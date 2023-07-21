@@ -13,6 +13,16 @@
   
 }
 
+
+.logo
+{
+  fill: linear-gradient(90deg, #FDFBFB 0%, #EBEDEE 100%);
+filter: blur(0.5px) drop-shadow(0px 2px 4px rgba(0, 42, 81, 0.10)) drop-shadow(0px 7px 7px rgba(0, 42, 81, 0.09)) drop-shadow(0px 15px 9px rgba(0, 42, 81, 0.05)) drop-shadow(0px 26px 11px rgba(0, 42, 81, 0.01)) drop-shadow(0px 41px 12px rgba(0, 42, 81, 0.00)) drop-shadow(0px 4px 4px rgba(0, 0, 0, 0.25));
+}
+.nav-links a{
+  cursor: pointer;
+}
+
 .nav-links a::after
 {
   content: '';
@@ -33,6 +43,14 @@
 {
   transform: rotateY(180deg);
 }
+.pong
+{
+  background: linear-gradient(90deg, #064A85 0%, #30C7EC 47.00%, #46AEF7 100%);
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent; 
+  text-shadow: 0px 0px 0px 0px rgba(0, 42, 81, 0.13), 0px 5px 11px 0px rgba(0, 42, 81, 0.13), 0px 19px 19px 0px rgba(0, 42, 81, 0.11), 0px 44px 26px 0px rgba(0, 42, 81, 0.07), 0px 77px 31px 0px rgba(0, 42, 81, 0.02), 0px 121px 34px 0px rgba(0, 42, 81, 0.00); 
+}
 .blob
 {
   background: linear-gradient(90deg, #074C87 0%, #04BEFE 100%);
@@ -46,6 +64,7 @@
 
 .dashboardIcons
 {
+  position: relative;
   cursor: pointer;
   opacity: 0.4;
   transition: all 0.5s ease;
@@ -139,11 +158,32 @@
 }
 .glass
 {
-  box-shadow: 0 0 1rem 0 rgba(0, 0, 0, .2);
+  box-shadow: 0 0 1rem 0 rgba(0, 0, 0, 0.122);
   border-radius: 5px;
   background-color: rgba(255, 255, 255, 0.033);
-  -webkit-backdrop-filter: blur(5px);
-  backdrop-filter: blur(3px);
+  -webkit-backdrop-filter: blur(0px);
+  backdrop-filter: blur(1px);
 }
 
 /* media for less then 1940px */
+
+
+.active 
+{
+  opacity: 1;
+  /* fill: #00539D */
+  transform: scale(1.1);
+}
+
+.active::after
+{
+  content: '';
+  position: absolute;
+  bottom: -10px;
+  right: 50%;
+  transform: translateX(50%);
+  width: 6px;
+  height: 6px;
+  background: #00539D;
+  border-radius: 50%;
+}

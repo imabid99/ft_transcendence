@@ -49,7 +49,7 @@ export default function Header({show, modalRef,handelShaw}: HeaderProps) {
                             <p className="font-[Poppins] text-[14px] font-[6500] text-[#AEBAC7]">Enjoy your game,</p>
                             {show ? <p className="font-[Poppins] text-[16px] font-[600] text-[#00539D]">Ahmed kamal</p> : <p className="font-[Poppins] text-[16px] font-[600] text-[#00539D]"></p>}
                         </div>
-                        <div className='cursor-pointer' onClick={handelShaw}>
+                        <div className='cursor-pointer' onClick={()=>handelShaw(modalRef)}>
                             <svg width="16" height="14" viewBox="0 0 16 14" fill="none" xmlns="http://www.w3.org/2000/svg">
                                 <path d="M6.492 12.841C6.41467 12.7657 6.084 12.4812 5.812 12.2163C4.10133 10.6628 1.30133 6.61016 0.446667 4.48904C0.309333 4.16691 0.0186667 3.35249 0 2.91736C0 2.50041 0.096 2.10294 0.290667 1.72366C0.562667 1.25085 0.990667 0.87157 1.496 0.663744C1.84667 0.529956 2.896 0.32213 2.91467 0.32213C4.06267 0.114304 5.928 0 7.98933 0C9.95333 0 11.7427 0.114304 12.908 0.284462C12.9267 0.303945 14.2307 0.511771 14.6773 0.739081C15.4933 1.15603 16 1.97045 16 2.84202V2.91736C15.98 3.48498 15.4733 4.67868 15.4547 4.67868C14.5987 6.6855 11.936 10.6446 10.1667 12.2358C10.1667 12.2358 9.712 12.6839 9.428 12.8787C9.02 13.1827 8.51467 13.3333 8.00933 13.3333C7.44533 13.3333 6.92 13.1632 6.492 12.841Z" fill="#00539D"/>
                             </svg> 

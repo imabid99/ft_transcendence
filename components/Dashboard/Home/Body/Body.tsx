@@ -1,7 +1,12 @@
 import RightSide from "../RightSide/RightSide"
 import Friend from "../Friend/Friend"
+import { type } from "os"
 
-export default function Body() {
+type Props = {
+    leaderRef: any,
+    handelShaw : (ref:any) => void
+}
+export default function Body({ leaderRef, handelShaw }: Props) {
     return (
         <div className='flex items-center w-full justify-around gap-[52px]
         lg:max-3xl:justify-center lg:max-2xl:justify-center lg:max-xl:justify-center
@@ -32,7 +37,7 @@ export default function Body() {
                     lg:max-3xl:right-[-100px]
                     "/>
                 </div>
-                <div  className="z-[50] bg-[#FFF]  w-[1224px] flex flex-col  px-[30px] pt-[35px]  rounded-[42px] min-h-[396px]
+                <div  className="z-[50] bg-[#fff]  w-[1224px] flex flex-col  px-[30px] pt-[35px]  rounded-[42px] min-h-[396px]
                     lg:max-3xl:w-[1000px] lg:max-2xl:w-[800px] lg:max-xl:w-[600px]
                 ">
                     <div className=" flex justify-between items-center min-w-[1160px]
@@ -67,7 +72,9 @@ export default function Body() {
                             </svg> 
                             <p className="text-[14px] font-[700] text-[#02539D]">LEADERBOARD</p>
                         </span>
-                        <button className=" border-none outline-none text-[#00539D] font-[500] font-[Poppins] text-[10px] font-[300]">See All</button>
+                        <button className=" border-none outline-none text-[#00539D] font-[500] font-[Poppins] text-[10px] font-[300]"
+                        onClick={() => handelShaw(leaderRef)}
+                        >See All</button>
                     </div>
                     <div className="flex justify-center items-end gap-[2px]  h-[calc(100%-56px)] overflow-hidden">
                         <div className="flex flex-col items-center justify-center gap-[10px]">

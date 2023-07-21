@@ -1,6 +1,6 @@
 import './globals.css'
 import { Inter } from 'next/font/google'
-
+import Dashboard from '@/components/Dashboard/Dashboard/Dashboard'
 const inter = Inter({ subsets: ['latin'] })
 
 export const metadata = {
@@ -13,9 +13,16 @@ export default function RootLayout({
 }: {
   children: React.ReactNode
 }) {
+
+  
   return (
     <html lang="en">
-      <body className={inter.className}>{children}</body>
+      <body className={inter.className}>
+        <div className='h-[100vh] w-[100vw] flex '>
+          {/* <Dashboard /> */}
+          {children}
+        </div>
+        </body>
     </html>
   )
 }

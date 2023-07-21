@@ -6,7 +6,7 @@ type RightSideProps = {
 export default function RightSide({children}:RightSideProps)
 {
     return (
-        <div className="leaderboard w-[371px] h-[396px]">
+        <div className="leaderboard w-[371px] h-[396px] bg-[#fff]">
             {children}
         </div>
     )
