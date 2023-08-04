@@ -19,7 +19,10 @@
     "postcss": "8.4.24",
     "react": "18.2.0",
     "react-dom": "18.2.0",
+<<<<<<< HEAD
     "swiper": "^10.1.0",
+=======
+>>>>>>> 0650be8586181921e07289db010e711347cf96fb
     "tailwind-scrollbar-hide": "^1.1.7",
     "tailwindcss": "3.3.2",
     "typescript": "5.1.3"

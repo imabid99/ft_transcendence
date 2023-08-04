@@ -52,6 +52,7 @@ export default function Body({ leaderRef, handelShaw }: Props) {
                         <button className="border-none outline-none text-[#00539D] font-[500] font-[Poppins] text-[10px] font-[300]">See All</button>
                     </div>
                     <div className="flex flex-col gap-[20px] max-h-[calc(396px-56px)] overflow-y-scroll no-scrollbar  ">
+<<<<<<< HEAD
                         <Friend  name="Achraf sabbar" username="asabbar" avatar="/userProfile.jpg" />
                         <Friend  name="Achraf sabbar" username="asabbar" avatar="/userProfile.jpg" />
                         <Friend  name="Achraf sabbar" username="asabbar" avatar="/userProfile.jpg" />
@@ -66,6 +67,22 @@ export default function Body({ leaderRef, handelShaw }: Props) {
                         <Friend  name="Achraf sabbar" username="asabbar" avatar="/userProfile.jpg" />
                         <Friend  name="Achraf sabbar" username="asabbar" avatar="/userProfile.jpg" />
                         <Friend  name="Achraf sabbar" username="asabbar" avatar="/userProfile.jpg" />
+=======
+                        <Friend  name="Achraf sabbar" username="asabbar" avatar="https://i.pravatar.cc/150?img=1" />
+                        <Friend  name="Achraf sabbar" username="asabbar" avatar="https://i.pravatar.cc/150?img=1" />
+                        <Friend  name="Achraf sabbar" username="asabbar" avatar="https://i.pravatar.cc/150?img=1" />
+                        <Friend  name="Achraf sabbar" username="asabbar" avatar="https://i.pravatar.cc/150?img=1" />
+                        <Friend  name="Achraf sabbar" username="asabbar" avatar="https://i.pravatar.cc/150?img=1" />
+                        <Friend  name="Achraf sabbar" username="asabbar" avatar="https://i.pravatar.cc/150?img=1" />
+                        <Friend  name="Achraf sabbar" username="asabbar" avatar="https://i.pravatar.cc/150?img=1" />
+                        <Friend  name="Achraf sabbar" username="asabbar" avatar="https://i.pravatar.cc/150?img=1" />
+                        <Friend  name="Achraf sabbar" username="asabbar" avatar="https://i.pravatar.cc/150?img=1" />
+                        <Friend  name="Achraf sabbar" username="asabbar" avatar="https://i.pravatar.cc/150?img=1" />
+                        <Friend  name="Achraf sabbar" username="asabbar" avatar="https://i.pravatar.cc/150?img=1" />
+                        <Friend  name="Achraf sabbar" username="asabbar" avatar="https://i.pravatar.cc/150?img=1" />
+                        <Friend  name="Achraf sabbar" username="asabbar" avatar="https://i.pravatar.cc/150?img=1" />
+                        <Friend  name="Achraf sabbar" username="asabbar" avatar="https://i.pravatar.cc/150?img=1" />
+>>>>>>> 0650be8586181921e07289db010e711347cf96fb
                     </div>
                 </div >
             </div>
@@ -85,7 +102,11 @@ export default function Body({ leaderRef, handelShaw }: Props) {
                     <div className="flex justify-center items-end gap-[2px]  h-[calc(100%-56px)] overflow-hidden">
                         <div className="flex flex-col items-center justify-center gap-[10px]">
                             <span className="flex flex-col items-center justify-center gap-[10px] relative">
+<<<<<<< HEAD
                                 <img src="userProfile.jpg/" alt="" className=" w-[80px] h-[80px] rounded-full object-cover shadow-4xl" />
+=======
+                                <img src="https://i.pravatar.cc/" alt="" className=" w-[80px] h-[80px] rounded-full object-cover shadow-4xl" />
+>>>>>>> 0650be8586181921e07289db010e711347cf96fb
                                 <p className="text-[10px] font-[700] font-[Poppins] text-[#6C8BD8]">
                                     Asabbar
                                 </p>
@@ -100,7 +121,11 @@ export default function Body({ leaderRef, handelShaw }: Props) {
                             <img src="/crown.svg" alt="" className="w-[25px]" />
                             <div className="flex flex-col items-center justify-center gap-[10px]">
                                 <span className="flex flex-col items-center justify-center gap-[10px] relative">
+<<<<<<< HEAD
                                     <img src="userProfile.jpg/" alt="" className=" w-[80px] h-[80px] rounded-full object-cover shadow-4xl" />
+=======
+                                    <img src="https://i.pravatar.cc/" alt="" className=" w-[80px] h-[80px] rounded-full object-cover shadow-4xl" />
+>>>>>>> 0650be8586181921e07289db010e711347cf96fb
                                     <p className="text-[10px] font-[700] font-[Poppins] text-[#6C8BD8]">
                                         Asabbar
                                     </p>
@@ -114,7 +139,11 @@ export default function Body({ leaderRef, handelShaw }: Props) {
                         </div>
                         <div className="flex flex-col items-center justify-center gap-[10px]">
                             <span className="flex flex-col items-center justify-center gap-[10px] relative">
+<<<<<<< HEAD
                                 <img src="userProfile.jpg/" alt="" className=" w-[80px] h-[80px] rounded-full object-cover shadow-4xl" />
+=======
+                                <img src="https://i.pravatar.cc/" alt="" className=" w-[80px] h-[80px] rounded-full object-cover shadow-4xl" />
+>>>>>>> 0650be8586181921e07289db010e711347cf96fb
                                 <p className="text-[10px] font-[700] font-[Poppins] text-[#6C8BD8]">
                                     Asabbar
                                 </p>
@@ -137,6 +166,7 @@ export default function Body({ leaderRef, handelShaw }: Props) {
                         </span>
                     </div>
                     <div className="flex flex-col  gap-[10px]   overflow-y-scroll max-h-[calc(100%-67px)] items-center py-[5px] no-scrollbar overflow-hidden">
+<<<<<<< HEAD
                         <Friend  name="Achraf sabbar" username="asabbar" avatar="/userProfile.jpg" />
                         <Friend  name="Achraf sabbar" username="asabbar" avatar="/userProfile.jpg" />
                         <Friend  name="Achraf sabbar" username="asabbar" avatar="/userProfile.jpg" />
@@ -158,6 +188,29 @@ export default function Body({ leaderRef, handelShaw }: Props) {
                         <Friend  name="Achraf sabbar" username="asabbar" avatar="/userProfile.jpg" />
                         <Friend  name="Achraf sabbar" username="asabbar" avatar="/userProfile.jpg" />
                         <Friend  name="Achraf sabbar" username="asabbar" avatar="/userProfile.jpg" />
+=======
+                        <Friend  name="Achraf sabbar" username="asabbar" avatar="https://i.pravatar.cc/150?img=1" />
+                        <Friend  name="Achraf sabbar" username="asabbar" avatar="https://i.pravatar.cc/150?img=1" />
+                        <Friend  name="Achraf sabbar" username="asabbar" avatar="https://i.pravatar.cc/150?img=1" />
+                        <Friend  name="Achraf sabbar" username="asabbar" avatar="https://i.pravatar.cc/150?img=1" />
+                        <Friend  name="Achraf sabbar" username="asabbar" avatar="https://i.pravatar.cc/150?img=1" />
+                        <Friend  name="Achraf sabbar" username="asabbar" avatar="https://i.pravatar.cc/150?img=1" />
+                        <Friend  name="Achraf sabbar" username="asabbar" avatar="https://i.pravatar.cc/150?img=1" />
+                        <Friend  name="Achraf sabbar" username="asabbar" avatar="https://i.pravatar.cc/150?img=1" />
+                        <Friend  name="Achraf sabbar" username="asabbar" avatar="https://i.pravatar.cc/150?img=1" />
+                        <Friend  name="Achraf sabbar" username="asabbar" avatar="https://i.pravatar.cc/150?img=1" />
+                        <Friend  name="Achraf sabbar" username="asabbar" avatar="https://i.pravatar.cc/150?img=1" />
+                        <Friend  name="Achraf sabbar" username="asabbar" avatar="https://i.pravatar.cc/150?img=1" />
+                        <Friend  name="Achraf sabbar" username="asabbar" avatar="https://i.pravatar.cc/150?img=1" />
+                        <Friend  name="Achraf sabbar" username="asabbar" avatar="https://i.pravatar.cc/150?img=1" />
+                        <Friend  name="Achraf sabbar" username="asabbar" avatar="https://i.pravatar.cc/150?img=1" />
+                        <Friend  name="Achraf sabbar" username="asabbar" avatar="https://i.pravatar.cc/150?img=1" />
+                        <Friend  name="Achraf sabbar" username="asabbar" avatar="https://i.pravatar.cc/150?img=1" />
+                        <Friend  name="Achraf sabbar" username="asabbar" avatar="https://i.pravatar.cc/150?img=1" />
+                        <Friend  name="Achraf sabbar" username="asabbar" avatar="https://i.pravatar.cc/150?img=1" />
+                        <Friend  name="Achraf sabbar" username="asabbar" avatar="https://i.pravatar.cc/150?img=1" />
+                        <Friend  name="Achraf sabbar" username="asabbar" avatar="https://i.pravatar.cc/150?img=1" />
+>>>>>>> 0650be8586181921e07289db010e711347cf96fb
                     </div>
                 </RightSide>
             </div>

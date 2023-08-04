@@ -22,7 +22,11 @@ export default function Header({show, modalRef,handelShaw,notifRef,notifIconRef}
                 <div className='header__left flex gap-[68px]'>
                     <div>
                         <p className="text-[18px] font-[500] text-[#AEBAC7]">Welcome</p>
+<<<<<<< HEAD
                         <p className="text-[25px] font-[700]">Achraf Sabbar</p>
+=======
+                        <p className="text-[25px] font-[700]">Ahmed kamal</p>
+>>>>>>> 0650be8586181921e07289db010e711347cf96fb
                     </div>
                     <div className="flex gap-[20px] items-center z-[0] bg-[#FFF] searchShadow rounded-[20px]">
                         <div className="flex items-center gap-[10px] p-[32px] pr-0">
@@ -43,15 +47,24 @@ export default function Header({show, modalRef,handelShaw,notifRef,notifIconRef}
                     </div>
                     <div className="z-[51] bg-[#FFF]  profileShadow flex gap-[15px]  items-center py-[13px] px-[18px] rounded-[20px]  relative" >
                         <div className="relative after:animate-ping">
+<<<<<<< HEAD
                             <img className="w-[55px] h-[55px] rounded-full outline  outline-[5px] outline-[#ACDAAD] object-cover"
                             src="/userProfile.jpg" alt="" />
+=======
+                            <img className="w-[55px] h-[55px] rounded-full outline  outline-[5px] outline-[#ACDAAD] "
+                            src="https://i.pravatar.cc/150?img=3" alt="" />
+>>>>>>> 0650be8586181921e07289db010e711347cf96fb
                             <span className="absolute top-[0px] right-[0px] w-[10px] h-[10px] rounded-full bg-[#2FCD48]
                             outline outline-[4px] outline-[#fff]
                             "></span>
                         </div>
                         <div className='flex flex-col gap-[5px] justify-start h-full'>
                             <p className="font-[Poppins] text-[14px] font-[6500] text-[#AEBAC7]">Enjoy your game,</p>
+<<<<<<< HEAD
                             {show ? <p className="font-[Poppins] text-[16px] font-[600] text-[#00539D]">Achraf Sabbar</p> : <p className="font-[Poppins] text-[16px] font-[600] text-[#00539D]"></p>}
+=======
+                            {show ? <p className="font-[Poppins] text-[16px] font-[600] text-[#00539D]">Ahmed kamal</p> : <p className="font-[Poppins] text-[16px] font-[600] text-[#00539D]"></p>}
+>>>>>>> 0650be8586181921e07289db010e711347cf96fb
                         </div>
                         <div className='cursor-pointer' onClick={()=>handelShaw(modalRef)}>
                             <svg width="16" height="14" viewBox="0 0 16 14" fill="none" xmlns="http://www.w3.org/2000/svg">

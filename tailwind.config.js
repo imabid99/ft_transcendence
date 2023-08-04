@@ -15,7 +15,10 @@ module.exports = {
       'lg': '1024px',
       'md': '768px',
       'sm': '640px',
+<<<<<<< HEAD
       'lsm': '360px',
+=======
+>>>>>>> 0650be8586181921e07289db010e711347cf96fb
     },
     extend: {
       backgroundImage: {

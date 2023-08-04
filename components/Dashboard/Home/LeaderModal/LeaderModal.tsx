@@ -27,7 +27,11 @@ export default function LeaderModal ({handelClose,leaderRef}:Props)
                 <div className="flex justify-center items-end gap-[2px]  w-[340px] h-[371px] rounded-[42px] overflow-hidden px-[42px] pt-[50px] border border-[#E5E5E5] rounded-[42px]">
                     <div className="flex flex-col items-center justify-center gap-[10px]">
                         <span className="flex flex-col items-center justify-center gap-[10px] relative">
+<<<<<<< HEAD
                             <img src="userProfile.jpg/" alt="" className=" w-[80px] h-[80px] rounded-full object-cover shadow-4xl" />
+=======
+                            <img src="https://i.pravatar.cc/" alt="" className=" w-[80px] h-[80px] rounded-full object-cover shadow-4xl" />
+>>>>>>> 0650be8586181921e07289db010e711347cf96fb
                             <p className="text-[10px] font-[700] font-[Poppins] text-[#6C8BD8]">
                                 Asabbar
                             </p>
@@ -41,7 +45,11 @@ export default function LeaderModal ({handelClose,leaderRef}:Props)
                         <img src="/crown.svg" alt="" className="w-[25px]" />
                         <div className="flex flex-col items-center justify-center gap-[10px]">
                             <span className="flex flex-col items-center justify-center gap-[10px] relative">
+<<<<<<< HEAD
                                 <img src="userProfile.jpg/" alt="" className=" w-[80px] h-[80px] rounded-full object-cover shadow-4xl" />
+=======
+                                <img src="https://i.pravatar.cc/" alt="" className=" w-[80px] h-[80px] rounded-full object-cover shadow-4xl" />
+>>>>>>> 0650be8586181921e07289db010e711347cf96fb
                                 <p className="text-[10px] font-[700] font-[Poppins] text-[#6C8BD8]">
                                     Asabbar
                                 </p>
@@ -54,7 +62,11 @@ export default function LeaderModal ({handelClose,leaderRef}:Props)
                     </div>
                     <div className="flex flex-col items-center justify-center gap-[10px]">
                         <span className="flex flex-col items-center justify-center gap-[10px] relative">
+<<<<<<< HEAD
                             <img src="userProfile.jpg/" alt="" className=" w-[80px] h-[80px] rounded-full object-cover shadow-4xl" />
+=======
+                            <img src="https://i.pravatar.cc/" alt="" className=" w-[80px] h-[80px] rounded-full object-cover shadow-4xl" />
+>>>>>>> 0650be8586181921e07289db010e711347cf96fb
                             <p className="text-[10px] font-[700] font-[Poppins] text-[#6C8BD8]">
                                 Asabbar
                             </p>
@@ -77,11 +89,19 @@ export default function LeaderModal ({handelClose,leaderRef}:Props)
                 </div>
                 <div className="flex flex-col gap-[20px] justify-center items-center w-full">
                     <p className="text-[20px] font-[500] text-[#849AA8]">Name</p>
+<<<<<<< HEAD
                     <User name="Achraf sabbar" username="asabbar" avatar="userProfile.jpg/" />
                     <User name="Imad Abid" username="imabid" avatar="userProfile.jpg/" />
                     <User name="Zakaria ait-sliman" username="zait-sli" avatar="userProfile.jpg/" />
                     <User name="Saad gmira" username="sgmira" avatar="userProfile.jpg/" />
                     <User name="Mustapha jlem" username="mjlem" avatar="userProfile.jpg/" />
+=======
+                    <User name="Achraf sabbar" username="asabbar" avatar="https://i.pravatar.cc/" />
+                    <User name="Imad Abid" username="imabid" avatar="https://i.pravatar.cc/" />
+                    <User name="Zakaria ait-sliman" username="zait-sli" avatar="https://i.pravatar.cc/" />
+                    <User name="Saad gmira" username="sgmira" avatar="https://i.pravatar.cc/" />
+                    <User name="Mustapha jlem" username="mjlem" avatar="https://i.pravatar.cc/" />
+>>>>>>> 0650be8586181921e07289db010e711347cf96fb
                 </div>
                 <div className="flex flex-col gap-[20px] justify-center items-center w-full">
                     <p className="text-[20px] font-[500] text-[#849AA8]">Match</p>
