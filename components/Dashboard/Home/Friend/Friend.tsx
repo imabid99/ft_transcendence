@@ -9,11 +9,7 @@ export default function Friend({name, username, avatar}:props) {
     return (
         <div className='flex  items-center justify-between w-[311px] min-h-[70px] bg-[#FFF] p-[13px] rounded-[9px] shadow-7xl'>
             <div className='flex items-center justify-center gap-[16px]  bg-[#FFF] rounded-full'>
-<<<<<<< HEAD
                 <img className="w-[42px] h-[42px] rounded-full outline  outline-[2px] outline-[#ACDAAD]  border-[3px] border-[#fff] object-cover"
-=======
-                <img className="w-[42px] h-[42px] rounded-full outline  outline-[2px] outline-[#ACDAAD]  border-[3px] border-[#fff]"
->>>>>>> 0650be8586181921e07289db010e711347cf96fb
                 src={avatar} alt="" />
                 <span className='flex flex-col justify-center '>
                     <p className='text-[#063B6B] text-[12px] font-[600]'>{name}</p>

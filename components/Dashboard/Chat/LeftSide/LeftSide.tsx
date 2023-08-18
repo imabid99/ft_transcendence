@@ -7,7 +7,8 @@ import { useEffect, useState } from "react";
 import SelectUsers from "./SelectUsers";
 import Link from "next/link";
 import { useRouter } from 'next/navigation'
-
+import { useContext } from "react";
+import { contextdata } from "@/app/Chat/contextApi";
 
 export default function  LeftSide() {
 
@@ -19,8 +20,9 @@ export default function  LeftSide() {
 	const [groupType, setGroupType] = useState('Group Type');
 	const [GroupName, setGroupName] = useState('');
 	const router = useRouter();
+	const {user} = useContext(contextdata);
 
-	const createGroup = (e:any) => {
+	const createGroup = () => {
 		if (GroupName === '') {
 			setShowError('badGroupName');
 			return;
@@ -34,12 +36,15 @@ export default function  LeftSide() {
 			setShowCreateGroup(null);
 			setShowAnimationLoading(false)
 			setGroupType('Group Type');
+			setShowError(null);
+			setGroupName('');
+			setGroupUsers([]);
 			router.push(`/Chat/${GroupName}`)
 		}, 1000);
 	}
 	return (
 		<>	
-			<div className="chat__left w-[450px] h-full bg-[#FFF] border-r-[1px] relative overflow-hidden lg:max-xl:w-[350px] lsm:max-lg:w-full">
+			<div className="chat__left w-[450px]  bg-[#FFF] border-r-[1px] relative overflow-hidden lg:max-xl:w-[350px] lsm:max-lg:w-full">
 					<div className="chat__left__head flex justify-between items-center border-b-[1px]  border-[#E5E5E5] pl-[42px] pr-[25px] lsm:max-lg:px-[10px]">
 						<div className="flex items-center gap-[10px] py-[35px]">
 							<img
@@ -50,7 +55,9 @@ export default function  LeftSide() {
 							<p className="text-[20px] font-[200] font-[Poppins] text-[#BDBFC3] leading-6">
 								Hello , <br />
 								<span className="text-[20px] font-[500] font-[Poppins] text-[#034B8A]">
-									Achraf Sabbar
+									{
+										user?.username
+									}
 								</span>
 							</p>
 						</div>
@@ -120,7 +127,7 @@ export default function  LeftSide() {
 					}
 					{
 						showCreateGroup === 'groupInfo'  && (
-							<div className="flex flex-col  overflow-y-scroll   max-h-[calc(100%-270px)] min-h-[calc(100%-135px)] ">
+							<div className="flex flex-col  overflow-y-scroll  max-h-[calc(100%-270px)] min-h-[calc(100%-135px)] ">
 								<div className=" flex gap-2 items-center  py-[27px] px-[25px]">
 									<span onClick={() => {setShowCreateGroup("selectUsers")}} className="cursor-pointer">
 										<svg width="30" height="30" viewBox="0 0 30 30" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -143,7 +150,7 @@ export default function  LeftSide() {
 										<input type="file" id="img" name="img" accept=".jpg,.jpeg,.png,.gif"  className="absolute top-[0px] left-[0px] w-full h-full opacity-0 cursor-pointer z-[1]" />
 									</div>
 								</div>
-								<form className="min-h-[300px] px-[39px] flex flex-col gap-[30px] py-[25px]">
+								<form className="min-h-[500px] px-[39px] flex flex-col gap-[30px] py-[25px]">
 									{
 										showError === 'badGroupName' ? (
 											<label htmlFor="GroupName" className=" groupInfo flex items-center border-[1px] border-[#FF0000]  ">
@@ -152,7 +159,7 @@ export default function  LeftSide() {
 														<path d="M0 12V9.90001C0 9.47501 0.106182 9.08426 0.318545 8.72776C0.530909 8.37126 0.812606 8.09951 1.16364 7.91251C1.91515 7.52501 2.67879 7.23426 3.45455 7.04026C4.2303 6.84626 5.01818 6.74951 5.81818 6.75001C6.61818 6.75001 7.40606 6.84701 8.18182 7.04101C8.95758 7.23501 9.72121 7.52551 10.4727 7.91251C10.8242 8.10001 11.1062 8.37201 11.3185 8.72851C11.5309 9.08501 11.6368 9.47551 11.6364 9.90001V12H0ZM13.0909 12V9.75C13.0909 9.20001 12.9423 8.67176 12.6451 8.16526C12.3479 7.65876 11.9268 7.22451 11.3818 6.86251C12 6.93751 12.5818 7.06576 13.1273 7.24726C13.6727 7.42876 14.1818 7.65051 14.6545 7.91251C15.0909 8.16251 15.4242 8.44051 15.6545 8.74651C15.8848 9.05251 16 9.387 16 9.75V12H13.0909ZM5.81818 6.00001C5.01818 6.00001 4.33333 5.70626 3.76364 5.11876C3.19394 4.53126 2.90909 3.82501 2.90909 3.00001C2.90909 2.17502 3.19394 1.46877 3.76364 0.881268C4.33333 0.293769 5.01818 1.92305e-05 5.81818 1.92305e-05C6.61818 1.92305e-05 7.30303 0.293769 7.87273 0.881268C8.44242 1.46877 8.72727 2.17502 8.72727 3.00001C8.72727 3.82501 8.44242 4.53126 7.87273 5.11876C7.30303 5.70626 6.61818 6.00001 5.81818 6.00001ZM13.0909 3.00001C13.0909 3.82501 12.8061 4.53126 12.2364 5.11876C11.6667 5.70626 10.9818 6.00001 10.1818 6.00001C10.0485 6.00001 9.87879 5.98426 9.67273 5.95276C9.46667 5.92126 9.29697 5.88701 9.16364 5.85001C9.49091 5.45001 9.74255 5.00626 9.91855 4.51876C10.0945 4.03126 10.1823 3.52501 10.1818 3.00001C10.1818 2.47502 10.0941 1.96877 9.91855 1.48127C9.74303 0.993768 9.49139 0.550018 9.16364 0.150019C9.33333 0.087519 9.50303 0.0467693 9.67273 0.0277693C9.84242 0.00876935 10.0121 -0.000480769 10.1818 1.92305e-05C10.9818 1.92305e-05 11.6667 0.293769 12.2364 0.881268C12.8061 1.46877 13.0909 2.17502 13.0909 3.00001Z" fill="#04427A"/>
 													</svg>
 												</span>
-														<input id="GroupName" type="text"  className="w-[calc(100%-54px)] h-[50px]  bg-[#F9FCFE] pr-[20px] text-[15px] font-[300] font-[Poppins] text-[#A5BFD6] outline-none rounded-r-[11px]" placeholder="Group Name" onChange={(e) => setGroupName(e.target.value)} />
+												<input id="GroupName" type="text" autoFocus className="w-[calc(100%-54px)] h-[50px]  bg-[#F9FCFE] pr-[20px] text-[15px] font-[300] font-[Poppins] text-[#A5BFD6] outline-none rounded-r-[11px]" placeholder="Group Name" onChange={(e) => setGroupName(e.target.value)} />
 											</label>
 										)
 										:
@@ -163,7 +170,7 @@ export default function  LeftSide() {
 														<path d="M0 12V9.90001C0 9.47501 0.106182 9.08426 0.318545 8.72776C0.530909 8.37126 0.812606 8.09951 1.16364 7.91251C1.91515 7.52501 2.67879 7.23426 3.45455 7.04026C4.2303 6.84626 5.01818 6.74951 5.81818 6.75001C6.61818 6.75001 7.40606 6.84701 8.18182 7.04101C8.95758 7.23501 9.72121 7.52551 10.4727 7.91251C10.8242 8.10001 11.1062 8.37201 11.3185 8.72851C11.5309 9.08501 11.6368 9.47551 11.6364 9.90001V12H0ZM13.0909 12V9.75C13.0909 9.20001 12.9423 8.67176 12.6451 8.16526C12.3479 7.65876 11.9268 7.22451 11.3818 6.86251C12 6.93751 12.5818 7.06576 13.1273 7.24726C13.6727 7.42876 14.1818 7.65051 14.6545 7.91251C15.0909 8.16251 15.4242 8.44051 15.6545 8.74651C15.8848 9.05251 16 9.387 16 9.75V12H13.0909ZM5.81818 6.00001C5.01818 6.00001 4.33333 5.70626 3.76364 5.11876C3.19394 4.53126 2.90909 3.82501 2.90909 3.00001C2.90909 2.17502 3.19394 1.46877 3.76364 0.881268C4.33333 0.293769 5.01818 1.92305e-05 5.81818 1.92305e-05C6.61818 1.92305e-05 7.30303 0.293769 7.87273 0.881268C8.44242 1.46877 8.72727 2.17502 8.72727 3.00001C8.72727 3.82501 8.44242 4.53126 7.87273 5.11876C7.30303 5.70626 6.61818 6.00001 5.81818 6.00001ZM13.0909 3.00001C13.0909 3.82501 12.8061 4.53126 12.2364 5.11876C11.6667 5.70626 10.9818 6.00001 10.1818 6.00001C10.0485 6.00001 9.87879 5.98426 9.67273 5.95276C9.46667 5.92126 9.29697 5.88701 9.16364 5.85001C9.49091 5.45001 9.74255 5.00626 9.91855 4.51876C10.0945 4.03126 10.1823 3.52501 10.1818 3.00001C10.1818 2.47502 10.0941 1.96877 9.91855 1.48127C9.74303 0.993768 9.49139 0.550018 9.16364 0.150019C9.33333 0.087519 9.50303 0.0467693 9.67273 0.0277693C9.84242 0.00876935 10.0121 -0.000480769 10.1818 1.92305e-05C10.9818 1.92305e-05 11.6667 0.293769 12.2364 0.881268C12.8061 1.46877 13.0909 2.17502 13.0909 3.00001Z" fill="#04427A"/>
 													</svg>
 												</span>
-												<input id="GroupName" type="text"  className="w-[calc(100%-54px)] h-[50px]  bg-[#F9FCFE] pr-[20px] text-[15px] font-[300] font-[Poppins] text-[#A5BFD6] outline-none rounded-r-[11px]" placeholder="Group Name" onChange={(e) => setGroupName(e.target.value)} />
+												<input id="GroupName" type="text" autoFocus className="w-[calc(100%-54px)] h-[50px]  bg-[#F9FCFE] pr-[20px] text-[15px] font-[300] font-[Poppins] text-[#A5BFD6] outline-none rounded-r-[11px]" placeholder="Group Name" onChange={(e) => setGroupName(e.target.value)} />
 											</label>
 										)
 										}
@@ -202,6 +209,15 @@ export default function  LeftSide() {
 											</label>
 										)
 									}
+									<label htmlFor="accessPass"  className="groupInfo flex flex-col gap-[10px] mt-[30px] ">
+										<p className="text-[15px] font-[500] font-[Poppins] text-[#00539D] flex gap-[10px]">
+										Access password
+										<p className="text-[13px] font-[300] font-[Poppins] text-[#A5BFD6]">
+											(optional)
+										</p>
+										</p>
+										<input type="password" id="accessPass" className="w-full h-[50px]  px-[20px]   bg-[#F9FCFE] pr-[20px] text-[15px] font-[300] font-[Poppins] text-[#A5BFD6] outline-none rounded-[11px]" placeholder="Password" />
+									</label>
 								</form>
 								<div  onClick={(e) => createGroup(e)} className="  bg-[#025063] min-h-[70px] min-w-[70px] rounded-full absolute bottom-[54px] right-[50px] z-[10] flex justify-center items-center cursor-pointer" >
 									<div className="flex justify-center items-center relative">

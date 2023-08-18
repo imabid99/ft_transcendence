@@ -42,7 +42,6 @@ export default function UsersOnline() {
             spaceBetween={1}
             slidesPerView={4}
             onSlideChange={() => console.log('slide change')}
-            onSwiper={(swiper) => console.log(swiper)}
             className="w-full cursor-grab"
             >
                 <SwiperSlide>

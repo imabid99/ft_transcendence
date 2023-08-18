@@ -1,6 +1,5 @@
-import { useState , useRef} from 'react'
-import UserModal from '../userModal/userModal'
 
+import UserModal from '../userModal/userModal'
 type HeaderProps = {
     modalRef: any,
     handelShaw: any,
@@ -17,16 +16,13 @@ export default function Header({show, modalRef,handelShaw,notifRef,notifIconRef}
     
     return (
         <div className="flex items-center h-[100px] w-full justify-around gap-[430px] 
-        lg:max-3xl:gap-[200px] lg:max-2xl:gap-[100px] lg:max-xl:gap-[50px]
+        lg:max-3xl:gap-[100px] lg:max-2xl:gap-[10px] 
         ">
-                <div className='header__left flex gap-[68px]'>
-                    <div>
-                        <p className="text-[18px] font-[500] text-[#AEBAC7]">Welcome</p>
-<<<<<<< HEAD
-                        <p className="text-[25px] font-[700]">Achraf Sabbar</p>
-=======
-                        <p className="text-[25px] font-[700]">Ahmed kamal</p>
->>>>>>> 0650be8586181921e07289db010e711347cf96fb
+                <div className='header__left flex gap-[68px] 2xl:max-3xl:gap-[45px]
+                '>
+                    <div className='lg:max-2xl:hidden'>
+                        <p className="text-[18px] font-[500] text-[#AEBAC7]  2xl:max-3xl:text-[15px]">Welcome</p>
+                        <p className="text-[25px] font-[700] 2xl:max-3xl:text-[20px]  2xl:max-3xl:w-[150px]">Achraf Sabbar</p>
                     </div>
                     <div className="flex gap-[20px] items-center z-[0] bg-[#FFF] searchShadow rounded-[20px]">
                         <div className="flex items-center gap-[10px] p-[32px] pr-0">
@@ -34,7 +30,7 @@ export default function Header({show, modalRef,handelShaw,notifRef,notifIconRef}
                                 <path d="M27 27L21.0974 21.0868M24.3684 13.1842C24.3684 16.1504 23.1901 18.9952 21.0926 21.0926C18.9952 23.1901 16.1504 24.3684 13.1842 24.3684C10.218 24.3684 7.37323 23.1901 5.27578 21.0926C3.17833 18.9952 2 16.1504 2 13.1842C2 10.218 3.17833 7.37323 5.27578 5.27578C7.37323 3.17833 10.218 2 13.1842 2C16.1504 2 18.9952 3.17833 21.0926 5.27578C23.1901 7.37323 24.3684 10.218 24.3684 13.1842Z" stroke="#B4C0CB"/>
                             </svg> 
                         </div>
-                        <input className="w-[530px] h-[90px] bg-[#FFF] rounded-[10px] outline-none border-none text-[20px] font-[600] font-[Poppins] pr-[20px]" type="text" placeholder="Search for friends to play" />
+                        <input className="2xl:max-3xl:w-[500px] lg:max-xl:w-[450px] w-[530px] h-[90px] bg-[#FFF] rounded-[10px] outline-none border-none text-[20px] font-[600] font-[Poppins] pr-[20px]" type="text" placeholder="Search for friends to play" />
                     </div>
                 </div>
                 <div className='header__right flex gap-[30px]'>
@@ -47,24 +43,15 @@ export default function Header({show, modalRef,handelShaw,notifRef,notifIconRef}
                     </div>
                     <div className="z-[51] bg-[#FFF]  profileShadow flex gap-[15px]  items-center py-[13px] px-[18px] rounded-[20px]  relative" >
                         <div className="relative after:animate-ping">
-<<<<<<< HEAD
                             <img className="w-[55px] h-[55px] rounded-full outline  outline-[5px] outline-[#ACDAAD] object-cover"
                             src="/userProfile.jpg" alt="" />
-=======
-                            <img className="w-[55px] h-[55px] rounded-full outline  outline-[5px] outline-[#ACDAAD] "
-                            src="https://i.pravatar.cc/150?img=3" alt="" />
->>>>>>> 0650be8586181921e07289db010e711347cf96fb
                             <span className="absolute top-[0px] right-[0px] w-[10px] h-[10px] rounded-full bg-[#2FCD48]
                             outline outline-[4px] outline-[#fff]
                             "></span>
                         </div>
                         <div className='flex flex-col gap-[5px] justify-start h-full'>
                             <p className="font-[Poppins] text-[14px] font-[6500] text-[#AEBAC7]">Enjoy your game,</p>
-<<<<<<< HEAD
                             {show ? <p className="font-[Poppins] text-[16px] font-[600] text-[#00539D]">Achraf Sabbar</p> : <p className="font-[Poppins] text-[16px] font-[600] text-[#00539D]"></p>}
-=======
-                            {show ? <p className="font-[Poppins] text-[16px] font-[600] text-[#00539D]">Ahmed kamal</p> : <p className="font-[Poppins] text-[16px] font-[600] text-[#00539D]"></p>}
->>>>>>> 0650be8586181921e07289db010e711347cf96fb
                         </div>
                         <div className='cursor-pointer' onClick={()=>handelShaw(modalRef)}>
                             <svg width="16" height="14" viewBox="0 0 16 14" fill="none" xmlns="http://www.w3.org/2000/svg">

@@ -9,15 +9,19 @@ type Props = {
 export default function Body({ leaderRef, handelShaw }: Props) {
     return (
         <div className='flex items-center w-full justify-around gap-[52px]
-        lg:max-3xl:justify-center lg:max-2xl:justify-center lg:max-xl:justify-center
-        relative
+        relative         lg:max-3xl:justify-center lg:max-2xl:justify-center lg:max-xl:justify-center
+        lg:max-2xl:flex-col lg:max-2xl:gap-[50px] lg:max-2xl:items-start
         '>
-            <div className='header__left flex flex-col gap-[52px]'>
+            <div className='header__left flex flex-col gap-[52px] lg:max-2xl:w-[100%]'>
                 <div className=" center__leaderboard__left home__center h-[396px] w-[1224px] flex flex-col justify-center pl-[98px] relative
-                lg:max-3xl:w-[1000px] lg:max-2xl:w-[800px] lg:max-xl:w-[600px]
+                lg:max-3xl:w-[1000px]  lg:max-xl:w-[600px]
+                2xl:max-3xl:w-[900px] 2xl:max-3xl:pl-[50px]
+                lg:max-2xl:min-w-full
                 ">
                     <div className=" flex flex-col justify-center relative gap-[20px]">
-                        <p className="text-[50px] font-[700] text-[#FFFFFF] z-[6]">
+                        <p className="text-[50px] font-[700] text-[#FFFFFF] z-[6]
+                        lg:max-2xl:text-[45px] lg:max-xl:text-[40px]
+                        ">
                             Ping
                             <span className="home__center__text"> PONG</span><br />
                             Let The Fun Begin.
@@ -33,26 +37,26 @@ export default function Body({ leaderRef, handelShaw }: Props) {
                         <img src="/star2.png" alt="" className="absolute bottom-[-50px] right-[150px] w-[100px] height-[100px] z-[0] -rotate-[75deg] opacity-[0.9]" />
                     </div>
                     <img src="/Rectangl.png" alt="" className="absolute bottom-[0px] right-[-150px] w-[708px] h-[574px] z-[20]
-                    lg:max-3xl:w-[600px] lg:max-3xl:h-[500px] lg:max-2xl:w-[500px] lg:max-2xl:h-[400px] lg:max-xl:w-[400px] lg:max-xl:h-[300px]
+                    lg:max-3xl:w-[600px] lg:max-3xl:h-[500px] 
                     lg:max-3xl:right-[-100px]
+                    lg:max-2xl:w-[600px] lg:max-2xl:h-[500px] 
                     "/>
                 </div>
-                <div  className="z-[50] bg-[#fff]  w-[1224px] flex flex-col  px-[30px] pt-[35px]  rounded-[42px] min-h-[396px]
+                <div  className="z-[50] bg-[#fff]  w-[1224px] flex flex-col  px-[30px] pt-[35px]  rounded-[42px] h-[396px]
                     lg:max-3xl:w-[1000px] lg:max-2xl:w-[800px] lg:max-xl:w-[600px]
+                    2xl:max-3xl:w-[900px] 2xl:max-3xl:pl-[50px] lg:max-2xl:h-[425px]
+                    lg:max-2xl:min-w-full 
                 ">
-                    <div className=" flex justify-between items-center min-w-[1160px]
-                    lg:max-3xl:min-w-[900px] lg:max-2xl:min-w-[700px] lg:max-xl:min-w-[500px]
-                    ">
+                    <div className=" flex justify-between items-center w-full pb-[30px]">
                         <span className="flex items-center gap-[5.3px] w-[200px]">
                             <svg width="17" height="16" viewBox="0 0 17 16" fill="none" xmlns="http://www.w3.org/2000/svg">
                                 <path d="M5.09567 0C5.42594 0 5.68544 0.262042 5.68544 0.578035C5.68544 0.809249 5.88203 0.99422 6.11795 0.99422H6.89645C8.08387 1.00193 9.0511 1.9499 9.05896 3.10597V3.25241C9.80601 3.25241 10.5531 3.26782 11.308 3.27553C14.0367 3.27553 16.0262 5.21773 16.0262 7.89981V11.3449C16.0262 14.027 14.0367 15.9692 11.308 15.9692C10.2149 15.9923 9.12187 16 8.02096 16C6.92004 16 5.81126 15.9923 4.71821 15.9692C1.98951 15.9692 0 14.027 0 11.3449V7.89981C0 5.21773 1.98951 3.27553 4.72607 3.27553C5.75622 3.26012 6.80995 3.2447 7.87941 3.2447V3.11368C7.87941 2.58189 7.43118 2.15029 6.89645 2.15029H6.11795C5.22935 2.15029 4.50589 1.44123 4.50589 0.578035C4.50589 0.262042 4.77326 0 5.09567 0ZM5.67758 7.65318C5.3473 7.65318 5.0878 7.91522 5.0878 8.23121V9.04046H4.25425C3.93184 9.04046 3.66448 9.30251 3.66448 9.6185C3.66448 9.9422 3.93184 10.1965 4.25425 10.1965H5.0878V11.0135C5.0878 11.3295 5.3473 11.5915 5.67758 11.5915C5.99999 11.5915 6.26736 11.3295 6.26736 11.0135V10.1965H7.09304C7.41545 10.1965 7.68282 9.9422 7.68282 9.6185C7.68282 9.30251 7.41545 9.04046 7.09304 9.04046H6.26736V8.23121C6.26736 7.91522 5.99999 7.65318 5.67758 7.65318ZM11.8584 10.3892H11.7798C11.4487 10.3892 11.19 10.6513 11.19 10.9672C11.19 11.2909 11.4487 11.5453 11.7798 11.5453H11.8584C12.1808 11.5453 12.4482 11.2909 12.4482 10.9672C12.4482 10.6513 12.1808 10.3892 11.8584 10.3892ZM10.5137 7.73796H10.4351C10.1048 7.73796 9.84533 8 9.84533 8.31599C9.84533 8.63969 10.1048 8.89403 10.4351 8.89403H10.5137C10.8362 8.89403 11.1035 8.63969 11.1035 8.31599C11.1035 8 10.8362 7.73796 10.5137 7.73796Z" fill="#02539D"/>
                             </svg>
                             <p className="text-[14px] font-[700] text-[#02539D] font-[Poppins]">LIVE MATCH</p>
                         </span>
-                        <button className="border-none outline-none text-[#00539D] font-[500] font-[Poppins] text-[10px] font-[300]">See All</button>
+                        <button className="border-none outline-none text-[#00539D]  font-[Poppins] text-[10px] font-[300]">See All</button>
                     </div>
-                    <div className="flex flex-col gap-[20px] max-h-[calc(396px-56px)] overflow-y-scroll no-scrollbar  ">
-<<<<<<< HEAD
+                    <div className="flex flex-col gap-[15px] max-h-[calc(396px-56px)] overflow-y-scroll no-scrollbar  ">
                         <Friend  name="Achraf sabbar" username="asabbar" avatar="/userProfile.jpg" />
                         <Friend  name="Achraf sabbar" username="asabbar" avatar="/userProfile.jpg" />
                         <Friend  name="Achraf sabbar" username="asabbar" avatar="/userProfile.jpg" />
@@ -67,26 +71,12 @@ export default function Body({ leaderRef, handelShaw }: Props) {
                         <Friend  name="Achraf sabbar" username="asabbar" avatar="/userProfile.jpg" />
                         <Friend  name="Achraf sabbar" username="asabbar" avatar="/userProfile.jpg" />
                         <Friend  name="Achraf sabbar" username="asabbar" avatar="/userProfile.jpg" />
-=======
-                        <Friend  name="Achraf sabbar" username="asabbar" avatar="https://i.pravatar.cc/150?img=1" />
-                        <Friend  name="Achraf sabbar" username="asabbar" avatar="https://i.pravatar.cc/150?img=1" />
-                        <Friend  name="Achraf sabbar" username="asabbar" avatar="https://i.pravatar.cc/150?img=1" />
-                        <Friend  name="Achraf sabbar" username="asabbar" avatar="https://i.pravatar.cc/150?img=1" />
-                        <Friend  name="Achraf sabbar" username="asabbar" avatar="https://i.pravatar.cc/150?img=1" />
-                        <Friend  name="Achraf sabbar" username="asabbar" avatar="https://i.pravatar.cc/150?img=1" />
-                        <Friend  name="Achraf sabbar" username="asabbar" avatar="https://i.pravatar.cc/150?img=1" />
-                        <Friend  name="Achraf sabbar" username="asabbar" avatar="https://i.pravatar.cc/150?img=1" />
-                        <Friend  name="Achraf sabbar" username="asabbar" avatar="https://i.pravatar.cc/150?img=1" />
-                        <Friend  name="Achraf sabbar" username="asabbar" avatar="https://i.pravatar.cc/150?img=1" />
-                        <Friend  name="Achraf sabbar" username="asabbar" avatar="https://i.pravatar.cc/150?img=1" />
-                        <Friend  name="Achraf sabbar" username="asabbar" avatar="https://i.pravatar.cc/150?img=1" />
-                        <Friend  name="Achraf sabbar" username="asabbar" avatar="https://i.pravatar.cc/150?img=1" />
-                        <Friend  name="Achraf sabbar" username="asabbar" avatar="https://i.pravatar.cc/150?img=1" />
->>>>>>> 0650be8586181921e07289db010e711347cf96fb
                     </div>
                 </div >
             </div>
-            <div className='header__left flex flex-col gap-[52px]'>
+            <div className='header__left flex flex-col gap-[52px]
+            lg:max-2xl:flex-row lg:max-2xl:gap-[50px] lg:max-2xl:justify-start lg:max-2xl:items-start 
+            '>
                 <RightSide>
                     <div className=" flex  items-center justify-between pt-[35px] px-[30px]">
                         <span className="flex items-center gap-[10px]">
@@ -95,18 +85,14 @@ export default function Body({ leaderRef, handelShaw }: Props) {
                             </svg> 
                             <p className="text-[14px] font-[700] text-[#02539D]">LEADERBOARD</p>
                         </span>
-                        <button className=" border-none outline-none text-[#00539D] font-[500] font-[Poppins] text-[10px] font-[300]"
+                        <button className=" border-none outline-none text-[#00539D] font-[Poppins] text-[10px] font-[300]"
                         onClick={() => handelShaw(leaderRef)}
                         >See All</button>
                     </div>
                     <div className="flex justify-center items-end gap-[2px]  h-[calc(100%-56px)] overflow-hidden">
                         <div className="flex flex-col items-center justify-center gap-[10px]">
                             <span className="flex flex-col items-center justify-center gap-[10px] relative">
-<<<<<<< HEAD
-                                <img src="userProfile.jpg/" alt="" className=" w-[80px] h-[80px] rounded-full object-cover shadow-4xl" />
-=======
-                                <img src="https://i.pravatar.cc/" alt="" className=" w-[80px] h-[80px] rounded-full object-cover shadow-4xl" />
->>>>>>> 0650be8586181921e07289db010e711347cf96fb
+                                <img src="/userProfile.jpg" alt="" className=" w-[80px] h-[80px] rounded-full object-cover shadow-4xl" />
                                 <p className="text-[10px] font-[700] font-[Poppins] text-[#6C8BD8]">
                                     Asabbar
                                 </p>
@@ -121,11 +107,7 @@ export default function Body({ leaderRef, handelShaw }: Props) {
                             <img src="/crown.svg" alt="" className="w-[25px]" />
                             <div className="flex flex-col items-center justify-center gap-[10px]">
                                 <span className="flex flex-col items-center justify-center gap-[10px] relative">
-<<<<<<< HEAD
-                                    <img src="userProfile.jpg/" alt="" className=" w-[80px] h-[80px] rounded-full object-cover shadow-4xl" />
-=======
-                                    <img src="https://i.pravatar.cc/" alt="" className=" w-[80px] h-[80px] rounded-full object-cover shadow-4xl" />
->>>>>>> 0650be8586181921e07289db010e711347cf96fb
+                                    <img src="/userProfile.jpg" alt="" className=" w-[80px] h-[80px] rounded-full object-cover shadow-4xl" />
                                     <p className="text-[10px] font-[700] font-[Poppins] text-[#6C8BD8]">
                                         Asabbar
                                     </p>
@@ -139,11 +121,7 @@ export default function Body({ leaderRef, handelShaw }: Props) {
                         </div>
                         <div className="flex flex-col items-center justify-center gap-[10px]">
                             <span className="flex flex-col items-center justify-center gap-[10px] relative">
-<<<<<<< HEAD
-                                <img src="userProfile.jpg/" alt="" className=" w-[80px] h-[80px] rounded-full object-cover shadow-4xl" />
-=======
-                                <img src="https://i.pravatar.cc/" alt="" className=" w-[80px] h-[80px] rounded-full object-cover shadow-4xl" />
->>>>>>> 0650be8586181921e07289db010e711347cf96fb
+                                <img src="/userProfile.jpg" alt="" className=" w-[80px] h-[80px] rounded-full object-cover shadow-4xl" />
                                 <p className="text-[10px] font-[700] font-[Poppins] text-[#6C8BD8]">
                                     Asabbar
                                 </p>
@@ -166,7 +144,6 @@ export default function Body({ leaderRef, handelShaw }: Props) {
                         </span>
                     </div>
                     <div className="flex flex-col  gap-[10px]   overflow-y-scroll max-h-[calc(100%-67px)] items-center py-[5px] no-scrollbar overflow-hidden">
-<<<<<<< HEAD
                         <Friend  name="Achraf sabbar" username="asabbar" avatar="/userProfile.jpg" />
                         <Friend  name="Achraf sabbar" username="asabbar" avatar="/userProfile.jpg" />
                         <Friend  name="Achraf sabbar" username="asabbar" avatar="/userProfile.jpg" />
@@ -188,29 +165,6 @@ export default function Body({ leaderRef, handelShaw }: Props) {
                         <Friend  name="Achraf sabbar" username="asabbar" avatar="/userProfile.jpg" />
                         <Friend  name="Achraf sabbar" username="asabbar" avatar="/userProfile.jpg" />
                         <Friend  name="Achraf sabbar" username="asabbar" avatar="/userProfile.jpg" />
-=======
-                        <Friend  name="Achraf sabbar" username="asabbar" avatar="https://i.pravatar.cc/150?img=1" />
-                        <Friend  name="Achraf sabbar" username="asabbar" avatar="https://i.pravatar.cc/150?img=1" />
-                        <Friend  name="Achraf sabbar" username="asabbar" avatar="https://i.pravatar.cc/150?img=1" />
-                        <Friend  name="Achraf sabbar" username="asabbar" avatar="https://i.pravatar.cc/150?img=1" />
-                        <Friend  name="Achraf sabbar" username="asabbar" avatar="https://i.pravatar.cc/150?img=1" />
-                        <Friend  name="Achraf sabbar" username="asabbar" avatar="https://i.pravatar.cc/150?img=1" />
-                        <Friend  name="Achraf sabbar" username="asabbar" avatar="https://i.pravatar.cc/150?img=1" />
-                        <Friend  name="Achraf sabbar" username="asabbar" avatar="https://i.pravatar.cc/150?img=1" />
-                        <Friend  name="Achraf sabbar" username="asabbar" avatar="https://i.pravatar.cc/150?img=1" />
-                        <Friend  name="Achraf sabbar" username="asabbar" avatar="https://i.pravatar.cc/150?img=1" />
-                        <Friend  name="Achraf sabbar" username="asabbar" avatar="https://i.pravatar.cc/150?img=1" />
-                        <Friend  name="Achraf sabbar" username="asabbar" avatar="https://i.pravatar.cc/150?img=1" />
-                        <Friend  name="Achraf sabbar" username="asabbar" avatar="https://i.pravatar.cc/150?img=1" />
-                        <Friend  name="Achraf sabbar" username="asabbar" avatar="https://i.pravatar.cc/150?img=1" />
-                        <Friend  name="Achraf sabbar" username="asabbar" avatar="https://i.pravatar.cc/150?img=1" />
-                        <Friend  name="Achraf sabbar" username="asabbar" avatar="https://i.pravatar.cc/150?img=1" />
-                        <Friend  name="Achraf sabbar" username="asabbar" avatar="https://i.pravatar.cc/150?img=1" />
-                        <Friend  name="Achraf sabbar" username="asabbar" avatar="https://i.pravatar.cc/150?img=1" />
-                        <Friend  name="Achraf sabbar" username="asabbar" avatar="https://i.pravatar.cc/150?img=1" />
-                        <Friend  name="Achraf sabbar" username="asabbar" avatar="https://i.pravatar.cc/150?img=1" />
-                        <Friend  name="Achraf sabbar" username="asabbar" avatar="https://i.pravatar.cc/150?img=1" />
->>>>>>> 0650be8586181921e07289db010e711347cf96fb
                     </div>
                 </RightSide>
             </div>

@@ -2,10 +2,7 @@ import './globals.css'
 import { Inter } from 'next/font/google'
 import Dashboard from '@/components/Dashboard/Dashboard/Dashboard'
 import Head from 'next/head'
-<<<<<<< HEAD
 import React from 'react'
-=======
->>>>>>> 0650be8586181921e07289db010e711347cf96fb
 const inter = Inter({ subsets: ['latin'] })
 
 export const metadata = {
@@ -19,10 +16,6 @@ export default function RootLayout({
   children: React.ReactNode
 }) {
 
-<<<<<<< HEAD
-=======
-  
->>>>>>> 0650be8586181921e07289db010e711347cf96fb
   return (
     <html lang="en">
       <body className={inter.className}>
@@ -32,11 +25,6 @@ export default function RootLayout({
           <link rel="icon" href="/favicon.ico" />
         </Head>
         <div className='h-[100vh] w-[100vw] flex '>
-<<<<<<< HEAD
-          <Dashboard path='Home'/>
-=======
-          <Dashboard />
->>>>>>> 0650be8586181921e07289db010e711347cf96fb
           {children}
         </div>
         </body>

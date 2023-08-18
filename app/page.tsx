@@ -17,8 +17,11 @@ export default function Page() {
     //   <Pong />
     //   <About/>
     // </div>
-    <div className='h-[100vh] w-[100vw] flex '>
-      <HomeDash />
-    </div>
+    <>
+      <Dashboard path='Home'/>
+      <div className='h-[100vh] w-[100vw] flex '>
+        <HomeDash />
+      </div>
+    </>
   )
 }

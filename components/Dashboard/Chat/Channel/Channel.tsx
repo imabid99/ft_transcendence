@@ -7,26 +7,20 @@ type ChannelProps = {
     lastMessageTime: string,
     notification: number,
     active: boolean,
+    link: string,
 }
 
 
-export default function Channel({avatar, channel, lastMessage, lastMessageTime, notification, active}: ChannelProps) {
+export default function Channel({avatar, channel, lastMessage, lastMessageTime, notification, active, link}: ChannelProps) {
     return (
-        <Link href={`/Chat/${channel}`} className="cursor-pointer w-full flex justify-between items-center " >
+        <Link href={`/Chat/${link}`} className="cursor-pointer w-full flex justify-between items-center " >
             <div className="flex items-center gap-[14px]">
                 <Avatar url={avatar} status={active}/>
                 <span>
-<<<<<<< HEAD
                     <p className="text-[#034B8A] text-[20px] font-[Poppins] font-[500] max-w-[200px] truncate lsm:max-lg:max-w-[152px]">
                         {channel}
                     </p>
                     <p className="text-[#C0C1C5] text-[16px] font-[Poppins] font-[300] max-w-[200px] truncate lg:max-xl:max-w-[150px] lsm:max-lg:max-w-[120px]">
-=======
-                    <p className="text-[#034B8A] text-[20px] font-[Poppins] font-[500] max-w-[300px] truncate">
-                        {channel}
-                    </p>
-                    <p className="text-[#C0C1C5] text-[16px] font-[Poppins] font-[300] max-w-[300px] truncate">
->>>>>>> 0650be8586181921e07289db010e711347cf96fb
                         {lastMessage}
                     </p>
                 </span>

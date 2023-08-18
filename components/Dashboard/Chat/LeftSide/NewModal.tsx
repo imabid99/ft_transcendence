@@ -12,7 +12,8 @@ export default function NewModal({setShowCreateGroup}: NewModalProps) {
     const [showModal, setShowModal] = useState(false);
     return (
     
-        <div className=" NewModal bg-[#025063] min-h-[70px] min-w-[70px] rounded-full absolute bottom-[-500px] right-[50px] z-[100] flex justify-center items-center cursor-pointer lsm:max-lg:bottom-[10px]  lsm:max-lg:right-[10px]" onClick={() => {setShowPen(!showPen); setShowModal(!showModal)}}>
+        <div className=" NewModal bg-[#025063] min-h-[70px] min-w-[70px] rounded-full absolute bottom-[-500px] right-[50px] z-[100] flex justify-center items-center cursor-pointer lsm:max-lg:bottom-[10px]  lsm:max-lg:right-[10px]" onClick={() => {setShowPen(!showPen); setShowModal(!showModal)}}
+        >
             <div className="flex justify-center items-center relative">
                 {showPen ?(
                 <svg stroke="currentColor" fill="#FFF"  viewBox="0 0 512 512" height="22px" width="22px" xmlns="http://www.w3.org/2000/svg"><path d="M362.7 19.3L314.3 67.7 444.3 197.7l48.4-48.4c25-25 25-65.5 0-90.5L453.3 19.3c-25-25-65.5-25-90.5 0zm-71 71L58.6 323.5c-10.4 10.4-18 23.3-22.2 37.4L1 481.2C-1.5 489.7 .8 498.8 7 505s15.3 8.5 23.7 6.1l120.3-35.4c14.1-4.2 27-11.8 37.4-22.2L421.7 220.3 291.7 90.3z"></path>
@@ -27,7 +28,7 @@ export default function NewModal({setShowCreateGroup}: NewModalProps) {
                 }
                 
                 {showModal && (
-                <div className=" absolute bottom-[70px] right-0 flex flex-col min-w-[200px] gap-[15px] bg-[#EDFAFF] px-[25px] py-[19px] rounded-[20px] notifShadow  lsm:max-lg:bottom-[50px]">
+                <div onMouseLeave={()=> {setShowModal(false); setShowPen(true)}} className=" absolute bottom-[70px] right-0 flex flex-col min-w-[200px] gap-[15px] bg-[#EDFAFF] px-[25px] py-[19px] rounded-[20px] notifShadow  lsm:max-lg:bottom-[50px]">
                     <span className="flex items-center gap-[20px]" >
                         <span>
                             <svg width="16" height="12" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg">
