@@ -10,28 +10,12 @@ export const contextdata = createContext({});
 
 const ContextProvider = ({ children }: { children: React.ReactNode; }) => {
 
-    const router = useRouter();
-    const [user, setUser] = useState<any>(null);
-    const [users, setUsers] = useState<any>(null);
-    const [isloading, setIsLoading] = useState(true);
-	  useEffect(() => {
-		async function getMessages() {
-			try
-			{
-				const resp = await axiosInstance.get('http://localhost:3000/api/user/all');
-                setUsers(resp.data);
-			}
-			catch (error)
-			{
-				console.log(error);
-				return;
-			}
-		}
-		getMessages();
-		return () => {
-			setUsers([]);
-		}
-	}, []);
+  const router = useRouter();
+  const [user, setUser] = useState<any>(null);
+  const [users, setUsers] = useState<any>(null);
+  const [profiles, setProfiles] = useState<any>(null);
+  const [messages, setMessages] = useState<any>(null);
+  const [isloading, setIsLoading] = useState(true);
   useEffect(() => {
     const token = getLocalStorageItem("Token");
     if (!token) {
@@ -45,8 +29,58 @@ const ContextProvider = ({ children }: { children: React.ReactNode; }) => {
     }
     setUser(decoded);
   }, []); 
+
+  useEffect(() => {
+    if (!user) {
+      return;
+    }
+		async function getUsers() {
+			try
+			{
+				const resp = await axiosInstance.get('http://localhost:3000/api/user/all');
+        setUsers(resp.data);
+			}
+			catch (error)
+			{
+				console.log("get : users ",error);
+				return;
+			}
+    }
+    async function getProfiles() {
+      try
+      {
+        const resp = await axiosInstance.get('http://localhost:3000/api/user/profiles');
+        setProfiles(resp.data);
+      }
+      catch (error)
+      {
+        console.log("get : profiles ", error);
+        return;
+      }
+    }
+    async function getMessages() {
+      try
+      {
+        const resp = await axiosInstance.get(`http://localhost:3000/api/user/messages/${user?.userId}`);
+        setMessages(resp.data);
+      }
+      catch (error)
+      {
+        console.log("get : profiles ", error);
+        return;
+      }
+    }
+		getUsers();
+    getProfiles();
+    getMessages();
+		return () => {
+			setUsers([]);
+      setProfiles([]);
+      setMessages([]);
+		}
+	}, [user]);
   return (
-    <contextdata.Provider value={{user : user, users:users}}>
+    <contextdata.Provider value={{user : user, users:users, profiles:profiles , messages:messages}}>
       {children}
     </contextdata.Provider>
   );

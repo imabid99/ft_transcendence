@@ -1,18 +1,21 @@
-
+'use client';
 import Avatars from "../Avatar/Avatar";
 import { Swiper, SwiperSlide } from 'swiper/react';
-
+import { useContext } from "react";
+import { contextdata } from '@/app/Chat/contextApi';
+import Link from 'next/link';
 import 'swiper/css';
 
 export default function UsersOnline() {
 
-  
-  return (
+    const {profiles, user} = useContext(contextdata);
+
+    return (
       <div className="chat__left__bottom flex flex-col gap-[24px] px-[25px] py-[25px] w-full">
         <div className="search flex items-center relative">
             <span className="p-[15px] bg-[#f5f7f9b3] rounded-l-[15px]">
             <svg
-                width="21"
+                        width="21"
                 height="20"
                 viewBox="0 0 21 20"
                 fill="none"
@@ -44,51 +47,14 @@ export default function UsersOnline() {
             onSlideChange={() => console.log('slide change')}
             className="w-full cursor-grab"
             >
-                <SwiperSlide>
-                    <Avatars url="/userProfile.jpg" status={true} />
-                </SwiperSlide>
-                <SwiperSlide>
-                    <Avatars url="/userProfile.jpg" status={true} />
-                </SwiperSlide>
-                <SwiperSlide>
-                    <Avatars url="/userProfile.jpg" status={true} />
-                </SwiperSlide>
-                <SwiperSlide>
-                    <Avatars url="/userProfile.jpg" status={true} />
-                </SwiperSlide>
-                <SwiperSlide>
-                    <Avatars url="/userProfile.jpg" status={true} />
-                </SwiperSlide>
-                <SwiperSlide>
-                    <Avatars url="/userProfile.jpg" status={true} />
-                </SwiperSlide>
-                <SwiperSlide>
-                    <Avatars url="/userProfile.jpg" status={true} />
-                </SwiperSlide>
-                <SwiperSlide>
-                    <Avatars url="/userProfile.jpg" status={true} />
-                </SwiperSlide>
-                <SwiperSlide>
-                    <Avatars url="/userProfile.jpg" status={true} />
-                </SwiperSlide>
-                <SwiperSlide>
-                    <Avatars url="/userProfile.jpg" status={true} />
-                </SwiperSlide>
-                <SwiperSlide>
-                    <Avatars url="/userProfile.jpg" status={true} />
-                </SwiperSlide>
-                <SwiperSlide>
-                    <Avatars url="/userProfile.jpg" status={true} />
-                </SwiperSlide>
-                <SwiperSlide>
-                    <Avatars url="/userProfile.jpg" status={true} />
-                </SwiperSlide>
-                <SwiperSlide>
-                    <Avatars url="/userProfile.jpg" status={true} />
-                </SwiperSlide>
-                <SwiperSlide>
-                    <Avatars url="/userProfile.jpg" status={true} />
-                </SwiperSlide>
+                {user && profiles?.map((profile: any) => (
+                    profile.status === "online" && profile.userId !== user.userId &&
+                    <SwiperSlide key={profile.id}>
+                        <Link href={`/Chat/${profile.userId}`}>
+                            <Avatars url="/userProfile.jpg" status={true} />
+                        </Link>
+                    </SwiperSlide>
+                ))}
             </Swiper>
         </div>
     </div>

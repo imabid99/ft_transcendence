@@ -21,6 +21,7 @@ type Message = {
   content :   string,
   createdAt:  string,
 }
+let socket: any = null;
 
 
 export default function Page() {
@@ -34,14 +35,59 @@ export default function Page() {
   const {user} = useContext(contextdata);
   const router = useRouter();
   const inputRef = useRef(null);
+  
+  useEffect(() => {
+    if(!receiver) return;
+    socket = io('http://localhost:3000', {
+      extraHeaders: {
+        Authorization: `Bearer ${getLocalStorageItem("Token")}`,
+      }
+    });
+    socket.on('connect', () => { });
+    
+    socket.on('message', (payload) => {
+      const msg = {
+        id:messages? messages.length + 1 : 1,
+        fromId: payload.fromId,
+        toId: payload.toId,
+        content: payload.content,
+        createdAt: payload.createdAt,
+      }
+      setMessages((prev: any) => [...prev, msg]);
+    });
+    
+    socket.on('privet-message', (payload) => {
+      if(!user|| !receiver) return;
+      if (payload.fromId !== receiver.userId && payload.fromId !== user.userId) return;
+      const msg = {
+        id: messages? messages.length + 1 : 1,
+        fromId: payload.fromId,
+        toId: payload.toId,
+        content: payload.content,
+        createdAt: payload.createdAt,
+      }
+      setMessages((prev: any) => [...prev, msg]);
+      // scrollToBottom
 
-  let socket: any = null;
-  socket = io('http://localhost:3000', {
-    extraHeaders: {
-      Authorization: `Bearer ${getLocalStorageItem("Token")}`,
+      const scrol = document.querySelector('.message__body');
+      if (scrol) {
+        scrol.scrollTop = scrol.scrollHeight;
+      }
+    });
+    
+    socket.on('disconnect', () => {
+    });
+    
+    setIsLoading(false);
+    return () => {
+      socket.off('connect');
+      socket.off('message');
+      socket.off('disconnect');
+      socket.off('privet-message');
+      socket.disconnect(); 
     }
-  });
-
+    
+  }, [receiver, user]);
   useEffect(() => {
     async function getReceiver() {
       try {
@@ -76,55 +122,6 @@ export default function Page() {
     }
   }, [user, receiver])
 
-
-
-
-
-  useEffect(() => {
-    if (!user) return;
-
-		socket.on('connect', () => { });
-
-		socket.on('message', (payload) => {
-			const msg = {
-				id:messages? messages.length + 1 : 1,
-				fromId: payload.fromId,
-				toId: payload.toId,
-				content: payload.content,
-				createdAt: payload.createdAt,
-			}
-			setMessages((prev: any) => [...prev, msg]);
-		});
-    
-		socket.on('privet-message', (payload) => {
-      const msg = {
-        id: messages? messages.length + 1 : 1,
-				fromId: payload.fromId,
-				toId: payload.toId,
-				content: payload.content,
-				createdAt: payload.createdAt,
-			}
-			setMessages((prev: any) => [...prev, msg]);
-      // scrollToBottom
-
-      const scrol = document.querySelector('.message__body');
-      if (scrol) {
-        scrol.scrollTop = scrol.scrollHeight;
-      }
-		});
-    
-		socket.on('disconnect', () => {
-    });
-    
-		setIsLoading(false);
-		return () => {
-      socket.off('connect');
-			socket.off('message');
-			socket.off('disconnect');
-			socket.off('privet-message');
-		}
-    
-	}, [user]);
   
   useEffect(() => {
     if(!messages) return;
@@ -137,7 +134,7 @@ export default function Page() {
   
 
 
-  if(messages === null || receiver === null || isloading)
+  if(messages === null)
   {
     return (
 			<div className="flex justify-center items-center  bg-gray-50 dark:bg-gray-900 w-[calc(100%-450px)] min-h-full min-w-[490px] lg:max-xl:w-[calc(100%-350px)] lsm:max-lg:min-w-full ">
@@ -177,7 +174,7 @@ export default function Page() {
 				fromId: user.userId,
 				toId: receiver.userId,
 				content: inputRef.current.value,
-				createdAt: new Date().toString(),
+				createdAt: new Date().toISOString(),
 			},
 		}
 		console.log("payload : ", payload);
@@ -262,14 +259,14 @@ export default function Page() {
               message-avatar-shadow object-cover
               '/>
               <span className='text-center max-w-[80%]'>
-                <p className='max-w-[200px] truncate text-[30px] text-[#4278A7] font-[600] font-[Poppins]'>{`${receiver?.firstName} ${receiver?.lastName}`}</p>
+                <p className='max-w-[300px] truncate text-[30px] text-[#4278A7] font-[600] font-[Poppins]'>{`${receiver?.firstName} ${receiver?.lastName}`}</p>
               </span>
           </div>
           <div className='flex flex-col px-[45px] gap-[16px] self-start w-full py-[5px]'>
           {
             user && messages && messages.map((message:Message, index) => {
               return (
-                message.fromId !== user.userId ? (<LeftMessages key={`i+${index}`} message={message} />) : (<RightMessages key={`i+${index}`} message={message} />)
+                message.fromId !== user.userId ? (<LeftMessages key={`i+${index}`} message={message} receiver={receiver}/>) : (<RightMessages key={`i+${index}`} message={message} />)
               )
             })
           }

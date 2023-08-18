@@ -1086,6 +1086,15 @@ video {
 .w-screen{
   width: 100vw;
 }
+.w-\[\]{
+  width: ;
+}
+.w-\[300\]{
+  width: 300;
+}
+.w-\[300px\]{
+  width: 300px;
+}
 .min-w-0{
   min-width: 0px;
 }
@@ -1130,6 +1139,9 @@ video {
 }
 .max-w-\[250px\]{
   max-width: 250px;
+}
+.max-w-\[300px\]{
+  max-width: 300px;
 }
 .max-w-\[400px\]{
   max-width: 400px;
@@ -1325,6 +1337,12 @@ video {
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+}
+.text-ellipsis{
+  text-overflow: ellipsis;
+}
+.break-words{
+  overflow-wrap: break-word;
 }
 .rounded{
   border-radius: 0.25rem;

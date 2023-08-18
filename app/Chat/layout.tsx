@@ -1,11 +1,27 @@
+'use client';
 import "../globals.css";
 import Head from "next/head";
 import LeftSide from "@/components/Dashboard/Chat/LeftSide/LeftSide";
 import Dashboard from '@/components/Dashboard/Dashboard/Dashboard'
 import ContextProvider from './contextApi';
+import { getLocalStorageItem } from "@/utils/localStorage";
+import { useEffect , useState } from "react";
+import {useRouter} from "next/navigation";
 
 export default function ChatLayout({children}: {hildren: React.ReactNode;}) {
-
+  const router = useRouter();
+  const [isloading, setIsLoading] = useState(true);
+  useEffect(() => {
+    const token = getLocalStorageItem("Token");
+    if (!token) {
+        router.push("/login");
+        return;
+    }
+    setIsLoading(false);
+  }, []);
+  if (isloading) {
+    return <div>Loading...</div>;
+  }
   return (
     <>
       <Head>

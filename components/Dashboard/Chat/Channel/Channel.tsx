@@ -3,8 +3,8 @@ import Link from 'next/link'
 type ChannelProps = {
     avatar: string,
     channel: string,
-    lastMessage: string,
-    lastMessageTime: string,
+    lastMessage: string | null | undefined,
+    lastMessageTime: string | null | undefined,
     notification: number,
     active: boolean,
     link: string,

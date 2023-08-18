@@ -1,12 +1,25 @@
 import Channel from "../Channel/Channel"
 import { useContext } from 'react';
 import { contextdata } from '@/app/Chat/contextApi';
+import { getLastMessage } from "@/utils/getLastMessage";
 type constextType = {
     user: any,
     users: any,
   };
 export default function UsersDm() {
-    const {users, user} = useContext(contextdata);
+    const {profiles, user, messages} = useContext(contextdata);
+
+    // sort profiles by last message time
+    // profiles?.sort((a: any, b: any) => {
+    //   if (a.lastMessageTime > b.lastMessageTime) {
+    //     return -1;
+    //   }
+    //   if (a.lastMessageTime < b.lastMessageTime) {
+    //     return 1;
+    //   }
+    //   return 0;
+    // });
+    console.log("messages : ", getLastMessage(messages, user?.userId));
     return (
       <div className="chat__left__bottom__groups flex flex-col  justify-center items-center">
           <span className="flex items-center justify-start gap-[10px] w-full mb-[20px]">
@@ -30,18 +43,18 @@ export default function UsersDm() {
           </span>
           <div className="flex flex-col gap-[20px]  rounded-[5px] w-full">
             {
-              user && users?.map((ur: any) => {
+              user && profiles?.map((ur: any) => {
                 
                 return (
-                  ur.id === user.userId ?  null : 
+                  ur.userId === user.userId ?  null : 
                   (<Channel
                     avatar="/userProfile.jpg"
-                    channel={ur.username}
-                    lastMessage="Mcha liya tele"
-                    lastMessageTime="12:00"
+                    channel={`${ur.firstName} ${ur.lastName}`}
+                    lastMessage={getLastMessage(messages, ur.userId)?.content}
+                    lastMessageTime={getLastMessage(messages, ur.userId)?.createdAt.toString().split('T')[1].split('.')[0].slice(0,5)}
                     notification={100}
-                    active={true}
-                    link={ur.id}
+                    active={ur.status === "online" ? true : false}
+                    link={ur.userId}
                     key={ur.id}
                   />)
                 )
