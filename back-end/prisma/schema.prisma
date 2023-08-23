@@ -1,0 +1,79 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id             Int         @id @unique @default(autoincrement())
+  id42           Int?
+  email          String      @unique
+  username       String      @unique @default("")
+  password       String
+  profile        Profile?
+  dmMessages     Message[]
+  BlockList      BlockList[]
+  channels       channels[]
+  channelsOwner  channels[]  @relation("Owners")
+  channelsAdmin  channels[]  @relation("Admins")
+  channelsMember channels[]  @relation("Members")
+}
+
+model Profile {
+  user            User      @relation(fields: [userId], references: [id])
+  userId          Int       @unique
+  firstName       String
+  lastName        String
+  email           String
+  username        String
+  status          String    @default("offline")
+  lastMessage     String?
+  lastMessageTime DateTime?
+  avatar          String?
+  background      String?
+  gaemePlayed     Int       @default(0)
+  win             Int       @default(0)
+  lose            Int       @default(0)
+  points          Int       @default(0)
+  level           Float     @default(0.0)
+}
+
+model channels {
+  id       Int       @id @default(autoincrement())
+  type     String // public or private or protected
+  name     String    @unique
+  password String?   @default("")
+  accessPassword String? @default("")
+  Creator  User?     @relation(fields: [userId], references: [id])
+  userId   Int?
+  Members  User[]    @relation("Members")
+  Owners   User[]    @relation("Owners")
+  Admins   User[]    @relation("Admins") 
+  avatar   String?
+  Messages Message[]
+}
+
+model Message {
+  id         Int       @id @default(autoincrement())
+  fromId     Int
+  toId       Int
+  content    String
+  createdAt  DateTime  @default(now())
+  User       User?     @relation(fields: [userId], references: [id])
+  userId     Int?
+  channels   channels? @relation(fields: [channelsId], references: [id])
+  channelsId Int?
+}
+
+model BlockList {
+  id        Int   @id @default(autoincrement())
+  blockedId Int
+  User      User? @relation(fields: [userId], references: [id])
+  userId    Int?
+}

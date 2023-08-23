@@ -16,6 +16,11 @@
       "static/css/app/layout.css",
       "static/chunks/app/layout.js"
     ],
+    "/signup/page": [
+      "static/chunks/webpack.js",
+      "static/chunks/main-app.js",
+      "static/chunks/app/signup/page.js"
+    ],
     "/Chat/page": [
       "static/chunks/webpack.js",
       "static/chunks/main-app.js",
@@ -27,40 +32,45 @@
       "static/css/app/Chat/layout.css",
       "static/chunks/app/Chat/layout.js"
     ],
-    "/Chat/[msgId]/page": [
-      "static/chunks/webpack.js",
-      "static/chunks/main-app.js",
-      "static/chunks/app/Chat/[msgId]/page.js"
-    ],
     "/login/page": [
       "static/chunks/webpack.js",
       "static/chunks/main-app.js",
       "static/chunks/app/login/page.js"
     ],
-    "/signup/page": [
+    "/Profile/layout": [
       "static/chunks/webpack.js",
       "static/chunks/main-app.js",
-      "static/chunks/app/signup/page.js"
-    ],
-    "/Game/page": [
-      "static/chunks/webpack.js",
-      "static/chunks/main-app.js",
-      "static/chunks/app/Game/page.js"
-    ],
-    "/Game/layout": [
-      "static/chunks/webpack.js",
-      "static/chunks/main-app.js",
-      "static/chunks/app/Game/layout.js"
+      "static/chunks/app/Profile/layout.js"
     ],
     "/Profile/page": [
       "static/chunks/webpack.js",
       "static/chunks/main-app.js",
       "static/chunks/app/Profile/page.js"
     ],
-    "/Profile/layout": [
+    "/Chat/me/[msgId]/page": [
       "static/chunks/webpack.js",
       "static/chunks/main-app.js",
-      "static/chunks/app/Profile/layout.js"
+      "static/chunks/app/Chat/me/[msgId]/page.js"
+    ],
+    "/Chat/g/[msgId]/page": [
+      "static/chunks/webpack.js",
+      "static/chunks/main-app.js",
+      "static/chunks/app/Chat/g/[msgId]/page.js"
+    ],
+    "/Game/layout": [
+      "static/chunks/webpack.js",
+      "static/chunks/main-app.js",
+      "static/chunks/app/Game/layout.js"
+    ],
+    "/Game/page": [
+      "static/chunks/webpack.js",
+      "static/chunks/main-app.js",
+      "static/chunks/app/Game/page.js"
+    ],
+    "/Chat/g/page": [
+      "static/chunks/webpack.js",
+      "static/chunks/main-app.js",
+      "static/chunks/app/Chat/g/page.js"
     ],
     "/Setting/page": [
       "static/chunks/webpack.js",
