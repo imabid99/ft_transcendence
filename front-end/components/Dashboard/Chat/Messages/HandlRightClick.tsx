@@ -6,8 +6,8 @@ type HandlRightClickProps ={
     children: ReactNode,
     id ?: number,
     name ?: string,
-    type ?: string,
-    mytype ?: string,
+    type ?: number,
+    mytype ?: number,
 }
 
 export default function HandlRightClick({ children , id , name , type , mytype }: HandlRightClickProps) {
@@ -15,12 +15,11 @@ export default function HandlRightClick({ children , id , name , type , mytype }
     const [showMutemenu, setShowMutemenu] = useState(false);
     const [pos, setPos] = useState({ x: 0, y: 0 });
     const handleContextMenu = (e: React.MouseEvent) => {
-        e.preventDefault(); // Prevent the default context menu
+        e.preventDefault(); 
         setShowMenu(true);
         setPos({ x: e.clientX - window.innerWidth, y: e.clientY });
         console.log(e.clientX, e.clientY);
     };
-    
     return(
         <div onContextMenu={handleContextMenu}
 
@@ -36,13 +35,9 @@ export default function HandlRightClick({ children , id , name , type , mytype }
                     groupInfo text-white rounded-[10px]
                     `}>
                         {
-                            
+                            mytype && type && mytype > type && (
                             <div className=' cursor-pointer relative'>
-                                <p className='py-[10px] px-[20px]' onClick={
-                                    () => {
-                                        setShowMutemenu(!showMutemenu);
-                                    }
-                                }>
+                                <p className='py-[10px] px-[20px]' onClick={() => {setShowMutemenu(!showMutemenu);}}>
                                     Mute
                                 </p>
                                 {
@@ -67,20 +62,33 @@ export default function HandlRightClick({ children , id , name , type , mytype }
                                     </ul>
                                     )
                                 }
-                            </div>
+                            </div>)
                         }
-                        <div className='py-[10px] px-[20px] cursor-pointer'>
-                            Ban
-                        </div>
-                        <div className='py-[10px] px-[20px] cursor-pointer'>
-                            Kick
-                        </div>
-                        <div className='py-[10px] px-[20px] cursor-pointer'>
-                            Set Admin
-                        </div>
-                        <div className='py-[10px] px-[20px] cursor-pointer'>
-                            Set Owner
-                        </div>
+                        {
+                            mytype && type && mytype > type && (
+                                <>
+                                    <div className='py-[10px] px-[20px] cursor-pointer'>
+                                        Ban
+                                    </div>
+                                    <div className='py-[10px] px-[20px] cursor-pointer'>
+                                        Kick
+                                    </div>
+                                </>
+                            )
+                        }
+                        {
+                            
+                            mytype && mytype === 3 &&  type !== 3 && (
+                                <>
+                                    <div className='py-[10px] px-[20px] cursor-pointer'>
+                                        Set Admin
+                                    </div>
+                                    <div className='py-[10px] px-[20px] cursor-pointer'>
+                                            Set Owner
+                                    </div>
+                                </>
+                            )
+                        }
                     </div>
                 )
             }

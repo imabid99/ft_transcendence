@@ -52,7 +52,7 @@ export default function GroupInfo({setShowBody,setGroupUsers,groupUsers}:GroupIn
                 username: user?.username,
             }
             socket.emit('create-group', payload);
-			router.push(`/Chat/g/${GroupName}`)
+			router.push(`/Chat`)
 		}, 1000);
 	}
     console.log(groupUsers);

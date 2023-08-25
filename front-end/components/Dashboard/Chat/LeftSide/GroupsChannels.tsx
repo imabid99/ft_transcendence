@@ -1,6 +1,8 @@
 'use client';
 import Channel from "../Channel/Channel";
-import { useRef } from "react";
+import { useRef , useContext } from "react";
+import { contextdata } from "@/app/contextApi";
+import { getLastMessageGroup } from "@/utils/getLastMessage";
 
 export default function GroupsChannels() {
 
@@ -13,6 +15,19 @@ export default function GroupsChannels() {
     groupsChannelsRef.current?.classList.toggle("overflow-y-hidden");
     groupsChannelsRef.current?.classList.toggle("max-h-[235px]");
   }
+  const {myChannels} :any= useContext(contextdata);
+
+  myChannels.sort((a: any, b: any) => {
+    const lastMessageA = getLastMessageGroup(a.Messages);
+    if (!lastMessageA) return 1;
+    const lastMessageB = getLastMessageGroup(b.Messages);
+    if (lastMessageA && lastMessageB) {
+      return (
+        new Date(lastMessageB.createdAt).getTime() -
+        new Date(lastMessageA.createdAt).getTime()
+      );
+    }
+  });
   return (
       <div className="chat__left__bottom__groups flex flex-col  justify-center items-center">
         <span className="flex items-center justify-start gap-[10px] w-full mb-[20px]">
@@ -47,16 +62,21 @@ export default function GroupsChannels() {
           </p>
         </span>
         <div className="flex flex-col gap-[20px] overflow-y-hidden max-h-[235px] rounded-[5px] w-full" ref={groupsChannelsRef}>
-           <Channel
-              avatar="/userProfile.jpg"
-              channel={`general`}
-              lastMessage={`hello`}
-              lastMessageTime={`12:00`}
-              notification={0}
-              active={false}
-              link={`g/11`}
-              key={`key : gg`}
-              />
+          {
+            myChannels?.map((mychannel: any) => {
+              return(
+              <Channel
+                avatar="/userProfile.jpg"
+                channel={mychannel.name}
+                lastMessage={getLastMessageGroup(mychannel.Messages)?.content}
+                lastMessageTime={getLastMessageGroup(mychannel.Messages)?.createdAt.toString().split('T')[1].split('.')[0].slice(0,5)}
+                notification={0}
+                active={false}
+                link={`g/${mychannel.id}`}
+                key={`key : ${mychannel.id}`}
+                />)
+            })
+          }
 
         </div>
         <span className="cursor-pointer p-[15px] transition-all duration-300 ease-in-out"

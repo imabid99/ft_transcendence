@@ -5,10 +5,12 @@ import Link from 'next/link';
 import {
   useState,
   useEffect,
-  useRef,
+  useContext
 } from 'react';
 import { setLocalStorageItem, getLocalStorageItem, removeLocalStorageItem } from '@/utils/localStorage';
 import jwt_decode from "jwt-decode";
+import { contextdata } from '@/app/contextApi';
+
 export default function Home() {
 
   const router = useRouter();
@@ -16,6 +18,7 @@ export default function Home() {
   const [isloading, setIsLoading] = useState(true);
   const [password, setPassword] = useState('');
   const [logInAnimation, setLogInAnimation] = useState(false);
+  const {loged, setLoged}:any = useContext(contextdata);
 
   useEffect(() => {
     const token = getLocalStorageItem("Token");
@@ -56,8 +59,9 @@ export default function Home() {
       return;
     }
     setTimeout(() => {
+      setLoged(!loged);
       router.push('/');
-    }, 2500);
+    }, 1000);
   }
   return (
     <div className="flex justify-center items-center w-screen h-screen bg-gray-50 dark:bg-gray-900">

@@ -10,11 +10,11 @@ export declare class ChatGateway implements OnGatewayConnection, OnGatewayDiscon
     server: SocketIO.Server;
     handleConnection(client: Socket): Promise<void>;
     handleDisconnect(client: Socket): Promise<void>;
-    handleMessage(_client: any, payload: any): string;
-    handleJoinPrivateRoom(client: any, payload: any): string;
     handlePrivetMessage(_client: any, payload: any): Promise<void>;
     handleBlockUser(client: any, payload: any): Promise<void>;
     handleUnblockUser(client: any, payload: any): Promise<void>;
     handleCreateGroup(client: any, payload: any): Promise<void>;
     handleRefresh(client: any, payload: any): Promise<void>;
+    handleMessageToGroup(client: any, payload: any): Promise<void>;
+    handleExitGroup(client: any, payload: any): Promise<void>;
 }

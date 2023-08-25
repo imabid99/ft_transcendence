@@ -240,16 +240,26 @@ let UserService = exports.UserService = class UserService {
                     },
                 },
             },
+            include: {
+                Messages: true,
+            }
+        });
+        channels.forEach((channel) => {
+            delete channel.password;
+            delete channel.accessPassword;
         });
         return channels;
     }
     async getChannel(myId, channelId) {
         const channel = await this.prisma.channels.findUnique({
             where: {
-                id: +channelId,
+                id: channelId,
             },
             include: {
                 Members: true,
+                Owners: true,
+                Admins: true,
+                Messages: true,
             },
         });
         const isMumber = channel.Members.some((member) => {
@@ -258,7 +268,6 @@ let UserService = exports.UserService = class UserService {
         if (!isMumber) {
             return "not member";
         }
-        delete channel.Members;
         delete channel.password;
         delete channel.accessPassword;
         return channel;

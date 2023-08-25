@@ -64,7 +64,7 @@ export default function Nav( {path} : Props) {
                         </div>
                     </Link>
                 </div>
-                <div  className=" w-full flex flex-col items-center justify-center pl-[10px] my-auto"
+                <div  className=" w-full flex flex-col items-center justify-center pl-[10px] my-auto cursor-pointer"
                 onClick={
                     () => {
                         removeLocalStorageItem("Token");

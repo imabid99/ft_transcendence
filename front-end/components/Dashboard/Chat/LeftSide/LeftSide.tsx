@@ -17,7 +17,7 @@ export default function  LeftSide() {
 	const [groupUsers, setGroupUsers] = useState<number[]>([]);
 	const [refresh, setRefresh] = useState<string>("");
 
-	const {user,setUsers,setProfiles,setMessages ,socket} :any= useContext(contextdata);
+	const {user,setUsers,setProfiles,setMessages ,socket,setMyChannels} :any= useContext(contextdata);
 	useEffect(() => {
 		if (!socket)  return;
 		socket.on("refresh", (payload:any) => {
@@ -70,13 +70,30 @@ export default function  LeftSide() {
 			}
 			catch (error)
 			{
-			console.log("get : profiles ", error);
+			console.log("get : messages ", error);
 			return;
 			}
 		}
-		getUsers();
-		getProfiles();
-		getMessages();
+		async function getMyChannels() {
+			console.log("getChannels user : ", user);
+			try
+			{
+			  const resp = await axiosInstance.get(`http://localhost:3000/api/user/myChannels/${user?.id}`);
+			  if (resp.data === null) {
+				return;
+			  }
+			  setMyChannels(resp.data);
+			}
+			catch (error)
+			{
+			  console.log("error : getChannels ", error);
+			  return;
+			}
+		  }
+			getUsers();
+			getProfiles();
+			getMessages();
+			getMyChannels();
 	}, [refresh, user])
 
 	return (

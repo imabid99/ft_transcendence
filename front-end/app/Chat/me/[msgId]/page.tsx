@@ -313,7 +313,7 @@ export default function Page() {
             user && messages && messages.map((message:Message, index) => {
               return (
                 message.fromId !== user.id ?
-                (!isBlocked && <LeftMessages key={`i+${index}`} message={message} receiver={receiver}/>)
+                (!isBlocked && <LeftMessages key={`i+${index}`} message={message} sender={receiver}/>)
                 :
                 (<RightMessages key={`i+${index}`} message={message} />)
               )

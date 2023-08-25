@@ -250,6 +250,13 @@ export class UserService {
           },
         },
       },
+      include: {
+        Messages: true,
+      }
+    });
+    channels.forEach((channel) => {
+      delete channel.password;
+      delete channel.accessPassword;
     });
     return channels;
   }
@@ -257,10 +264,13 @@ export class UserService {
   async getChannel(myId: string, channelId: string): Promise<any> {
     const channel = await this.prisma.channels.findUnique({
       where: {
-        id: +channelId,
+        id: channelId,
       },
       include: {
         Members: true,
+        Owners: true,
+        Admins: true,
+        Messages: true,
       },
 
     });
@@ -270,7 +280,6 @@ export class UserService {
     if (!isMumber) {
       return "not member";
     }
-    delete channel.Members;
     delete channel.password;
     delete channel.accessPassword;
     return channel;

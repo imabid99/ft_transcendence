@@ -2,7 +2,7 @@
 import { useState , useEffect , useRef, use } from 'react';
 import { useParams } from 'next/navigation';
 import Avatar from '@/components/Dashboard/Chat/Avatar/Avatar';
-import LeftMessages from '@/components/Dashboard/Chat/Messages/LeftMessages';
+import LeftMessagesGroup from '@/components/Dashboard/Chat/Messages/LeftMessagesGroup';
 import RightMessages from '@/components/Dashboard/Chat/Messages/RightMessages';
 import Link from 'next/link';
 import ChannelInfo  from '@/components/Dashboard/Chat/Messages/ChannelInfo';
@@ -16,13 +16,11 @@ import { useContext } from 'react';
 import { contextdata } from '@/app/contextApi';
 
 type Message = {
-  fromId :    number,
-  toId  :     number,
-  content :   string,
-  createdAt:  string,
+  fromName :    string,
+  content :     string,
+  createdAt:    string,
 }
 
-let socket: any = null;
 
 export default function Page() {
   const { msgId } = useParams();
@@ -31,105 +29,69 @@ export default function Page() {
   const [showInfo, setShowInfo] = useState(false);
   const infoRef = useRef(null);
   const [isloading, setIsLoading] = useState(true);
-  const [receiver, setReceiver] = useState<any>(null);
-  const {user} = useContext(contextdata);
+  const [group, setGroup] = useState<any>(null);
   const router = useRouter();
   const inputRef = useRef(null);
+  const {user, socket} :any= useContext(contextdata);
 
 
-  return
-  (
-    <div>
-      heere grouuup
-    </div>
-  )
   useEffect(() => {
-    if(!receiver) return;
-    socket = io('http://localhost:3000', {
-      extraHeaders: {
-        Authorization: `Bearer ${getLocalStorageItem("Token")}`,
-      }
-    });
-    socket.on('connect', () => { });
-    
-    socket.on('message', (payload) => {
-      const msg = {
-        id:messages? messages.length + 1 : 1,
-        fromId: payload.fromId,
-        toId: payload.toId,
-        content: payload.content,
-        createdAt: payload.createdAt,
-      }
-      setMessages((prev: any) => [...prev, msg]);
-    });
-    
-    socket.on('privet-message', (payload) => {
-      if(!user|| !receiver) return;
-      if (payload.fromId !== receiver.userId && payload.fromId !== user.userId) return;
-      const msg = {
-        id: messages? messages.length + 1 : 1,
-        fromId: payload.fromId,
-        toId: payload.toId,
-        content: payload.content,
-        createdAt: payload.createdAt,
-      }
-      setMessages((prev: any) => [...prev, msg]);
-      // scrollToBottom
+    if(!group || !user || !socket) return;
 
+    socket.on('message-to-group', (payload:any) => {
+      console.log("message-to-group payload : ",payload);
+      const msg = {
+        fromName: payload.fromName,
+        content: payload.content,
+        createdAt: payload.createdAt,
+      }
+      setMessages((prev: any) => [...prev, msg]);
       const scrol = document.querySelector('.message__body');
       if (scrol) {
         scrol.scrollTop = scrol.scrollHeight;
       }
     });
     
-    socket.on('disconnect', () => {
-    });
-    
     setIsLoading(false);
     return () => {
-      socket.off('connect');
-      socket.off('message');
-      socket.off('disconnect');
-      socket.off('privet-message');
-      socket.disconnect(); 
+      socket.off('message-to-group');
     }
     
-  }, [receiver, user]);
+  }, [group, user]);
+
+  const handleSubmit = (e: { preventDefault: () => void; }) => {
+		e.preventDefault();
+		if (!inputRef.current?.value || !group.name) return;
+		const payload = {
+			groupId: msgId,
+			message: {
+				fromName: user.username,
+				content: inputRef.current.value,
+				createdAt: new Date().toISOString(),
+			},
+		}
+		socket.emit("message-to-group", payload);
+		inputRef.current.value = '';
+	}
+
+
   useEffect(() => {
-    async function getReceiver() {
+    async function getgroup() {
       try {
-        const res = await axiosInstance.get(`http://localhost:3000/api/user/profile/${msgId}`);
-        setReceiver(res.data);
+        const res = await axiosInstance.get(`http://localhost:3000/api/user/channel/${msgId}`);
+        setGroup(res.data);
+        setMessages(res.data.Messages);
       } catch (err) {
         console.log(err);
       }
     }
-    getReceiver();
+    getgroup();
     return () => {
-      setReceiver(null);
+      setGroup(null);
     }
-  }, [])
+  }, []);
 
-  useEffect(() => {
-    if(!user || !receiver) return;
-    async function fetchMessages() {
-      try {
-        const res = await axiosInstance.get(`http://localhost:3000/api/user/messages/${user.id}`);
-        const onlyMyMessages = res.data.filter((msg: Message) => {
-          return (msg.fromId === user.userId && msg.toId === receiver.userId) || (msg.fromId === receiver.userId && msg.toId === user.userId);
-        })
-        setMessages(onlyMyMessages);
-      } catch (err) {
-        console.log(err);
-      }
-    }
-    fetchMessages();
-    return () => {
-      setMessages(null);
-    }
-  }, [user, receiver])
-
-  
+  console.log("group : ", group);
   useEffect(() => {
     if(!messages) return;
      const scrol = document.querySelector('.message__body');
@@ -168,23 +130,6 @@ export default function Page() {
     setShowInfo(!showInfo);
   }
   
-  const handleSubmit = (e: { preventDefault: () => void; }) => {
-		e.preventDefault();
-		if (!inputRef.current?.value || !receiver.username) return;
-		const payload = {
-			room: receiver.username,
-			sander: user.username,
-			message: {
-				fromId: user.userId,
-				toId: receiver.userId,
-				content: inputRef.current.value,
-				createdAt: new Date().toISOString(),
-			},
-		}
-		socket.emit("privet-message", payload);
-		inputRef.current.value = '';
-	}
-
 
 
 
@@ -213,7 +158,7 @@ export default function Page() {
             <div className='message__header__left flex items-center cursor-pointer pr-[30px]' onClick={()=>handleshowInfo()}>
               <Avatar url="/userProfile.jpg" status={false} />
               <div className='message__header__left__info ml-2'>
-                <div className='message__header__left__info__name text-[#034B8A] font-[600] font-[Poppins] text-[25px] truncate max-w-[250px] lsm:max-lg:max-w-[150px]'>{`${receiver?.firstName} ${receiver?.lastName}`}</div>
+                <div className='message__header__left__info__name text-[#034B8A] font-[600] font-[Poppins] text-[25px] truncate max-w-[250px] lsm:max-lg:max-w-[150px]'>{`${group?.name}`}</div>
               </div>
             </div>
           </div>
@@ -224,14 +169,14 @@ export default function Page() {
               message-avatar-shadow object-cover
               '/>
               <span className='text-center max-w-[80%]'>
-                <p className='max-w-[300px] truncate text-[30px] text-[#4278A7] font-[600] font-[Poppins]'>{`${receiver?.firstName} ${receiver?.lastName}`}</p>
+                <p className='max-w-[300px] truncate text-[30px] text-[#4278A7] font-[600] font-[Poppins]'>{`${group?.name}`}</p>
               </span>
           </div>
           <div className='flex flex-col px-[45px] gap-[16px] self-start w-full py-[5px]'>
           {
-            user && messages && messages.map((message:Message, index) => {
+            user && messages?.map((message:Message, index) => {
               return (
-                message.fromId !== user.userId ? (<LeftMessages key={`i+${index}`} message={message} receiver={receiver}/>) : (<RightMessages key={`i+${index}`} message={message} />)
+                message.fromName !== user.username ? (<LeftMessagesGroup key={`i+${index}`} message={message} />) : (<RightMessages key={`i+${index}`} message={message} />)
               )
             })
           }
@@ -256,7 +201,7 @@ export default function Page() {
         {
           showInfo && <div className="  w-full h-full fixed top-0 left-0 z-[50]  inset-0 bg-white-900 bg-opacity-50 backdrop-blur-sm" onClick={()=>{handleshowInfo()}}/>
         }
-        <ChannelInfo infoRef={infoRef} handleshowInfo={handleshowInfo}/>
+        {group && user && <ChannelInfo infoRef={infoRef} handleshowInfo={handleshowInfo} group={group} userId={user.id}/>}
       </div>
   )
 }

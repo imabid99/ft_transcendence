@@ -16,7 +16,8 @@ const ContextProvider = ({ children }: { children: React.ReactNode; }) => {
   const [profiles, setProfiles] = useState<any>(null);
   const [messages, setMessages] = useState<any>([]);
   const [socket, setSocket] = useState<any>(null);
-  
+  const [myChannels, setMyChannels] = useState<any>([]);
+  const [loged, setLoged] = useState<boolean>(false);
   useEffect(() => {
     const getUser = async () => {
       try
@@ -43,7 +44,7 @@ const ContextProvider = ({ children }: { children: React.ReactNode; }) => {
     return () => {
       setUser(null);
     }
-  }, []);
+  }, [loged]);
 
   useEffect(() => {
     if (!user || user === undefined) {
@@ -96,7 +97,6 @@ const ContextProvider = ({ children }: { children: React.ReactNode; }) => {
       }
     }
     async function getMessages() {
-      console.log("getMessages user : ", user);
       try
       {
         const resp = await axiosInstance.get(`http://localhost:3000/api/user/messages/${user?.id}`);
@@ -111,9 +111,26 @@ const ContextProvider = ({ children }: { children: React.ReactNode; }) => {
         return;
       }
     }
+    async function getMyChannels() {
+      console.log("getChannels user : ", user);
+      try
+      {
+        const resp = await axiosInstance.get(`http://localhost:3000/api/user/myChannels/${user?.id}`);
+        if (resp.data === null) {
+          return;
+        }
+        setMyChannels(resp.data);
+      }
+      catch (error)
+      {
+        console.log("error : profiles ", error);
+        return;
+      }
+    }
 		getUsers();
     getProfiles();
     getMessages();
+    getMyChannels();
 		return () => {
 			setUsers([]);
       setProfiles([]);
@@ -122,7 +139,7 @@ const ContextProvider = ({ children }: { children: React.ReactNode; }) => {
 	}, [user]);
 
   return (
-    <contextdata.Provider value={{socket:socket, user:user, users:users, profiles:profiles , messages:messages, setUser:setUser, setUsers:setUsers, setProfiles:setProfiles , setMessages:setMessages}}>
+    <contextdata.Provider value={{socket:socket, user:user, users:users, profiles:profiles , messages:messages,myChannels:myChannels, setUser:setUser,setMyChannels:setMyChannels, setUsers:setUsers, setProfiles:setProfiles , setMessages:setMessages, setLoged:setLoged , loged:loged}}>
       {children}
     </contextdata.Provider>
   );

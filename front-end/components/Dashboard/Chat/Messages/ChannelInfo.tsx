@@ -1,18 +1,28 @@
 'use client';
 import HandlRightClick from "./HandlRightClick"
-import { useEffect
-    , useState
-    , useRef
-    , useContext
-    , useCallback
-} from "react";
+import { useState, useContext } from "react";
+import { useRouter } from "next/navigation";
+import { contextdata } from "@/app/contextApi";
+import Link from "next/link";
+
 type ChannelInfoProps = {
     infoRef: any,
-    handleshowInfo: any
+    handleshowInfo: any,
+    group: any,
+    userId: number,
 }
 
-export default function ChannelInfo({infoRef, handleshowInfo}:ChannelInfoProps) {
-    const [showAccessPassword, setShowAccessPassword] = useState<boolean>(false); 
+export default function ChannelInfo({infoRef, handleshowInfo, group, userId}: ChannelInfoProps) {
+    const [showAccessPassword, setShowAccessPassword] = useState<boolean>(false);
+    const mytype = group.Owners.find((owner: any) => owner.id === userId) ? 3 : group.Admins.find((admin: any) => admin.id === userId) ? 2 : 1;
+    const {socket}: any = useContext(contextdata);
+    const router = useRouter();
+    const handleExit = () => {
+        socket.emit("leaveGroup", {groupId: group.id});
+        handleshowInfo();
+        router.push("/Chat");
+    }
+
     return (
         <div className="h-[100vh] bg-[#FFF] min-w-[524px] fixed right-[-700px] top-0 z-[60] groupInfo p-[42px] !pb-0 ease-in duration-300 delay-100 "
             ref={infoRef}>
@@ -36,7 +46,7 @@ export default function ChannelInfo({infoRef, handleshowInfo}:ChannelInfoProps) 
                         Group name
                     </p>
                     <p className="text-[#064A85] text-[20px] font-[Poppins] font-[400]">
-                        2 members
+                        {group.Members.length} members
                     </p>
                     {
                         showAccessPassword &&
@@ -73,547 +83,78 @@ export default function ChannelInfo({infoRef, handleshowInfo}:ChannelInfoProps) 
                     </span>
                     members
                 </p>
-                <div className="w-full flex flex-col gap-[25px] overflow-y-scroll no-scrollbar min-h-[calc(300px)] max-h-[calc(100%-600px)] relative">
-                    <HandlRightClick >
-                        <div className="w-full flex items-center gap-[10px] justify-between cursor-pointer">
-                            <span className="flex items-center gap-[10px]">
-                                <img src="/userProfile.jpg" alt="" className="rounded-full w-[60px] h-[60px] object-cover"/>
-                                <span>
-                                    <p className="text-[#034B8A] text-[20px] font-[Poppins] font-[500] max-w-[400px] truncate">
-                                        Achraf Sabbar
-                                    </p>
-                                    <p className="text-[#C0C1C5] text-[12px] font-[Poppins] font-[300]">
-                                        asabbar
-                                    </p>
-                                </span>
-                            </span>
-                            <span className="">
-                                owner
-                            </span>
-                        </div>
-                    </HandlRightClick>
-                    <HandlRightClick >
-                        <div className="w-full flex items-center gap-[10px] justify-between cursor-pointer">
-                            <span className="flex items-center gap-[10px]">
-                                <img src="/userProfile.jpg" alt="" className="rounded-full w-[60px] h-[60px] object-cover"/>
-                                <span>
-                                    <p className="text-[#034B8A] text-[20px] font-[Poppins] font-[500] max-w-[400px] truncate">
-                                        Achraf Sabbar
-                                    </p>
-                                    <p className="text-[#C0C1C5] text-[12px] font-[Poppins] font-[300]">
-                                        asabbar
-                                    </p>
-                                </span>
-                            </span>
-                            <span className="">
-                                owner
-                            </span>
-                        </div>
-                    </HandlRightClick>
-                    <HandlRightClick >
-                        <div className="w-full flex items-center gap-[10px] justify-between cursor-pointer">
-                            <span className="flex items-center gap-[10px]">
-                                <img src="/userProfile.jpg" alt="" className="rounded-full w-[60px] h-[60px] object-cover"/>
-                                <span>
-                                    <p className="text-[#034B8A] text-[20px] font-[Poppins] font-[500] max-w-[400px] truncate">
-                                        Achraf Sabbar
-                                    </p>
-                                    <p className="text-[#C0C1C5] text-[12px] font-[Poppins] font-[300]">
-                                        asabbar
-                                    </p>
-                                </span>
-                            </span>
-                            <span className="">
-                                owner
-                            </span>
-                        </div>
-                    </HandlRightClick>
-                    <HandlRightClick >
-                        <div className="w-full flex items-center gap-[10px] justify-between cursor-pointer">
-                            <span className="flex items-center gap-[10px]">
-                                <img src="/userProfile.jpg" alt="" className="rounded-full w-[60px] h-[60px] object-cover"/>
-                                <span>
-                                    <p className="text-[#034B8A] text-[20px] font-[Poppins] font-[500] max-w-[400px] truncate">
-                                        Achraf Sabbar
-                                    </p>
-                                    <p className="text-[#C0C1C5] text-[12px] font-[Poppins] font-[300]">
-                                        asabbar
-                                    </p>
-                                </span>
-                            </span>
-                            <span className="">
-                                owner
-                            </span>
-                        </div>
-                    </HandlRightClick>
-                    <HandlRightClick >
-                        <div className="w-full flex items-center gap-[10px] justify-between cursor-pointer">
-                            <span className="flex items-center gap-[10px]">
-                                <img src="/userProfile.jpg" alt="" className="rounded-full w-[60px] h-[60px] object-cover"/>
-                                <span>
-                                    <p className="text-[#034B8A] text-[20px] font-[Poppins] font-[500] max-w-[400px] truncate">
-                                        Achraf Sabbar
-                                    </p>
-                                    <p className="text-[#C0C1C5] text-[12px] font-[Poppins] font-[300]">
-                                        asabbar
-                                    </p>
-                                </span>
-                            </span>
-                            <span className="">
-                                owner
-                            </span>
-                        </div>
-                    </HandlRightClick>
-                    <HandlRightClick >
-                        <div className="w-full flex items-center gap-[10px] justify-between cursor-pointer">
-                            <span className="flex items-center gap-[10px]">
-                                <img src="/userProfile.jpg" alt="" className="rounded-full w-[60px] h-[60px] object-cover"/>
-                                <span>
-                                    <p className="text-[#034B8A] text-[20px] font-[Poppins] font-[500] max-w-[400px] truncate">
-                                        Achraf Sabbar
-                                    </p>
-                                    <p className="text-[#C0C1C5] text-[12px] font-[Poppins] font-[300]">
-                                        asabbar
-                                    </p>
-                                </span>
-                            </span>
-                            <span className="">
-                                owner
-                            </span>
-                        </div>
-                    </HandlRightClick>
-                    <HandlRightClick >
-                        <div className="w-full flex items-center gap-[10px] justify-between cursor-pointer">
-                            <span className="flex items-center gap-[10px]">
-                                <img src="/userProfile.jpg" alt="" className="rounded-full w-[60px] h-[60px] object-cover"/>
-                                <span>
-                                    <p className="text-[#034B8A] text-[20px] font-[Poppins] font-[500] max-w-[400px] truncate">
-                                        Achraf Sabbar
-                                    </p>
-                                    <p className="text-[#C0C1C5] text-[12px] font-[Poppins] font-[300]">
-                                        asabbar
-                                    </p>
-                                </span>
-                            </span>
-                            <span className="">
-                                owner
-                            </span>
-                        </div>
-                    </HandlRightClick>
-                    <HandlRightClick >
-                        <div className="w-full flex items-center gap-[10px] justify-between cursor-pointer">
-                            <span className="flex items-center gap-[10px]">
-                                <img src="/userProfile.jpg" alt="" className="rounded-full w-[60px] h-[60px] object-cover"/>
-                                <span>
-                                    <p className="text-[#034B8A] text-[20px] font-[Poppins] font-[500] max-w-[400px] truncate">
-                                        Achraf Sabbar
-                                    </p>
-                                    <p className="text-[#C0C1C5] text-[12px] font-[Poppins] font-[300]">
-                                        asabbar
-                                    </p>
-                                </span>
-                            </span>
-                            <span className="">
-                                owner
-                            </span>
-                        </div>
-                    </HandlRightClick>
-                    <HandlRightClick >
-                        <div className="w-full flex items-center gap-[10px] justify-between cursor-pointer">
-                            <span className="flex items-center gap-[10px]">
-                                <img src="/userProfile.jpg" alt="" className="rounded-full w-[60px] h-[60px] object-cover"/>
-                                <span>
-                                    <p className="text-[#034B8A] text-[20px] font-[Poppins] font-[500] max-w-[400px] truncate">
-                                        Achraf Sabbar
-                                    </p>
-                                    <p className="text-[#C0C1C5] text-[12px] font-[Poppins] font-[300]">
-                                        asabbar
-                                    </p>
-                                </span>
-                            </span>
-                            <span className="">
-                                owner
-                            </span>
-                        </div>
-                    </HandlRightClick>
-                    <HandlRightClick >
-                        <div className="w-full flex items-center gap-[10px] justify-between cursor-pointer">
-                            <span className="flex items-center gap-[10px]">
-                                <img src="/userProfile.jpg" alt="" className="rounded-full w-[60px] h-[60px] object-cover"/>
-                                <span>
-                                    <p className="text-[#034B8A] text-[20px] font-[Poppins] font-[500] max-w-[400px] truncate">
-                                        Achraf Sabbar
-                                    </p>
-                                    <p className="text-[#C0C1C5] text-[12px] font-[Poppins] font-[300]">
-                                        asabbar
-                                    </p>
-                                </span>
-                            </span>
-                            <span className="">
-                                owner
-                            </span>
-                        </div>
-                    </HandlRightClick>
-                    <HandlRightClick >
-                        <div className="w-full flex items-center gap-[10px] justify-between cursor-pointer">
-                            <span className="flex items-center gap-[10px]">
-                                <img src="/userProfile.jpg" alt="" className="rounded-full w-[60px] h-[60px] object-cover"/>
-                                <span>
-                                    <p className="text-[#034B8A] text-[20px] font-[Poppins] font-[500] max-w-[400px] truncate">
-                                        Achraf Sabbar
-                                    </p>
-                                    <p className="text-[#C0C1C5] text-[12px] font-[Poppins] font-[300]">
-                                        asabbar
-                                    </p>
-                                </span>
-                            </span>
-                            <span className="">
-                                owner
-                            </span>
-                        </div>
-                    </HandlRightClick>
-                    <HandlRightClick >
-                        <div className="w-full flex items-center gap-[10px] justify-between cursor-pointer">
-                            <span className="flex items-center gap-[10px]">
-                                <img src="/userProfile.jpg" alt="" className="rounded-full w-[60px] h-[60px] object-cover"/>
-                                <span>
-                                    <p className="text-[#034B8A] text-[20px] font-[Poppins] font-[500] max-w-[400px] truncate">
-                                        Achraf Sabbar
-                                    </p>
-                                    <p className="text-[#C0C1C5] text-[12px] font-[Poppins] font-[300]">
-                                        asabbar
-                                    </p>
-                                </span>
-                            </span>
-                            <span className="">
-                                owner
-                            </span>
-                        </div>
-                    </HandlRightClick>
-                    <HandlRightClick >
-                        <div className="w-full flex items-center gap-[10px] justify-between cursor-pointer">
-                            <span className="flex items-center gap-[10px]">
-                                <img src="/userProfile.jpg" alt="" className="rounded-full w-[60px] h-[60px] object-cover"/>
-                                <span>
-                                    <p className="text-[#034B8A] text-[20px] font-[Poppins] font-[500] max-w-[400px] truncate">
-                                        Achraf Sabbar
-                                    </p>
-                                    <p className="text-[#C0C1C5] text-[12px] font-[Poppins] font-[300]">
-                                        asabbar
-                                    </p>
-                                </span>
-                            </span>
-                            <span className="">
-                                owner
-                            </span>
-                        </div>
-                    </HandlRightClick>
-                    <HandlRightClick >
-                        <div className="w-full flex items-center gap-[10px] justify-between cursor-pointer">
-                            <span className="flex items-center gap-[10px]">
-                                <img src="/userProfile.jpg" alt="" className="rounded-full w-[60px] h-[60px] object-cover"/>
-                                <span>
-                                    <p className="text-[#034B8A] text-[20px] font-[Poppins] font-[500] max-w-[400px] truncate">
-                                        Achraf Sabbar
-                                    </p>
-                                    <p className="text-[#C0C1C5] text-[12px] font-[Poppins] font-[300]">
-                                        asabbar
-                                    </p>
-                                </span>
-                            </span>
-                            <span className="">
-                                owner
-                            </span>
-                        </div>
-                    </HandlRightClick>
-                    <HandlRightClick >
-                        <div className="w-full flex items-center gap-[10px] justify-between cursor-pointer">
-                            <span className="flex items-center gap-[10px]">
-                                <img src="/userProfile.jpg" alt="" className="rounded-full w-[60px] h-[60px] object-cover"/>
-                                <span>
-                                    <p className="text-[#034B8A] text-[20px] font-[Poppins] font-[500] max-w-[400px] truncate">
-                                        Achraf Sabbar
-                                    </p>
-                                    <p className="text-[#C0C1C5] text-[12px] font-[Poppins] font-[300]">
-                                        asabbar
-                                    </p>
-                                </span>
-                            </span>
-                            <span className="">
-                                owner
-                            </span>
-                        </div>
-                    </HandlRightClick>
-                    <HandlRightClick >
-                        <div className="w-full flex items-center gap-[10px] justify-between cursor-pointer">
-                            <span className="flex items-center gap-[10px]">
-                                <img src="/userProfile.jpg" alt="" className="rounded-full w-[60px] h-[60px] object-cover"/>
-                                <span>
-                                    <p className="text-[#034B8A] text-[20px] font-[Poppins] font-[500] max-w-[400px] truncate">
-                                        Achraf Sabbar
-                                    </p>
-                                    <p className="text-[#C0C1C5] text-[12px] font-[Poppins] font-[300]">
-                                        asabbar
-                                    </p>
-                                </span>
-                            </span>
-                            <span className="">
-                                owner
-                            </span>
-                        </div>
-                    </HandlRightClick>
-                    <HandlRightClick >
-                        <div className="w-full flex items-center gap-[10px] justify-between cursor-pointer">
-                            <span className="flex items-center gap-[10px]">
-                                <img src="/userProfile.jpg" alt="" className="rounded-full w-[60px] h-[60px] object-cover"/>
-                                <span>
-                                    <p className="text-[#034B8A] text-[20px] font-[Poppins] font-[500] max-w-[400px] truncate">
-                                        Achraf Sabbar
-                                    </p>
-                                    <p className="text-[#C0C1C5] text-[12px] font-[Poppins] font-[300]">
-                                        asabbar
-                                    </p>
-                                </span>
-                            </span>
-                            <span className="">
-                                owner
-                            </span>
-                        </div>
-                    </HandlRightClick>
-                    <HandlRightClick >
-                        <div className="w-full flex items-center gap-[10px] justify-between cursor-pointer">
-                            <span className="flex items-center gap-[10px]">
-                                <img src="/userProfile.jpg" alt="" className="rounded-full w-[60px] h-[60px] object-cover"/>
-                                <span>
-                                    <p className="text-[#034B8A] text-[20px] font-[Poppins] font-[500] max-w-[400px] truncate">
-                                        Achraf Sabbar
-                                    </p>
-                                    <p className="text-[#C0C1C5] text-[12px] font-[Poppins] font-[300]">
-                                        asabbar
-                                    </p>
-                                </span>
-                            </span>
-                            <span className="">
-                                owner
-                            </span>
-                        </div>
-                    </HandlRightClick>
-                    <HandlRightClick >
-                        <div className="w-full flex items-center gap-[10px] justify-between cursor-pointer">
-                            <span className="flex items-center gap-[10px]">
-                                <img src="/userProfile.jpg" alt="" className="rounded-full w-[60px] h-[60px] object-cover"/>
-                                <span>
-                                    <p className="text-[#034B8A] text-[20px] font-[Poppins] font-[500] max-w-[400px] truncate">
-                                        Achraf Sabbar
-                                    </p>
-                                    <p className="text-[#C0C1C5] text-[12px] font-[Poppins] font-[300]">
-                                        asabbar
-                                    </p>
-                                </span>
-                            </span>
-                            <span className="">
-                                owner
-                            </span>
-                        </div>
-                    </HandlRightClick>
-                    <HandlRightClick >
-                        <div className="w-full flex items-center gap-[10px] justify-between cursor-pointer">
-                            <span className="flex items-center gap-[10px]">
-                                <img src="/userProfile.jpg" alt="" className="rounded-full w-[60px] h-[60px] object-cover"/>
-                                <span>
-                                    <p className="text-[#034B8A] text-[20px] font-[Poppins] font-[500] max-w-[400px] truncate">
-                                        Achraf Sabbar
-                                    </p>
-                                    <p className="text-[#C0C1C5] text-[12px] font-[Poppins] font-[300]">
-                                        asabbar
-                                    </p>
-                                </span>
-                            </span>
-                            <span className="">
-                                owner
-                            </span>
-                        </div>
-                    </HandlRightClick>
-                    <HandlRightClick >
-                        <div className="w-full flex items-center gap-[10px] justify-between cursor-pointer">
-                            <span className="flex items-center gap-[10px]">
-                                <img src="/userProfile.jpg" alt="" className="rounded-full w-[60px] h-[60px] object-cover"/>
-                                <span>
-                                    <p className="text-[#034B8A] text-[20px] font-[Poppins] font-[500] max-w-[400px] truncate">
-                                        Achraf Sabbar
-                                    </p>
-                                    <p className="text-[#C0C1C5] text-[12px] font-[Poppins] font-[300]">
-                                        asabbar
-                                    </p>
-                                </span>
-                            </span>
-                            <span className="">
-                                owner
-                            </span>
-                        </div>
-                    </HandlRightClick>
-                    <HandlRightClick >
-                        <div className="w-full flex items-center gap-[10px] justify-between cursor-pointer">
-                            <span className="flex items-center gap-[10px]">
-                                <img src="/userProfile.jpg" alt="" className="rounded-full w-[60px] h-[60px] object-cover"/>
-                                <span>
-                                    <p className="text-[#034B8A] text-[20px] font-[Poppins] font-[500] max-w-[400px] truncate">
-                                        Achraf Sabbar
-                                    </p>
-                                    <p className="text-[#C0C1C5] text-[12px] font-[Poppins] font-[300]">
-                                        asabbar
-                                    </p>
-                                </span>
-                            </span>
-                            <span className="">
-                                owner
-                            </span>
-                        </div>
-                    </HandlRightClick>
-                    <HandlRightClick >
-                        <div className="w-full flex items-center gap-[10px] justify-between cursor-pointer">
-                            <span className="flex items-center gap-[10px]">
-                                <img src="/userProfile.jpg" alt="" className="rounded-full w-[60px] h-[60px] object-cover"/>
-                                <span>
-                                    <p className="text-[#034B8A] text-[20px] font-[Poppins] font-[500] max-w-[400px] truncate">
-                                        Achraf Sabbar
-                                    </p>
-                                    <p className="text-[#C0C1C5] text-[12px] font-[Poppins] font-[300]">
-                                        asabbar
-                                    </p>
-                                </span>
-                            </span>
-                            <span className="">
-                                owner
-                            </span>
-                        </div>
-                    </HandlRightClick>
-                    <HandlRightClick >
-                        <div className="w-full flex items-center gap-[10px] justify-between cursor-pointer">
-                            <span className="flex items-center gap-[10px]">
-                                <img src="/userProfile.jpg" alt="" className="rounded-full w-[60px] h-[60px] object-cover"/>
-                                <span>
-                                    <p className="text-[#034B8A] text-[20px] font-[Poppins] font-[500] max-w-[400px] truncate">
-                                        Achraf Sabbar
-                                    </p>
-                                    <p className="text-[#C0C1C5] text-[12px] font-[Poppins] font-[300]">
-                                        asabbar
-                                    </p>
-                                </span>
-                            </span>
-                            <span className="">
-                                owner
-                            </span>
-                        </div>
-                    </HandlRightClick>
-                    <HandlRightClick >
-                        <div className="w-full flex items-center gap-[10px] justify-between cursor-pointer">
-                            <span className="flex items-center gap-[10px]">
-                                <img src="/userProfile.jpg" alt="" className="rounded-full w-[60px] h-[60px] object-cover"/>
-                                <span>
-                                    <p className="text-[#034B8A] text-[20px] font-[Poppins] font-[500] max-w-[400px] truncate">
-                                        Achraf Sabbar
-                                    </p>
-                                    <p className="text-[#C0C1C5] text-[12px] font-[Poppins] font-[300]">
-                                        asabbar
-                                    </p>
-                                </span>
-                            </span>
-                            <span className="">
-                                owner
-                            </span>
-                        </div>
-                    </HandlRightClick>
-                    <HandlRightClick >
-                        <div className="w-full flex items-center gap-[10px] justify-between cursor-pointer">
-                            <span className="flex items-center gap-[10px]">
-                                <img src="/userProfile.jpg" alt="" className="rounded-full w-[60px] h-[60px] object-cover"/>
-                                <span>
-                                    <p className="text-[#034B8A] text-[20px] font-[Poppins] font-[500] max-w-[400px] truncate">
-                                        Achraf Sabbar
-                                    </p>
-                                    <p className="text-[#C0C1C5] text-[12px] font-[Poppins] font-[300]">
-                                        asabbar
-                                    </p>
-                                </span>
-                            </span>
-                            <span className="">
-                                owner
-                            </span>
-                        </div>
-                    </HandlRightClick>
-                    <HandlRightClick >
-                        <div className="w-full flex items-center gap-[10px] justify-between cursor-pointer">
-                            <span className="flex items-center gap-[10px]">
-                                <img src="/userProfile.jpg" alt="" className="rounded-full w-[60px] h-[60px] object-cover"/>
-                                <span>
-                                    <p className="text-[#034B8A] text-[20px] font-[Poppins] font-[500] max-w-[400px] truncate">
-                                        Achraf Sabbar
-                                    </p>
-                                    <p className="text-[#C0C1C5] text-[12px] font-[Poppins] font-[300]">
-                                        asabbar
-                                    </p>
-                                </span>
-                            </span>
-                            <span className="">
-                                owner
-                            </span>
-                        </div>
-                    </HandlRightClick>
-                    <HandlRightClick >
-                        <div className="w-full flex items-center gap-[10px] justify-between cursor-pointer">
-                            <span className="flex items-center gap-[10px]">
-                                <img src="/userProfile.jpg" alt="" className="rounded-full w-[60px] h-[60px] object-cover"/>
-                                <span>
-                                    <p className="text-[#034B8A] text-[20px] font-[Poppins] font-[500] max-w-[400px] truncate">
-                                        Achraf Sabbar
-                                    </p>
-                                    <p className="text-[#C0C1C5] text-[12px] font-[Poppins] font-[300]">
-                                        asabbar
-                                    </p>
-                                </span>
-                            </span>
-                            <span className="">
-                                owner
-                            </span>
-                        </div>
-                    </HandlRightClick>
-                    <HandlRightClick >
-                        <div className="w-full flex items-center gap-[10px] justify-between cursor-pointer">
-                            <span className="flex items-center gap-[10px]">
-                                <img src="/userProfile.jpg" alt="" className="rounded-full w-[60px] h-[60px] object-cover"/>
-                                <span>
-                                    <p className="text-[#034B8A] text-[20px] font-[Poppins] font-[500] max-w-[400px] truncate">
-                                        Achraf Sabbar
-                                    </p>
-                                    <p className="text-[#C0C1C5] text-[12px] font-[Poppins] font-[300]">
-                                        asabbar
-                                    </p>
-                                </span>
-                            </span>
-                            <span className="">
-                                owner
-                            </span>
-                        </div>
-                    </HandlRightClick>
-                    <HandlRightClick >
-                        <div className="w-full flex items-center gap-[10px] justify-between cursor-pointer">
-                            <span className="flex items-center gap-[10px]">
-                                <img src="/userProfile.jpg" alt="" className="rounded-full w-[60px] h-[60px] object-cover"/>
-                                <span>
-                                    <p className="text-[#034B8A] text-[20px] font-[Poppins] font-[500] max-w-[400px] truncate">
-                                        Achraf Sabbar
-                                    </p>
-                                    <p className="text-[#C0C1C5] text-[12px] font-[Poppins] font-[300]">
-                                        asabbar
-                                    </p>
-                                </span>
-                            </span>
-                            <span className="">
-                                owner
-                            </span>
-                        </div>
-                    </HandlRightClick>
+                <div className="w-full flex flex-col gap-[25px] overflow-y-scroll no-scrollbar min-h-[calc(300px)] h-[calc(100%-600px)]  max-h-[calc(100%-600px)] relative">
+                    {
+                        group?.Owners.map((owner: any) => {
+                            return (
+                                
+                                <HandlRightClick mytype={mytype} type={3}>
+                                    <Link href={`/profile/${owner.id}`}  key={`${owner.id}`}>
+                                        <div className="w-full flex items-center gap-[10px] justify-between cursor-pointer">
+                                            <span className="flex items-center gap-[10px]">
+                                                <img src="/userProfile.jpg" alt="" className="rounded-full w-[60px] h-[60px] object-cover"/>
+                                                <span>
+                                                    <p className="text-[#034B8A] text-[20px] font-[Poppins] font-[500] max-w-[400px] truncate">
+                                                        {owner.username}
+                                                    </p>
+                                                </span>
+                                            </span>
+                                            <span className="">
+                                                owner
+                                            </span>
+                                        </div>
+                                    </Link>
+                                </HandlRightClick>
+                            )
+                        })
+                    }
+                    {
+                        group?.Admins.map((admin: any) => {
+                            return (
+                                <HandlRightClick mytype={mytype} type={2}>
+                                    <Link href={`/profile/${admin.id}`}  key={`${admin.id}`}>
+                                        <div className="w-full flex items-center gap-[10px] justify-between cursor-pointer">
+                                            <span className="flex items-center gap-[10px]">
+                                                <img src="/userProfile.jpg" alt="" className="rounded-full w-[60px] h-[60px] object-cover"/>
+                                                <span>
+                                                    <p className="text-[#034B8A] text-[20px] font-[Poppins] font-[500] max-w-[400px] truncate">
+                                                        {admin.username}
+                                                    </p>
+                                                </span>
+                                            </span>
+                                            <span className="">
+                                                Admin
+                                            </span>
+                                        </div>
+                                    </Link>
+                                </HandlRightClick>
+                            )
+                        })
+                    }
+                    {
+                        group?.Members.map((member: any) => {
+                            if (group.Owners.find((owner: any) => owner.id === member.id)) return;
+                            return(
+                                <HandlRightClick mytype={mytype} type={1}>
+                                    <Link href={`/profile/${member.id}`}  key={`${member.id}`}>
+                                        <div className="w-full flex items-center gap-[10px] justify-between cursor-pointer">
+                                            <span className="flex items-center gap-[10px]">
+                                                <img src="/userProfile.jpg" alt="" className="rounded-full w-[60px] h-[60px] object-cover"/>
+                                                <span>
+                                                    <p className="text-[#034B8A] text-[20px] font-[Poppins] font-[500] max-w-[400px] truncate">
+                                                        {member.username}
+                                                    </p>
+                                                </span>
+                                            </span>
+                                            <span className="">
+                                            member
+                                            </span>
+                                        </div>
+                                    </Link> 
+                                </HandlRightClick>
+                            )
+                        })
+                    }
                 </div>
                 <span className=" w-full flex items-center justify-around gap-[25px] cursor-pointer pb-[25px]">
                     <div className="flex gap-[15px] items-center " onClick={
@@ -630,7 +171,7 @@ export default function ChannelInfo({infoRef, handleshowInfo}:ChannelInfoProps) 
                             access pass
                         </p>
                     </div>
-                    <div className="flex gap-[15px]" onClick={handleshowInfo}>
+                    <div className="flex gap-[15px]" onClick={handleExit}>
                         <span>
                             <svg width="21" height="24" viewBox="0 0 21 24" fill="#AF1C1C" xmlns="http://www.w3.org/2000/svg">
                                 <path d="M9.98349 0C10.3016 0.000376943 10.6075 0.130506 10.8388 0.363798C11.0701 0.59709 11.2093 0.915937 11.2279 1.25519C11.2465 1.59445 11.1432 1.92851 10.9391 2.18911C10.7349 2.44971 10.4453 2.6172 10.1295 2.65733L9.98349 2.66667H3.74381C3.43815 2.66671 3.14313 2.78661 2.91471 3.00362C2.6863 3.22063 2.54037 3.51967 2.50461 3.844L2.49587 4V20C2.49591 20.3266 2.60813 20.6418 2.81124 20.8858C3.01436 21.1299 3.29424 21.2858 3.5978 21.324L3.74381 21.3333H9.35952C9.67759 21.3337 9.98353 21.4638 10.2148 21.6971C10.4461 21.9304 10.5853 22.2493 10.6039 22.5885C10.6226 22.9278 10.5193 23.2618 10.3151 23.5224C10.111 23.783 9.82137 23.9505 9.50553 23.9907L9.35952 24H3.74381C2.78887 24.0001 1.87001 23.6102 1.17523 22.9103C0.480447 22.2103 0.0622626 21.2532 0.00623983 20.2347L5.81594e-09 20V4C-5.31892e-05 2.97972 0.364803 1.99798 1.01992 1.25565C1.67503 0.513324 2.57088 0.0665233 3.52417 0.00666682L3.74381 0H9.98349ZM17.1055 7.28533L20.6346 11.0573C20.8686 11.3074 21 11.6464 21 12C21 12.3536 20.8686 12.6926 20.6346 12.9427L17.1055 16.7147C16.8713 16.9647 16.5538 17.1051 16.2227 17.1049C15.8917 17.1048 15.5743 16.9642 15.3403 16.714C15.1063 16.4638 14.9749 16.1246 14.975 15.7709C14.9751 15.4172 15.1067 15.078 15.3409 14.828L16.7398 13.3333H9.98349C9.65251 13.3333 9.3351 13.1929 9.10106 12.9428C8.86703 12.6928 8.73555 12.3536 8.73555 12C8.73555 11.6464 8.86703 11.3072 9.10106 11.0572C9.3351 10.8071 9.65251 10.6667 9.98349 10.6667H16.7398L15.3409 9.172C15.1067 8.92199 14.9751 8.58283 14.975 8.22914C14.9749 7.87544 15.1063 7.53619 15.3403 7.286C15.5743 7.03581 15.8917 6.89519 16.2227 6.89506C16.5538 6.89494 16.8713 7.03532 17.1055 7.28533Z" />

@@ -56,89 +56,9 @@
         "async": false
       }
     },
-    "(app-client)/./app/login/page.tsx": {
-      "*": {
-        "id": "(sc_client)/./app/login/page.tsx",
-        "name": "*",
-        "chunks": [],
-        "async": false
-      }
-    },
-    "(app-client)/./node_modules/next/dist/client/link.js": {
-      "*": {
-        "id": "(sc_client)/./node_modules/next/dist/client/link.js",
-        "name": "*",
-        "chunks": [],
-        "async": false
-      }
-    },
     "(app-client)/./app/contextApi.tsx": {
       "*": {
         "id": "(sc_client)/./app/contextApi.tsx",
-        "name": "*",
-        "chunks": [],
-        "async": false
-      }
-    },
-    "(app-client)/./app/signup/page.tsx": {
-      "*": {
-        "id": "(sc_client)/./app/signup/page.tsx",
-        "name": "*",
-        "chunks": [],
-        "async": false
-      }
-    },
-    "(app-client)/./app/page.tsx": {
-      "*": {
-        "id": "(sc_client)/./app/page.tsx",
-        "name": "*",
-        "chunks": [],
-        "async": false
-      }
-    },
-    "(app-client)/./components/Dashboard/Dashboard/Dashboard.tsx": {
-      "*": {
-        "id": "(sc_client)/./components/Dashboard/Dashboard/Dashboard.tsx",
-        "name": "*",
-        "chunks": [],
-        "async": false
-      }
-    },
-    "(app-client)/./components/Dashboard/Home/Header/Header.tsx": {
-      "*": {
-        "id": "(sc_client)/./components/Dashboard/Home/Header/Header.tsx",
-        "name": "*",
-        "chunks": [],
-        "async": false
-      }
-    },
-    "(app-client)/./components/Dashboard/Home/Home.tsx": {
-      "*": {
-        "id": "(sc_client)/./components/Dashboard/Home/Home.tsx",
-        "name": "*",
-        "chunks": [],
-        "async": false
-      }
-    },
-    "(app-client)/./node_modules/next/dist/client/image.js": {
-      "*": {
-        "id": "(sc_client)/./node_modules/next/dist/client/image.js",
-        "name": "*",
-        "chunks": [],
-        "async": false
-      }
-    },
-    "(app-client)/./node_modules/next/dist/shared/lib/head.js": {
-      "*": {
-        "id": "(sc_client)/./node_modules/next/dist/shared/lib/head.js",
-        "name": "*",
-        "chunks": [],
-        "async": false
-      }
-    },
-    "(app-client)/./app/Chat/page.tsx": {
-      "*": {
-        "id": "(sc_client)/./app/Chat/page.tsx",
         "name": "*",
         "chunks": [],
         "async": false
@@ -208,6 +128,38 @@
         "async": false
       }
     },
+    "(app-client)/./components/Dashboard/Dashboard/Dashboard.tsx": {
+      "*": {
+        "id": "(sc_client)/./components/Dashboard/Dashboard/Dashboard.tsx",
+        "name": "*",
+        "chunks": [],
+        "async": false
+      }
+    },
+    "(app-client)/./node_modules/next/dist/client/image.js": {
+      "*": {
+        "id": "(sc_client)/./node_modules/next/dist/client/image.js",
+        "name": "*",
+        "chunks": [],
+        "async": false
+      }
+    },
+    "(app-client)/./node_modules/next/dist/client/link.js": {
+      "*": {
+        "id": "(sc_client)/./node_modules/next/dist/client/link.js",
+        "name": "*",
+        "chunks": [],
+        "async": false
+      }
+    },
+    "(app-client)/./node_modules/next/dist/shared/lib/head.js": {
+      "*": {
+        "id": "(sc_client)/./node_modules/next/dist/shared/lib/head.js",
+        "name": "*",
+        "chunks": [],
+        "async": false
+      }
+    },
     "(app-client)/./app/Chat/g/[msgId]/page.tsx": {
       "*": {
         "id": "(sc_client)/./app/Chat/g/[msgId]/page.tsx",
@@ -232,9 +184,57 @@
         "async": false
       }
     },
-    "(app-client)/./components/Dashboard/Chat/Messages/LeftMessages.tsx": {
+    "(app-client)/./app/Chat/me/[msgId]/page.tsx": {
       "*": {
-        "id": "(sc_client)/./components/Dashboard/Chat/Messages/LeftMessages.tsx",
+        "id": "(sc_client)/./app/Chat/me/[msgId]/page.tsx",
+        "name": "*",
+        "chunks": [],
+        "async": false
+      }
+    },
+    "(app-client)/./app/Chat/g/page.tsx": {
+      "*": {
+        "id": "(sc_client)/./app/Chat/g/page.tsx",
+        "name": "*",
+        "chunks": [],
+        "async": false
+      }
+    },
+    "(app-client)/./app/Chat/page.tsx": {
+      "*": {
+        "id": "(sc_client)/./app/Chat/page.tsx",
+        "name": "*",
+        "chunks": [],
+        "async": false
+      }
+    },
+    "(app-client)/./app/page.tsx": {
+      "*": {
+        "id": "(sc_client)/./app/page.tsx",
+        "name": "*",
+        "chunks": [],
+        "async": false
+      }
+    },
+    "(app-client)/./components/Dashboard/Home/Header/Header.tsx": {
+      "*": {
+        "id": "(sc_client)/./components/Dashboard/Home/Header/Header.tsx",
+        "name": "*",
+        "chunks": [],
+        "async": false
+      }
+    },
+    "(app-client)/./components/Dashboard/Home/Home.tsx": {
+      "*": {
+        "id": "(sc_client)/./components/Dashboard/Home/Home.tsx",
+        "name": "*",
+        "chunks": [],
+        "async": false
+      }
+    },
+    "(app-client)/./app/login/page.tsx": {
+      "*": {
+        "id": "(sc_client)/./app/login/page.tsx",
         "name": "*",
         "chunks": [],
         "async": false
@@ -403,115 +403,11 @@
       ],
       "async": false
     },
-    "/Users/asabbar/Desktop/ft_git/front-end/app/login/page.tsx": {
-      "id": "(app-client)/./app/login/page.tsx",
-      "name": "*",
-      "chunks": [
-        "app/login/page:static/chunks/app/login/page.js"
-      ],
-      "async": false
-    },
-    "/Users/asabbar/Desktop/ft_git/front-end/node_modules/next/dist/client/link.js": {
-      "id": "(app-client)/./node_modules/next/dist/client/link.js",
-      "name": "*",
-      "chunks": [
-        "app/Chat/g/[msgId]/page:static/chunks/app/Chat/g/[msgId]/page.js"
-      ],
-      "async": false
-    },
-    "/Users/asabbar/Desktop/ft_git/front-end/node_modules/next/dist/esm/client/link.js": {
-      "id": "(app-client)/./node_modules/next/dist/client/link.js",
-      "name": "*",
-      "chunks": [
-        "app/Chat/g/[msgId]/page:static/chunks/app/Chat/g/[msgId]/page.js"
-      ],
-      "async": false
-    },
     "/Users/asabbar/Desktop/ft_git/front-end/app/contextApi.tsx": {
       "id": "(app-client)/./app/contextApi.tsx",
       "name": "*",
       "chunks": [
-        "app/Chat/g/[msgId]/page:static/chunks/app/Chat/g/[msgId]/page.js"
-      ],
-      "async": false
-    },
-    "/Users/asabbar/Desktop/ft_git/front-end/app/signup/page.tsx": {
-      "id": "(app-client)/./app/signup/page.tsx",
-      "name": "*",
-      "chunks": [
-        "app/signup/page:static/chunks/app/signup/page.js"
-      ],
-      "async": false
-    },
-    "/Users/asabbar/Desktop/ft_git/front-end/app/page.tsx": {
-      "id": "(app-client)/./app/page.tsx",
-      "name": "*",
-      "chunks": [
-        "app/page:static/chunks/app/page.js"
-      ],
-      "async": false
-    },
-    "/Users/asabbar/Desktop/ft_git/front-end/components/Dashboard/Dashboard/Dashboard.tsx": {
-      "id": "(app-client)/./components/Dashboard/Dashboard/Dashboard.tsx",
-      "name": "*",
-      "chunks": [
-        "app/Chat/layout:static/chunks/app/Chat/layout.js"
-      ],
-      "async": false
-    },
-    "/Users/asabbar/Desktop/ft_git/front-end/components/Dashboard/Home/Header/Header.tsx": {
-      "id": "(app-client)/./components/Dashboard/Home/Header/Header.tsx",
-      "name": "*",
-      "chunks": [
-        "app/page:static/chunks/app/page.js"
-      ],
-      "async": false
-    },
-    "/Users/asabbar/Desktop/ft_git/front-end/components/Dashboard/Home/Home.tsx": {
-      "id": "(app-client)/./components/Dashboard/Home/Home.tsx",
-      "name": "*",
-      "chunks": [
-        "app/page:static/chunks/app/page.js"
-      ],
-      "async": false
-    },
-    "/Users/asabbar/Desktop/ft_git/front-end/node_modules/next/dist/client/image.js": {
-      "id": "(app-client)/./node_modules/next/dist/client/image.js",
-      "name": "*",
-      "chunks": [
-        "app/Chat/layout:static/chunks/app/Chat/layout.js"
-      ],
-      "async": false
-    },
-    "/Users/asabbar/Desktop/ft_git/front-end/node_modules/next/dist/esm/client/image.js": {
-      "id": "(app-client)/./node_modules/next/dist/client/image.js",
-      "name": "*",
-      "chunks": [
-        "app/Chat/layout:static/chunks/app/Chat/layout.js"
-      ],
-      "async": false
-    },
-    "/Users/asabbar/Desktop/ft_git/front-end/node_modules/next/dist/shared/lib/head.js": {
-      "id": "(app-client)/./node_modules/next/dist/shared/lib/head.js",
-      "name": "*",
-      "chunks": [
-        "app/Chat/layout:static/chunks/app/Chat/layout.js"
-      ],
-      "async": false
-    },
-    "/Users/asabbar/Desktop/ft_git/front-end/node_modules/next/dist/esm/shared/lib/head.js": {
-      "id": "(app-client)/./node_modules/next/dist/shared/lib/head.js",
-      "name": "*",
-      "chunks": [
-        "app/Chat/layout:static/chunks/app/Chat/layout.js"
-      ],
-      "async": false
-    },
-    "/Users/asabbar/Desktop/ft_git/front-end/app/Chat/page.tsx": {
-      "id": "(app-client)/./app/Chat/page.tsx",
-      "name": "*",
-      "chunks": [
-        "app/Chat/page:static/chunks/app/Chat/page.js"
+        "app/Profile/layout:static/chunks/app/Profile/layout.js"
       ],
       "async": false
     },
@@ -579,6 +475,62 @@
       ],
       "async": false
     },
+    "/Users/asabbar/Desktop/ft_git/front-end/components/Dashboard/Dashboard/Dashboard.tsx": {
+      "id": "(app-client)/./components/Dashboard/Dashboard/Dashboard.tsx",
+      "name": "*",
+      "chunks": [
+        "app/Profile/layout:static/chunks/app/Profile/layout.js"
+      ],
+      "async": false
+    },
+    "/Users/asabbar/Desktop/ft_git/front-end/node_modules/next/dist/client/image.js": {
+      "id": "(app-client)/./node_modules/next/dist/client/image.js",
+      "name": "*",
+      "chunks": [
+        "app/Profile/layout:static/chunks/app/Profile/layout.js"
+      ],
+      "async": false
+    },
+    "/Users/asabbar/Desktop/ft_git/front-end/node_modules/next/dist/esm/client/image.js": {
+      "id": "(app-client)/./node_modules/next/dist/client/image.js",
+      "name": "*",
+      "chunks": [
+        "app/Profile/layout:static/chunks/app/Profile/layout.js"
+      ],
+      "async": false
+    },
+    "/Users/asabbar/Desktop/ft_git/front-end/node_modules/next/dist/client/link.js": {
+      "id": "(app-client)/./node_modules/next/dist/client/link.js",
+      "name": "*",
+      "chunks": [
+        "app/Profile/layout:static/chunks/app/Profile/layout.js"
+      ],
+      "async": false
+    },
+    "/Users/asabbar/Desktop/ft_git/front-end/node_modules/next/dist/esm/client/link.js": {
+      "id": "(app-client)/./node_modules/next/dist/client/link.js",
+      "name": "*",
+      "chunks": [
+        "app/Profile/layout:static/chunks/app/Profile/layout.js"
+      ],
+      "async": false
+    },
+    "/Users/asabbar/Desktop/ft_git/front-end/node_modules/next/dist/shared/lib/head.js": {
+      "id": "(app-client)/./node_modules/next/dist/shared/lib/head.js",
+      "name": "*",
+      "chunks": [
+        "app/Profile/layout:static/chunks/app/Profile/layout.js"
+      ],
+      "async": false
+    },
+    "/Users/asabbar/Desktop/ft_git/front-end/node_modules/next/dist/esm/shared/lib/head.js": {
+      "id": "(app-client)/./node_modules/next/dist/shared/lib/head.js",
+      "name": "*",
+      "chunks": [
+        "app/Profile/layout:static/chunks/app/Profile/layout.js"
+      ],
+      "async": false
+    },
     "/Users/asabbar/Desktop/ft_git/front-end/app/Chat/g/[msgId]/page.tsx": {
       "id": "(app-client)/./app/Chat/g/[msgId]/page.tsx",
       "name": "*",
@@ -603,20 +555,64 @@
       ],
       "async": false
     },
-    "/Users/asabbar/Desktop/ft_git/front-end/components/Dashboard/Chat/Messages/LeftMessages.tsx": {
-      "id": "(app-client)/./components/Dashboard/Chat/Messages/LeftMessages.tsx",
+    "/Users/asabbar/Desktop/ft_git/front-end/app/Chat/me/[msgId]/page.tsx": {
+      "id": "(app-client)/./app/Chat/me/[msgId]/page.tsx",
       "name": "*",
       "chunks": [
-        "app/Chat/g/[msgId]/page:static/chunks/app/Chat/g/[msgId]/page.js"
+        "app/Chat/me/[msgId]/page:static/chunks/app/Chat/me/[msgId]/page.js"
+      ],
+      "async": false
+    },
+    "/Users/asabbar/Desktop/ft_git/front-end/app/Chat/g/page.tsx": {
+      "id": "(app-client)/./app/Chat/g/page.tsx",
+      "name": "*",
+      "chunks": [
+        "app/Chat/g/page:static/chunks/app/Chat/g/page.js"
+      ],
+      "async": false
+    },
+    "/Users/asabbar/Desktop/ft_git/front-end/app/Chat/page.tsx": {
+      "id": "(app-client)/./app/Chat/page.tsx",
+      "name": "*",
+      "chunks": [
+        "app/Chat/page:static/chunks/app/Chat/page.js"
+      ],
+      "async": false
+    },
+    "/Users/asabbar/Desktop/ft_git/front-end/app/page.tsx": {
+      "id": "(app-client)/./app/page.tsx",
+      "name": "*",
+      "chunks": [
+        "app/page:static/chunks/app/page.js"
+      ],
+      "async": false
+    },
+    "/Users/asabbar/Desktop/ft_git/front-end/components/Dashboard/Home/Header/Header.tsx": {
+      "id": "(app-client)/./components/Dashboard/Home/Header/Header.tsx",
+      "name": "*",
+      "chunks": [
+        "app/page:static/chunks/app/page.js"
+      ],
+      "async": false
+    },
+    "/Users/asabbar/Desktop/ft_git/front-end/components/Dashboard/Home/Home.tsx": {
+      "id": "(app-client)/./components/Dashboard/Home/Home.tsx",
+      "name": "*",
+      "chunks": [
+        "app/page:static/chunks/app/page.js"
+      ],
+      "async": false
+    },
+    "/Users/asabbar/Desktop/ft_git/front-end/app/login/page.tsx": {
+      "id": "(app-client)/./app/login/page.tsx",
+      "name": "*",
+      "chunks": [
+        "app/login/page:static/chunks/app/login/page.js"
       ],
       "async": false
     }
   },
   "entryCSSFiles": {
-    "/Users/asabbar/Desktop/ft_git/front-end/app/login/page": {
-      "modules": [],
-      "files": []
-    },
     "/Users/asabbar/Desktop/ft_git/front-end/app/layout": {
       "modules": [
         "/Users/asabbar/Desktop/ft_git/front-end/app/globals.css",
@@ -630,18 +626,6 @@
       "modules": [],
       "files": []
     },
-    "/Users/asabbar/Desktop/ft_git/front-end/app/signup/page": {
-      "modules": [],
-      "files": []
-    },
-    "/Users/asabbar/Desktop/ft_git/front-end/app/page": {
-      "modules": [],
-      "files": []
-    },
-    "/Users/asabbar/Desktop/ft_git/front-end/app/Chat/page": {
-      "modules": [],
-      "files": []
-    },
     "/Users/asabbar/Desktop/ft_git/front-end/app/Chat/layout": {
       "modules": [
         "/Users/asabbar/Desktop/ft_git/front-end/app/globals.css",
@@ -652,6 +636,34 @@
       ]
     },
     "/Users/asabbar/Desktop/ft_git/front-end/app/Chat/g/[msgId]/page": {
+      "modules": [],
+      "files": []
+    },
+    "/Users/asabbar/Desktop/ft_git/front-end/app/Chat/me/[msgId]/page": {
+      "modules": [],
+      "files": []
+    },
+    "/Users/asabbar/Desktop/ft_git/front-end/app/Chat/g/page": {
+      "modules": [],
+      "files": []
+    },
+    "/Users/asabbar/Desktop/ft_git/front-end/app/Chat/page": {
+      "modules": [],
+      "files": []
+    },
+    "/Users/asabbar/Desktop/ft_git/front-end/app/page": {
+      "modules": [],
+      "files": []
+    },
+    "/Users/asabbar/Desktop/ft_git/front-end/app/login/page": {
+      "modules": [],
+      "files": []
+    },
+    "/Users/asabbar/Desktop/ft_git/front-end/app/Profile/page": {
+      "modules": [],
+      "files": []
+    },
+    "/Users/asabbar/Desktop/ft_git/front-end/app/Profile/layout": {
       "modules": [],
       "files": []
     }

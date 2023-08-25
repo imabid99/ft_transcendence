@@ -19,6 +19,7 @@ import { use } from "passport";
     methods: ["GET", "POST"],
   },
 })
+
 export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
   constructor(
     private prisma: PrismaService,
@@ -28,14 +29,22 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
   server: SocketIO.Server;
 
   async handleConnection(client: Socket) {
-    console.log("connected : ");
-    if (client.handshake.headers.refresh) {
-      return;
-    }
     const token = client.handshake.headers.authorization?.split(" ")[1];
     if (token) {
       const decoded: any = jwt_decode(token);
       client.join(decoded.username);
+      const myChannels = await this.prisma.channels.findMany({
+        where: {
+          Members: {
+            some: {
+              id: decoded.userId,
+            },
+          },
+        },
+      });
+      myChannels.map((channel) => {
+        client.join(channel.id);
+      });
       if (this.server.sockets.adapter.rooms.get(decoded.username)?.size !== 1) {
         return;
       }
@@ -47,27 +56,20 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
           status: "online",
         },
       });
-      console.log("connected : ", decoded.username);
+      console.log("myChannels : ", client.rooms);
       const refresh = {
-        nothis: new Date().getMilliseconds(),
+        nothing: new Date().getMilliseconds(),
       };
       this.server.emit("refresh", refresh);
     }
   }
   // eslint-disable-next-line @typescript-eslint/no-empty-function, @typescript-eslint/no-unused-vars
   async handleDisconnect(client: Socket) {
-    if (client.handshake.headers.refresh) {
-      return;
-    }
     const token = client.handshake.headers.authorization?.split(" ")[1];
     if (token) {
       const decoded: any = jwt_decode(token);
       if (this.server.sockets.adapter.rooms.get(decoded.username) !== undefined)
         return;
-      console.log(
-        "disconnected : ",
-        this.server.sockets.adapter.rooms.get(decoded.username)
-      );
       await this.prisma.profile.update({
         where: {
           userId: decoded.userId,
@@ -77,23 +79,12 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
         },
       });
       const refresh = {
-        nothis: new Date().getMilliseconds(),
+        nothing: new Date().getMilliseconds(),
       };
       this.server.emit("refresh", refresh);
     }
   }
 
-  @SubscribeMessage("message")
-  handleMessage(_client: any, payload: any): string {
-    this.server.emit("message", payload);
-    return "Hello world!";
-  }
-
-  @SubscribeMessage("join-private-room")
-  handleJoinPrivateRoom(client: any, payload: any): string {
-    client.join(payload.room);
-    return "Hello world!";
-  }
 
   @SubscribeMessage("privet-message")
   async handlePrivetMessage(_client: any, payload: any): Promise<void> {
@@ -131,7 +122,7 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
       },
     });
     const refresh = {
-      nothis: new Date().getMilliseconds(),
+      nothing: new Date().getMilliseconds(),
     };
     this.server.to(payload.room).emit("privet-message", payload.message);
     this.server.to(payload.sander).emit("privet-message", payload.message);
@@ -155,7 +146,7 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
         },
       });
       const refresh = {
-        nothis: new Date().getMilliseconds(),
+        nothing: new Date().getMilliseconds(),
       };
       this.server.emit("refresh", refresh);
     }
@@ -185,10 +176,10 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
         }
       });
       const refresh = {
-        nothis: new Date(),
+        nothing: new Date(),
       };
       this.server.emit("refresh", refresh);
-      console.log("refresh : ", refresh.nothis);
+      console.log("refresh : ", refresh.nothing);
     }
   }
 
@@ -211,7 +202,7 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
       });
       delete user.password;
       payload.groupUsers.push(user.id);
-      const newGroup = await this.prisma.channels.create({
+       await this.prisma.channels.create({
         data: {
           type: payload.groupType,
           name: payload.groupName,
@@ -227,52 +218,144 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
             },
           },
           avatar: "",
+          accessIsActived : payload.accessPassword? true : false,
         },
       });
-      console.log("newGroup : ", newGroup);
+      const refresh = {
+        nothing: new Date(),
+      };
+      this.server.emit("refresh", refresh);
     }
   }
 
-  // @SubscribeMessage("join-users-channel")
-  // async handleJoinUsersGroup(client: any, payload: any): Promise<void> {
-  //   const token = client.handshake.headers.authorization?.split(" ")[1];
-  //   if (token) {
-  //     const decoded: any = jwt_decode(token);
-  //     const user = await this.prisma.user.findUnique({
-  //       where: {
-  //         username: decoded.username,
-  //       },
-  //     });
-  //     await this.prisma.group.findUnique({
-  //       where: {
-  //         id: payload.id,
-  //       },
-  //     });
-  //     const newGroup = await this.prisma.group.update({
-  //       where: {
-  //         id: payload.id,
-  //       },
-  //       data: {
-  //         users: {
-  //           connect: {
-  //             id: user.id,
-  //           },
-  //         },
-  //       },
-  //     });
-  //     this.server.emit("join-users-group", newGroup);
-  //   }
-  // }
-
+  
+  
   @SubscribeMessage("refresh")
   async handleRefresh(client: any, payload: any): Promise<void> {
     const jwt = client.handshake.headers.authorization?.split(" ")[1];
     if (jwt) {
       console.log("payload : ", payload);
       const refresh = {
-        nothis: new Date().getMilliseconds(),
+        nothing: new Date().getMilliseconds(),
       };
       this.server.emit("refresh", refresh);
     }
+  }
+  @SubscribeMessage("message-to-group")
+  async handleMessageToGroup(client: any, payload: any): Promise<void>
+  {
+    const token = client.handshake.headers.authorization?.split(" ")[1];
+    if (token) {
+      const info:any= jwt_decode(token);
+      const user = await this.prisma.user.findUnique({
+        where: {
+          id: info?.userId,
+        },
+      });
+      const group = await this.prisma.channels.findUnique({
+        where: {
+          id: payload.groupId,
+        },
+        include: {
+          Members: true,
+          Muts: true,
+          Band: true,
+        },
+      });
+      const verifyIsMemmber: boolean = group.Members.some((member) => {
+        return member.id === +user.id;
+      }); 
+      if (!verifyIsMemmber) {
+        return;
+      }
+      const verifyMuts: boolean = group.Muts.some((mut) => {
+        return mut.id === +user.id;
+      }); 
+      if (verifyMuts) {
+        return;
+      }
+      const verifyBand: boolean = group.Band.some((ban) => {
+        return ban.id === +user.id;
+      }); 
+      if (verifyMuts) {
+        return;
+      }
+      await this.prisma.message.create({
+        data: {
+          fromName: user.username,
+          content: payload.message.content,
+          channelsId: group.id,
+        },
+      });
+      const refresh = {
+        nothing: new Date().getMilliseconds(),
+      };
+
+      console.log("sockets id in room : ", this.server.sockets.adapter.rooms.get(payload.groupId));
+      this.server.to(payload.groupId).emit("message-to-group", payload.message);
+      console.log("message-to-group : ", payload.message.content , " to : ", payload.groupId);
+      this.server.emit("refresh", refresh);
+    }
+  }
+
+  @SubscribeMessage("leaveGroup")
+  async handleExitGroup(client: any, payload: any): Promise<void> {
+  const jwt = client.handshake.headers.authorization?.split(" ")[1];
+  if(jwt)
+  {
+    const info:any= jwt_decode(jwt);
+    const user = await this.prisma.user.findUnique({
+      where: {
+        id: info?.userId,
+      },
+    });
+    const group = await this.prisma.channels.findUnique({
+      where: {
+        id: payload.groupId,
+      },
+      include: {
+        Members: true,
+        Muts: true,
+        Band: true,
+      },
+    });
+    const verifyIsMemmber: boolean = group.Members.some((member) => {
+      return member.id === +user.id;
+    }); 
+    if (!verifyIsMemmber) {
+      return;
+    }
+    const verifyMuts: boolean = group.Muts.some((mut) => {
+      return mut.id === +user.id;
+    }); 
+    if (verifyMuts) {
+      return;
+    }
+    const verifyBand: boolean = group.Band.some((ban) => {
+      return ban.id === +user.id;
+    }); 
+    if (verifyBand) {
+      return;
+    }
+    await this.prisma.channels.update({
+      where: {
+        id: payload.groupId,
+      },
+      data: {
+        Members: {
+          disconnect: {
+            id: user.id,
+          },
+        },
+      },
+    });
+    const refresh = {
+      nothing: new Date().getMilliseconds(),
+    };
+    this.server.emit("refresh", refresh);
+  }
+  
+  
+  
   }
 }

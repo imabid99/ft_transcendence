@@ -1,9 +1,7 @@
-import { type } from "os"
-
 type LeftMessagesProps = {
     message: {
-        fromId :    number,
-        toId  :     number,
+        fromId? :    number,
+        toId?  :     number,
         content :   String,
         createdAt:  String,
       }
@@ -18,7 +16,7 @@ export default function RightMessages({message}: LeftMessagesProps) {
                     {message.content}
                 </p>
                 <span className="text-[#AEAEAE] text-[15px] font-[Poppins] font-[500] self-end">{
-                message.createdAt === new Date().toISOString() ? "NOW" : message.createdAt.split('T')[1].split('.')[0].slice(0, 5)
+                message.createdAt.split('T')[1].split('.')[0].slice(0, 5)
                 }</span>
             </span>
         </div>
