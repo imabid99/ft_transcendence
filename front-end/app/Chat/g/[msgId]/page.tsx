@@ -7,14 +7,9 @@ import RightMessages from '@/components/Dashboard/Chat/Messages/RightMessages';
 import Link from 'next/link';
 import ChannelInfo  from '@/components/Dashboard/Chat/Messages/ChannelInfo';
 import axiosInstance from '@/utils/axiosInstance';
-import { getLocalStorageItem} from '@/utils/localStorage';
 import { useRouter } from 'next/navigation';
-import io from 'socket.io-client';
-import { getUserInfo } from '@/utils/getUserInfo';
-import Layout from '@/app/Chat/layout';
 import { useContext } from 'react';
 import { contextdata } from '@/app/contextApi';
-
 type Message = {
   fromName :    string,
   content :     string,
@@ -24,28 +19,47 @@ type Message = {
 
 export default function Page() {
   const { msgId } = useParams();
-  const [messages, setMessages] = useState <[Message] | null>(null);
+  const [messages, setMessages] = useState<Message[] | null>(null);
   const [show, setShow] = useState(false);
   const [showInfo, setShowInfo] = useState(false);
-  const infoRef = useRef(null);
   const [isloading, setIsLoading] = useState(true);
+  const [member, setMember] = useState<boolean>(true);
   const [group, setGroup] = useState<any>(null);
   const router = useRouter();
-  const inputRef = useRef(null);
+  const infoRef = useRef<HTMLInputElement | null>(null);
+  const inputRef = useRef<HTMLInputElement | null>(null);;
   const {user, socket} :any= useContext(contextdata);
-
+  
+  
+  useEffect(() => {
+    async function getgroup() {
+      try {
+        const res = await axiosInstance.get(`http://localhost:3000/api/user/channel/${msgId}`);
+        setGroup(res.data);
+        setMessages(res.data.Messages);
+      } catch (err) {
+        setMember(false);
+        console.log(err);
+      }
+    }
+    getgroup();
+    return () => {
+      setGroup(null);
+    }
+  }, []);
 
   useEffect(() => {
     if(!group || !user || !socket) return;
-
     socket.on('message-to-group', (payload:any) => {
       console.log("message-to-group payload : ",payload);
-      const msg = {
+      const newMessage: Message = {
         fromName: payload.fromName,
         content: payload.content,
         createdAt: payload.createdAt,
-      }
-      setMessages((prev: any) => [...prev, msg]);
+      };
+  
+      setMessages((messages:any) => [...messages, newMessage]);
+  
       const scrol = document.querySelector('.message__body');
       if (scrol) {
         scrol.scrollTop = scrol.scrollHeight;
@@ -74,23 +88,6 @@ export default function Page() {
 		inputRef.current.value = '';
 	}
 
-
-  useEffect(() => {
-    async function getgroup() {
-      try {
-        const res = await axiosInstance.get(`http://localhost:3000/api/user/channel/${msgId}`);
-        setGroup(res.data);
-        setMessages(res.data.Messages);
-      } catch (err) {
-        console.log(err);
-      }
-    }
-    getgroup();
-    return () => {
-      setGroup(null);
-    }
-  }, []);
-
   console.log("group : ", group);
   useEffect(() => {
     if(!messages) return;
@@ -99,6 +96,18 @@ export default function Page() {
        scrol.scrollTop = scrol.scrollHeight;
      }
   }, [messages])
+
+  if (!member) {
+    return (
+      <div className=' items-center justify-center w-[calc(100%-450px)] min-h-full flex flex-col min-w-[490px] lg:max-xl:w-[calc(100%-350px)] lsm:max-lg:min-w-full '>
+          <h1 className='text-[100px] text-[#034B8A] font-bold'>404</h1>
+          <h1 className='text-[30px] text-[#034B8A] font-bold'>Page Not Found</h1>
+          <Link href="/Chat" className='text-[#AF1C1C] font-bold underline'>
+            Go Back
+          </Link>
+      </div>
+    )
+  }
 
   if(messages === null)
   {
@@ -109,19 +118,6 @@ export default function Page() {
     )
   }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
   const handleshowInfo = () => {
     console.log("message__info");
     console.log(showInfo);
@@ -129,22 +125,6 @@ export default function Page() {
     infoRef.current?.classList.toggle("right-0");
     setShowInfo(!showInfo);
   }
-  
-
-
-
-
-
-
-
-  
-  /* sort messages by date */
-  messages?.sort((a, b) => {
-    return new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime()
-  })
-
-  /* scroll to bottom */
-
   return (
       <div className='message w-[calc(100%-450px)] min-h-full flex flex-col min-w-[490px] lg:max-xl:w-[calc(100%-350px)] lsm:max-lg:min-w-full '>
         {show && <div className='message__header__bg w-full h-full absolute top-0 left-0 z-[1]' onClick={() => setShow(false)}></div>}

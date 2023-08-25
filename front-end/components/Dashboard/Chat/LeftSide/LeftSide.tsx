@@ -21,7 +21,8 @@ export default function  LeftSide() {
 	useEffect(() => {
 		if (!socket)  return;
 		socket.on("refresh", (payload:any) => {
-			setRefresh(payload);
+			setRefresh(new Date().getTime().toString());
+			console.log("refresh : ");
 		});
 	}, [socket]);
 
@@ -62,11 +63,18 @@ export default function  LeftSide() {
 		async function getMessages() {
 			try
 			{
-			const resp = await axiosInstance.get(`http://localhost:3000/api/user/messages/${user?.id}`);
-			if (resp.data === null) {
-				return;
-			}
-			setMessages(resp.data);
+				const resp = await axiosInstance.get(`http://localhost:3000/api/user/messages/${user?.id}`);
+				if (resp.data === null) {
+					return;
+				}
+				resp.data.sort ((a:any, b:any) => {
+					return (
+						new Date(a.createdAt).getTime() -
+						new Date(b.createdAt).getTime()
+					);
+				});
+				setMessages(resp.data);
+				console.log("get : messages ", resp.data); 
 			}
 			catch (error)
 			{
@@ -122,12 +130,12 @@ export default function  LeftSide() {
 									<path
 									d="M9.32 17C13.915 17 17.64 13.4183 17.64 9C17.64 4.58172 13.915 1 9.32 1C4.72499 1 1 4.58172 1 9C1 13.4183 4.72499 17 9.32 17Z"
 									stroke="#898F94"
-									stroke-width="2"
+									strokeWidth="2"
 									/>
 									<path
 									d="M19.7193 18.9984L15.1953 14.6484"
 									stroke="#898F94"
-									stroke-width="2"
+									strokeWidth="2"
 									/>
 								</svg>
 							</div>

@@ -103,6 +103,12 @@ const ContextProvider = ({ children }: { children: React.ReactNode; }) => {
         if (resp.data === null) {
           return;
         }
+        resp.data.sort ((a:any, b:any) => {
+					return (
+						new Date(a.createdAt).getTime() -
+						new Date(b.createdAt).getTime()
+					);
+				});
         setMessages(resp.data);
       }
       catch (error)

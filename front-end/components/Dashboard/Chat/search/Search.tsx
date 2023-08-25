@@ -9,7 +9,7 @@ type Props = {
 }
 
 export default function Search({setShowBody}: Props) {
-    const {user, profiles } = useContext(contextdata);
+    const {user, profiles }:any = useContext(contextdata);
     const router = useRouter()
     const showUsers = profiles?.filter((ur:any) => {
         return ur.username === user?.username ? false : true
@@ -38,12 +38,12 @@ export default function Search({setShowBody}: Props) {
                         <path
                         d="M9.32 17C13.915 17 17.64 13.4183 17.64 9C17.64 4.58172 13.915 1 9.32 1C4.72499 1 1 4.58172 1 9C1 13.4183 4.72499 17 9.32 17Z"
                         stroke="#898F94"
-                        stroke-width="2"
+                        strokeWidth="2"
                         />
                         <path
                         d="M19.7193 18.9984L15.1953 14.6484"
                         stroke="#898F94"
-                        stroke-width="2"
+                        strokeWidth="2"
                         />
                     </svg>
                 </span>

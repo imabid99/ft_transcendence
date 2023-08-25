@@ -7,8 +7,7 @@ type constextType = {
     users: any,
   };
 export default function UsersDm() {
-    const {profiles, user, messages} = useContext(contextdata);
-    // sort profiles by last message time
+    const {profiles, user, messages} :any= useContext(contextdata);
     profiles?.sort((a: any, b: any) => {
       const lastMessageA = getLastMessage(messages, a.userId);
       if (!lastMessageA) return 1;
@@ -46,7 +45,6 @@ export default function UsersDm() {
           <div className="flex flex-col gap-[20px]  rounded-[5px] w-full">
             {
               user && profiles?.map((ur: any) => {
-                
                 return (
                   ur.userId === user.id  || getLastMessage(messages, ur.userId)?.content === undefined   ?  null : 
                   (<Channel

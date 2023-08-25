@@ -10,8 +10,7 @@ import * as jwt from "jsonwebtoken";
 import jwt_decode from "jwt-decode";
 import { PrismaService } from "../../../prisma/prisma.service";
 import { UserService } from "../../../user.service";
-import { Inject } from "@nestjs/common";
-import { use } from "passport";
+
 
 @WebSocketGateway({
   cors: {
@@ -57,10 +56,7 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
         },
       });
       console.log("myChannels : ", client.rooms);
-      const refresh = {
-        nothing: new Date().getMilliseconds(),
-      };
-      this.server.emit("refresh", refresh);
+      this.server.emit("refresh");
     }
   }
   // eslint-disable-next-line @typescript-eslint/no-empty-function, @typescript-eslint/no-unused-vars
@@ -78,10 +74,8 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
           status: "offline",
         },
       });
-      const refresh = {
-        nothing: new Date().getMilliseconds(),
-      };
-      this.server.emit("refresh", refresh);
+
+      this.server.emit("refresh");
     }
   }
 
@@ -121,21 +115,18 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
         userId: receiver.id,
       },
     });
-    const refresh = {
-      nothing: new Date().getMilliseconds(),
-    };
+
     this.server.to(payload.room).emit("privet-message", payload.message);
     this.server.to(payload.sander).emit("privet-message", payload.message);
-    this.server.emit("refresh", refresh);
+    this.server.emit("refresh");
   }
+  
   @SubscribeMessage("block-user")
   async handleBlockUser(client: any, payload: any): Promise<void> {
     const token = client.handshake.headers.authorization?.split(" ")[1];
     try {
-      const verified = jwt.verify(token, process.env.JWT_SECRET);
-      console.log("verified : ", verified);
+      jwt.verify(token, process.env.JWT_SECRET);
     } catch (err) {
-      console.log("verified : ", err.message);
       return;
     }
     if (token) {
@@ -145,10 +136,7 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
           blockedId: payload.blockedId,
         },
       });
-      const refresh = {
-        nothing: new Date().getMilliseconds(),
-      };
-      this.server.emit("refresh", refresh);
+      this.server.emit("refresh");
     }
   }
   @SubscribeMessage("unblock-user")
@@ -175,11 +163,8 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
           });
         }
       });
-      const refresh = {
-        nothing: new Date(),
-      };
-      this.server.emit("refresh", refresh);
-      console.log("refresh : ", refresh.nothing);
+      this.server.emit("refresh");
+
     }
   }
 
@@ -221,10 +206,8 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
           accessIsActived : payload.accessPassword? true : false,
         },
       });
-      const refresh = {
-        nothing: new Date(),
-      };
-      this.server.emit("refresh", refresh);
+
+      this.server.emit("refresh");
     }
   }
 
@@ -234,11 +217,7 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
   async handleRefresh(client: any, payload: any): Promise<void> {
     const jwt = client.handshake.headers.authorization?.split(" ")[1];
     if (jwt) {
-      console.log("payload : ", payload);
-      const refresh = {
-        nothing: new Date().getMilliseconds(),
-      };
-      this.server.emit("refresh", refresh);
+      this.server.emit("refresh", payload);
     }
   }
   @SubscribeMessage("message-to-group")
@@ -277,7 +256,7 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
       const verifyBand: boolean = group.Band.some((ban) => {
         return ban.id === +user.id;
       }); 
-      if (verifyMuts) {
+      if (verifyBand) {
         return;
       }
       await this.prisma.message.create({
@@ -287,14 +266,11 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
           channelsId: group.id,
         },
       });
-      const refresh = {
-        nothing: new Date().getMilliseconds(),
-      };
 
       console.log("sockets id in room : ", this.server.sockets.adapter.rooms.get(payload.groupId));
       this.server.to(payload.groupId).emit("message-to-group", payload.message);
       console.log("message-to-group : ", payload.message.content , " to : ", payload.groupId);
-      this.server.emit("refresh", refresh);
+      this.server.emit("refresh");
     }
   }
 
@@ -315,47 +291,155 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
       },
       include: {
         Members: true,
-        Muts: true,
         Band: true,
+        Owners: true,
+        Admins: true,
       },
     });
+
     const verifyIsMemmber: boolean = group.Members.some((member) => {
       return member.id === +user.id;
     }); 
     if (!verifyIsMemmber) {
       return;
     }
-    const verifyMuts: boolean = group.Muts.some((mut) => {
-      return mut.id === +user.id;
-    }); 
-    if (verifyMuts) {
-      return;
-    }
-    const verifyBand: boolean = group.Band.some((ban) => {
+
+    const verifyMuts: boolean = group.Band.some((ban) => {
       return ban.id === +user.id;
-    }); 
-    if (verifyBand) {
-      return;
-    }
-    await this.prisma.channels.update({
-      where: {
-        id: payload.groupId,
-      },
-      data: {
-        Members: {
-          disconnect: {
-            id: user.id,
+    });
+    if (verifyMuts) {
+      await this.prisma.user.update({
+        where: {
+          id: user.id,
+        },
+        data: {
+          channelsMember: {
+            disconnect: {
+              id: payload.groupId,
+            },
           },
         },
+      });
+      await this.prisma.channels.update({
+        where: {
+          id: payload.groupId,
+        },
+        data: {
+          Members: {
+            disconnect: {
+              id: user.id,
+            },
+          },
+        },
+      });
+      const verifyOwner: boolean = group.Owners.some((owner) => {
+        return owner.id === +user.id;
+      });
+      if (verifyOwner && group.Owners.length === 1) {
+        return;
+      }
+      const verifyAdmin: boolean = group.Admins.some((admin) => {
+        return admin.id === +user.id;
+      });
+
+      if (verifyAdmin)
+      {
+        await this.prisma.user.update({
+          where: {
+            id: user.id,
+          },
+          data: {
+            channelsAdmin: {
+              disconnect: {
+                id: payload.groupId,
+              },
+            },
+          },
+        });
+      }
+
+      if (verifyOwner)
+      {
+        await this.prisma.user.update({
+          where: {
+            id: user.id,
+          },
+          data: {
+            channelsOwner: {
+              disconnect: {
+                id: payload.groupId,
+              },
+            },
+          },
+        });
+      }
+    }
+    await this.prisma.user.update({
+      where: {
+        id: user.id,
+      },
+      data: {
+        channels: {
+          disconnect: {
+            id: payload.groupId,
+          },
+        },
+        channelsMember:{
+          disconnect: {
+            id: payload.groupId,
+          },
+        }
       },
     });
-    const refresh = {
-      nothing: new Date().getMilliseconds(),
-    };
-    this.server.emit("refresh", refresh);
+    this.server.emit("refresh");
   }
-  
-  
-  
+  }
+
+  @SubscribeMessage("joinGroup")
+  async handleJoinGroup(client: any, payload: any): Promise<void> {
+    const token = client.handshake.headers.authorization?.split(" ")[1];
+    if (token) {
+      const info:any= jwt_decode(token);
+      const user = await this.prisma.user.findUnique({
+        where: {
+          id: info?.userId,
+        },
+      });
+      const group = await this.prisma.channels.findUnique({
+        where: {
+          id: payload.groupId,
+        },
+        include: {
+          Members: true,
+          Band: true,
+          Owners: true,
+          Admins: true,
+        },
+      });
+      const verifyIsMemmber: boolean = group.Members.some((member) => {
+        return member.id === +user.id;
+      }); 
+      if (verifyIsMemmber) {
+        return;
+      }
+      await this.prisma.user.update({
+        where: {
+          id: user.id,
+        },
+        data: {
+          channels: {
+            connect: {
+              id: payload.groupId,
+            },
+          },
+          channelsMember: {
+            connect: {
+              id: payload.groupId,
+            },
+          },
+        },
+      });
+      this.server.emit("refresh");
+    }
   }
 }

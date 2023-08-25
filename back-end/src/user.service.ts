@@ -1,4 +1,4 @@
-import { Injectable, UseGuards } from "@nestjs/common";
+import { Injectable, UseGuards , NotFoundException } from '@nestjs/common';
 import { PrismaService } from "./prisma/prisma.service";
 import { UserData } from "./dtos/user.dto";
 import { UserDataLogin } from "./dtos/user-login.dto";
@@ -278,7 +278,7 @@ export class UserService {
       return member.id === +myId;
     });
     if (!isMumber) {
-      return "not member";
+      throw new NotFoundException("Channel not found");
     }
     delete channel.password;
     delete channel.accessPassword;

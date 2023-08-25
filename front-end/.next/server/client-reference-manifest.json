@@ -56,17 +56,17 @@
         "async": false
       }
     },
-    "(app-client)/./app/contextApi.tsx": {
+    "(app-client)/./app/Chat/layout.tsx": {
       "*": {
-        "id": "(sc_client)/./app/contextApi.tsx",
+        "id": "(sc_client)/./app/Chat/layout.tsx",
         "name": "*",
         "chunks": [],
         "async": false
       }
     },
-    "(app-client)/./app/Chat/layout.tsx": {
+    "(app-client)/./app/contextApi.tsx": {
       "*": {
-        "id": "(sc_client)/./app/Chat/layout.tsx",
+        "id": "(sc_client)/./app/contextApi.tsx",
         "name": "*",
         "chunks": [],
         "async": false
@@ -184,25 +184,17 @@
         "async": false
       }
     },
-    "(app-client)/./app/Chat/me/[msgId]/page.tsx": {
-      "*": {
-        "id": "(sc_client)/./app/Chat/me/[msgId]/page.tsx",
-        "name": "*",
-        "chunks": [],
-        "async": false
-      }
-    },
-    "(app-client)/./app/Chat/g/page.tsx": {
-      "*": {
-        "id": "(sc_client)/./app/Chat/g/page.tsx",
-        "name": "*",
-        "chunks": [],
-        "async": false
-      }
-    },
     "(app-client)/./app/Chat/page.tsx": {
       "*": {
         "id": "(sc_client)/./app/Chat/page.tsx",
+        "name": "*",
+        "chunks": [],
+        "async": false
+      }
+    },
+    "(app-client)/./app/Chat/me/[msgId]/page.tsx": {
+      "*": {
+        "id": "(sc_client)/./app/Chat/me/[msgId]/page.tsx",
         "name": "*",
         "chunks": [],
         "async": false
@@ -235,6 +227,14 @@
     "(app-client)/./app/login/page.tsx": {
       "*": {
         "id": "(sc_client)/./app/login/page.tsx",
+        "name": "*",
+        "chunks": [],
+        "async": false
+      }
+    },
+    "(app-client)/./app/signup/page.tsx": {
+      "*": {
+        "id": "(sc_client)/./app/signup/page.tsx",
         "name": "*",
         "chunks": [],
         "async": false
@@ -403,19 +403,19 @@
       ],
       "async": false
     },
-    "/Users/asabbar/Desktop/ft_git/front-end/app/contextApi.tsx": {
-      "id": "(app-client)/./app/contextApi.tsx",
-      "name": "*",
-      "chunks": [
-        "app/Profile/layout:static/chunks/app/Profile/layout.js"
-      ],
-      "async": false
-    },
     "/Users/asabbar/Desktop/ft_git/front-end/app/Chat/layout.tsx": {
       "id": "(app-client)/./app/Chat/layout.tsx",
       "name": "*",
       "chunks": [
         "app/Chat/layout:static/chunks/app/Chat/layout.js"
+      ],
+      "async": false
+    },
+    "/Users/asabbar/Desktop/ft_git/front-end/app/contextApi.tsx": {
+      "id": "(app-client)/./app/contextApi.tsx",
+      "name": "*",
+      "chunks": [
+        "app/Profile/layout:static/chunks/app/Profile/layout.js"
       ],
       "async": false
     },
@@ -555,27 +555,19 @@
       ],
       "async": false
     },
-    "/Users/asabbar/Desktop/ft_git/front-end/app/Chat/me/[msgId]/page.tsx": {
-      "id": "(app-client)/./app/Chat/me/[msgId]/page.tsx",
-      "name": "*",
-      "chunks": [
-        "app/Chat/me/[msgId]/page:static/chunks/app/Chat/me/[msgId]/page.js"
-      ],
-      "async": false
-    },
-    "/Users/asabbar/Desktop/ft_git/front-end/app/Chat/g/page.tsx": {
-      "id": "(app-client)/./app/Chat/g/page.tsx",
-      "name": "*",
-      "chunks": [
-        "app/Chat/g/page:static/chunks/app/Chat/g/page.js"
-      ],
-      "async": false
-    },
     "/Users/asabbar/Desktop/ft_git/front-end/app/Chat/page.tsx": {
       "id": "(app-client)/./app/Chat/page.tsx",
       "name": "*",
       "chunks": [
         "app/Chat/page:static/chunks/app/Chat/page.js"
+      ],
+      "async": false
+    },
+    "/Users/asabbar/Desktop/ft_git/front-end/app/Chat/me/[msgId]/page.tsx": {
+      "id": "(app-client)/./app/Chat/me/[msgId]/page.tsx",
+      "name": "*",
+      "chunks": [
+        "app/Chat/me/[msgId]/page:static/chunks/app/Chat/me/[msgId]/page.js"
       ],
       "async": false
     },
@@ -610,22 +602,17 @@
         "app/login/page:static/chunks/app/login/page.js"
       ],
       "async": false
+    },
+    "/Users/asabbar/Desktop/ft_git/front-end/app/signup/page.tsx": {
+      "id": "(app-client)/./app/signup/page.tsx",
+      "name": "*",
+      "chunks": [
+        "app/signup/page:static/chunks/app/signup/page.js"
+      ],
+      "async": false
     }
   },
   "entryCSSFiles": {
-    "/Users/asabbar/Desktop/ft_git/front-end/app/layout": {
-      "modules": [
-        "/Users/asabbar/Desktop/ft_git/front-end/app/globals.css",
-        "/Users/asabbar/Desktop/ft_git/front-end/node_modules/next/font/google/target.css?{\"path\":\"app/layout.tsx\",\"import\":\"Inter\",\"arguments\":[{\"subsets\":[\"latin\"]}],\"variableName\":\"inter\"}"
-      ],
-      "files": [
-        "static/css/app/layout.css"
-      ]
-    },
-    "/Users/asabbar/Desktop/ft_git/front-end/app/loading": {
-      "modules": [],
-      "files": []
-    },
     "/Users/asabbar/Desktop/ft_git/front-end/app/Chat/layout": {
       "modules": [
         "/Users/asabbar/Desktop/ft_git/front-end/app/globals.css",
@@ -635,7 +622,24 @@
         "static/css/app/Chat/layout.css"
       ]
     },
+    "/Users/asabbar/Desktop/ft_git/front-end/app/loading": {
+      "modules": [],
+      "files": []
+    },
+    "/Users/asabbar/Desktop/ft_git/front-end/app/layout": {
+      "modules": [
+        "/Users/asabbar/Desktop/ft_git/front-end/app/globals.css",
+        "/Users/asabbar/Desktop/ft_git/front-end/node_modules/next/font/google/target.css?{\"path\":\"app/layout.tsx\",\"import\":\"Inter\",\"arguments\":[{\"subsets\":[\"latin\"]}],\"variableName\":\"inter\"}"
+      ],
+      "files": [
+        "static/css/app/layout.css"
+      ]
+    },
     "/Users/asabbar/Desktop/ft_git/front-end/app/Chat/g/[msgId]/page": {
+      "modules": [],
+      "files": []
+    },
+    "/Users/asabbar/Desktop/ft_git/front-end/app/Chat/page": {
       "modules": [],
       "files": []
     },
@@ -643,11 +647,19 @@
       "modules": [],
       "files": []
     },
-    "/Users/asabbar/Desktop/ft_git/front-end/app/Chat/g/page": {
+    "/Users/asabbar/Desktop/ft_git/front-end/app/Game/page": {
       "modules": [],
       "files": []
     },
-    "/Users/asabbar/Desktop/ft_git/front-end/app/Chat/page": {
+    "/Users/asabbar/Desktop/ft_git/front-end/app/Game/layout": {
+      "modules": [],
+      "files": []
+    },
+    "/Users/asabbar/Desktop/ft_git/front-end/app/Setting/page": {
+      "modules": [],
+      "files": []
+    },
+    "/Users/asabbar/Desktop/ft_git/front-end/app/Setting/layout": {
       "modules": [],
       "files": []
     },
@@ -656,6 +668,10 @@
       "files": []
     },
     "/Users/asabbar/Desktop/ft_git/front-end/app/login/page": {
+      "modules": [],
+      "files": []
+    },
+    "/Users/asabbar/Desktop/ft_git/front-end/app/signup/page": {
       "modules": [],
       "files": []
     },

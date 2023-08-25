@@ -266,7 +266,7 @@ let UserService = exports.UserService = class UserService {
             return member.id === +myId;
         });
         if (!isMumber) {
-            return "not member";
+            throw new common_1.NotFoundException("Channel not found");
         }
         delete channel.password;
         delete channel.accessPassword;

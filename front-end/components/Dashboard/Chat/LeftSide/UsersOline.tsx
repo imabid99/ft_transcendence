@@ -8,7 +8,7 @@ import 'swiper/css';
 
 export default function UsersOnline() {
 
-    const {profiles, user} = useContext(contextdata);
+    const {profiles, user} :any= useContext(contextdata);
 
     return (
       <div className="chat__left__bottom flex flex-col gap-[24px] px-[25px] py-[25px] w-full">

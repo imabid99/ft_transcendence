@@ -14,7 +14,7 @@ type ChannelInfoProps = {
 
 export default function ChannelInfo({infoRef, handleshowInfo, group, userId}: ChannelInfoProps) {
     const [showAccessPassword, setShowAccessPassword] = useState<boolean>(false);
-    const mytype = group.Owners.find((owner: any) => owner.id === userId) ? 3 : group.Admins.find((admin: any) => admin.id === userId) ? 2 : 1;
+    const mytype = group?.Owners.find((owner: any) => owner.id === userId) ? 3 : group?.Admins.find((admin: any) => admin.id === userId) ? 2 : 1;
     const {socket}: any = useContext(contextdata);
     const router = useRouter();
     const handleExit = () => {
@@ -43,7 +43,7 @@ export default function ChannelInfo({infoRef, handleshowInfo, group, userId}: Ch
                 <div className="w-full flex flex-col gap-[5px] justify-center items-center relative">
                     <img src="/userProfile.jpg" alt="" className="rounded-full w-[250px] h-[250px] object-cover"/>
                     <p className="text-[#024077] text-[35px] font-[Poppins] font-[700]">
-                        Group name
+                        {group.name}
                     </p>
                     <p className="text-[#064A85] text-[20px] font-[Poppins] font-[400]">
                         {group.Members.length} members
@@ -94,16 +94,28 @@ export default function ChannelInfo({infoRef, handleshowInfo, group, userId}: Ch
                                             <span className="flex items-center gap-[10px]">
                                                 <img src="/userProfile.jpg" alt="" className="rounded-full w-[60px] h-[60px] object-cover"/>
                                                 <span>
-                                                    <p className="text-[#034B8A] text-[20px] font-[Poppins] font-[500] max-w-[400px] truncate">
+                                                    <p className="text-[#034B8A] text-[20px] font-[Poppins] font-[500] min-w-[200px]  max-w-[300px] truncate">
                                                         {owner.username}
                                                     </p>
                                                 </span>
                                             </span>
-                                            <span className="">
-                                                owner
-                                            </span>
                                         </div>
                                     </Link>
+                                    <>
+                                        <span className="">
+                                            owner
+                                        </span>
+                                        {
+                                            userId !== owner.id && (
+                                            <Link href="/Game">
+                                                <svg stroke="currentColor" fill="currentColor"  viewBox="0 0 512 512" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg">
+                                                    <path d="M483.13 245.38C461.92 149.49 430 98.31 382.65 84.33A107.13 107.13 0 00352 80c-13.71 0-25.65 3.34-38.28 6.88C298.5 91.15 281.21 96 256 96s-42.51-4.84-57.76-9.11C185.6 83.34 173.67 80 160 80a115.74 115.74 0 00-31.73 4.32c-47.1 13.92-79 65.08-100.52 161C4.61 348.54 16 413.71 59.69 428.83a56.62 56.62 0 0018.64 3.22c29.93 0 53.93-24.93 70.33-45.34 18.53-23.1 40.22-34.82 107.34-34.82 59.95 0 84.76 8.13 106.19 34.82 13.47 16.78 26.2 28.52 38.9 35.91 16.89 9.82 33.77 12 50.16 6.37 25.82-8.81 40.62-32.1 44-69.24 2.57-28.48-1.39-65.89-12.12-114.37zM208 240h-32v32a16 16 0 01-32 0v-32h-32a16 16 0 010-32h32v-32a16 16 0 0132 0v32h32a16 16 0 010 32zm84 4a20 20 0 1120-20 20 20 0 01-20 20zm44 44a20 20 0 1120-19.95A20 20 0 01336 288zm0-88a20 20 0 1120-20 20 20 0 01-20 20zm44 44a20 20 0 1120-20 20 20 0 01-20 20z">
+                                                    </path>
+                                                </svg>
+                                            </Link>)
+
+                                        }
+                                    </>
                                 </HandlRightClick>
                             )
                         })
@@ -117,16 +129,28 @@ export default function ChannelInfo({infoRef, handleshowInfo, group, userId}: Ch
                                             <span className="flex items-center gap-[10px]">
                                                 <img src="/userProfile.jpg" alt="" className="rounded-full w-[60px] h-[60px] object-cover"/>
                                                 <span>
-                                                    <p className="text-[#034B8A] text-[20px] font-[Poppins] font-[500] max-w-[400px] truncate">
+                                                    <p className="text-[#034B8A] text-[20px] font-[Poppins] font-[500] min-w-[200px]  max-w-[300px] truncate">
                                                         {admin.username}
                                                     </p>
                                                 </span>
                                             </span>
-                                            <span className="">
-                                                Admin
-                                            </span>
                                         </div>
                                     </Link>
+                                    <>
+                                        <span className="">
+                                            Admin
+                                        </span>
+                                        {
+                                            userId !== admin.id && (
+                                                <Link href="/Game">
+                                                    <svg stroke="currentColor" fill="#034B8A"  viewBox="0 0 512 512" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg">
+                                                        <path d="M483.13 245.38C461.92 149.49 430 98.31 382.65 84.33A107.13 107.13 0 00352 80c-13.71 0-25.65 3.34-38.28 6.88C298.5 91.15 281.21 96 256 96s-42.51-4.84-57.76-9.11C185.6 83.34 173.67 80 160 80a115.74 115.74 0 00-31.73 4.32c-47.1 13.92-79 65.08-100.52 161C4.61 348.54 16 413.71 59.69 428.83a56.62 56.62 0 0018.64 3.22c29.93 0 53.93-24.93 70.33-45.34 18.53-23.1 40.22-34.82 107.34-34.82 59.95 0 84.76 8.13 106.19 34.82 13.47 16.78 26.2 28.52 38.9 35.91 16.89 9.82 33.77 12 50.16 6.37 25.82-8.81 40.62-32.1 44-69.24 2.57-28.48-1.39-65.89-12.12-114.37zM208 240h-32v32a16 16 0 01-32 0v-32h-32a16 16 0 010-32h32v-32a16 16 0 0132 0v32h32a16 16 0 010 32zm84 4a20 20 0 1120-20 20 20 0 01-20 20zm44 44a20 20 0 1120-19.95A20 20 0 01336 288zm0-88a20 20 0 1120-20 20 20 0 01-20 20zm44 44a20 20 0 1120-20 20 20 0 01-20 20z">
+                                                        </path>
+                                                    </svg>
+                                                </Link>
+                                            )
+                                        }
+                                    </>
                                 </HandlRightClick>
                             )
                         })
@@ -141,16 +165,28 @@ export default function ChannelInfo({infoRef, handleshowInfo, group, userId}: Ch
                                             <span className="flex items-center gap-[10px]">
                                                 <img src="/userProfile.jpg" alt="" className="rounded-full w-[60px] h-[60px] object-cover"/>
                                                 <span>
-                                                    <p className="text-[#034B8A] text-[20px] font-[Poppins] font-[500] max-w-[400px] truncate">
+                                                    <p className="text-[#034B8A] text-[20px] font-[Poppins] font-[500] min-w-[200px]  max-w-[300px] truncate">
                                                         {member.username}
                                                     </p>
                                                 </span>
                                             </span>
-                                            <span className="">
-                                            member
-                                            </span>
                                         </div>
                                     </Link> 
+                                    <>
+                                        <span className="">
+                                            memmber
+                                        </span>
+                                        {
+                                            userId !== member.id && (
+                                                <Link href="/Game">
+                                                    <svg stroke="currentColor" fill="currentColor"  viewBox="0 0 512 512" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg">
+                                                        <path d="M483.13 245.38C461.92 149.49 430 98.31 382.65 84.33A107.13 107.13 0 00352 80c-13.71 0-25.65 3.34-38.28 6.88C298.5 91.15 281.21 96 256 96s-42.51-4.84-57.76-9.11C185.6 83.34 173.67 80 160 80a115.74 115.74 0 00-31.73 4.32c-47.1 13.92-79 65.08-100.52 161C4.61 348.54 16 413.71 59.69 428.83a56.62 56.62 0 0018.64 3.22c29.93 0 53.93-24.93 70.33-45.34 18.53-23.1 40.22-34.82 107.34-34.82 59.95 0 84.76 8.13 106.19 34.82 13.47 16.78 26.2 28.52 38.9 35.91 16.89 9.82 33.77 12 50.16 6.37 25.82-8.81 40.62-32.1 44-69.24 2.57-28.48-1.39-65.89-12.12-114.37zM208 240h-32v32a16 16 0 01-32 0v-32h-32a16 16 0 010-32h32v-32a16 16 0 0132 0v32h32a16 16 0 010 32zm84 4a20 20 0 1120-20 20 20 0 01-20 20zm44 44a20 20 0 1120-19.95A20 20 0 01336 288zm0-88a20 20 0 1120-20 20 20 0 01-20 20zm44 44a20 20 0 1120-20 20 20 0 01-20 20z">
+                                                        </path>
+                                                    </svg>
+                                                </Link>
+                                            )
+                                        }
+                                    </>
                                 </HandlRightClick>
                             )
                         })

@@ -51,10 +51,7 @@ let ChatGateway = exports.ChatGateway = class ChatGateway {
                 },
             });
             console.log("myChannels : ", client.rooms);
-            const refresh = {
-                nothing: new Date().getMilliseconds(),
-            };
-            this.server.emit("refresh", refresh);
+            this.server.emit("refresh");
         }
     }
     async handleDisconnect(client) {
@@ -72,10 +69,7 @@ let ChatGateway = exports.ChatGateway = class ChatGateway {
                     status: "offline",
                 },
             });
-            const refresh = {
-                nothing: new Date().getMilliseconds(),
-            };
-            this.server.emit("refresh", refresh);
+            this.server.emit("refresh");
         }
     }
     async handlePrivetMessage(_client, payload) {
@@ -109,22 +103,17 @@ let ChatGateway = exports.ChatGateway = class ChatGateway {
                 userId: receiver.id,
             },
         });
-        const refresh = {
-            nothing: new Date().getMilliseconds(),
-        };
         this.server.to(payload.room).emit("privet-message", payload.message);
         this.server.to(payload.sander).emit("privet-message", payload.message);
-        this.server.emit("refresh", refresh);
+        this.server.emit("refresh");
     }
     async handleBlockUser(client, payload) {
         var _a;
         const token = (_a = client.handshake.headers.authorization) === null || _a === void 0 ? void 0 : _a.split(" ")[1];
         try {
-            const verified = jwt.verify(token, process.env.JWT_SECRET);
-            console.log("verified : ", verified);
+            jwt.verify(token, process.env.JWT_SECRET);
         }
         catch (err) {
-            console.log("verified : ", err.message);
             return;
         }
         if (token) {
@@ -134,10 +123,7 @@ let ChatGateway = exports.ChatGateway = class ChatGateway {
                     blockedId: payload.blockedId,
                 },
             });
-            const refresh = {
-                nothing: new Date().getMilliseconds(),
-            };
-            this.server.emit("refresh", refresh);
+            this.server.emit("refresh");
         }
     }
     async handleUnblockUser(client, payload) {
@@ -165,11 +151,7 @@ let ChatGateway = exports.ChatGateway = class ChatGateway {
                     });
                 }
             });
-            const refresh = {
-                nothing: new Date(),
-            };
-            this.server.emit("refresh", refresh);
-            console.log("refresh : ", refresh.nothing);
+            this.server.emit("refresh");
         }
     }
     async handleCreateGroup(client, payload) {
@@ -211,21 +193,14 @@ let ChatGateway = exports.ChatGateway = class ChatGateway {
                     accessIsActived: payload.accessPassword ? true : false,
                 },
             });
-            const refresh = {
-                nothing: new Date(),
-            };
-            this.server.emit("refresh", refresh);
+            this.server.emit("refresh");
         }
     }
     async handleRefresh(client, payload) {
         var _a;
         const jwt = (_a = client.handshake.headers.authorization) === null || _a === void 0 ? void 0 : _a.split(" ")[1];
         if (jwt) {
-            console.log("payload : ", payload);
-            const refresh = {
-                nothing: new Date().getMilliseconds(),
-            };
-            this.server.emit("refresh", refresh);
+            this.server.emit("refresh", payload);
         }
     }
     async handleMessageToGroup(client, payload) {
@@ -263,7 +238,7 @@ let ChatGateway = exports.ChatGateway = class ChatGateway {
             const verifyBand = group.Band.some((ban) => {
                 return ban.id === +user.id;
             });
-            if (verifyMuts) {
+            if (verifyBand) {
                 return;
             }
             await this.prisma.message.create({
@@ -273,13 +248,10 @@ let ChatGateway = exports.ChatGateway = class ChatGateway {
                     channelsId: group.id,
                 },
             });
-            const refresh = {
-                nothing: new Date().getMilliseconds(),
-            };
             console.log("sockets id in room : ", this.server.sockets.adapter.rooms.get(payload.groupId));
             this.server.to(payload.groupId).emit("message-to-group", payload.message);
             console.log("message-to-group : ", payload.message.content, " to : ", payload.groupId);
-            this.server.emit("refresh", refresh);
+            this.server.emit("refresh");
         }
     }
     async handleExitGroup(client, payload) {
@@ -298,8 +270,9 @@ let ChatGateway = exports.ChatGateway = class ChatGateway {
                 },
                 include: {
                     Members: true,
-                    Muts: true,
                     Band: true,
+                    Owners: true,
+                    Admins: true,
                 },
             });
             const verifyIsMemmber = group.Members.some((member) => {
@@ -308,34 +281,137 @@ let ChatGateway = exports.ChatGateway = class ChatGateway {
             if (!verifyIsMemmber) {
                 return;
             }
-            const verifyMuts = group.Muts.some((mut) => {
-                return mut.id === +user.id;
-            });
-            if (verifyMuts) {
-                return;
-            }
-            const verifyBand = group.Band.some((ban) => {
+            const verifyMuts = group.Band.some((ban) => {
                 return ban.id === +user.id;
             });
-            if (verifyBand) {
-                return;
+            if (verifyMuts) {
+                await this.prisma.user.update({
+                    where: {
+                        id: user.id,
+                    },
+                    data: {
+                        channelsMember: {
+                            disconnect: {
+                                id: payload.groupId,
+                            },
+                        },
+                    },
+                });
+                await this.prisma.channels.update({
+                    where: {
+                        id: payload.groupId,
+                    },
+                    data: {
+                        Members: {
+                            disconnect: {
+                                id: user.id,
+                            },
+                        },
+                    },
+                });
+                const verifyOwner = group.Owners.some((owner) => {
+                    return owner.id === +user.id;
+                });
+                if (verifyOwner && group.Owners.length === 1) {
+                    return;
+                }
+                const verifyAdmin = group.Admins.some((admin) => {
+                    return admin.id === +user.id;
+                });
+                if (verifyAdmin) {
+                    await this.prisma.user.update({
+                        where: {
+                            id: user.id,
+                        },
+                        data: {
+                            channelsAdmin: {
+                                disconnect: {
+                                    id: payload.groupId,
+                                },
+                            },
+                        },
+                    });
+                }
+                if (verifyOwner) {
+                    await this.prisma.user.update({
+                        where: {
+                            id: user.id,
+                        },
+                        data: {
+                            channelsOwner: {
+                                disconnect: {
+                                    id: payload.groupId,
+                                },
+                            },
+                        },
+                    });
+                }
             }
-            await this.prisma.channels.update({
+            await this.prisma.user.update({
+                where: {
+                    id: user.id,
+                },
+                data: {
+                    channels: {
+                        disconnect: {
+                            id: payload.groupId,
+                        },
+                    },
+                    channelsMember: {
+                        disconnect: {
+                            id: payload.groupId,
+                        },
+                    }
+                },
+            });
+            this.server.emit("refresh");
+        }
+    }
+    async handleJoinGroup(client, payload) {
+        var _a;
+        const token = (_a = client.handshake.headers.authorization) === null || _a === void 0 ? void 0 : _a.split(" ")[1];
+        if (token) {
+            const info = (0, jwt_decode_1.default)(token);
+            const user = await this.prisma.user.findUnique({
+                where: {
+                    id: info === null || info === void 0 ? void 0 : info.userId,
+                },
+            });
+            const group = await this.prisma.channels.findUnique({
                 where: {
                     id: payload.groupId,
                 },
+                include: {
+                    Members: true,
+                    Band: true,
+                    Owners: true,
+                    Admins: true,
+                },
+            });
+            const verifyIsMemmber = group.Members.some((member) => {
+                return member.id === +user.id;
+            });
+            if (verifyIsMemmber) {
+                return;
+            }
+            await this.prisma.user.update({
+                where: {
+                    id: user.id,
+                },
                 data: {
-                    Members: {
-                        disconnect: {
-                            id: user.id,
+                    channels: {
+                        connect: {
+                            id: payload.groupId,
+                        },
+                    },
+                    channelsMember: {
+                        connect: {
+                            id: payload.groupId,
                         },
                     },
                 },
             });
-            const refresh = {
-                nothing: new Date().getMilliseconds(),
-            };
-            this.server.emit("refresh", refresh);
+            this.server.emit("refresh");
         }
     }
 };
@@ -385,6 +461,12 @@ __decorate([
     __metadata("design:paramtypes", [Object, Object]),
     __metadata("design:returntype", Promise)
 ], ChatGateway.prototype, "handleExitGroup", null);
+__decorate([
+    (0, websockets_1.SubscribeMessage)("joinGroup"),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Object, Object]),
+    __metadata("design:returntype", Promise)
+], ChatGateway.prototype, "handleJoinGroup", null);
 exports.ChatGateway = ChatGateway = __decorate([
     (0, websockets_1.WebSocketGateway)({
         cors: {

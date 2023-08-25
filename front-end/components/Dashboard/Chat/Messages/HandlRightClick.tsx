@@ -5,12 +5,11 @@ import { useState } from 'react';
 type HandlRightClickProps ={
     children: ReactNode,
     id ?: number,
-    name ?: string,
     type ?: number,
     mytype ?: number,
 }
 
-export default function HandlRightClick({ children , id , name , type , mytype }: HandlRightClickProps) {
+export default function HandlRightClick({ children ,id, type , mytype }: HandlRightClickProps) {
     const [showMenu, setShowMenu] = useState(false);
     const [showMutemenu, setShowMutemenu] = useState(false);
     const [pos, setPos] = useState({ x: 0, y: 0 });
@@ -92,7 +91,7 @@ export default function HandlRightClick({ children , id , name , type , mytype }
                     </div>
                 )
             }
-            <div onClick={() =>  setShowMenu(false)}>
+            <div onClick={() =>  setShowMenu(false)} className='flex  items-center justify-between'>
                 {children}
             </div>
             </div>

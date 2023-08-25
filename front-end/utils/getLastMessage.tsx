@@ -16,10 +16,12 @@ export const getLastMessage = (messages: Message[], userId: number) => {
 }
 
 export const getLastMessageGroup = (messages: Message[]) => {
-    console.log("heere last message ");
     if (!messages || messages.length === 0) {
         return null;
     }
-    console.log("heere last message ", messages[messages.length - 1]);
+    messages.sort((a: Message, b: Message) => {
+        return new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime();
+    })
+
     return messages[messages.length - 1];
 }

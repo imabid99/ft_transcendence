@@ -61,7 +61,7 @@ export default function GroupsChannels() {
             Groups & Channels
           </p>
         </span>
-        <div className="flex flex-col gap-[20px] overflow-y-hidden max-h-[235px] rounded-[5px] w-full" ref={groupsChannelsRef}>
+        <div className="flex flex-col gap-[20px] overflow-y-hidden max-h-[235px] min-h-[235px]rounded-[5px] w-full" ref={groupsChannelsRef}>
           {
             myChannels?.map((mychannel: any) => {
               return(

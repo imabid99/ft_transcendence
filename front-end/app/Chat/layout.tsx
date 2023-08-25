@@ -10,7 +10,7 @@ import { useContext } from "react";
 import { contextdata } from "@/app/contextApi";
 
 
-export default function ChatLayout({children}: {hildren: React.ReactNode;}) {
+export default function ChatLayout({ children }: { children: React.ReactNode }) {
   const router = useRouter();
   const [isloading, setIsLoading] = useState(true);
   useEffect(() => {
