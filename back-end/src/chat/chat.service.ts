@@ -43,4 +43,24 @@ export class ChatService {
         });
         return messages;
     }
+
+    async getMyChannels(id: string): Promise<any> {
+        const channels = await this.prisma.channels.findMany({
+          where: {
+            Members: {
+              some: {
+                id: +id,
+              },
+            },
+          },
+          include: {
+            Messages: true,
+          }
+        });
+        channels.forEach((channel) => {
+          delete channel.password;
+          delete channel.accessPassword;
+        });
+        return channels;
+      }
 }

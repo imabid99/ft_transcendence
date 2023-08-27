@@ -89,10 +89,4 @@ export class userController {
   ): Promise<{ iBlocked: boolean; heBlocked: boolean }> {
     return this.userService.isBlocked(userId, tragetId);
   }
-
-  @Get("myChannels/:id")
-  @UseGuards(JwtAuthGuard)
-  async myChannels(@Param("id") id: string): Promise<any> {
-    return this.userService.getMyChannels(id);
-  }
 }

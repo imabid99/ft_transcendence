@@ -120,7 +120,7 @@ const ContextProvider = ({ children }: { children: React.ReactNode; }) => {
       console.log("getChannels user : ", user);
       try
       {
-        const resp = await axiosInstance.get(`http://10.13.1.7:3000/api/user/myChannels/${user?.id}`);
+        const resp = await axiosInstance.get(`http://10.13.1.7:3000/api/chat/myChannels/${user?.id}`);
         if (resp.data === null) {
           return;
         }

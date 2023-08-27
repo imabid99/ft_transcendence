@@ -35,4 +35,10 @@ export class ChatController {
     messages(@Param() params: any) {
         return this.chatService.getMessages(params.id);
     }
+
+    @Get("myChannels/:id")
+    @UseGuards(JwtAuthGuard)
+    async myChannels(@Param("id") id: string): Promise<any> {
+      return this.chatService.getMyChannels(id);
+    }
 }
