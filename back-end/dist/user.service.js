@@ -29,18 +29,6 @@ let UserService = exports.UserService = class UserService {
         const profiles = await this.prisma.profile.findMany();
         return profiles;
     }
-    async getLastMessage(id) {
-        const getLastMessage = await this.prisma.message.findMany({
-            where: {
-                userId: +id,
-            },
-            orderBy: {
-                createdAt: "desc",
-            },
-            take: 1,
-        });
-        return getLastMessage;
-    }
     async addUser(userData) {
         let exist = await this.prisma.user.findUnique({
             where: {
@@ -189,14 +177,6 @@ let UserService = exports.UserService = class UserService {
         }
         return user;
     }
-    async getMessages(id) {
-        const messages = await this.prisma.message.findMany({
-            where: {
-                userId: +id,
-            },
-        });
-        return messages;
-    }
     async getUserInfo(token) {
         const decoded = jwt.verify(token.split(" ")[1], process.env.JWT_SECRET);
         const user = await this.prisma.user.findUnique({
@@ -249,28 +229,6 @@ let UserService = exports.UserService = class UserService {
             delete channel.accessPassword;
         });
         return channels;
-    }
-    async getChannel(myId, channelId) {
-        const channel = await this.prisma.channels.findUnique({
-            where: {
-                id: channelId,
-            },
-            include: {
-                Members: true,
-                Owners: true,
-                Admins: true,
-                Messages: true,
-            },
-        });
-        const isMumber = channel.Members.some((member) => {
-            return member.id === +myId;
-        });
-        if (!isMumber) {
-            throw new common_1.NotFoundException("Channel not found");
-        }
-        delete channel.password;
-        delete channel.accessPassword;
-        return channel;
     }
 };
 exports.UserService = UserService = __decorate([

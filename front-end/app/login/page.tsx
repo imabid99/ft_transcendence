@@ -46,7 +46,7 @@ export default function Home() {
       return;
     };
     try {
-      const response = await axios.post('http://localhost:3000/api/user/login', {
+      const response = await axios.post('http://10.13.1.7:3000/api/user/login', {
         email: email,
         password: password,
        });

@@ -8,7 +8,6 @@ export declare class UserService {
     constructor(prisma: PrismaService);
     getUsers(): Promise<import(".prisma/client").User[]>;
     getProfiles(): Promise<import(".prisma/client").Profile[]>;
-    getLastMessage(id: string | number): Promise<import(".prisma/client").Message[]>;
     addUser(userData: UserData): Promise<"User created" | "user exist">;
     generateToken(userId: number, username: string, email: string): string;
     login(userData: UserDataLogin): Promise<string>;
@@ -18,12 +17,10 @@ export declare class UserService {
     getProfile(id: string): Promise<import(".prisma/client").Profile | "Not found">;
     validateJwtToken(token: string): Promise<string | jwt.JwtPayload>;
     validateIntraUser(user: any): Promise<any>;
-    getMessages(id: string): Promise<any>;
     getUserInfo(token: string): Promise<any>;
     isBlocked(id: string, userId: string): Promise<{
         iBlocked: boolean;
         heBlocked: boolean;
     }>;
     getMyChannels(id: string): Promise<any>;
-    getChannel(myId: string, channelId: string): Promise<any>;
 }

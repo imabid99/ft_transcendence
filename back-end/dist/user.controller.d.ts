@@ -6,13 +6,11 @@ export declare class userController {
     constructor(userService: UserService);
     getUsers(headers: any): Promise<import(".prisma/client").User[]>;
     signup(userData: UserData): Promise<"User created" | "user exist"> | "invalid input";
-    signin(userData: UserDataLogin): Promise<string> | "invalid input";
+    signin(userData: UserDataLogin): "invalid input" | Promise<string>;
     changePass(req: any): Promise<"invalid password" | "Changed successfully"> | "Invalid input";
     Callback(req: any): Promise<string>;
     profile(): Promise<import(".prisma/client").Profile[]>;
-    LastMessage(params: any): Promise<import(".prisma/client").Message[]>;
     pubProfile(params: any): Promise<import(".prisma/client").Profile | "Not found">;
-    messages(params: any): Promise<any>;
     fortyTwoCallback(req: Request): Promise<void>;
     getUserInfo(headers: any): Promise<void>;
     isBlocked(userId: string, tragetId: string): Promise<{
@@ -20,5 +18,4 @@ export declare class userController {
         heBlocked: boolean;
     }>;
     myChannels(id: string): Promise<any>;
-    channel(id: string, headers: any): Promise<any>;
 }

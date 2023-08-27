@@ -50,7 +50,7 @@ export default function ChannelInfo({infoRef, handleshowInfo, group, userId}: Ch
                     </p>
                     {
                         showAccessPassword &&
-                            <div className="min-h-full absolute top-0 left-0 bg-white flex flex-col justify-center items-center">
+                            <div className="min-h-full w-full absolute top-0 left-0 bg-white flex flex-col justify-center items-center">
                                 <>
                                     <p className="text-[#064A85] text-[20px] font-[Poppins] font-[400] flex items-center gap-[10px]">
                                         Change access password
@@ -88,8 +88,8 @@ export default function ChannelInfo({infoRef, handleshowInfo, group, userId}: Ch
                         group?.Owners.map((owner: any) => {
                             return (
                                 
-                                <HandlRightClick mytype={mytype} type={3} id={owner.id}>
-                                    <Link href={`/profile/${owner.id}`}  key={`${owner.id}`}>
+                                <HandlRightClick mytype={mytype} type={3} id={owner.id}  key={`${owner.id}`}>
+                                    <Link href={`/profile/${owner.id}`}>
                                         <div className="w-full flex items-center gap-[10px] justify-between cursor-pointer">
                                             <span className="flex items-center gap-[10px]">
                                                 <img src="/groupAvatar.jpg" alt="" className="rounded-full w-[60px] h-[60px] object-cover"/>
@@ -123,8 +123,8 @@ export default function ChannelInfo({infoRef, handleshowInfo, group, userId}: Ch
                     {
                         group?.Admins.map((admin: any) => {
                             return (
-                                <HandlRightClick mytype={mytype} type={2} id={admin.id} groupId={group.id}>
-                                    <Link href={`/profile/${admin.id}`}  key={`${admin.id}`}>
+                                <HandlRightClick mytype={mytype} type={2} id={admin.id} groupId={group.id}  key={`${admin.id}`}>
+                                    <Link href={`/profile/${admin.id}`}>
                                         <div className="w-full flex items-center gap-[10px] justify-between cursor-pointer">
                                             <span className="flex items-center gap-[10px]">
                                                 <img src="/groupAvatar.jpg" alt="" className="rounded-full w-[60px] h-[60px] object-cover"/>
@@ -159,8 +159,8 @@ export default function ChannelInfo({infoRef, handleshowInfo, group, userId}: Ch
                         group?.Members.map((member: any) => {
                             if (group.Owners.find((owner: any) => owner.id === member.id)) return;
                             return(
-                                <HandlRightClick mytype={mytype} type={1} id={member.id} groupId={group.id}>
-                                    <Link href={`/profile/${member.id}`}  key={`${member.id}`}>
+                                <HandlRightClick mytype={mytype} type={1} id={member.id} groupId={group.id}  key={`${member.id}`}>
+                                    <Link href={`/profile/${member.id}`} >
                                         <div className="w-full flex items-center gap-[10px] justify-between cursor-pointer">
                                             <span className="flex items-center gap-[10px]">
                                                 <img src="/groupAvatar.jpg" alt="" className="rounded-full w-[60px] h-[60px] object-cover"/>

@@ -10,11 +10,14 @@ exports.ChatModule = void 0;
 const common_1 = require("@nestjs/common");
 const chat_gateway_1 = require("./gateway/chat/chat.gateway");
 const user_service_1 = require("../user.service");
+const chat_controller_1 = require("./chat.controller");
+const chat_service_1 = require("./chat.service");
 let ChatModule = exports.ChatModule = class ChatModule {
 };
 exports.ChatModule = ChatModule = __decorate([
     (0, common_1.Module)({
-        providers: [chat_gateway_1.ChatGateway, user_service_1.UserService],
+        providers: [chat_gateway_1.ChatGateway, user_service_1.UserService, chat_service_1.ChatService],
+        controllers: [chat_controller_1.ChatController],
     })
 ], ChatModule);
 //# sourceMappingURL=chat.module.js.map

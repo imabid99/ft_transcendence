@@ -19,7 +19,6 @@ const user_dto_1 = require("./dtos/user.dto");
 const user_login_dto_1 = require("./dtos/user-login.dto");
 const passport_1 = require("@nestjs/passport");
 const jwt_auth_guard_1 = require("./jwt-auth/jwt-auth.guard");
-const jwt_decode_1 = require("jwt-decode");
 let userController = exports.userController = class userController {
     constructor(userService) {
         this.userService = userService;
@@ -55,14 +54,8 @@ let userController = exports.userController = class userController {
     profile() {
         return this.userService.getProfiles();
     }
-    LastMessage(params) {
-        return this.userService.getLastMessage(params.id);
-    }
     pubProfile(params) {
         return this.userService.getProfile(params.id);
-    }
-    messages(params) {
-        return this.userService.getMessages(params.id);
     }
     async fortyTwoCallback(req) {
         console.log("here");
@@ -75,11 +68,6 @@ let userController = exports.userController = class userController {
     }
     async myChannels(id) {
         return this.userService.getMyChannels(id);
-    }
-    async channel(id, headers) {
-        const token = headers.authorization.split(" ")[1];
-        const decoded = (0, jwt_decode_1.default)(token);
-        return this.userService.getChannel(decoded === null || decoded === void 0 ? void 0 : decoded.userId.toString(), id);
     }
 };
 __decorate([
@@ -126,14 +114,6 @@ __decorate([
     __metadata("design:returntype", void 0)
 ], userController.prototype, "profile", null);
 __decorate([
-    (0, common_1.Get)("lastmessage/:id"),
-    (0, common_1.UseGuards)(jwt_auth_guard_1.JwtAuthGuard),
-    __param(0, (0, common_1.Param)()),
-    __metadata("design:type", Function),
-    __metadata("design:paramtypes", [Object]),
-    __metadata("design:returntype", void 0)
-], userController.prototype, "LastMessage", null);
-__decorate([
     (0, common_1.Get)("profile/:id"),
     (0, common_1.UseGuards)(jwt_auth_guard_1.JwtAuthGuard),
     __param(0, (0, common_1.Param)()),
@@ -141,14 +121,6 @@ __decorate([
     __metadata("design:paramtypes", [Object]),
     __metadata("design:returntype", void 0)
 ], userController.prototype, "pubProfile", null);
-__decorate([
-    (0, common_1.Get)("messages/:id"),
-    (0, common_1.UseGuards)(jwt_auth_guard_1.JwtAuthGuard),
-    __param(0, (0, common_1.Param)()),
-    __metadata("design:type", Function),
-    __metadata("design:paramtypes", [Object]),
-    __metadata("design:returntype", void 0)
-], userController.prototype, "messages", null);
 __decorate([
     (0, common_1.Get)("42"),
     (0, common_1.UseGuards)((0, passport_1.AuthGuard)("42")),
@@ -182,15 +154,6 @@ __decorate([
     __metadata("design:paramtypes", [String]),
     __metadata("design:returntype", Promise)
 ], userController.prototype, "myChannels", null);
-__decorate([
-    (0, common_1.Get)("channel/:id"),
-    (0, common_1.UseGuards)(jwt_auth_guard_1.JwtAuthGuard),
-    __param(0, (0, common_1.Param)("id")),
-    __param(1, (0, common_1.Headers)()),
-    __metadata("design:type", Function),
-    __metadata("design:paramtypes", [String, Object]),
-    __metadata("design:returntype", Promise)
-], userController.prototype, "channel", null);
 exports.userController = userController = __decorate([
     (0, common_1.Controller)("user"),
     __metadata("design:paramtypes", [user_service_1.UserService])

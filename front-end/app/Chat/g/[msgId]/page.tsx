@@ -34,7 +34,7 @@ export default function Page() {
   useEffect(() => {
     async function getgroup() {
       try {
-        const res = await axiosInstance.get(`http://localhost:3000/api/user/channel/${msgId}`);
+        const res = await axiosInstance.get(`http://10.13.1.7:3000/api/chat/channel/${msgId}`);
         setGroup(res.data);
         setMessages(res.data.Messages);
       } catch (err) {
@@ -68,11 +68,10 @@ export default function Page() {
     socket.on('refresh', () => {
       async function getgroup() {
         try {
-          const res = await axiosInstance.get(`http://localhost:3000/api/user/channel/${msgId}`);
+          const res = await axiosInstance.get(`http://10.13.1.7:3000/api/chat/channel/${msgId}`);
           setGroup(res.data);
           setMessages(res.data.Messages);
         } catch (err) {
-          setMember(false);
           console.log(err);
         }
       }

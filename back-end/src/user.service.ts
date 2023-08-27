@@ -5,7 +5,6 @@ import { UserDataLogin } from "./dtos/user-login.dto";
 import { chPass } from "./dtos/pass.dto";
 import * as bcrypt from "bcrypt";
 import * as jwt from "jsonwebtoken";
-import passport from "passport";
 
 @Injectable()
 export class UserService {
@@ -23,18 +22,7 @@ export class UserService {
     const profiles = await this.prisma.profile.findMany();
     return profiles;
   }
-  async getLastMessage(id: string | number) {
-    const getLastMessage = await this.prisma.message.findMany({
-      where: {
-        userId: +id,
-      },
-      orderBy: {
-        createdAt: "desc",
-      },
-      take: 1,
-    });
-    return getLastMessage;
-  }
+
 
   async addUser(userData: UserData) {
     let exist = await this.prisma.user.findUnique({
@@ -192,14 +180,6 @@ export class UserService {
     return user;
   }
 
-  async getMessages(id: string): Promise<any> {
-    const messages = await this.prisma.message.findMany({
-      where: {
-        userId: +id,
-      },
-    });
-    return messages;
-  }
   async getUserInfo(token: string): Promise<any> {
     const decoded: any = jwt.verify(
       token.split(" ")[1],
@@ -259,30 +239,6 @@ export class UserService {
       delete channel.accessPassword;
     });
     return channels;
-  }
-
-  async getChannel(myId: string, channelId: string): Promise<any> {
-    const channel = await this.prisma.channels.findUnique({
-      where: {
-        id: channelId,
-      },
-      include: {
-        Members: true,
-        Owners: true,
-        Admins: true,
-        Messages: true,
-      },
-
-    });
-    const isMumber: boolean = channel.Members.some((member) => {
-      return member.id === +myId;
-    });
-    if (!isMumber) {
-      throw new NotFoundException("Channel not found");
-    }
-    delete channel.password;
-    delete channel.accessPassword;
-    return channel;
   }
 
 }

@@ -11,14 +11,10 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.JwtAuthGuard = void 0;
 const common_1 = require("@nestjs/common");
-const core_1 = require("@nestjs/core");
-const jwt_1 = require("@nestjs/jwt");
 const jwt = require("jsonwebtoken");
 const user_service_1 = require("../user.service");
 let JwtAuthGuard = exports.JwtAuthGuard = class JwtAuthGuard {
-    constructor(reflector, jwtService, userService) {
-        this.reflector = reflector;
-        this.jwtService = jwtService;
+    constructor(userService) {
         this.userService = userService;
     }
     canActivate(context) {
@@ -47,8 +43,6 @@ let JwtAuthGuard = exports.JwtAuthGuard = class JwtAuthGuard {
 };
 exports.JwtAuthGuard = JwtAuthGuard = __decorate([
     (0, common_1.Injectable)(),
-    __metadata("design:paramtypes", [core_1.Reflector,
-        jwt_1.JwtService,
-        user_service_1.UserService])
+    __metadata("design:paramtypes", [user_service_1.UserService])
 ], JwtAuthGuard);
 //# sourceMappingURL=jwt-auth.guard.js.map
