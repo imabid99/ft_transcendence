@@ -1,15 +1,18 @@
 'use client';
 import React, { ReactNode } from 'react';
 import { useState } from 'react';
+import { useContext } from 'react';
+import { contextdata } from '@/app/contextApi';
 
 type HandlRightClickProps ={
     children: ReactNode,
     id ?: number,
     type ?: number,
     mytype ?: number,
+    groupId ?: number,
 }
 
-export default function HandlRightClick({ children ,id, type , mytype }: HandlRightClickProps) {
+export default function HandlRightClick({ children ,id, type , groupId, mytype }: HandlRightClickProps) {
     const [showMenu, setShowMenu] = useState(false);
     const [showMutemenu, setShowMutemenu] = useState(false);
     const [pos, setPos] = useState({ x: 0, y: 0 });
@@ -19,6 +22,14 @@ export default function HandlRightClick({ children ,id, type , mytype }: HandlRi
         setPos({ x: e.clientX - window.innerWidth, y: e.clientY });
         console.log(e.clientX, e.clientY);
     };
+    const {socket} :any= useContext(contextdata);
+    const handleKick = () => {
+        if (!socket) return;
+
+        socket.emit("KickUser", {userId: id, groupId: groupId});
+        setShowMenu(false);
+    }
+
     return(
         <div onContextMenu={handleContextMenu}
 
@@ -69,7 +80,7 @@ export default function HandlRightClick({ children ,id, type , mytype }: HandlRi
                                     <div className='py-[10px] px-[20px] cursor-pointer'>
                                         Ban
                                     </div>
-                                    <div className='py-[10px] px-[20px] cursor-pointer'>
+                                    <div className='py-[10px] px-[20px] cursor-pointer' onClick={handleKick}>
                                         Kick
                                     </div>
                                 </>

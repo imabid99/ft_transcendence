@@ -65,6 +65,19 @@ export default function Page() {
         scrol.scrollTop = scrol.scrollHeight;
       }
     });
+    socket.on('refresh', () => {
+      async function getgroup() {
+        try {
+          const res = await axiosInstance.get(`http://localhost:3000/api/user/channel/${msgId}`);
+          setGroup(res.data);
+          setMessages(res.data.Messages);
+        } catch (err) {
+          setMember(false);
+          console.log(err);
+        }
+      }
+      getgroup();
+    });
     
     setIsLoading(false);
     return () => {

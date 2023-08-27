@@ -6,7 +6,7 @@ const prisma_service_1 = require("./prisma/prisma.service");
 async function bootstrap() {
     const app = await core_1.NestFactory.create(app_module_1.AppModule);
     app.enableCors({
-        origin: "http://localhost:1337",
+        origin: "*",
         credentials: true,
     });
     app.setGlobalPrefix("api");

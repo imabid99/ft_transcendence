@@ -41,7 +41,7 @@ export default function ChannelInfo({infoRef, handleshowInfo, group, userId}: Ch
                 </div>
 
                 <div className="w-full flex flex-col gap-[5px] justify-center items-center relative">
-                    <img src="/userProfile.jpg" alt="" className="rounded-full w-[250px] h-[250px] object-cover"/>
+                    <img src="/groupAvatar.jpg" alt="" className="rounded-full w-[250px] h-[250px] object-cover"/>
                     <p className="text-[#024077] text-[35px] font-[Poppins] font-[700]">
                         {group.name}
                     </p>
@@ -88,11 +88,11 @@ export default function ChannelInfo({infoRef, handleshowInfo, group, userId}: Ch
                         group?.Owners.map((owner: any) => {
                             return (
                                 
-                                <HandlRightClick mytype={mytype} type={3}>
+                                <HandlRightClick mytype={mytype} type={3} id={owner.id}>
                                     <Link href={`/profile/${owner.id}`}  key={`${owner.id}`}>
                                         <div className="w-full flex items-center gap-[10px] justify-between cursor-pointer">
                                             <span className="flex items-center gap-[10px]">
-                                                <img src="/userProfile.jpg" alt="" className="rounded-full w-[60px] h-[60px] object-cover"/>
+                                                <img src="/groupAvatar.jpg" alt="" className="rounded-full w-[60px] h-[60px] object-cover"/>
                                                 <span>
                                                     <p className="text-[#034B8A] text-[20px] font-[Poppins] font-[500] min-w-[200px]  max-w-[300px] truncate">
                                                         {owner.username}
@@ -123,11 +123,11 @@ export default function ChannelInfo({infoRef, handleshowInfo, group, userId}: Ch
                     {
                         group?.Admins.map((admin: any) => {
                             return (
-                                <HandlRightClick mytype={mytype} type={2}>
+                                <HandlRightClick mytype={mytype} type={2} id={admin.id} groupId={group.id}>
                                     <Link href={`/profile/${admin.id}`}  key={`${admin.id}`}>
                                         <div className="w-full flex items-center gap-[10px] justify-between cursor-pointer">
                                             <span className="flex items-center gap-[10px]">
-                                                <img src="/userProfile.jpg" alt="" className="rounded-full w-[60px] h-[60px] object-cover"/>
+                                                <img src="/groupAvatar.jpg" alt="" className="rounded-full w-[60px] h-[60px] object-cover"/>
                                                 <span>
                                                     <p className="text-[#034B8A] text-[20px] font-[Poppins] font-[500] min-w-[200px]  max-w-[300px] truncate">
                                                         {admin.username}
@@ -159,11 +159,11 @@ export default function ChannelInfo({infoRef, handleshowInfo, group, userId}: Ch
                         group?.Members.map((member: any) => {
                             if (group.Owners.find((owner: any) => owner.id === member.id)) return;
                             return(
-                                <HandlRightClick mytype={mytype} type={1}>
+                                <HandlRightClick mytype={mytype} type={1} id={member.id} groupId={group.id}>
                                     <Link href={`/profile/${member.id}`}  key={`${member.id}`}>
                                         <div className="w-full flex items-center gap-[10px] justify-between cursor-pointer">
                                             <span className="flex items-center gap-[10px]">
-                                                <img src="/userProfile.jpg" alt="" className="rounded-full w-[60px] h-[60px] object-cover"/>
+                                                <img src="/groupAvatar.jpg" alt="" className="rounded-full w-[60px] h-[60px] object-cover"/>
                                                 <span>
                                                     <p className="text-[#034B8A] text-[20px] font-[Poppins] font-[500] min-w-[200px]  max-w-[300px] truncate">
                                                         {member.username}
@@ -193,20 +193,19 @@ export default function ChannelInfo({infoRef, handleshowInfo, group, userId}: Ch
                     }
                 </div>
                 <span className=" w-full flex items-center justify-around gap-[25px] cursor-pointer pb-[25px]">
-                    <div className="flex gap-[15px] items-center " onClick={
-                        () => {
-                            setShowAccessPassword(true)
-                        }
-                    }>
-                        <span>
-                            <svg width="21" height="27" viewBox="0 0 16 20"  fill="#AF1C1C"  xmlns="http://www.w3.org/2000/svg">
-                                <path d="M13 7V5C13 2.2 10.8 0 8 0C5.2 0 3 2.2 3 5V7C1.3 7 0 8.3 0 10V17C0 18.7 1.3 20 3 20H13C14.7 20 16 18.7 16 17V10C16 8.3 14.7 7 13 7ZM5 5C5 3.3 6.3 2 8 2C9.7 2 11 3.3 11 5V7H5V5ZM9.1 13.5L9 13.6V15C9 15.6 8.6 16 8 16C7.4 16 7 15.6 7 15V13.6C6.4 13 6.3 12.1 6.9 11.5C7.5 10.9 8.4 10.8 9 11.4C9.6 11.9 9.7 12.9 9.1 13.5Z"/>
-                            </svg> 
-                        </span>
-                        <p className="text-[#AF1C1C] text-[20px] font-[Poppins] font-[500]">
-                            access pass
-                        </p>
-                    </div>
+                    {
+                        mytype === 3 && 
+                        <div className="flex gap-[15px] items-center " onClick={() => setShowAccessPassword(true)}>
+                            <span>
+                                <svg width="21" height="27" viewBox="0 0 16 20"  fill="#AF1C1C"  xmlns="http://www.w3.org/2000/svg">
+                                    <path d="M13 7V5C13 2.2 10.8 0 8 0C5.2 0 3 2.2 3 5V7C1.3 7 0 8.3 0 10V17C0 18.7 1.3 20 3 20H13C14.7 20 16 18.7 16 17V10C16 8.3 14.7 7 13 7ZM5 5C5 3.3 6.3 2 8 2C9.7 2 11 3.3 11 5V7H5V5ZM9.1 13.5L9 13.6V15C9 15.6 8.6 16 8 16C7.4 16 7 15.6 7 15V13.6C6.4 13 6.3 12.1 6.9 11.5C7.5 10.9 8.4 10.8 9 11.4C9.6 11.9 9.7 12.9 9.1 13.5Z"/>
+                                </svg> 
+                            </span>
+                            <p className="text-[#AF1C1C] text-[20px] font-[Poppins] font-[500]">
+                                access pass
+                            </p>
+                        </div>
+                    }
                     <div className="flex gap-[15px]" onClick={handleExit}>
                         <span>
                             <svg width="21" height="24" viewBox="0 0 21 24" fill="#AF1C1C" xmlns="http://www.w3.org/2000/svg">

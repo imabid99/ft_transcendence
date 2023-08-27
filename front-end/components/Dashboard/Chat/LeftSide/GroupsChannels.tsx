@@ -58,7 +58,7 @@ export default function GroupsChannels() {
             </svg>
           </span>
           <p className="text-[16px] font-[500] font-[Poppins] text-[#0174D9]">
-            Groups & Channels
+            Groups
           </p>
         </span>
         <div className="flex flex-col gap-[20px] overflow-y-hidden max-h-[235px] min-h-[235px]rounded-[5px] w-full" ref={groupsChannelsRef}>
@@ -66,7 +66,7 @@ export default function GroupsChannels() {
             myChannels?.map((mychannel: any) => {
               return(
               <Channel
-                avatar="/userProfile.jpg"
+                avatar="/groupAvatar.jpg"
                 channel={mychannel.name}
                 lastMessage={getLastMessageGroup(mychannel.Messages)?.content}
                 lastMessageTime={getLastMessageGroup(mychannel.Messages)?.createdAt.toString().split('T')[1].split('.')[0].slice(0,5)}
