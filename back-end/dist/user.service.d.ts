@@ -22,5 +22,4 @@ export declare class UserService {
         iBlocked: boolean;
         heBlocked: boolean;
     }>;
-    getMyChannels(id: string): Promise<any>;
 }

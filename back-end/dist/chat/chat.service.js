@@ -46,6 +46,47 @@ let ChatService = exports.ChatService = class ChatService {
         });
         return messages;
     }
+    async getMyChannels(id) {
+        const channels = await this.prisma.channels.findMany({
+            where: {
+                Members: {
+                    some: {
+                        id: +id,
+                    },
+                },
+            },
+            include: {
+                Messages: true,
+            }
+        });
+        channels.forEach((channel) => {
+            delete channel.password;
+            delete channel.accessPassword;
+        });
+        return channels;
+    }
+    async getChannels(id) {
+        const channels = await this.prisma.channels.findMany({
+            include: {
+                Members: true,
+            }
+        });
+        const publicChannels = channels.filter((channel) => {
+            return channel.type !== "private";
+        }).filter((channel) => {
+            var _a;
+            const isMumber = (_a = channel.Members) === null || _a === void 0 ? void 0 : _a.some((member) => {
+                return member.id === id;
+            });
+            return isMumber === false ? channel : null;
+        });
+        publicChannels.forEach((channel) => {
+            delete channel.password;
+            delete channel.accessPassword;
+            delete channel.Members;
+        });
+        return publicChannels;
+    }
 };
 exports.ChatService = ChatService = __decorate([
     (0, common_1.Injectable)(),

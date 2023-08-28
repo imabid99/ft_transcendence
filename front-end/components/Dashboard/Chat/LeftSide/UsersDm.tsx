@@ -8,6 +8,13 @@ type constextType = {
   };
 export default function UsersDm() {
     const {profiles, user, messages} :any= useContext(contextdata);
+    messages?.sort((a: any, b: any) => {
+      return (
+        new Date(a.createdAt).getTime() -
+        new Date(b.createdAt).getTime()
+      );
+    });
+    
     profiles?.sort((a: any, b: any) => {
       const lastMessageA = getLastMessage(messages, a.userId);
       if (!lastMessageA) return 1;

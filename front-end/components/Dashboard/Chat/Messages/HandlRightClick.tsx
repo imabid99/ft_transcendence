@@ -29,7 +29,25 @@ export default function HandlRightClick({ children ,id, type , groupId, mytype }
         socket.emit("KickUser", {userId: id, groupId: groupId});
         setShowMenu(false);
     }
+    const handleBan = () => {
+        if (!socket) return;
 
+        socket.emit("BanUser", {userId: id, groupId: groupId});
+        setShowMenu(false);
+    }
+
+    const handleMute = (time:number) => {
+        if (!socket) return;
+
+        socket.emit("MuteUser", {userId: id, groupId: groupId, time: time});
+        setShowMenu(false);
+    }
+
+    const handleSetAdmin = () => {
+        if (!socket) return;
+        socket.emit("SetAdmin", {userId: id, groupId: groupId});
+        setShowMenu(false);
+    }
     return(
         <div onContextMenu={handleContextMenu}
 
@@ -45,7 +63,7 @@ export default function HandlRightClick({ children ,id, type , groupId, mytype }
                     groupInfo text-white rounded-[10px]
                     `}>
                         {
-                            mytype && type && mytype > type && (
+                            mytype && type && mytype >= type &&  type !== 3 && mytype >= 2 && (
                             <div className=' cursor-pointer relative'>
                                 <p className='py-[10px] px-[20px]' onClick={() => {setShowMutemenu(!showMutemenu);}}>
                                     Mute
@@ -57,16 +75,16 @@ export default function HandlRightClick({ children ,id, type , groupId, mytype }
                                             setShowMutemenu(false);
                                         }
                                     }>
-                                        <li className='py-[10px] px-[20px] cursor-pointer'>
+                                        <li className='py-[10px] px-[20px] cursor-pointer' onClick={() => handleMute(5)}>
                                             5 sec
                                         </li>
-                                        <li className='py-[10px] px-[20px] cursor-pointer'>
+                                        <li className='py-[10px] px-[20px] cursor-pointer' onClick={() => handleMute(5)}>
                                             5 min
                                         </li>
-                                        <li className='py-[10px] px-[20px] cursor-pointer'>
+                                        <li className='py-[10px] px-[20px] cursor-pointer' onClick={() => handleMute(5)}>
                                             1 hour
                                         </li>
-                                        <li className='py-[10px] px-[20px] cursor-pointer'>
+                                        <li className='py-[10px] px-[20px] cursor-pointer' onClick={() => handleMute(5)}>
                                             1 year
                                         </li>
                                     </ul>
@@ -75,9 +93,9 @@ export default function HandlRightClick({ children ,id, type , groupId, mytype }
                             </div>)
                         }
                         {
-                            mytype && type && mytype > type && (
+                            mytype && type && mytype >= type &&  type !== 3 && mytype >= 2 && (
                                 <>
-                                    <div className='py-[10px] px-[20px] cursor-pointer'>
+                                    <div className='py-[10px] px-[20px] cursor-pointer' onClick={()=> handleBan()}>
                                         Ban
                                     </div>
                                     <div className='py-[10px] px-[20px] cursor-pointer' onClick={handleKick}>
@@ -87,14 +105,10 @@ export default function HandlRightClick({ children ,id, type , groupId, mytype }
                             )
                         }
                         {
-                            
-                            mytype && mytype === 3 &&  type !== 3 && (
+                            mytype && mytype === 3 &&  type !== 3 &&  type === 1 && (
                                 <>
-                                    <div className='py-[10px] px-[20px] cursor-pointer'>
+                                    <div className='py-[10px] px-[20px] cursor-pointer' onClick={()=> handleSetAdmin()}>
                                         Set Admin
-                                    </div>
-                                    <div className='py-[10px] px-[20px] cursor-pointer'>
-                                            Set Owner
                                     </div>
                                 </>
                             )

@@ -4,4 +4,6 @@ export declare class ChatController {
     constructor(chatService: ChatService);
     channel(id: string, headers: any): Promise<any>;
     messages(params: any): Promise<any>;
+    myChannels(id: string): Promise<any>;
+    channels(headers: any): Promise<any>;
 }

@@ -157,7 +157,9 @@ export default function ChannelInfo({infoRef, handleshowInfo, group, userId}: Ch
                     }
                     {
                         group?.Members.map((member: any) => {
-                            if (group.Owners.find((owner: any) => owner.id === member.id)) return;
+                            if (group.Owners.find((owner: any) => owner.id === member.id) || group.Admins.find((admin: any) => admin.id === member.id)) {
+                                return null;
+                            }
                             return(
                                 <HandlRightClick mytype={mytype} type={1} id={member.id} groupId={group.id}  key={`${member.id}`}>
                                     <Link href={`/profile/${member.id}`} >

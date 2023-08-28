@@ -16,6 +16,7 @@ const ContextProvider = ({ children }: { children: React.ReactNode; }) => {
   const [messages, setMessages] = useState<any>([]);
   const [socket, setSocket] = useState<any>(null);
   const [myChannels, setMyChannels] = useState<any>([]);
+  const [channels, setChannels] = useState<any>([]);
   const [loged, setLoged] = useState<boolean>(false);
   useEffect(() => {
     const getUser = async () => {
@@ -132,6 +133,23 @@ const ContextProvider = ({ children }: { children: React.ReactNode; }) => {
         return;
       }
     }
+    async function getChannels() {
+      console.log("getChannels user : ", user);
+      try
+      {
+        const resp = await axiosInstance.get(`http://10.13.1.7:3000/api/chat/channels`);
+        if (resp.data === null) {
+          return;
+        }
+        setChannels(resp.data);
+      }
+      catch (error)
+      {
+        console.log("error : profiles ", error);
+        return;
+      }
+    }
+    getChannels();
 		getUsers();
     getProfiles();
     getMessages();
@@ -140,11 +158,14 @@ const ContextProvider = ({ children }: { children: React.ReactNode; }) => {
 			setUsers([]);
       setProfiles([]);
       setMessages([]);
+      setMyChannels([]);
+      setChannels([]);
+
 		}
 	}, [user]);
 
   return (
-    <contextdata.Provider value={{socket:socket, user:user, users:users, profiles:profiles , messages:messages,myChannels:myChannels, setUser:setUser,setMyChannels:setMyChannels, setUsers:setUsers, setProfiles:setProfiles , setMessages:setMessages, setLoged:setLoged , loged:loged}}>
+    <contextdata.Provider value={{socket:socket, user:user, users:users, profiles:profiles , messages:messages,myChannels:myChannels, channels:channels,setChannels:setChannels, setUser:setUser,setMyChannels:setMyChannels, setUsers:setUsers, setProfiles:setProfiles , setMessages:setMessages, setLoged:setLoged , loged:loged}}>
       {children}
     </contextdata.Provider>
   );

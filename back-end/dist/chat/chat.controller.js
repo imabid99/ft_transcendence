@@ -29,6 +29,14 @@ let ChatController = exports.ChatController = class ChatController {
     messages(params) {
         return this.chatService.getMessages(params.id);
     }
+    async myChannels(id) {
+        return this.chatService.getMyChannels(id);
+    }
+    async channels(headers) {
+        const token = headers.authorization.split(" ")[1];
+        const decoded = (0, jwt_decode_1.default)(token);
+        return this.chatService.getChannels(decoded.userId);
+    }
 };
 __decorate([
     (0, common_1.Get)("channel/:id"),
@@ -47,6 +55,22 @@ __decorate([
     __metadata("design:paramtypes", [Object]),
     __metadata("design:returntype", void 0)
 ], ChatController.prototype, "messages", null);
+__decorate([
+    (0, common_1.Get)("myChannels/:id"),
+    (0, common_1.UseGuards)(jwt_auth_guard_1.JwtAuthGuard),
+    __param(0, (0, common_1.Param)("id")),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [String]),
+    __metadata("design:returntype", Promise)
+], ChatController.prototype, "myChannels", null);
+__decorate([
+    (0, common_1.Get)("channels"),
+    (0, common_1.UseGuards)(jwt_auth_guard_1.JwtAuthGuard),
+    __param(0, (0, common_1.Headers)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Object]),
+    __metadata("design:returntype", Promise)
+], ChatController.prototype, "channels", null);
 exports.ChatController = ChatController = __decorate([
     (0, common_1.Controller)('chat'),
     __metadata("design:paramtypes", [chat_service_1.ChatService])

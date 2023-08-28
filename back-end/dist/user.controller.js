@@ -66,9 +66,6 @@ let userController = exports.userController = class userController {
     async isBlocked(userId, tragetId) {
         return this.userService.isBlocked(userId, tragetId);
     }
-    async myChannels(id) {
-        return this.userService.getMyChannels(id);
-    }
 };
 __decorate([
     (0, common_1.Get)("all"),
@@ -146,14 +143,6 @@ __decorate([
     __metadata("design:paramtypes", [String, String]),
     __metadata("design:returntype", Promise)
 ], userController.prototype, "isBlocked", null);
-__decorate([
-    (0, common_1.Get)("myChannels/:id"),
-    (0, common_1.UseGuards)(jwt_auth_guard_1.JwtAuthGuard),
-    __param(0, (0, common_1.Param)("id")),
-    __metadata("design:type", Function),
-    __metadata("design:paramtypes", [String]),
-    __metadata("design:returntype", Promise)
-], userController.prototype, "myChannels", null);
 exports.userController = userController = __decorate([
     (0, common_1.Controller)("user"),
     __metadata("design:paramtypes", [user_service_1.UserService])

@@ -4,4 +4,6 @@ export declare class ChatService {
     constructor(prisma: PrismaService);
     getChannel(myId: string, channelId: string): Promise<any>;
     getMessages(id: string): Promise<any>;
+    getMyChannels(id: string): Promise<any>;
+    getChannels(id: number): Promise<any>;
 }

@@ -23,6 +23,7 @@ let ChatGateway = exports.ChatGateway = class ChatGateway {
     }
     async handleConnection(client) {
         var _a, _b;
+        console.log("client  √");
         const token = (_a = client.handshake.headers.authorization) === null || _a === void 0 ? void 0 : _a.split(" ")[1];
         if (token) {
             const decoded = (0, jwt_decode_1.default)(token);
@@ -50,12 +51,12 @@ let ChatGateway = exports.ChatGateway = class ChatGateway {
                     status: "online",
                 },
             });
-            console.log("myChannels : ", client.rooms);
             this.server.emit("refresh");
         }
     }
     async handleDisconnect(client) {
         var _a;
+        console.log("Disconnect  √");
         const token = (_a = client.handshake.headers.authorization) === null || _a === void 0 ? void 0 : _a.split(" ")[1];
         if (token) {
             const decoded = (0, jwt_decode_1.default)(token);
@@ -225,6 +226,7 @@ let ChatGateway = exports.ChatGateway = class ChatGateway {
         var _a;
         const jwt = (_a = client.handshake.headers.authorization) === null || _a === void 0 ? void 0 : _a.split(" ")[1];
         if (jwt) {
+            console.log("refresh : ", "done");
             this.server.emit("refresh", payload);
         }
     }
@@ -363,11 +365,75 @@ let ChatGateway = exports.ChatGateway = class ChatGateway {
             this.server.emit("refresh");
         }
     }
-    async handleKickUser(client, payload) {
+    async handleJoinGroup(client, payload) {
         var _a;
         const jwt = (_a = client.handshake.headers.authorization) === null || _a === void 0 ? void 0 : _a.split(" ")[1];
         if (jwt) {
             const info = (0, jwt_decode_1.default)(jwt);
+            const user = await this.prisma.user.findUnique({
+                where: {
+                    id: info === null || info === void 0 ? void 0 : info.userId,
+                },
+            });
+            if (user.id !== payload.userId) {
+                console.log("joinGroup : ", "user.id !== payload.userId");
+                return;
+            }
+            const group = await this.prisma.channels.findUnique({
+                where: {
+                    id: payload.groupId,
+                },
+                include: {
+                    Members: true,
+                    Band: true,
+                    Owners: true,
+                    Admins: true,
+                },
+            });
+            if (group.type === "private") {
+                console.log("joinGroup : ", "group.type === private");
+                return;
+            }
+            const verifyIsMemmber = group.Members.some((member) => {
+                return member.id === +user.id;
+            });
+            if (verifyIsMemmber) {
+                console.log("joinGroup : ", "verifyIsMemmber");
+                return;
+            }
+            const verifyBand = group.Band.some((ban) => {
+                return ban.id === +user.id;
+            });
+            if (verifyBand) {
+                console.log("joinGroup : ", "verifyBand");
+                return;
+            }
+            await this.prisma.user.update({
+                where: {
+                    id: user.id,
+                },
+                data: {
+                    channels: {
+                        connect: {
+                            id: payload.groupId,
+                        },
+                    },
+                    channelsMember: {
+                        connect: {
+                            id: payload.groupId,
+                        },
+                    }
+                },
+            });
+            this.server.emit("refresh");
+            console.log("joinGroup : ", "done");
+        }
+    }
+    async handleKickUser(client, payload) {
+        var _a;
+        const token = (_a = client.handshake.headers.authorization) === null || _a === void 0 ? void 0 : _a.split(" ")[1];
+        if (token) {
+            const info = (0, jwt_decode_1.default)(token);
             const user = await this.prisma.user.findUnique({
                 where: {
                     id: info === null || info === void 0 ? void 0 : info.userId,
@@ -435,6 +501,187 @@ let ChatGateway = exports.ChatGateway = class ChatGateway {
             this.server.emit("refresh");
         }
     }
+    async handleSetAdmin(client, payload) {
+        var _a;
+        const token = (_a = client.handshake.headers.authorization) === null || _a === void 0 ? void 0 : _a.split(" ")[1];
+        if (token) {
+            const info = (0, jwt_decode_1.default)(token);
+            const user = await this.prisma.user.findUnique({
+                where: {
+                    id: info === null || info === void 0 ? void 0 : info.userId,
+                },
+            });
+            const group = await this.prisma.channels.findUnique({
+                where: {
+                    id: payload.groupId,
+                },
+                include: {
+                    Members: true,
+                    Owners: true,
+                    Admins: true,
+                },
+            });
+            const verifyIsMemmber = group.Members.some((member) => {
+                return member.id === +user.id;
+            });
+            if (!verifyIsMemmber) {
+                return;
+            }
+            const verifyOwner = group.Owners.some((owner) => {
+                return owner.id === +user.id;
+            });
+            if (!verifyOwner) {
+                return;
+            }
+            await this.prisma.user.update({
+                where: {
+                    id: +payload.userId,
+                },
+                data: {
+                    channelsAdmin: {
+                        connect: {
+                            id: group.id,
+                        },
+                    },
+                },
+            });
+            this.server.emit("refresh");
+        }
+    }
+    async handleBanUser(client, payload) {
+        var _a;
+        const token = (_a = client.handshake.headers.authorization) === null || _a === void 0 ? void 0 : _a.split(" ")[1];
+        if (token) {
+            const info = (0, jwt_decode_1.default)(token);
+            const user = await this.prisma.user.findUnique({
+                where: {
+                    id: info === null || info === void 0 ? void 0 : info.userId,
+                },
+            });
+            const group = await this.prisma.channels.findUnique({
+                where: {
+                    id: payload.groupId,
+                },
+                include: {
+                    Members: true,
+                    Owners: true,
+                    Admins: true,
+                },
+            });
+            const verifyIsMemmber = group.Members.some((member) => {
+                return member.id === +user.id;
+            });
+            if (!verifyIsMemmber) {
+                return;
+            }
+            const verifyOwner = group.Owners.some((owner) => {
+                return owner.id === +user.id;
+            });
+            const verifyAdmin = group.Admins.some((admin) => {
+                return admin.id === +user.id;
+            });
+            if (!verifyOwner && !verifyAdmin) {
+                return;
+            }
+            const verifyAdmin2 = group.Admins.some((admin) => {
+                return admin.id === +payload.userId;
+            });
+            if (verifyAdmin2) {
+                await this.prisma.user.update({
+                    where: {
+                        id: payload.userId,
+                    },
+                    data: {
+                        channelsAdmin: {
+                            disconnect: {
+                                id: group.id,
+                            },
+                        },
+                    },
+                });
+            }
+            await this.prisma.user.update({
+                where: {
+                    id: +payload.userId,
+                },
+                data: {
+                    channels: {
+                        disconnect: {
+                            id: group.id,
+                        },
+                    },
+                    channelsMember: {
+                        disconnect: {
+                            id: group.id,
+                        },
+                    }
+                },
+            });
+            await this.prisma.user.update({
+                where: {
+                    id: +payload.userId,
+                },
+                data: {
+                    channelsBand: {
+                        connect: {
+                            id: group.id,
+                        },
+                    },
+                },
+            });
+            this.server.emit("refresh");
+        }
+    }
+    async handleUnBanUser(client, payload) {
+        var _a;
+        const token = (_a = client.handshake.headers.authorization) === null || _a === void 0 ? void 0 : _a.split(" ")[1];
+        if (token) {
+            const info = (0, jwt_decode_1.default)(token);
+            const user = await this.prisma.user.findUnique({
+                where: {
+                    id: info === null || info === void 0 ? void 0 : info.userId,
+                },
+            });
+            const group = await this.prisma.channels.findUnique({
+                where: {
+                    id: payload.groupId,
+                },
+                include: {
+                    Members: true,
+                    Owners: true,
+                    Admins: true,
+                },
+            });
+            const verifyIsMemmber = group.Members.some((member) => {
+                return member.id === +user.id;
+            });
+            if (!verifyIsMemmber) {
+                return;
+            }
+            const verifyOwner = group.Owners.some((owner) => {
+                return owner.id === +user.id;
+            });
+            const verifyAdmin = group.Admins.some((admin) => {
+                return admin.id === +user.id;
+            });
+            if (!verifyOwner && !verifyAdmin) {
+                return;
+            }
+            await this.prisma.user.update({
+                where: {
+                    id: +payload.userId,
+                },
+                data: {
+                    channelsBand: {
+                        disconnect: {
+                            id: group.id,
+                        },
+                    },
+                },
+            });
+            this.server.emit("refresh");
+        }
+    }
 };
 __decorate([
     (0, websockets_1.WebSocketServer)(),
@@ -483,11 +730,35 @@ __decorate([
     __metadata("design:returntype", Promise)
 ], ChatGateway.prototype, "handleExitGroup", null);
 __decorate([
+    (0, websockets_1.SubscribeMessage)("joinGroup"),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Object, Object]),
+    __metadata("design:returntype", Promise)
+], ChatGateway.prototype, "handleJoinGroup", null);
+__decorate([
     (0, websockets_1.SubscribeMessage)("KickUser"),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [Object, Object]),
     __metadata("design:returntype", Promise)
 ], ChatGateway.prototype, "handleKickUser", null);
+__decorate([
+    (0, websockets_1.SubscribeMessage)("SetAdmin"),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Object, Object]),
+    __metadata("design:returntype", Promise)
+], ChatGateway.prototype, "handleSetAdmin", null);
+__decorate([
+    (0, websockets_1.SubscribeMessage)("BanUser"),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Object, Object]),
+    __metadata("design:returntype", Promise)
+], ChatGateway.prototype, "handleBanUser", null);
+__decorate([
+    (0, websockets_1.SubscribeMessage)("UnBanUser"),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Object, Object]),
+    __metadata("design:returntype", Promise)
+], ChatGateway.prototype, "handleUnBanUser", null);
 exports.ChatGateway = ChatGateway = __decorate([
     (0, websockets_1.WebSocketGateway)({
         cors: {

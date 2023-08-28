@@ -9,7 +9,7 @@ type Props = {
 }
 
 export default function Search({setShowBody}: Props) {
-    const {user, profiles }:any = useContext(contextdata);
+    const {user, profiles,channels,socket}:any = useContext(contextdata);
     const router = useRouter()
     const showUsers = profiles?.filter((ur:any) => {
         return ur.username === user?.username ? false : true
@@ -20,6 +20,12 @@ export default function Search({setShowBody}: Props) {
         router.push(`/Chat/me/${id}`)
         setShowBody(null)
     }
+    const handelClickChannel = (id:number) => {
+        // router.push(`/Chat/channel/${id}`)
+        socket?.emit("joinGroup",{groupId: id, userId: user?.id})
+        setShowBody(null)
+    }
+
     return (
         <div className="flex flex-col  overflow-y-scroll  max-h-[calc(100%-270px)] min-h-[calc(100%-135px)] no-scrollbar">
             <div className=" flex gap-2 items-center  py-[27px] px-[25px]">
@@ -96,20 +102,27 @@ export default function Search({setShowBody}: Props) {
                         </p>
 
                         {
-                            showUsers?.map((ur:any) => {
+                            channels?.map((channel:any) => {
                                 return (
-                                    <div className="flex items-center gap-[10px] cursor-pointer" onClick={() => handelClick(ur.userId)}key={ur.userId}
+                                    <div className="flex items-center gap-[10px] cursor-pointer" onClick={() => handelClickChannel(channel.id)} key={channel.id}
                                     >
                                         <img
-                                            src="/userProfile.jpg"
+                                            src="/groupAvatar.jpg"
                                             alt=""
                                             className="max-w-[64px] max-h-[64px] min-w-[64px] min-h-[64px] rounded-full object-cover border-[3px] border-[#064A85] border-opacity-25"
                                         />
-                                        <p className="text-[20px] font-[200] font-[Poppins] text-[#BDBFC3] leading-6  max-w-[400px] truncate">
+                                        <div>
+                                            <p className="text-[20px] font-[300] font-[Poppins] text-[#034B8A] leading-6  max-w-[400px] truncate">
                                             {
-                                                `Group Name`
+                                                channel.name
                                             }
-                                        </p>
+                                            </p>
+                                            <span className="text-[#898F94]">
+                                            {
+                                                channel.type
+                                            }
+                                            </span>
+                                        </div>
                                     </div>
                                 )
                             })

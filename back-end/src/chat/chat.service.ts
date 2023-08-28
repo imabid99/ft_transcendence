@@ -62,5 +62,31 @@ export class ChatService {
           delete channel.accessPassword;
         });
         return channels;
-      }
+    }
+
+    async getChannels(id: number): Promise<any> {
+        const channels = await this.prisma.channels.findMany({
+          include: {
+            Members: true,
+          }
+        });
+        
+        // delete private channels
+        const publicChannels = channels.filter((channel:any) => {
+          return channel.type !== "private";
+        }).filter((channel:any) => {
+          const isMumber: boolean = channel.Members?.some((member) => {
+            return member.id === id;
+          });
+          return isMumber === false ? channel : null;
+        });
+        
+
+        publicChannels.forEach((channel : any) => {
+          delete channel.password;
+          delete channel.accessPassword;
+          delete channel.Members;
+        });
+        return publicChannels;
+    }
 }

@@ -10,7 +10,7 @@ import * as jwt from "jsonwebtoken";
 import jwt_decode from "jwt-decode";
 import { PrismaService } from "../../../prisma/prisma.service";
 import { UserService } from "../../../user.service";
-import { async } from "rxjs";
+import { subscribe } from "diagnostics_channel";
 
 
 @WebSocketGateway({
@@ -29,6 +29,7 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
   server: SocketIO.Server;
 
   async handleConnection(client: Socket) {
+    console.log("client  √");
     const token = client.handshake.headers.authorization?.split(" ")[1];
     if (token) {
       const decoded: any = jwt_decode(token);
@@ -56,12 +57,12 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
           status: "online",
         },
       });
-      console.log("myChannels : ", client.rooms);
       this.server.emit("refresh");
     }
   }
   // eslint-disable-next-line @typescript-eslint/no-empty-function, @typescript-eslint/no-unused-vars
   async handleDisconnect(client: Socket) {
+    console.log("Disconnect  √");
     const token = client.handshake.headers.authorization?.split(" ")[1];
     if (token) {
       const decoded: any = jwt_decode(token);
@@ -246,6 +247,7 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
   async handleRefresh(client: any, payload: any): Promise<void> {
     const jwt = client.handshake.headers.authorization?.split(" ")[1];
     if (jwt) {
+      console.log("refresh : ", "done");
       this.server.emit("refresh", payload);
     }
   }
@@ -396,12 +398,79 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
   }
   }
 
-  @SubscribeMessage("KickUser")
-  async handleKickUser(client: any, payload: any): Promise<void> {
+  @SubscribeMessage("joinGroup")
+  async handleJoinGroup(client: any, payload: any): Promise<void> {
     const jwt = client.handshake.headers.authorization?.split(" ")[1];
     if(jwt)
     {
       const info:any= jwt_decode(jwt);
+      const user = await this.prisma.user.findUnique({
+        where: {
+          id: info?.userId,
+        },
+      });
+      if (user.id !== payload.userId) {
+        console.log("joinGroup : ", "user.id !== payload.userId");
+        return;
+      }
+      const group = await this.prisma.channels.findUnique({
+        where: {
+          id: payload.groupId,
+        },
+        include: {
+          Members: true,
+          Band: true,
+          Owners: true,
+          Admins: true,
+        },
+      });
+      if (group.type === "private") {
+        console.log("joinGroup : ", "group.type === private");
+        return;
+      }
+
+      const verifyIsMemmber: boolean = group.Members.some((member) => {
+        return member.id === +user.id;
+      });
+      if (verifyIsMemmber) {
+        console.log("joinGroup : ", "verifyIsMemmber");
+        return;
+      }
+      const verifyBand: boolean = group.Band.some((ban) => {
+        return ban.id === +user.id;
+      });
+      if (verifyBand) {
+        console.log("joinGroup : ", "verifyBand");
+        return;
+      }
+      await this.prisma.user.update({
+        where: {
+          id: user.id,
+        },
+        data: {
+          channels: {
+            connect: {
+              id: payload.groupId,
+            },
+          },
+          channelsMember:{
+            connect: {
+              id: payload.groupId,
+            },
+          }
+        },
+      });
+      this.server.emit("refresh");
+      console.log("joinGroup : ", "done");
+    }
+  }
+
+  @SubscribeMessage("KickUser")
+  async handleKickUser(client: any, payload: any): Promise<void> {
+    const token = client.handshake.headers.authorization?.split(" ")[1];
+    if(token)
+    {
+      const info:any= jwt_decode(token);
       const user = await this.prisma.user.findUnique({
         where: {
           id: info?.userId,
@@ -473,4 +542,199 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
       this.server.emit("refresh");
     }
   }
+
+  @SubscribeMessage("SetAdmin")
+  async handleSetAdmin(client: any, payload: any): Promise<void> {
+    const token = client.handshake.headers.authorization?.split(" ")[1];
+    if(token)
+    {
+      const info:any= jwt_decode(token);
+      const user = await this.prisma.user.findUnique({
+        where: {
+          id: info?.userId,
+        },
+      });
+      const group = await this.prisma.channels.findUnique({
+        where: {
+          id: payload.groupId,
+        },
+        include: {
+          Members: true,
+          Owners: true,
+          Admins: true,
+        },
+      });
+      const verifyIsMemmber: boolean = group.Members.some((member) => {
+        return member.id === +user.id;
+      }); 
+      if (!verifyIsMemmber) {
+        return;
+      }
+
+      const verifyOwner: boolean = group.Owners.some((owner) => {
+        return owner.id === +user.id;
+      });
+      if (!verifyOwner) {
+        return;
+      }
+      await this.prisma.user.update({
+        where: {
+          id: +payload.userId,
+        },
+        data: {
+          channelsAdmin: {
+            connect: {
+              id: group.id,
+            },
+          },
+        },
+      });
+      this.server.emit("refresh");
+    }
+  }
+
+  @SubscribeMessage("BanUser")
+  async handleBanUser(client: any, payload: any): Promise<void> {
+    const token = client.handshake.headers.authorization?.split(" ")[1];
+    if(token)
+    {
+      const info:any= jwt_decode(token);
+      const user = await this.prisma.user.findUnique({
+        where: {
+          id: info?.userId,
+        },
+      });
+      const group = await this.prisma.channels.findUnique({
+        where: {
+          id: payload.groupId,
+        },
+        include: {
+          Members: true,
+          Owners: true,
+          Admins: true,
+        },
+      });
+      const verifyIsMemmber: boolean = group.Members.some((member) => {
+        return member.id === +user.id;
+      }); 
+      if (!verifyIsMemmber) {
+        return;
+      }
+
+      const verifyOwner: boolean = group.Owners.some((owner) => {
+        return owner.id === +user.id;
+      });
+      const verifyAdmin: boolean = group.Admins.some((admin) => {
+        return admin.id === +user.id;
+      });
+      if (!verifyOwner && !verifyAdmin) {
+        return;
+      }
+
+      //check if userid is  admin
+      const verifyAdmin2: boolean = group.Admins.some((admin) => {
+        return admin.id === +payload.userId;
+      });
+      if (verifyAdmin2)
+      {
+        await this.prisma.user.update({
+          where: {
+            id: payload.userId,
+          },
+          data: {
+            channelsAdmin: {
+              disconnect: {
+                id: group.id,
+              },
+            },
+          },
+        });
+      }
+      await this.prisma.user.update({
+        where: {
+          id: +payload.userId,
+        },
+        data: {
+          channels: {
+            disconnect: {
+              id: group.id,
+            },
+          },
+          channelsMember:{
+            disconnect: {
+              id: group.id,
+            },
+          }
+        },
+      });
+      await this.prisma.user.update({
+        where: {
+          id: +payload.userId,
+        },
+        data: {
+          channelsBand: {
+            connect: {
+              id: group.id,
+            },
+          },
+        },
+      });
+      this.server.emit("refresh");
+    }
+  }
+
+  @SubscribeMessage("UnBanUser")
+  async handleUnBanUser(client: any, payload: any): Promise<void> {
+    const token = client.handshake.headers.authorization?.split(" ")[1];
+    if(token)
+    {
+      const info:any= jwt_decode(token);
+      const user = await this.prisma.user.findUnique({
+        where: {
+          id: info?.userId,
+        },
+      });
+      const group = await this.prisma.channels.findUnique({
+        where: {
+          id: payload.groupId,
+        },
+        include: {
+          Members: true,
+          Owners: true,
+          Admins: true,
+        },
+      });
+      const verifyIsMemmber: boolean = group.Members.some((member) => {
+        return member.id === +user.id;
+      }); 
+      if (!verifyIsMemmber) {
+        return;
+      }
+
+      const verifyOwner: boolean = group.Owners.some((owner) => {
+        return owner.id === +user.id;
+      });
+      const verifyAdmin: boolean = group.Admins.some((admin) => {
+        return admin.id === +user.id;
+      });
+      if (!verifyOwner && !verifyAdmin) {
+        return;
+      }
+      await this.prisma.user.update({
+        where: {
+          id: +payload.userId,
+        },
+        data: {
+          channelsBand: {
+            disconnect: {
+              id: group.id,
+            },
+          },
+        },
+      });
+      this.server.emit("refresh");
+    }
+  }
+  //mute user for a limited time
+
 }

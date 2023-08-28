@@ -47,12 +47,6 @@ export default function Page() {
         createdAt: payload.createdAt,
       }
       setMessages((prev: any) => [...prev, msg]);
-      // scrollToBottom
-
-      const scrol = document.querySelector('.message__body');
-      if (scrol) {
-        scrol.scrollTop = scrol.scrollHeight;
-      }
     });
     socket.on('refresh', () => {
       async function fetchIsBlocked() {

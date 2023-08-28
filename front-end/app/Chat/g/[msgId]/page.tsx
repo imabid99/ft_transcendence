@@ -22,10 +22,8 @@ export default function Page() {
   const [messages, setMessages] = useState<Message[] | null>(null);
   const [show, setShow] = useState(false);
   const [showInfo, setShowInfo] = useState(false);
-  const [isloading, setIsLoading] = useState(true);
   const [member, setMember] = useState<boolean>(true);
   const [group, setGroup] = useState<any>(null);
-  const router = useRouter();
   const infoRef = useRef<HTMLInputElement | null>(null);
   const inputRef = useRef<HTMLInputElement | null>(null);;
   const {user, socket} :any= useContext(contextdata);
@@ -49,7 +47,7 @@ export default function Page() {
   }, []);
 
   useEffect(() => {
-    if(!group || !user || !socket) return;
+    if( !socket) return;
     socket.on('message-to-group', (payload:any) => {
       console.log("message-to-group payload : ",payload);
       const newMessage: Message = {
@@ -59,11 +57,6 @@ export default function Page() {
       };
   
       setMessages((messages:any) => [...messages, newMessage]);
-  
-      const scrol = document.querySelector('.message__body');
-      if (scrol) {
-        scrol.scrollTop = scrol.scrollHeight;
-      }
     });
     socket.on('refresh', () => {
       async function getgroup() {
@@ -78,12 +71,11 @@ export default function Page() {
       getgroup();
     });
     
-    setIsLoading(false);
     return () => {
       socket.off('message-to-group');
     }
     
-  }, [group, user]);
+  }, [socket]);
 
   const handleSubmit = (e: { preventDefault: () => void; }) => {
 		e.preventDefault();
@@ -137,6 +129,12 @@ export default function Page() {
     infoRef.current?.classList.toggle("right-0");
     setShowInfo(!showInfo);
   }
+
+  // sort messages by date
+  messages?.sort((a, b) => {
+    return new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime()
+  })
+  
   return (
       <div className='message w-[calc(100%-450px)] min-h-full flex flex-col min-w-[490px] lg:max-xl:w-[calc(100%-350px)] lsm:max-lg:min-w-full '>
         {show && <div className='message__header__bg w-full h-full absolute top-0 left-0 z-[1]' onClick={() => setShow(false)}></div>}

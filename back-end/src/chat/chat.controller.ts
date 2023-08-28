@@ -41,4 +41,12 @@ export class ChatController {
     async myChannels(@Param("id") id: string): Promise<any> {
       return this.chatService.getMyChannels(id);
     }
+    
+    @Get("channels")
+    @UseGuards(JwtAuthGuard)
+    async channels(@Headers() headers: any): Promise<any> {
+      const token = headers.authorization.split(" ")[1];
+      const decoded: any = jwtDecode(token);
+      return this.chatService.getChannels(decoded.userId);
+    }
 }

@@ -17,7 +17,7 @@ export default function  LeftSide() {
 	const [groupUsers, setGroupUsers] = useState<number[]>([]);
 	const [refresh, setRefresh] = useState<string>("");
 
-	const {user,setUsers,setProfiles,setMessages ,socket,setMyChannels} :any= useContext(contextdata);
+	const {user,setUsers,setProfiles,setMessages ,socket,setMyChannels,setChannels} :any= useContext(contextdata);
 	useEffect(() => {
 		if (!socket)  return;
 		socket.on("refresh", (payload:any) => {
@@ -97,11 +97,27 @@ export default function  LeftSide() {
 			  console.log("error : getChannels ", error);
 			  return;
 			}
+		  }    async function getChannels() {
+			console.log("getChannels user : ", user);
+			try
+			{
+			  const resp = await axiosInstance.get(`http://10.13.1.7:3000/api/chat/channels`);
+			  if (resp.data === null) {
+				return;
+			  }
+			  setChannels(resp.data);
+			}
+			catch (error)
+			{
+			  console.log("error : profiles ", error);
+			  return;
+			}
 		  }
-			getUsers();
-			getProfiles();
-			getMessages();
-			getMyChannels();
+		getChannels();
+		getUsers();
+		getProfiles();
+		getMessages();
+		getMyChannels();
 	}, [refresh, user])
 
 	return (
