@@ -52,7 +52,7 @@ export default function Page() {
       async function fetchIsBlocked() {
         setTimeout(async () => {
           try {
-            const res = await axiosInstance.get(`http://10.13.1.7:3000/api/user/is-blocked/${user.id}/${msgId}`);
+            const res = await axiosInstance.get(`http://localhost:3000/api/user/is-blocked/${user.id}/${msgId}`);
             if (res.data === null) {
               return;
             }
@@ -85,7 +85,7 @@ export default function Page() {
   useEffect(() => {
     async function getReceiver() {
       try {
-        const res = await axiosInstance.get(`http://10.13.1.7:3000/api/user/profile/${msgId}`);
+        const res = await axiosInstance.get(`http://localhost:3000/api/user/profile/${msgId}`);
         setReceiver(res.data);
       } catch (err) {
         console.log(err);
@@ -103,7 +103,7 @@ export default function Page() {
     if(!user || !receiver) return;
     async function fetchMessages() {
       try {
-        const res = await axiosInstance.get(`http://10.13.1.7:3000/api/chat/messages/${user.id}`);
+        const res = await axiosInstance.get(`http://localhost:3000/api/chat/messages/${user.id}`);
 
         const onlyMyMessages = res.data.filter((msg: Message) => {
           return (msg.fromId === user.id && msg.toId === receiver.userId) || (msg.fromId === receiver.userId && msg.toId === user.id);
@@ -116,7 +116,7 @@ export default function Page() {
     }
     async function fetchIsBlocked() {
       try {
-        const res = await axiosInstance.get(`http://10.13.1.7:3000/api/user/is-blocked/${user.id}/${msgId}`);
+        const res = await axiosInstance.get(`http://localhost:3000/api/user/is-blocked/${user.id}/${msgId}`);
         if (res.data === null) {
           return;
         }

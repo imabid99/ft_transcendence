@@ -4,7 +4,7 @@ import { getLocalStorageItem } from '@/utils/localStorage';
 // Create an Axios instance with default configuration
 const axiosInstance = axios.create({
   // Set the base URL for your API
-  baseURL: 'http://10.13.1.7:3000/api/',
+  baseURL: 'http://localhost:3000/api/',
 });
 
 // Add an interceptor to include the JWT in the request headers

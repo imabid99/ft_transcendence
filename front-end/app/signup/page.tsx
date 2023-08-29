@@ -43,7 +43,7 @@ export default function Home() {
     if (!email || !password || !password2 || !firstName || !lastName || !userName) return;
     if (password !== password2) return;
     try {
-      const response = await axios.post('http://10.13.1.7:3000/api/user/signup', {
+      const response = await axios.post('http://localhost:3000/api/user/signup', {
         email: email,
         password: password,
         firstName: firstName,

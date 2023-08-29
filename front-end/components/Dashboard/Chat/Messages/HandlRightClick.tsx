@@ -10,9 +10,10 @@ type HandlRightClickProps ={
     type ?: number,
     mytype ?: number,
     groupId ?: number,
+    isBan ?: boolean,
 }
 
-export default function HandlRightClick({ children ,id, type , groupId, mytype }: HandlRightClickProps) {
+export default function HandlRightClick({ children ,id, type , groupId, mytype , isBan}: HandlRightClickProps) {
     const [showMenu, setShowMenu] = useState(false);
     const [showMutemenu, setShowMutemenu] = useState(false);
     const [pos, setPos] = useState({ x: 0, y: 0 });
@@ -36,10 +37,25 @@ export default function HandlRightClick({ children ,id, type , groupId, mytype }
         setShowMenu(false);
     }
 
-    const handleMute = (time:number) => {
+    const handleMute = (time:string) => {
         if (!socket) return;
-
-        socket.emit("MuteUser", {userId: id, groupId: groupId, time: time});
+        let timeOffMute = new Date();
+        if (time === "5 sec") {
+            timeOffMute.setSeconds(timeOffMute.getSeconds() + 5);
+        }
+        else if (time === "5 min") {
+            timeOffMute.setMinutes(timeOffMute.getMinutes() + 5);
+        }
+        else if (time === "1 hour") {
+            timeOffMute.setHours(timeOffMute.getHours() + 1);
+        }
+        else if (time === "1 day") {
+            timeOffMute.setDate(timeOffMute.getDate() + 1);
+        }
+        else if (time === "1 year") {
+            timeOffMute.setFullYear(timeOffMute.getFullYear() + 1);
+        }
+        socket.emit("MuteUser", {userId: id, groupId: groupId, timeOffMute: timeOffMute});
         setShowMenu(false);
     }
 
@@ -48,6 +64,13 @@ export default function HandlRightClick({ children ,id, type , groupId, mytype }
         socket.emit("SetAdmin", {userId: id, groupId: groupId});
         setShowMenu(false);
     }
+
+    const handleUnban = () => {
+        if (!socket) return;
+        socket.emit("UnBanUser", {userId: id, groupId: groupId});
+        setShowMenu(false);
+    }
+
     return(
         <div onContextMenu={handleContextMenu}
 
@@ -63,7 +86,7 @@ export default function HandlRightClick({ children ,id, type , groupId, mytype }
                     groupInfo text-white rounded-[10px]
                     `}>
                         {
-                            mytype && type && mytype >= type &&  type !== 3 && mytype >= 2 && (
+                            !isBan && mytype && type && mytype >= type &&  type !== 3 && mytype >= 2 && (
                             <div className=' cursor-pointer relative'>
                                 <p className='py-[10px] px-[20px]' onClick={() => {setShowMutemenu(!showMutemenu);}}>
                                     Mute
@@ -75,17 +98,17 @@ export default function HandlRightClick({ children ,id, type , groupId, mytype }
                                             setShowMutemenu(false);
                                         }
                                     }>
-                                        <li className='py-[10px] px-[20px] cursor-pointer' onClick={() => handleMute(5)}>
+                                        <li className='py-[10px] px-[20px] cursor-pointer' onClick={() => handleMute("5 sec")}>
                                             5 sec
                                         </li>
-                                        <li className='py-[10px] px-[20px] cursor-pointer' onClick={() => handleMute(5)}>
+                                        <li className='py-[10px] px-[20px] cursor-pointer' onClick={() => handleMute("5 min")}>
                                             5 min
                                         </li>
-                                        <li className='py-[10px] px-[20px] cursor-pointer' onClick={() => handleMute(5)}>
+                                        <li className='py-[10px] px-[20px] cursor-pointer' onClick={() => handleMute("1 hour")}>
                                             1 hour
                                         </li>
-                                        <li className='py-[10px] px-[20px] cursor-pointer' onClick={() => handleMute(5)}>
-                                            1 year
+                                        <li className='py-[10px] px-[20px] cursor-pointer' onClick={() => handleMute("1 year")}>
+                                            1 day
                                         </li>
                                     </ul>
                                     )
@@ -93,7 +116,7 @@ export default function HandlRightClick({ children ,id, type , groupId, mytype }
                             </div>)
                         }
                         {
-                            mytype && type && mytype >= type &&  type !== 3 && mytype >= 2 && (
+                            !isBan && mytype && type && mytype >= type &&  type !== 3 && mytype >= 2 && (
                                 <>
                                     <div className='py-[10px] px-[20px] cursor-pointer' onClick={()=> handleBan()}>
                                         Ban
@@ -105,10 +128,19 @@ export default function HandlRightClick({ children ,id, type , groupId, mytype }
                             )
                         }
                         {
-                            mytype && mytype === 3 &&  type !== 3 &&  type === 1 && (
+                            !isBan && mytype && mytype === 3 &&  type !== 3 &&  type === 1 && (
                                 <>
                                     <div className='py-[10px] px-[20px] cursor-pointer' onClick={()=> handleSetAdmin()}>
                                         Set Admin
+                                    </div>
+                                </>
+                            )
+                        }
+                        {
+                            isBan && (
+                                <>
+                                    <div className='py-[10px] px-[20px] cursor-pointer' onClick={()=> handleUnban()}>
+                                        UnBan
                                     </div>
                                 </>
                             )

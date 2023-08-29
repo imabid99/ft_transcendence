@@ -22,7 +22,7 @@ const ContextProvider = ({ children }: { children: React.ReactNode; }) => {
     const getUser = async () => {
       try
       {
-        const resp = await axiosInstance.get('http://10.13.1.7:3000/api/user/userinfo');
+        const resp = await axiosInstance.get('http://localhost:3000/api/user/userinfo');
         if (resp.data === null) {
           console.log("get : user ");
           removeLocalStorageItem("Token");
@@ -50,7 +50,7 @@ const ContextProvider = ({ children }: { children: React.ReactNode; }) => {
     if (!user || user === undefined) {
       return;
     }
-    newSocket = io('http://10.13.1.7:3000', {
+    newSocket = io('http://localhost:3000', {
       extraHeaders: {
         Authorization: `Bearer ${getLocalStorageItem("Token")}`,
       }
@@ -69,7 +69,7 @@ const ContextProvider = ({ children }: { children: React.ReactNode; }) => {
 		async function getUsers() {
 			try
 			{
-				const resp = await axiosInstance.get('http://10.13.1.7:3000/api/user/all');
+				const resp = await axiosInstance.get('http://localhost:3000/api/user/all');
         if (resp.data === null) {
           return;
         }
@@ -84,7 +84,7 @@ const ContextProvider = ({ children }: { children: React.ReactNode; }) => {
     async function getProfiles() {
       try
       {
-        const resp = await axiosInstance.get('http://10.13.1.7:3000/api/user/profiles');
+        const resp = await axiosInstance.get('http://localhost:3000/api/user/profiles');
         if (resp.data === null) {
           return;
         }
@@ -99,7 +99,7 @@ const ContextProvider = ({ children }: { children: React.ReactNode; }) => {
     async function getMessages() {
       try
       {
-        const resp = await axiosInstance.get(`http://10.13.1.7:3000/api/chat/messages/${user?.id}`);
+        const resp = await axiosInstance.get(`http://localhost:3000/api/chat/messages/${user?.id}`);
         if (resp.data === null) {
           return;
         }
@@ -121,7 +121,7 @@ const ContextProvider = ({ children }: { children: React.ReactNode; }) => {
       console.log("getChannels user : ", user);
       try
       {
-        const resp = await axiosInstance.get(`http://10.13.1.7:3000/api/chat/myChannels/${user?.id}`);
+        const resp = await axiosInstance.get(`http://localhost:3000/api/chat/myChannels/${user?.id}`);
         if (resp.data === null) {
           return;
         }
@@ -137,7 +137,7 @@ const ContextProvider = ({ children }: { children: React.ReactNode; }) => {
       console.log("getChannels user : ", user);
       try
       {
-        const resp = await axiosInstance.get(`http://10.13.1.7:3000/api/chat/channels`);
+        const resp = await axiosInstance.get(`http://localhost:3000/api/chat/channels`);
         if (resp.data === null) {
           return;
         }
