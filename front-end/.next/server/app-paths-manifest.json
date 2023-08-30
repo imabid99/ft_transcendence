@@ -1,0 +1,14 @@
+{
+  "/favicon.ico/route": "app/favicon.ico/route.js",
+  "/page": "app/page.js",
+  "/login/page": "app/login/page.js",
+  "/signup/page": "app/signup/page.js",
+  "/Chat/page": "app/Chat/page.js",
+  "/Game/page": "app/Game/page.js",
+  "/Profile/page": "app/Profile/page.js",
+  "/Setting/page": "app/Setting/page.js",
+  "/Chat/g/page": "app/Chat/g/page.js",
+  "/Chat/me/page": "app/Chat/me/page.js",
+  "/Chat/g/[msgId]/page": "app/Chat/g/[msgId]/page.js",
+  "/Chat/me/[msgId]/page": "app/Chat/me/[msgId]/page.js"
+}
