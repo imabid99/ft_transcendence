@@ -6,4 +6,8 @@ export declare class ChatController {
     messages(params: any): Promise<any>;
     myChannels(id: string): Promise<any>;
     channels(headers: any): Promise<any>;
+    isMute(userId: string, groupId: string): Promise<{
+        iMute: boolean;
+        heMute: boolean;
+    }>;
 }

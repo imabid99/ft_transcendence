@@ -2,415 +2,686 @@ exports.id = 421;
 exports.ids = [421];
 exports.modules = {
 
-/***/ 2535:
-/***/ ((__unused_webpack_module, __unused_webpack_exports, __webpack_require__) => {
-
-Promise.resolve(/* import() eager */).then(__webpack_require__.bind(__webpack_require__, 9121))
-
-/***/ }),
-
-/***/ 737:
-/***/ ((__unused_webpack_module, __unused_webpack_exports, __webpack_require__) => {
-
-Promise.resolve(/* import() eager */).then(__webpack_require__.t.bind(__webpack_require__, 125, 23));
-Promise.resolve(/* import() eager */).then(__webpack_require__.t.bind(__webpack_require__, 6249, 23));
-Promise.resolve(/* import() eager */).then(__webpack_require__.t.bind(__webpack_require__, 7844, 23));
-Promise.resolve(/* import() eager */).then(__webpack_require__.t.bind(__webpack_require__, 1522, 23));
-Promise.resolve(/* import() eager */).then(__webpack_require__.t.bind(__webpack_require__, 3100, 23))
-
-/***/ }),
-
-/***/ 3259:
-/***/ (() => {
-
-
-
-/***/ }),
-
-/***/ 9121:
-/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+/***/ 7649:
+/***/ ((module, exports, __webpack_require__) => {
 
 "use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   contextdata: () => (/* binding */ contextdata),
-/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
-/* harmony export */ });
-/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(6786);
-/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(8038);
-/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_1__);
-/* harmony import */ var _utils_localStorage__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(1392);
-/* harmony import */ var next_navigation__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(9483);
-/* harmony import */ var next_navigation__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(next_navigation__WEBPACK_IMPORTED_MODULE_2__);
-/* harmony import */ var _utils_axiosInstance__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(954);
-/* harmony import */ var socket_io_client__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(3133);
-/* __next_internal_client_entry_do_not_use__ contextdata,default auto */ 
-
-
-
-
-
-let newSocket = null;
-const contextdata = /*#__PURE__*/ (0,react__WEBPACK_IMPORTED_MODULE_1__.createContext)({});
-const ContextProvider = ({ children })=>{
-    const router = (0,next_navigation__WEBPACK_IMPORTED_MODULE_2__.useRouter)();
-    const [user, setUser] = (0,react__WEBPACK_IMPORTED_MODULE_1__.useState)(null);
-    const [users, setUsers] = (0,react__WEBPACK_IMPORTED_MODULE_1__.useState)(null);
-    const [profiles, setProfiles] = (0,react__WEBPACK_IMPORTED_MODULE_1__.useState)(null);
-    const [messages, setMessages] = (0,react__WEBPACK_IMPORTED_MODULE_1__.useState)([]);
-    const [socket, setSocket] = (0,react__WEBPACK_IMPORTED_MODULE_1__.useState)(null);
-    const [myChannels, setMyChannels] = (0,react__WEBPACK_IMPORTED_MODULE_1__.useState)([]);
-    const [channels, setChannels] = (0,react__WEBPACK_IMPORTED_MODULE_1__.useState)([]);
-    const [loged, setLoged] = (0,react__WEBPACK_IMPORTED_MODULE_1__.useState)(false);
-    (0,react__WEBPACK_IMPORTED_MODULE_1__.useEffect)(()=>{
-        const getUser = async ()=>{
-            try {
-                const resp = await _utils_axiosInstance__WEBPACK_IMPORTED_MODULE_3__/* ["default"] */ .Z.get("http://localhost:3000/api/user/userinfo");
-                if (resp.data === null) {
-                    console.log("get : user ");
-                    (0,_utils_localStorage__WEBPACK_IMPORTED_MODULE_5__/* .removeLocalStorageItem */ .e8)("Token");
-                    router.push("/login");
-                    return;
-                }
-                console.log("resp.data ", resp.data);
-                setUser(resp.data);
-            } catch (error) {
-                console.log("error : ", error);
-                (0,_utils_localStorage__WEBPACK_IMPORTED_MODULE_5__/* .removeLocalStorageItem */ .e8)("Token");
-                router.push("/login");
-                return;
-            }
-        };
-        getUser();
-        return ()=>{
-            setUser(null);
-        };
-    }, [
-        loged
-    ]);
-    (0,react__WEBPACK_IMPORTED_MODULE_1__.useEffect)(()=>{
-        if (!user || user === undefined) {
-            return;
+/* __next_internal_client_entry_do_not_use__  cjs */ 
+Object.defineProperty(exports, "__esModule", ({
+    value: true
+}));
+Object.defineProperty(exports, "default", ({
+    enumerable: true,
+    get: function() {
+        return _default;
+    }
+}));
+const _interop_require_default = __webpack_require__(5967);
+const _interop_require_wildcard = __webpack_require__(1113);
+const _react = /*#__PURE__*/ _interop_require_wildcard._(__webpack_require__(8038));
+const _head = /*#__PURE__*/ _interop_require_default._(__webpack_require__(9040));
+const _imageblursvg = __webpack_require__(4486);
+const _imageconfig = __webpack_require__(5843);
+const _imageconfigcontext = __webpack_require__(744);
+const _warnonce = __webpack_require__(618);
+const _imageloader = /*#__PURE__*/ _interop_require_default._(__webpack_require__(9552));
+const configEnv = {"deviceSizes":[640,750,828,1080,1200,1920,2048,3840],"imageSizes":[16,32,48,64,96,128,256,384],"path":"/_next/image","loader":"default","dangerouslyAllowSVG":false,"unoptimized":false};
+const allImgs = new Map();
+let perfObserver;
+if (true) {
+    globalThis.__NEXT_IMAGE_IMPORTED = true;
+}
+const VALID_LOADING_VALUES = (/* unused pure expression or super */ null && ([
+    "lazy",
+    "eager",
+    undefined
+]));
+function isStaticRequire(src) {
+    return src.default !== undefined;
+}
+function isStaticImageData(src) {
+    return src.src !== undefined;
+}
+function isStaticImport(src) {
+    return typeof src === "object" && (isStaticRequire(src) || isStaticImageData(src));
+}
+function getWidths(param, width, sizes) {
+    let { deviceSizes, allSizes } = param;
+    if (sizes) {
+        // Find all the "vw" percent sizes used in the sizes prop
+        const viewportWidthRe = /(^|\s)(1?\d?\d)vw/g;
+        const percentSizes = [];
+        for(let match; match = viewportWidthRe.exec(sizes); match){
+            percentSizes.push(parseInt(match[2]));
         }
-        newSocket = (0,socket_io_client__WEBPACK_IMPORTED_MODULE_4__/* ["default"] */ .ZP)("http://localhost:3000", {
-            extraHeaders: {
-                Authorization: `Bearer ${(0,_utils_localStorage__WEBPACK_IMPORTED_MODULE_5__/* .getLocalStorageItem */ .le)("Token")}`
-            }
-        });
-        if (newSocket) {
-            setSocket(newSocket);
+        if (percentSizes.length) {
+            const smallestRatio = Math.min(...percentSizes) * 0.01;
+            return {
+                widths: allSizes.filter((s)=>s >= deviceSizes[0] * smallestRatio),
+                kind: "w"
+            };
         }
-        return ()=>newSocket.disconnect();
-    }, [
-        user
-    ]);
-    (0,react__WEBPACK_IMPORTED_MODULE_1__.useEffect)(()=>{
-        if (!user || user === undefined) {
-            return;
-        }
-        console.log("useEffect user : ", user);
-        async function getUsers() {
-            try {
-                const resp = await _utils_axiosInstance__WEBPACK_IMPORTED_MODULE_3__/* ["default"] */ .Z.get("http://localhost:3000/api/user/all");
-                if (resp.data === null) {
-                    return;
-                }
-                setUsers(resp.data);
-            } catch (error) {
-                console.log("error : users ", error);
-                return;
-            }
-        }
-        async function getProfiles() {
-            try {
-                const resp = await _utils_axiosInstance__WEBPACK_IMPORTED_MODULE_3__/* ["default"] */ .Z.get("http://localhost:3000/api/user/profiles");
-                if (resp.data === null) {
-                    return;
-                }
-                setProfiles(resp.data);
-            } catch (error) {
-                console.log("error : profiles ", error);
-                return;
-            }
-        }
-        async function getMessages() {
-            try {
-                const resp = await _utils_axiosInstance__WEBPACK_IMPORTED_MODULE_3__/* ["default"] */ .Z.get(`http://localhost:3000/api/chat/messages/${user?.id}`);
-                if (resp.data === null) {
-                    return;
-                }
-                resp.data.sort((a, b)=>{
-                    return new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime();
-                });
-                setMessages(resp.data);
-            } catch (error) {
-                console.log("error : profiles ", error);
-                return;
-            }
-        }
-        async function getMyChannels() {
-            console.log("getChannels user : ", user);
-            try {
-                const resp = await _utils_axiosInstance__WEBPACK_IMPORTED_MODULE_3__/* ["default"] */ .Z.get(`http://localhost:3000/api/chat/myChannels/${user?.id}`);
-                if (resp.data === null) {
-                    return;
-                }
-                setMyChannels(resp.data);
-            } catch (error) {
-                console.log("error : profiles ", error);
-                return;
-            }
-        }
-        async function getChannels() {
-            console.log("getChannels user : ", user);
-            try {
-                const resp = await _utils_axiosInstance__WEBPACK_IMPORTED_MODULE_3__/* ["default"] */ .Z.get(`http://localhost:3000/api/chat/channels`);
-                if (resp.data === null) {
-                    return;
-                }
-                setChannels(resp.data);
-            } catch (error) {
-                console.log("error : profiles ", error);
-                return;
-            }
-        }
-        getChannels();
-        getUsers();
-        getProfiles();
-        getMessages();
-        getMyChannels();
-        return ()=>{
-            setUsers([]);
-            setProfiles([]);
-            setMessages([]);
-            setMyChannels([]);
-            setChannels([]);
-        };
-    }, [
-        user
-    ]);
-    return /*#__PURE__*/ react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx(contextdata.Provider, {
-        value: {
-            socket: socket,
-            user: user,
-            users: users,
-            profiles: profiles,
-            messages: messages,
-            myChannels: myChannels,
-            channels: channels,
-            setChannels: setChannels,
-            setUser: setUser,
-            setMyChannels: setMyChannels,
-            setUsers: setUsers,
-            setProfiles: setProfiles,
-            setMessages: setMessages,
-            setLoged: setLoged,
-            loged: loged
-        },
-        children: children
-    });
-};
-/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (ContextProvider);
-
-
-/***/ }),
-
-/***/ 954:
-/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
-
-"use strict";
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   Z: () => (__WEBPACK_DEFAULT_EXPORT__)
-/* harmony export */ });
-/* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(248);
-/* harmony import */ var _utils_localStorage__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(1392);
-
-
-// Create an Axios instance with default configuration
-const axiosInstance = axios__WEBPACK_IMPORTED_MODULE_0__/* ["default"] */ .Z.create({
-    // Set the base URL for your API
-    baseURL: "http://localhost:3000/api/"
-});
-// Add an interceptor to include the JWT in the request headers
-axiosInstance.interceptors.request.use((config)=>{
-    const token = (0,_utils_localStorage__WEBPACK_IMPORTED_MODULE_1__/* .getLocalStorageItem */ .le)("Token"); // Retrieve the JWT from storage
-    if (token) {
-        config.headers = {
-            ...config.headers,
-            "Authorization": `Bearer ${token}`
+        return {
+            widths: allSizes,
+            kind: "w"
         };
     }
-    return config;
-}, (error)=>{
-    return Promise.reject(error);
+    if (typeof width !== "number") {
+        return {
+            widths: deviceSizes,
+            kind: "w"
+        };
+    }
+    const widths = [
+        ...new Set(// > are actually 3x in the green color, but only 1.5x in the red and
+        // > blue colors. Showing a 3x resolution image in the app vs a 2x
+        // > resolution image will be visually the same, though the 3x image
+        // > takes significantly more data. Even true 3x resolution screens are
+        // > wasteful as the human eye cannot see that level of detail without
+        // > something like a magnifying glass.
+        // https://blog.twitter.com/engineering/en_us/topics/infrastructure/2019/capping-image-fidelity-on-ultra-high-resolution-devices.html
+        [
+            width,
+            width * 2 /*, width * 3*/ 
+        ].map((w)=>allSizes.find((p)=>p >= w) || allSizes[allSizes.length - 1]))
+    ];
+    return {
+        widths,
+        kind: "x"
+    };
+}
+function generateImgAttrs(param) {
+    let { config, src, unoptimized, width, quality, sizes, loader } = param;
+    if (unoptimized) {
+        return {
+            src,
+            srcSet: undefined,
+            sizes: undefined
+        };
+    }
+    const { widths, kind } = getWidths(config, width, sizes);
+    const last = widths.length - 1;
+    return {
+        sizes: !sizes && kind === "w" ? "100vw" : sizes,
+        srcSet: widths.map((w, i)=>loader({
+                config,
+                src,
+                quality,
+                width: w
+            }) + " " + (kind === "w" ? w : i + 1) + kind).join(", "),
+        // It's intended to keep `src` the last attribute because React updates
+        // attributes in order. If we keep `src` the first one, Safari will
+        // immediately start to fetch `src`, before `sizes` and `srcSet` are even
+        // updated by React. That causes multiple unnecessary requests if `srcSet`
+        // and `sizes` are defined.
+        // This bug cannot be reproduced in Chrome or Firefox.
+        src: loader({
+            config,
+            src,
+            quality,
+            width: widths[last]
+        })
+    };
+}
+function getInt(x) {
+    if (typeof x === "undefined") {
+        return x;
+    }
+    if (typeof x === "number") {
+        return Number.isFinite(x) ? x : NaN;
+    }
+    if (typeof x === "string" && /^[0-9]+$/.test(x)) {
+        return parseInt(x, 10);
+    }
+    return NaN;
+}
+// See https://stackoverflow.com/q/39777833/266535 for why we use this ref
+// handler instead of the img's onLoad attribute.
+function handleLoading(img, src, placeholder, onLoadRef, onLoadingCompleteRef, setBlurComplete, unoptimized) {
+    if (!img || img["data-loaded-src"] === src) {
+        return;
+    }
+    img["data-loaded-src"] = src;
+    const p = "decode" in img ? img.decode() : Promise.resolve();
+    p.catch(()=>{}).then(()=>{
+        if (!img.parentElement || !img.isConnected) {
+            // Exit early in case of race condition:
+            // - onload() is called
+            // - decode() is called but incomplete
+            // - unmount is called
+            // - decode() completes
+            return;
+        }
+        if (placeholder === "blur") {
+            setBlurComplete(true);
+        }
+        if (onLoadRef == null ? void 0 : onLoadRef.current) {
+            // Since we don't have the SyntheticEvent here,
+            // we must create one with the same shape.
+            // See https://reactjs.org/docs/events.html
+            const event = new Event("load");
+            Object.defineProperty(event, "target", {
+                writable: false,
+                value: img
+            });
+            let prevented = false;
+            let stopped = false;
+            onLoadRef.current({
+                ...event,
+                nativeEvent: event,
+                currentTarget: img,
+                target: img,
+                isDefaultPrevented: ()=>prevented,
+                isPropagationStopped: ()=>stopped,
+                persist: ()=>{},
+                preventDefault: ()=>{
+                    prevented = true;
+                    event.preventDefault();
+                },
+                stopPropagation: ()=>{
+                    stopped = true;
+                    event.stopPropagation();
+                }
+            });
+        }
+        if (onLoadingCompleteRef == null ? void 0 : onLoadingCompleteRef.current) {
+            onLoadingCompleteRef.current(img);
+        }
+        if (false) {}
+    });
+}
+function getDynamicProps(fetchPriority) {
+    const [majorStr, minorStr] = _react.version.split(".");
+    const major = parseInt(majorStr, 10);
+    const minor = parseInt(minorStr, 10);
+    if (major > 18 || major === 18 && minor >= 3) {
+        // In React 18.3.0 or newer, we must use camelCase
+        // prop to avoid "Warning: Invalid DOM property".
+        // See https://github.com/facebook/react/pull/25927
+        return {
+            fetchPriority
+        };
+    }
+    // In React 18.2.0 or older, we must use lowercase prop
+    // to avoid "Warning: Invalid DOM property".
+    return {
+        fetchpriority: fetchPriority
+    };
+}
+const ImageElement = /*#__PURE__*/ (0, _react.forwardRef)((param, forwardedRef)=>{
+    let { imgAttributes, heightInt, widthInt, qualityInt, className, imgStyle, blurStyle, isLazy, fetchPriority, fill, placeholder, loading, srcString, config, unoptimized, loader, onLoadRef, onLoadingCompleteRef, setBlurComplete, setShowAltText, onLoad, onError, ...rest } = param;
+    loading = isLazy ? "lazy" : loading;
+    return /*#__PURE__*/ _react.default.createElement("img", {
+        ...rest,
+        ...getDynamicProps(fetchPriority),
+        loading: loading,
+        width: widthInt,
+        height: heightInt,
+        decoding: "async",
+        "data-nimg": fill ? "fill" : "1",
+        className: className,
+        style: {
+            ...imgStyle,
+            ...blurStyle
+        },
+        ...imgAttributes,
+        ref: (0, _react.useCallback)((img)=>{
+            if (forwardedRef) {
+                if (typeof forwardedRef === "function") forwardedRef(img);
+                else if (typeof forwardedRef === "object") {
+                    // @ts-ignore - .current is read only it's usually assigned by react internally
+                    forwardedRef.current = img;
+                }
+            }
+            if (!img) {
+                return;
+            }
+            if (onError) {
+                // If the image has an error before react hydrates, then the error is lost.
+                // The workaround is to wait until the image is mounted which is after hydration,
+                // then we set the src again to trigger the error handler (if there was an error).
+                // eslint-disable-next-line no-self-assign
+                img.src = img.src;
+            }
+            if (false) {}
+            if (img.complete) {
+                handleLoading(img, srcString, placeholder, onLoadRef, onLoadingCompleteRef, setBlurComplete, unoptimized);
+            }
+        }, [
+            srcString,
+            placeholder,
+            onLoadRef,
+            onLoadingCompleteRef,
+            setBlurComplete,
+            onError,
+            unoptimized,
+            forwardedRef
+        ]),
+        onLoad: (event)=>{
+            const img = event.currentTarget;
+            handleLoading(img, srcString, placeholder, onLoadRef, onLoadingCompleteRef, setBlurComplete, unoptimized);
+        },
+        onError: (event)=>{
+            // if the real image fails to load, this will ensure "alt" is visible
+            setShowAltText(true);
+            if (placeholder === "blur") {
+                // If the real image fails to load, this will still remove the placeholder.
+                setBlurComplete(true);
+            }
+            if (onError) {
+                onError(event);
+            }
+        }
+    });
 });
-/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (axiosInstance);
-
-
-/***/ }),
-
-/***/ 1392:
-/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
-
-"use strict";
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   D$: () => (/* binding */ setLocalStorageItem),
-/* harmony export */   e8: () => (/* binding */ removeLocalStorageItem),
-/* harmony export */   le: () => (/* binding */ getLocalStorageItem)
-/* harmony export */ });
-const setLocalStorageItem = (key, value)=>{
+const Image = /*#__PURE__*/ (0, _react.forwardRef)((param, forwardedRef)=>{
+    let { src, sizes, unoptimized = false, priority = false, loading, className, quality, width, height, fill, style, onLoad, onLoadingComplete, placeholder = "empty", blurDataURL, fetchPriority, layout, objectFit, objectPosition, lazyBoundary, lazyRoot, ...all } = param;
+    const configContext = (0, _react.useContext)(_imageconfigcontext.ImageConfigContext);
+    const config = (0, _react.useMemo)(()=>{
+        const c = configEnv || configContext || _imageconfig.imageConfigDefault;
+        const allSizes = [
+            ...c.deviceSizes,
+            ...c.imageSizes
+        ].sort((a, b)=>a - b);
+        const deviceSizes = c.deviceSizes.sort((a, b)=>a - b);
+        return {
+            ...c,
+            allSizes,
+            deviceSizes
+        };
+    }, [
+        configContext
+    ]);
+    let rest = all;
+    let loader = rest.loader || _imageloader.default;
+    // Remove property so it's not spread on <img> element
+    delete rest.loader;
+    // This special value indicates that the user
+    // didn't define a "loader" prop or "loader" config.
+    const isDefaultLoader = "__next_img_default" in loader;
+    if (isDefaultLoader) {
+        if (config.loader === "custom") {
+            throw new Error('Image with src "' + src + '" is missing "loader" prop.' + "\nRead more: https://nextjs.org/docs/messages/next-image-missing-loader");
+        }
+    } else {
+        // The user defined a "loader" prop or config.
+        // Since the config object is internal only, we
+        // must not pass it to the user-defined "loader".
+        const customImageLoader = loader;
+        loader = (obj)=>{
+            const { config: _, ...opts } = obj;
+            return customImageLoader(opts);
+        };
+    }
+    if (layout) {
+        if (layout === "fill") {
+            fill = true;
+        }
+        const layoutToStyle = {
+            intrinsic: {
+                maxWidth: "100%",
+                height: "auto"
+            },
+            responsive: {
+                width: "100%",
+                height: "auto"
+            }
+        };
+        const layoutToSizes = {
+            responsive: "100vw",
+            fill: "100vw"
+        };
+        const layoutStyle = layoutToStyle[layout];
+        if (layoutStyle) {
+            style = {
+                ...style,
+                ...layoutStyle
+            };
+        }
+        const layoutSizes = layoutToSizes[layout];
+        if (layoutSizes && !sizes) {
+            sizes = layoutSizes;
+        }
+    }
+    let staticSrc = "";
+    let widthInt = getInt(width);
+    let heightInt = getInt(height);
+    let blurWidth;
+    let blurHeight;
+    if (isStaticImport(src)) {
+        const staticImageData = isStaticRequire(src) ? src.default : src;
+        if (!staticImageData.src) {
+            throw new Error("An object should only be passed to the image component src parameter if it comes from a static image import. It must include src. Received " + JSON.stringify(staticImageData));
+        }
+        if (!staticImageData.height || !staticImageData.width) {
+            throw new Error("An object should only be passed to the image component src parameter if it comes from a static image import. It must include height and width. Received " + JSON.stringify(staticImageData));
+        }
+        blurWidth = staticImageData.blurWidth;
+        blurHeight = staticImageData.blurHeight;
+        blurDataURL = blurDataURL || staticImageData.blurDataURL;
+        staticSrc = staticImageData.src;
+        if (!fill) {
+            if (!widthInt && !heightInt) {
+                widthInt = staticImageData.width;
+                heightInt = staticImageData.height;
+            } else if (widthInt && !heightInt) {
+                const ratio = widthInt / staticImageData.width;
+                heightInt = Math.round(staticImageData.height * ratio);
+            } else if (!widthInt && heightInt) {
+                const ratio = heightInt / staticImageData.height;
+                widthInt = Math.round(staticImageData.width * ratio);
+            }
+        }
+    }
+    src = typeof src === "string" ? src : staticSrc;
+    let isLazy = !priority && (loading === "lazy" || typeof loading === "undefined");
+    if (!src || src.startsWith("data:") || src.startsWith("blob:")) {
+        // https://developer.mozilla.org/en-US/docs/Web/HTTP/Basics_of_HTTP/Data_URIs
+        unoptimized = true;
+        isLazy = false;
+    }
+    if (config.unoptimized) {
+        unoptimized = true;
+    }
+    if (isDefaultLoader && src.endsWith(".svg") && !config.dangerouslyAllowSVG) {
+        // Special case to make svg serve as-is to avoid proxying
+        // through the built-in Image Optimization API.
+        unoptimized = true;
+    }
+    if (priority) {
+        fetchPriority = "high";
+    }
+    const [blurComplete, setBlurComplete] = (0, _react.useState)(false);
+    const [showAltText, setShowAltText] = (0, _react.useState)(false);
+    const qualityInt = getInt(quality);
     if (false) {}
-};
-const getLocalStorageItem = (key)=>{
-    const value = localStorage.getItem(key);
-    return value;
-};
-const removeLocalStorageItem = (key)=>{
-    localStorage.removeItem(key);
-};
-
-
-/***/ }),
-
-/***/ 2241:
-/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
-
-"use strict";
-// ESM COMPAT FLAG
-__webpack_require__.r(__webpack_exports__);
-
-// EXPORTS
-__webpack_require__.d(__webpack_exports__, {
-  "default": () => (/* binding */ RootLayout),
-  metadata: () => (/* binding */ metadata)
+    const imgStyle = Object.assign(fill ? {
+        position: "absolute",
+        height: "100%",
+        width: "100%",
+        left: 0,
+        top: 0,
+        right: 0,
+        bottom: 0,
+        objectFit,
+        objectPosition
+    } : {}, showAltText ? {} : {
+        color: "transparent"
+    }, style);
+    const blurStyle = placeholder === "blur" && blurDataURL && !blurComplete ? {
+        backgroundSize: imgStyle.objectFit || "cover",
+        backgroundPosition: imgStyle.objectPosition || "50% 50%",
+        backgroundRepeat: "no-repeat",
+        backgroundImage: 'url("data:image/svg+xml;charset=utf-8,' + (0, _imageblursvg.getImageBlurSvg)({
+            widthInt,
+            heightInt,
+            blurWidth,
+            blurHeight,
+            blurDataURL,
+            objectFit: imgStyle.objectFit
+        }) + '")'
+    } : {};
+    if (false) {}
+    const imgAttributes = generateImgAttrs({
+        config,
+        src,
+        unoptimized,
+        width: widthInt,
+        quality: qualityInt,
+        sizes,
+        loader
+    });
+    let srcString = src;
+    if (false) {}
+    const onLoadRef = (0, _react.useRef)(onLoad);
+    (0, _react.useEffect)(()=>{
+        onLoadRef.current = onLoad;
+    }, [
+        onLoad
+    ]);
+    const onLoadingCompleteRef = (0, _react.useRef)(onLoadingComplete);
+    (0, _react.useEffect)(()=>{
+        onLoadingCompleteRef.current = onLoadingComplete;
+    }, [
+        onLoadingComplete
+    ]);
+    const imgElementArgs = {
+        isLazy,
+        imgAttributes,
+        heightInt,
+        widthInt,
+        qualityInt,
+        className,
+        imgStyle,
+        blurStyle,
+        loading,
+        config,
+        fetchPriority,
+        fill,
+        unoptimized,
+        placeholder,
+        loader,
+        srcString,
+        onLoadRef,
+        onLoadingCompleteRef,
+        setBlurComplete,
+        setShowAltText,
+        ...rest
+    };
+    return /*#__PURE__*/ _react.default.createElement(_react.default.Fragment, null, /*#__PURE__*/ _react.default.createElement(ImageElement, {
+        ...imgElementArgs,
+        ref: forwardedRef
+    }), priority ? // for browsers that do not support `imagesrcset`, and in those cases
+    // it would likely cause the incorrect image to be preloaded.
+    //
+    // https://html.spec.whatwg.org/multipage/semantics.html#attr-link-imagesrcset
+    /*#__PURE__*/ _react.default.createElement(_head.default, null, /*#__PURE__*/ _react.default.createElement("link", {
+        key: "__nimg-" + imgAttributes.src + imgAttributes.srcSet + imgAttributes.sizes,
+        rel: "preload",
+        as: "image",
+        href: imgAttributes.srcSet ? undefined : imgAttributes.src,
+        imageSrcSet: imgAttributes.srcSet,
+        imageSizes: imgAttributes.sizes,
+        crossOrigin: rest.crossOrigin,
+        referrerPolicy: rest.referrerPolicy,
+        ...getDynamicProps(fetchPriority)
+    })) : null);
 });
-
-// EXTERNAL MODULE: external "next/dist/compiled/react/jsx-runtime"
-var jsx_runtime_ = __webpack_require__(6786);
-// EXTERNAL MODULE: ./node_modules/next/font/google/target.css?{"path":"app/layout.tsx","import":"Inter","arguments":[{"subsets":["latin"]}],"variableName":"inter"}
-var layout_tsx_import_Inter_arguments_subsets_latin_variableName_inter_ = __webpack_require__(9298);
-var layout_tsx_import_Inter_arguments_subsets_latin_variableName_inter_default = /*#__PURE__*/__webpack_require__.n(layout_tsx_import_Inter_arguments_subsets_latin_variableName_inter_);
-// EXTERNAL MODULE: ./app/globals.css
-var globals = __webpack_require__(2817);
-// EXTERNAL MODULE: ./node_modules/next/dist/client/components/noop-head.js
-var noop_head = __webpack_require__(3873);
-var noop_head_default = /*#__PURE__*/__webpack_require__.n(noop_head);
-// EXTERNAL MODULE: ./node_modules/next/dist/compiled/react/react.shared-subset.js
-var react_shared_subset = __webpack_require__(7887);
-// EXTERNAL MODULE: ./node_modules/next/dist/build/webpack/loaders/next-flight-loader/module-proxy.js
-var module_proxy = __webpack_require__(1313);
-;// CONCATENATED MODULE: ./app/contextApi.tsx
-
-const proxy = (0,module_proxy.createProxy)(String.raw`/Users/asabbar/Desktop/ft_git/front-end/app/contextApi.tsx`)
-
-// Accessing the __esModule property and exporting $$typeof are required here.
-// The __esModule getter forces the proxy target to create the default export
-// and the $$typeof value is for rendering logic to determine if the module
-// is a client boundary.
-const { __esModule, $$typeof } = proxy;
-const __default__ = proxy.default;
-
-const e0 = proxy["contextdata"];
-
-
-/* harmony default export */ const contextApi = (__default__);
-;// CONCATENATED MODULE: ./app/layout.tsx
-
-
-
-
-
-
-const metadata = {
-    title: "Ping Pong",
-    description: "ft_transcendence"
-};
-function RootLayout({ children }) {
-    return /*#__PURE__*/ jsx_runtime_.jsx("html", {
-        lang: "en",
-        children: /*#__PURE__*/ (0,jsx_runtime_.jsxs)("body", {
-            className: (layout_tsx_import_Inter_arguments_subsets_latin_variableName_inter_default()).className,
-            children: [
-                /*#__PURE__*/ (0,jsx_runtime_.jsxs)((noop_head_default()), {
-                    children: [
-                        /*#__PURE__*/ jsx_runtime_.jsx("title", {
-                            children: metadata.title
-                        }),
-                        /*#__PURE__*/ jsx_runtime_.jsx("meta", {
-                            name: "description",
-                            content: metadata.description
-                        }),
-                        /*#__PURE__*/ jsx_runtime_.jsx("link", {
-                            rel: "icon",
-                            href: "/favicon.ico"
-                        })
-                    ]
-                }),
-                /*#__PURE__*/ jsx_runtime_.jsx("div", {
-                    className: "h-[100vh] w-[100vw] flex ",
-                    children: /*#__PURE__*/ jsx_runtime_.jsx(contextApi, {
-                        children: children
-                    })
-                })
-            ]
-        })
+const _default = Image;
+if ((typeof exports.default === "function" || typeof exports.default === "object" && exports.default !== null) && typeof exports.default.__esModule === "undefined") {
+    Object.defineProperty(exports.default, "__esModule", {
+        value: true
     });
-}
+    Object.assign(exports.default, exports);
+    module.exports = exports.default;
+} //# sourceMappingURL=image.js.map
 
 
 /***/ }),
 
-/***/ 4521:
-/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+/***/ 9040:
+/***/ ((module, exports, __webpack_require__) => {
 
 "use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "default": () => (/* binding */ Loading)
-/* harmony export */ });
-/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(6786);
-/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__);
-
-function Loading() {
-    return /*#__PURE__*/ react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx("div", {
-        className: "flex justify-center items-center w-full h-full bg-gray-50 dark:bg-gray-900",
-        children: /*#__PURE__*/ react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx("div", {
-            className: "animate-spin rounded-full h-32 w-32 border-t-2 border-b-2 border-gray-900"
-        })
+/* __next_internal_client_entry_do_not_use__  cjs */ 
+Object.defineProperty(exports, "__esModule", ({
+    value: true
+}));
+0 && (0);
+function _export(target, all) {
+    for(var name in all)Object.defineProperty(target, name, {
+        enumerable: true,
+        get: all[name]
     });
 }
+_export(exports, {
+    defaultHead: function() {
+        return defaultHead;
+    },
+    default: function() {
+        return _default;
+    }
+});
+const _interop_require_default = __webpack_require__(5967);
+const _interop_require_wildcard = __webpack_require__(1113);
+const _react = /*#__PURE__*/ _interop_require_wildcard._(__webpack_require__(8038));
+const _sideeffect = /*#__PURE__*/ _interop_require_default._(__webpack_require__(2470));
+const _ampcontext = __webpack_require__(3918);
+const _headmanagercontext = __webpack_require__(2796);
+const _ampmode = __webpack_require__(5732);
+const _warnonce = __webpack_require__(618);
+function defaultHead(inAmpMode) {
+    if (inAmpMode === void 0) inAmpMode = false;
+    const head = [
+        /*#__PURE__*/ _react.default.createElement("meta", {
+            charSet: "utf-8"
+        })
+    ];
+    if (!inAmpMode) {
+        head.push(/*#__PURE__*/ _react.default.createElement("meta", {
+            name: "viewport",
+            content: "width=device-width"
+        }));
+    }
+    return head;
+}
+function onlyReactElement(list, child) {
+    // React children can be "string" or "number" in this case we ignore them for backwards compat
+    if (typeof child === "string" || typeof child === "number") {
+        return list;
+    }
+    // Adds support for React.Fragment
+    if (child.type === _react.default.Fragment) {
+        return list.concat(_react.default.Children.toArray(child.props.children).reduce((fragmentList, fragmentChild)=>{
+            if (typeof fragmentChild === "string" || typeof fragmentChild === "number") {
+                return fragmentList;
+            }
+            return fragmentList.concat(fragmentChild);
+        }, []));
+    }
+    return list.concat(child);
+}
+const METATYPES = [
+    "name",
+    "httpEquiv",
+    "charSet",
+    "itemProp"
+];
+/*
+ returns a function for filtering head child elements
+ which shouldn't be duplicated, like <title/>
+ Also adds support for deduplicated `key` properties
+*/ function unique() {
+    const keys = new Set();
+    const tags = new Set();
+    const metaTypes = new Set();
+    const metaCategories = {};
+    return (h)=>{
+        let isUnique = true;
+        let hasKey = false;
+        if (h.key && typeof h.key !== "number" && h.key.indexOf("$") > 0) {
+            hasKey = true;
+            const key = h.key.slice(h.key.indexOf("$") + 1);
+            if (keys.has(key)) {
+                isUnique = false;
+            } else {
+                keys.add(key);
+            }
+        }
+        // eslint-disable-next-line default-case
+        switch(h.type){
+            case "title":
+            case "base":
+                if (tags.has(h.type)) {
+                    isUnique = false;
+                } else {
+                    tags.add(h.type);
+                }
+                break;
+            case "meta":
+                for(let i = 0, len = METATYPES.length; i < len; i++){
+                    const metatype = METATYPES[i];
+                    if (!h.props.hasOwnProperty(metatype)) continue;
+                    if (metatype === "charSet") {
+                        if (metaTypes.has(metatype)) {
+                            isUnique = false;
+                        } else {
+                            metaTypes.add(metatype);
+                        }
+                    } else {
+                        const category = h.props[metatype];
+                        const categories = metaCategories[metatype] || new Set();
+                        if ((metatype !== "name" || !hasKey) && categories.has(category)) {
+                            isUnique = false;
+                        } else {
+                            categories.add(category);
+                            metaCategories[metatype] = categories;
+                        }
+                    }
+                }
+                break;
+        }
+        return isUnique;
+    };
+}
+/**
+ *
+ * @param headChildrenElements List of children of <Head>
+ */ function reduceComponents(headChildrenElements, props) {
+    const { inAmpMode } = props;
+    return headChildrenElements.reduce(onlyReactElement, []).reverse().concat(defaultHead(inAmpMode).reverse()).filter(unique()).reverse().map((c, i)=>{
+        const key = c.key || i;
+        if ( true && !inAmpMode) {
+            if (c.type === "link" && c.props["href"] && // TODO(prateekbh@): Replace this with const from `constants` when the tree shaking works.
+            [
+                "https://fonts.googleapis.com/css",
+                "https://use.typekit.net/"
+            ].some((url)=>c.props["href"].startsWith(url))) {
+                const newProps = {
+                    ...c.props || {}
+                };
+                newProps["data-href"] = newProps["href"];
+                newProps["href"] = undefined;
+                // Add this attribute to make it easy to identify optimized tags
+                newProps["data-optimized-fonts"] = true;
+                return /*#__PURE__*/ _react.default.cloneElement(c, newProps);
+            }
+        }
+        if (false) {}
+        return /*#__PURE__*/ _react.default.cloneElement(c, {
+            key
+        });
+    });
+}
+/**
+ * This component injects elements to `<head>` of your page.
+ * To avoid duplicated `tags` in `<head>` you can use the `key` property, which will make sure every tag is only rendered once.
+ */ function Head(param) {
+    let { children } = param;
+    const ampState = (0, _react.useContext)(_ampcontext.AmpStateContext);
+    const headManager = (0, _react.useContext)(_headmanagercontext.HeadManagerContext);
+    return /*#__PURE__*/ _react.default.createElement(_sideeffect.default, {
+        reduceComponentsToState: reduceComponents,
+        headManager: headManager,
+        inAmpMode: (0, _ampmode.isInAmpMode)(ampState)
+    }, children);
+}
+const _default = Head;
+if ((typeof exports.default === "function" || typeof exports.default === "object" && exports.default !== null) && typeof exports.default.__esModule === "undefined") {
+    Object.defineProperty(exports.default, "__esModule", {
+        value: true
+    });
+    Object.assign(exports.default, exports);
+    module.exports = exports.default;
+} //# sourceMappingURL=head.js.map
 
 
 /***/ }),
 
-/***/ 3174:
-/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+/***/ 8421:
+/***/ ((module, __unused_webpack_exports, __webpack_require__) => {
 
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
-/* harmony export */ });
-/* harmony import */ var next_dist_lib_metadata_get_metadata_route__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(3180);
-/* harmony import */ var next_dist_lib_metadata_get_metadata_route__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(next_dist_lib_metadata_get_metadata_route__WEBPACK_IMPORTED_MODULE_0__);
-  
-
-  /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ((props) => {
-    const imageData = {"type":"image/x-icon","sizes":"any"}
-    const imageUrl = (0,next_dist_lib_metadata_get_metadata_route__WEBPACK_IMPORTED_MODULE_0__.fillMetadataSegment)(".", props.params, "favicon.ico")
-
-    return [{
-      ...imageData,
-      url: imageUrl + "",
-    }]
-  });
-
-/***/ }),
-
-/***/ 2817:
-/***/ (() => {
-
+module.exports = __webpack_require__(7649)
 
 
 /***/ })

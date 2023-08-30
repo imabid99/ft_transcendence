@@ -478,7 +478,7 @@ __webpack_require__.r(__webpack_exports__);
       },
         {
           'layout': [() => Promise.resolve(/* import() eager */).then(__webpack_require__.bind(__webpack_require__, 2241)), "/Users/asabbar/Desktop/ft_git/front-end/app/layout.tsx"],
-'loading': [() => Promise.resolve(/* import() eager */).then(__webpack_require__.bind(__webpack_require__, 4521)), "/Users/asabbar/Desktop/ft_git/front-end/app/loading.tsx"],
+'loading': [() => Promise.resolve(/* import() eager */).then(__webpack_require__.bind(__webpack_require__, 1340)), "/Users/asabbar/Desktop/ft_git/front-end/app/loading.tsx"],
           metadata: {
     icon: [(async (props) => (await Promise.resolve(/* import() eager */).then(__webpack_require__.bind(__webpack_require__, 3174))).default(props))],
     apple: [],
@@ -588,7 +588,7 @@ var contextApi = __webpack_require__(9121);
 
 
 
-function HandlRightClick({ children, id, type, groupId, mytype, isBan }) {
+function HandlRightClick({ children, id, type, groupId, mytype, isBan, isMute }) {
     const [showMenu, setShowMenu] = (0,react_.useState)(false);
     const [showMutemenu, setShowMutemenu] = (0,react_.useState)(false);
     const [pos, setPos] = (0,react_.useState)({
@@ -602,7 +602,6 @@ function HandlRightClick({ children, id, type, groupId, mytype, isBan }) {
             x: e.clientX - window.innerWidth,
             y: e.clientY
         });
-        console.log(e.clientX, e.clientY);
     };
     const { socket } = (0,react_.useContext)(contextApi.contextdata);
     const handleKick = ()=>{
@@ -642,6 +641,14 @@ function HandlRightClick({ children, id, type, groupId, mytype, isBan }) {
         });
         setShowMenu(false);
     };
+    const handleUnmute = ()=>{
+        if (!socket) return;
+        socket.emit("UnMuteUser", {
+            userId: id,
+            groupId: groupId
+        });
+        setShowMenu(false);
+    };
     const handleSetAdmin = ()=>{
         if (!socket) return;
         socket.emit("SetAdmin", {
@@ -669,7 +676,7 @@ function HandlRightClick({ children, id, type, groupId, mytype, isBan }) {
                     groupInfo text-white rounded-[10px]
                     `,
                 children: [
-                    !isBan && mytype && type && mytype >= type && type !== 3 && mytype >= 2 && /*#__PURE__*/ (0,jsx_runtime_.jsxs)("div", {
+                    !isBan && !isMute && mytype && type && mytype >= type && type !== 3 && mytype >= 2 && /*#__PURE__*/ (0,jsx_runtime_.jsxs)("div", {
                         className: " cursor-pointer relative",
                         children: [
                             /*#__PURE__*/ jsx_runtime_.jsx("p", {
@@ -708,6 +715,13 @@ function HandlRightClick({ children, id, type, groupId, mytype, isBan }) {
                                 ]
                             })
                         ]
+                    }),
+                    isMute && mytype && type && mytype >= type && type !== 3 && mytype >= 2 && /*#__PURE__*/ jsx_runtime_.jsx(jsx_runtime_.Fragment, {
+                        children: /*#__PURE__*/ jsx_runtime_.jsx("div", {
+                            className: "py-[10px] px-[20px] cursor-pointer",
+                            onClick: ()=>handleUnmute(),
+                            children: "UnMute"
+                        })
                     }),
                     !isBan && mytype && type && mytype >= type && type !== 3 && mytype >= 2 && /*#__PURE__*/ (0,jsx_runtime_.jsxs)(jsx_runtime_.Fragment, {
                         children: [
@@ -880,7 +894,7 @@ function ChannelInfo({ infoRef, handleshowInfo, group, userId }) {
                     children: [
                         group?.Owners.map((owner)=>{
                             return /*#__PURE__*/ (0,jsx_runtime_.jsxs)(HandlRightClick, {
-                                mytype: mytype,
+                                mytype: userId == owner.id ? 1 : mytype,
                                 type: 3,
                                 id: owner.id,
                                 children: [
@@ -932,8 +946,11 @@ function ChannelInfo({ infoRef, handleshowInfo, group, userId }) {
                             }, `${owner.id}`);
                         }),
                         group?.Admins.map((admin)=>{
+                            if (group.Muts?.find((mute)=>mute.id === admin.id)) {
+                                return null;
+                            }
                             return /*#__PURE__*/ (0,jsx_runtime_.jsxs)(HandlRightClick, {
-                                mytype: mytype,
+                                mytype: userId == admin.id ? 1 : mytype,
                                 type: 2,
                                 id: admin.id,
                                 groupId: group.id,
@@ -986,7 +1003,7 @@ function ChannelInfo({ infoRef, handleshowInfo, group, userId }) {
                             }, `${admin.id}`);
                         }),
                         group?.Members.map((member)=>{
-                            if (group.Owners.find((owner)=>owner.id === member.id) || group.Admins.find((admin)=>admin.id === member.id)) {
+                            if (group.Owners.find((owner)=>owner.id === member.id) || group.Admins.find((admin)=>admin.id === member.id) || group.Muts?.find((mute)=>mute.id === member.id)) {
                                 return null;
                             }
                             return /*#__PURE__*/ (0,jsx_runtime_.jsxs)(HandlRightClick, {
@@ -1042,13 +1059,83 @@ function ChannelInfo({ infoRef, handleshowInfo, group, userId }) {
                                 ]
                             }, `${member.id}`);
                         }),
+                        group?.Muts?.map((mute)=>{
+                            return /*#__PURE__*/ jsx_runtime_.jsx(HandlRightClick, {
+                                mytype: userId == mute.id ? 1 : mytype,
+                                type: 1,
+                                id: mute.id,
+                                groupId: group.id,
+                                isMute: true,
+                                children: /*#__PURE__*/ (0,jsx_runtime_.jsxs)("div", {
+                                    className: "flex  items-center justify-between opacity-60 w-full",
+                                    children: [
+                                        /*#__PURE__*/ jsx_runtime_.jsx((link_default()), {
+                                            href: `/profile/${mute.id}`,
+                                            children: /*#__PURE__*/ jsx_runtime_.jsx("div", {
+                                                className: "w-full flex items-center gap-[10px] justify-between cursor-pointer",
+                                                children: /*#__PURE__*/ (0,jsx_runtime_.jsxs)("span", {
+                                                    className: "flex items-center gap-[10px]",
+                                                    children: [
+                                                        /*#__PURE__*/ jsx_runtime_.jsx("img", {
+                                                            src: "/groupAvatar.jpg",
+                                                            alt: "",
+                                                            className: "rounded-full w-[60px] h-[60px] object-cover"
+                                                        }),
+                                                        /*#__PURE__*/ jsx_runtime_.jsx("span", {
+                                                            children: /*#__PURE__*/ jsx_runtime_.jsx("p", {
+                                                                className: "text-[#034B8A] text-[20px] font-[Poppins] font-[500] min-w-[200px]  max-w-[300px] truncate",
+                                                                children: mute.username
+                                                            })
+                                                        })
+                                                    ]
+                                                })
+                                            })
+                                        }),
+                                        /*#__PURE__*/ (0,jsx_runtime_.jsxs)(jsx_runtime_.Fragment, {
+                                            children: [
+                                                /*#__PURE__*/ jsx_runtime_.jsx("span", {
+                                                    className: "",
+                                                    children: "memmber"
+                                                }),
+                                                /*#__PURE__*/ jsx_runtime_.jsx("span", {
+                                                    className: "",
+                                                    children: /*#__PURE__*/ jsx_runtime_.jsx("svg", {
+                                                        width: "23",
+                                                        height: "23",
+                                                        viewBox: "0 0 48 48",
+                                                        fill: "#AF1C1C",
+                                                        xmlns: "http://www.w3.org/2000/svg",
+                                                        children: /*#__PURE__*/ jsx_runtime_.jsx("path", {
+                                                            d: "M24.86 8.2C24.5352 8.05949 24.1789 8.00767 23.8276 8.04983C23.4762 8.09199 23.1423 8.22663 22.86 8.44L13.3 16H6C5.46957 16 4.96086 16.2107 4.58579 16.5858C4.21071 16.9609 4 17.4696 4 18V30C4 30.5304 4.21071 31.0391 4.58579 31.4142C4.96086 31.7893 5.46957 32 6 32H13.3L22.76 39.56C23.1119 39.8423 23.5489 39.9974 24 40C24.2987 40.0049 24.5941 39.9362 24.86 39.8C25.2003 39.6379 25.4879 39.3829 25.6896 39.0644C25.8913 38.746 25.9989 38.377 26 38V10C25.9989 9.62303 25.8913 9.25404 25.6896 8.93556C25.4879 8.61709 25.2003 8.3621 24.86 8.2ZM22 33.84L15.24 28.44C14.8881 28.1577 14.4511 28.0026 14 28H8V20H14C14.4511 19.9974 14.8881 19.8423 15.24 19.56L22 14.16V33.84ZM39.82 24L43.42 20.42C43.6065 20.2335 43.7544 20.0121 43.8553 19.7685C43.9562 19.5249 44.0082 19.2637 44.0082 19C44.0082 18.7363 43.9562 18.4751 43.8553 18.2315C43.7544 17.9879 43.6065 17.7665 43.42 17.58C43.2335 17.3935 43.0121 17.2456 42.7685 17.1447C42.5249 17.0438 42.2637 16.9918 42 16.9918C41.7363 16.9918 41.4751 17.0438 41.2315 17.1447C40.9879 17.2456 40.7665 17.3935 40.58 17.58L37 21.18L33.42 17.58C33.0434 17.2034 32.5326 16.9918 32 16.9918C31.4674 16.9918 30.9566 17.2034 30.58 17.58C30.2034 17.9566 29.9918 18.4674 29.9918 19C29.9918 19.5326 30.2034 20.0434 30.58 20.42L34.18 24L30.58 27.58C30.3925 27.7659 30.2438 27.9871 30.1422 28.2309C30.0407 28.4746 29.9884 28.736 29.9884 29C29.9884 29.264 30.0407 29.5254 30.1422 29.7692C30.2438 30.0129 30.3925 30.2341 30.58 30.42C30.7659 30.6075 30.9871 30.7562 31.2308 30.8578C31.4746 30.9593 31.736 31.0116 32 31.0116C32.264 31.0116 32.5254 30.9593 32.7692 30.8578C33.0129 30.7562 33.2341 30.6075 33.42 30.42L37 26.82L40.58 30.42C40.7659 30.6075 40.9871 30.7562 41.2308 30.8578C41.4746 30.9593 41.736 31.0116 42 31.0116C42.264 31.0116 42.5254 30.9593 42.7692 30.8578C43.0129 30.7562 43.2341 30.6075 43.42 30.42C43.6075 30.2341 43.7562 30.0129 43.8578 29.7692C43.9593 29.5254 44.0116 29.264 44.0116 29C44.0116 28.736 43.9593 28.4746 43.8578 28.2309C43.7562 27.9871 43.6075 27.7659 43.42 27.58L39.82 24Z"
+                                                        })
+                                                    })
+                                                }),
+                                                userId !== mute.id && /*#__PURE__*/ jsx_runtime_.jsx((link_default()), {
+                                                    href: "/Game",
+                                                    children: /*#__PURE__*/ jsx_runtime_.jsx("svg", {
+                                                        stroke: "currentColor",
+                                                        fill: "currentColor",
+                                                        viewBox: "0 0 512 512",
+                                                        height: "1em",
+                                                        width: "1em",
+                                                        xmlns: "http://www.w3.org/2000/svg",
+                                                        children: /*#__PURE__*/ jsx_runtime_.jsx("path", {
+                                                            d: "M483.13 245.38C461.92 149.49 430 98.31 382.65 84.33A107.13 107.13 0 00352 80c-13.71 0-25.65 3.34-38.28 6.88C298.5 91.15 281.21 96 256 96s-42.51-4.84-57.76-9.11C185.6 83.34 173.67 80 160 80a115.74 115.74 0 00-31.73 4.32c-47.1 13.92-79 65.08-100.52 161C4.61 348.54 16 413.71 59.69 428.83a56.62 56.62 0 0018.64 3.22c29.93 0 53.93-24.93 70.33-45.34 18.53-23.1 40.22-34.82 107.34-34.82 59.95 0 84.76 8.13 106.19 34.82 13.47 16.78 26.2 28.52 38.9 35.91 16.89 9.82 33.77 12 50.16 6.37 25.82-8.81 40.62-32.1 44-69.24 2.57-28.48-1.39-65.89-12.12-114.37zM208 240h-32v32a16 16 0 01-32 0v-32h-32a16 16 0 010-32h32v-32a16 16 0 0132 0v32h32a16 16 0 010 32zm84 4a20 20 0 1120-20 20 20 0 01-20 20zm44 44a20 20 0 1120-19.95A20 20 0 01336 288zm0-88a20 20 0 1120-20 20 20 0 01-20 20zm44 44a20 20 0 1120-20 20 20 0 01-20 20z"
+                                                        })
+                                                    })
+                                                })
+                                            ]
+                                        })
+                                    ]
+                                })
+                            }, `${mute.id}`);
+                        }),
                         group?.Band?.map((ban)=>{
                             if (group.Owners.find((owner)=>owner.id !== userId) && group.Admins.find((admin)=>admin.id !== userId)) {
                                 return null;
                             }
-                            console.log("ban", ban);
                             return /*#__PURE__*/ jsx_runtime_.jsx(HandlRightClick, {
-                                mytype: mytype,
+                                mytype: userId == ban.id ? 1 : mytype,
                                 type: 1,
                                 id: ban.id,
                                 groupId: group.id,
@@ -1187,9 +1274,10 @@ function Page() {
     (0,react_.useEffect)(()=>{
         async function getgroup() {
             try {
-                const res = await axiosInstance/* default */.Z.get(`http://localhost:3000/api/chat/channel/${msgId}`);
+                const res = await axiosInstance/* default */.Z.get(`http://${"10.13.2.5"}:3000/api/chat/channel/${msgId}`);
                 setGroup(res.data);
                 setMessages(res.data.Messages);
+                setMember(true);
             } catch (err) {
                 setMember(false);
                 console.log(err);
@@ -1203,7 +1291,7 @@ function Page() {
     (0,react_.useEffect)(()=>{
         if (!socket) return;
         socket.on("message-to-group", (payload)=>{
-            console.log("message-to-group payload : ", payload);
+            if (payload.groupId !== msgId) return;
             const newMessage = {
                 fromName: payload.fromName,
                 content: payload.content,
@@ -1217,9 +1305,10 @@ function Page() {
         socket.on("refresh", ()=>{
             async function getgroup() {
                 try {
-                    const res = await axiosInstance/* default */.Z.get(`http://localhost:3000/api/chat/channel/${msgId}`);
+                    const res = await axiosInstance/* default */.Z.get(`http://${"10.13.2.5"}:3000/api/chat/channel/${msgId}`);
                     setGroup(res.data);
                     setMessages(res.data.Messages);
+                    setMember(true);
                 } catch (err) {
                     console.log(err);
                 }
@@ -1235,18 +1324,20 @@ function Page() {
     const handleSubmit = (e)=>{
         e.preventDefault();
         if (!inputRef.current?.value || !group.name) return;
+        const content = inputRef.current?.value.trim();
+        if (content === "") return;
         const payload = {
             groupId: msgId,
             message: {
                 fromName: user.username,
-                content: inputRef.current.value,
-                createdAt: new Date().toISOString()
+                content: content,
+                createdAt: new Date().toISOString(),
+                groupId: msgId
             }
         };
         socket.emit("message-to-group", payload);
         inputRef.current.value = "";
     };
-    console.log("group : ", group);
     (0,react_.useEffect)(()=>{
         if (!messages) return;
         const scrol = document.querySelector(".message__body");
@@ -1285,8 +1376,6 @@ function Page() {
         });
     }
     const handleshowInfo = ()=>{
-        console.log("message__info");
-        console.log(showInfo);
         infoRef.current?.classList.toggle("right-[-700px]");
         infoRef.current?.classList.toggle("right-0");
         setShowInfo(!showInfo);
@@ -1455,7 +1544,7 @@ const __default__ = proxy.default;
 var __webpack_require__ = require("../../../../webpack-runtime.js");
 __webpack_require__.C(exports);
 var __webpack_exec__ = (moduleId) => (__webpack_require__(__webpack_require__.s = moduleId))
-var __webpack_exports__ = __webpack_require__.X(0, [381,549,990,496,421,88,280,878], () => (__webpack_exec__(5004)));
+var __webpack_exports__ = __webpack_require__.X(0, [381,549,421,420,240,88,924,878], () => (__webpack_exec__(5004)));
 module.exports = __webpack_exports__;
 
 })();

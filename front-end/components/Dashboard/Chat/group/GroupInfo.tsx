@@ -55,7 +55,6 @@ export default function GroupInfo({setShowBody,setGroupUsers,groupUsers}:GroupIn
 			router.push(`/Chat`)
 		}, 1000);
 	}
-    console.log(groupUsers);
     return (
         <div className="flex flex-col  overflow-y-scroll  max-h-[calc(100%-270px)] min-h-[calc(100%-135px)] ">
             <div className=" flex gap-2 items-center  py-[27px] px-[25px]">

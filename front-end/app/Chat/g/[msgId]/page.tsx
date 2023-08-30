@@ -7,7 +7,6 @@ import RightMessages from '@/components/Dashboard/Chat/Messages/RightMessages';
 import Link from 'next/link';
 import ChannelInfo  from '@/components/Dashboard/Chat/Messages/ChannelInfo';
 import axiosInstance from '@/utils/axiosInstance';
-import { useRouter } from 'next/navigation';
 import { useContext } from 'react';
 import { contextdata } from '@/app/contextApi';
 type Message = {
@@ -32,9 +31,10 @@ export default function Page() {
   useEffect(() => {
     async function getgroup() {
       try {
-        const res = await axiosInstance.get(`http://localhost:3000/api/chat/channel/${msgId}`);
+        const res = await axiosInstance.get(`http://${process.env.NEXT_PUBLIC_APP_URL}:3000/api/chat/channel/${msgId}`);
         setGroup(res.data);
         setMessages(res.data.Messages);
+        setMember(true);
       } catch (err) {
         setMember(false);
         console.log(err);
@@ -49,21 +49,21 @@ export default function Page() {
   useEffect(() => {
     if( !socket) return;
     socket.on('message-to-group', (payload:any) => {
-      console.log("message-to-group payload : ",payload);
+      if (payload.groupId !== msgId) return;
       const newMessage: Message = {
         fromName: payload.fromName,
         content: payload.content,
         createdAt: payload.createdAt,
       };
-  
       setMessages((messages:any) => [...messages, newMessage]);
     });
     socket.on('refresh', () => {
       async function getgroup() {
         try {
-          const res = await axiosInstance.get(`http://localhost:3000/api/chat/channel/${msgId}`);
+          const res = await axiosInstance.get(`http://${process.env.NEXT_PUBLIC_APP_URL}:3000/api/chat/channel/${msgId}`);
           setGroup(res.data);
           setMessages(res.data.Messages);
+          setMember(true);
         } catch (err) {
           console.log(err);
         }
@@ -80,19 +80,21 @@ export default function Page() {
   const handleSubmit = (e: { preventDefault: () => void; }) => {
 		e.preventDefault();
 		if (!inputRef.current?.value || !group.name) return;
+    const content = inputRef.current?.value.trim();
+    if(content === '') return;
 		const payload = {
 			groupId: msgId,
 			message: {
 				fromName: user.username,
-				content: inputRef.current.value,
+				content: content,
 				createdAt: new Date().toISOString(),
+        groupId: msgId,
 			},
 		}
 		socket.emit("message-to-group", payload);
 		inputRef.current.value = '';
 	}
 
-  console.log("group : ", group);
   useEffect(() => {
     if(!messages) return;
      const scrol = document.querySelector('.message__body');
@@ -123,8 +125,6 @@ export default function Page() {
   }
 
   const handleshowInfo = () => {
-    console.log("message__info");
-    console.log(showInfo);
     infoRef.current?.classList.toggle("right-[-700px]");
     infoRef.current?.classList.toggle("right-0");
     setShowInfo(!showInfo);

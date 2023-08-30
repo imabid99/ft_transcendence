@@ -388,7 +388,7 @@ __webpack_require__.r(__webpack_exports__);
       },
         {
           'layout': [() => Promise.resolve(/* import() eager */).then(__webpack_require__.bind(__webpack_require__, 2241)), "/Users/asabbar/Desktop/ft_git/front-end/app/layout.tsx"],
-'loading': [() => Promise.resolve(/* import() eager */).then(__webpack_require__.bind(__webpack_require__, 4521)), "/Users/asabbar/Desktop/ft_git/front-end/app/loading.tsx"],
+'loading': [() => Promise.resolve(/* import() eager */).then(__webpack_require__.bind(__webpack_require__, 1340)), "/Users/asabbar/Desktop/ft_git/front-end/app/loading.tsx"],
           metadata: {
     icon: [(async (props) => (await Promise.resolve(/* import() eager */).then(__webpack_require__.bind(__webpack_require__, 3174))).default(props))],
     apple: [],
@@ -430,6 +430,17 @@ __webpack_require__.r(__webpack_exports__);
 /***/ ((__unused_webpack_module, __unused_webpack_exports, __webpack_require__) => {
 
 Promise.resolve(/* import() eager */).then(__webpack_require__.bind(__webpack_require__, 2392))
+
+/***/ }),
+
+/***/ 737:
+/***/ ((__unused_webpack_module, __unused_webpack_exports, __webpack_require__) => {
+
+Promise.resolve(/* import() eager */).then(__webpack_require__.t.bind(__webpack_require__, 125, 23));
+Promise.resolve(/* import() eager */).then(__webpack_require__.t.bind(__webpack_require__, 6249, 23));
+Promise.resolve(/* import() eager */).then(__webpack_require__.t.bind(__webpack_require__, 7844, 23));
+Promise.resolve(/* import() eager */).then(__webpack_require__.t.bind(__webpack_require__, 1522, 23));
+Promise.resolve(/* import() eager */).then(__webpack_require__.t.bind(__webpack_require__, 3100, 23))
 
 /***/ }),
 
@@ -490,11 +501,10 @@ function Home() {
             return;
         }
         try {
-            const response = await axios__WEBPACK_IMPORTED_MODULE_6__/* ["default"] */ .Z.post("http://localhost:3000/api/user/login", {
+            const response = await axios__WEBPACK_IMPORTED_MODULE_6__/* ["default"] */ .Z.post(`http://${"10.13.2.5"}:3000/api/user/login`, {
                 email: email,
                 password: password
             });
-            console.log("Response : ", response.data);
             (0,_utils_localStorage__WEBPACK_IMPORTED_MODULE_5__/* .setLocalStorageItem */ .D$)("Token", response.data);
         } catch (e) {
             console.log("Error : ", e.response.data);
@@ -637,7 +647,7 @@ const __default__ = proxy.default;
 var __webpack_require__ = require("../../webpack-runtime.js");
 __webpack_require__.C(exports);
 var __webpack_exec__ = (moduleId) => (__webpack_require__(__webpack_require__.s = moduleId))
-var __webpack_exports__ = __webpack_require__.X(0, [381,549,421], () => (__webpack_exec__(6837)));
+var __webpack_exports__ = __webpack_require__.X(0, [381,549,240], () => (__webpack_exec__(6837)));
 module.exports = __webpack_exports__;
 
 })();

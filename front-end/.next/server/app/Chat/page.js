@@ -460,7 +460,7 @@ __webpack_require__.r(__webpack_exports__);
       },
         {
           'layout': [() => Promise.resolve(/* import() eager */).then(__webpack_require__.bind(__webpack_require__, 2241)), "/Users/asabbar/Desktop/ft_git/front-end/app/layout.tsx"],
-'loading': [() => Promise.resolve(/* import() eager */).then(__webpack_require__.bind(__webpack_require__, 4521)), "/Users/asabbar/Desktop/ft_git/front-end/app/loading.tsx"],
+'loading': [() => Promise.resolve(/* import() eager */).then(__webpack_require__.bind(__webpack_require__, 1340)), "/Users/asabbar/Desktop/ft_git/front-end/app/loading.tsx"],
           metadata: {
     icon: [(async (props) => (await Promise.resolve(/* import() eager */).then(__webpack_require__.bind(__webpack_require__, 3174))).default(props))],
     apple: [],
@@ -558,7 +558,7 @@ const __default__ = proxy.default;
 var __webpack_require__ = require("../../webpack-runtime.js");
 __webpack_require__.C(exports);
 var __webpack_exec__ = (moduleId) => (__webpack_require__(__webpack_require__.s = moduleId))
-var __webpack_exports__ = __webpack_require__.X(0, [381,549,990,496,421,88,280], () => (__webpack_exec__(8381)));
+var __webpack_exports__ = __webpack_require__.X(0, [381,549,421,420,240,88,924], () => (__webpack_exec__(8381)));
 module.exports = __webpack_exports__;
 
 })();

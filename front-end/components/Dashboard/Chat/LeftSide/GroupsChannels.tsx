@@ -17,20 +17,16 @@ export default function GroupsChannels() {
   }
   const {myChannels} :any= useContext(contextdata);
 
-  // myChannels.sort((a: any, b: any) => {
-  //   const lastMessageA = getLastMessageGroup(a.Messages);
-  //   if (!lastMessageA) return 1;
-  //   const lastMessageB = getLastMessageGroup(b.Messages);
-  //   if (lastMessageA && lastMessageB) {
-  //     return (
-  //       new Date(lastMessageB.createdAt).getTime() -
-  //       new Date(lastMessageA.createdAt).getTime()
-  //     );
-  //   }
-  // });
-  myChannels?.Messages?.sort((a:any, b:any) => {
-    return new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime()
-  })
+  myChannels.sort((a: any, b: any) => {
+    const lastMessageA = getLastMessageGroup(a.Messages);
+    const lastMessageB = getLastMessageGroup(b.Messages);
+    if (lastMessageA && lastMessageB) {
+      return (
+        new Date(lastMessageB.createdAt).getTime() -
+        new Date(lastMessageA.createdAt).getTime()
+      );
+    }
+  });
   return (
       <div className="chat__left__bottom__groups flex flex-col  justify-center items-center">
         <span className="flex items-center justify-start gap-[10px] w-full mb-[20px]">

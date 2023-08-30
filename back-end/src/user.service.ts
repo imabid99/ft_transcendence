@@ -8,6 +8,9 @@ import * as jwt from "jsonwebtoken";
 
 @Injectable()
 export class UserService {
+  checkMute(arg0: number, groupId: string): { iMute: boolean; heMute: boolean; } | PromiseLike<{ iMute: boolean; heMute: boolean; }> {
+    throw new Error("Method not implemented.");
+  }
   constructor(private prisma: PrismaService) {}
 
   async getUsers() {

@@ -6,4 +6,5 @@ export declare class ChatService {
     getMessages(id: string): Promise<any>;
     getMyChannels(id: string): Promise<any>;
     getChannels(id: number): Promise<any>;
+    checkMute(id: number, channelId: string): Promise<any>;
 }

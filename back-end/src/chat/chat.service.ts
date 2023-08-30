@@ -1,10 +1,5 @@
 import { Injectable, UseGuards , NotFoundException } from '@nestjs/common';
 import { PrismaService } from "../prisma/prisma.service";
-import { UserData } from "../dtos/user.dto";
-import { UserDataLogin } from "../dtos/user-login.dto";
-import { chPass } from "../dtos/pass.dto";
-import * as bcrypt from "bcrypt";
-import * as jwt from "jsonwebtoken";
 
 @Injectable()
 export class ChatService {
@@ -20,6 +15,8 @@ export class ChatService {
             Owners: true,
             Admins: true,
             Messages: true,
+            Band : true,
+            Muts: true,
           },
     
         });
@@ -31,9 +28,19 @@ export class ChatService {
         }
         delete channel.password;
         delete channel.accessPassword;
+        // check if i am admin or owner
+        const isAdmin: boolean = channel.Admins.some((admin) => {
+          return admin.id === +myId;
+        });
+        const isOwner: boolean = channel.Owners.some((owner) => {
+          return owner.id === +myId;
+        });
+        if (!isAdmin && !isOwner) {
+          delete channel.Band;
+          delete channel.Muts;
+        }
         return channel;
       }
-
 
     async getMessages(id: string): Promise<any> {
         const messages = await this.prisma.message.findMany({
@@ -88,5 +95,46 @@ export class ChatService {
           delete channel.Members;
         });
         return publicChannels;
+    }
+
+    async checkMute(id: number, channelId: string): Promise<any> {
+        const channel = await this.prisma.channels.findUnique({
+          where: {
+            id: channelId,
+          },
+          include: {
+            Members: true,
+            Band: true,
+          },
+        });
+        const isMumber: boolean = channel.Members.some((member) => {
+          return member.id === id;
+        });
+        if (!isMumber) {
+          throw new NotFoundException("Channel not found");
+        }
+        const isMute: boolean = channel.Band.some((member) => {
+          return member.id === id;
+        });
+        if (isMute) {
+          const mut :any= await this.prisma.Muted.findMany({
+            where: {
+              userId: id,
+              channelId: channelId,
+            },
+          });
+          const timeNow = new Date();
+          const timeOffMute = new Date(mut[0].timeOffMute);
+          if (mut[0]  && timeNow < timeOffMute) {
+            return true;
+          }
+          await this.prisma.Muted.deleteMany({
+            where: {
+              userId: id,
+              channelId: channelId,
+            },
+          });
+        }
+        return false;
     }
 }

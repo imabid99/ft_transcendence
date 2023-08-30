@@ -5,6 +5,13 @@ import { chPass } from "./dtos/pass.dto";
 import * as jwt from "jsonwebtoken";
 export declare class UserService {
     private prisma;
+    checkMute(arg0: number, groupId: string): {
+        iMute: boolean;
+        heMute: boolean;
+    } | PromiseLike<{
+        iMute: boolean;
+        heMute: boolean;
+    }>;
     constructor(prisma: PrismaService);
     getUsers(): Promise<import(".prisma/client").User[]>;
     getProfiles(): Promise<import(".prisma/client").Profile[]>;

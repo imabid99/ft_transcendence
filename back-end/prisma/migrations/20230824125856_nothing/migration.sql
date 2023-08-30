@@ -1,2 +1,0 @@
--- AlterTable
-ALTER TABLE "Message" ALTER COLUMN "toId" DROP NOT NULL;

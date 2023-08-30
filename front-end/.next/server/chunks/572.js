@@ -46,7 +46,7 @@ _export(exports, {
         return warnOnce;
     }
 });
-const _chalk = /*#__PURE__*/ _interop_require_default(__webpack_require__(5093));
+const _chalk = /*#__PURE__*/ _interop_require_default(__webpack_require__(3942));
 function _interop_require_default(obj) {
     return obj && obj.__esModule ? obj : {
         default: obj
@@ -165,7 +165,7 @@ _export(exports, {
 });
 const _requestcookies = __webpack_require__(8661);
 const _headers = __webpack_require__(7304);
-const _cookies = __webpack_require__(7008);
+const _cookies = __webpack_require__(4521);
 const _requestasyncstorage = __webpack_require__(4437);
 const _actionasyncstorage = __webpack_require__(6127);
 const _staticgenerationbailout = __webpack_require__(5486);
@@ -1829,7 +1829,7 @@ if ((typeof exports.default === "function" || typeof exports.default === "object
 
 /***/ }),
 
-/***/ 5093:
+/***/ 3942:
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 
@@ -2111,7 +2111,7 @@ Object.defineProperty(exports, "RequestAsyncStorageWrapper", ({
 const _approuterheaders = __webpack_require__(42);
 const _headers = __webpack_require__(7304);
 const _requestcookies = __webpack_require__(8661);
-const _cookies = __webpack_require__(7008);
+const _cookies = __webpack_require__(4521);
 const _draftmodeprovider = __webpack_require__(5744);
 function getHeaders(headers) {
     const cleaned = _headers.HeadersAdapter.from(headers);
@@ -4305,7 +4305,7 @@ _export(exports, {
         return MutableRequestCookiesAdapter;
     }
 });
-const _cookies = __webpack_require__(7008);
+const _cookies = __webpack_require__(4521);
 const _reflect = __webpack_require__(9470);
 class ReadonlyRequestCookiesError extends Error {
     constructor(){
@@ -4423,7 +4423,7 @@ class MutableRequestCookiesAdapter {
 
 /***/ }),
 
-/***/ 7008:
+/***/ 4521:
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 
@@ -4528,7 +4528,7 @@ _export(exports, {
 const _nexturl = __webpack_require__(3369);
 const _utils = __webpack_require__(7252);
 const _error = __webpack_require__(222);
-const _cookies = __webpack_require__(7008);
+const _cookies = __webpack_require__(4521);
 const INTERNALS = Symbol("internal request");
 class NextRequest extends Request {
     constructor(input, init = {}){
@@ -4620,7 +4620,7 @@ Object.defineProperty(exports, "x", ({
 }));
 const _nexturl = __webpack_require__(3369);
 const _utils = __webpack_require__(7252);
-const _cookies = __webpack_require__(7008);
+const _cookies = __webpack_require__(4521);
 const INTERNALS = Symbol("internal response");
 const REDIRECTS = new Set([
     301,
@@ -4932,7 +4932,7 @@ Object.defineProperty(exports, "addLocale", ({
         return addLocale;
     }
 }));
-const _addpathprefix = __webpack_require__(6079);
+const _addpathprefix = __webpack_require__(2610);
 const _pathhasprefix = __webpack_require__(1342);
 function addLocale(path, locale, defaultLocale, ignorePrefix) {
     // If no locale was given or the locale is the default locale, we don't need
@@ -4952,7 +4952,7 @@ function addLocale(path, locale, defaultLocale, ignorePrefix) {
 
 /***/ }),
 
-/***/ 6079:
+/***/ 2610:
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 
@@ -5016,7 +5016,7 @@ Object.defineProperty(exports, "formatNextPathnameInfo", ({
     }
 }));
 const _removetrailingslash = __webpack_require__(465);
-const _addpathprefix = __webpack_require__(6079);
+const _addpathprefix = __webpack_require__(2610);
 const _addpathsuffix = __webpack_require__(7928);
 const _addlocale = __webpack_require__(5723);
 function formatNextPathnameInfo(info) {

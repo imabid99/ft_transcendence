@@ -451,7 +451,7 @@ __webpack_require__.r(__webpack_exports__);
       },
         {
           'layout': [() => Promise.resolve(/* import() eager */).then(__webpack_require__.bind(__webpack_require__, 2241)), "/Users/asabbar/Desktop/ft_git/front-end/app/layout.tsx"],
-'loading': [() => Promise.resolve(/* import() eager */).then(__webpack_require__.bind(__webpack_require__, 4521)), "/Users/asabbar/Desktop/ft_git/front-end/app/loading.tsx"],
+'loading': [() => Promise.resolve(/* import() eager */).then(__webpack_require__.bind(__webpack_require__, 1340)), "/Users/asabbar/Desktop/ft_git/front-end/app/loading.tsx"],
           metadata: {
     icon: [(async (props) => (await Promise.resolve(/* import() eager */).then(__webpack_require__.bind(__webpack_require__, 3174))).default(props))],
     apple: [],
@@ -493,6 +493,17 @@ __webpack_require__.r(__webpack_exports__);
 /***/ ((__unused_webpack_module, __unused_webpack_exports, __webpack_require__) => {
 
 Promise.resolve(/* import() eager */).then(__webpack_require__.bind(__webpack_require__, 7266))
+
+/***/ }),
+
+/***/ 3879:
+/***/ ((__unused_webpack_module, __unused_webpack_exports, __webpack_require__) => {
+
+Promise.resolve(/* import() eager */).then(__webpack_require__.t.bind(__webpack_require__, 125, 23));
+Promise.resolve(/* import() eager */).then(__webpack_require__.t.bind(__webpack_require__, 7844, 23));
+Promise.resolve(/* import() eager */).then(__webpack_require__.t.bind(__webpack_require__, 3100, 23));
+Promise.resolve(/* import() eager */).then(__webpack_require__.t.bind(__webpack_require__, 1522, 23));
+Promise.resolve(/* import() eager */).then(__webpack_require__.t.bind(__webpack_require__, 6249, 23))
 
 /***/ }),
 
@@ -1692,7 +1703,6 @@ function Home() {
         } else if (Ref.current.classList.contains("LeaderModal")) {
             Ref.current.classList.remove("right-[-6000px]");
             Ref.current.classList.add("right-[60px]");
-            console.log(Ref.current.classList);
             setShowModal(true);
         } else {
             setShow(true);
@@ -1845,7 +1855,7 @@ const __default__ = proxy.default;
 var __webpack_require__ = require("../webpack-runtime.js");
 __webpack_require__.C(exports);
 var __webpack_exec__ = (moduleId) => (__webpack_require__(__webpack_require__.s = moduleId))
-var __webpack_exports__ = __webpack_require__.X(0, [381,549,990,421,88], () => (__webpack_exec__(5835)));
+var __webpack_exports__ = __webpack_require__.X(0, [381,549,421,240,88], () => (__webpack_exec__(5835)));
 module.exports = __webpack_exports__;
 
 })();

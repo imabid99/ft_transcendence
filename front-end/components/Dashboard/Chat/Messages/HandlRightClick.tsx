@@ -11,9 +11,10 @@ type HandlRightClickProps ={
     mytype ?: number,
     groupId ?: number,
     isBan ?: boolean,
+    isMute?: boolean,
 }
 
-export default function HandlRightClick({ children ,id, type , groupId, mytype , isBan}: HandlRightClickProps) {
+export default function HandlRightClick({ children ,id, type , groupId, mytype , isBan,isMute}: HandlRightClickProps) {
     const [showMenu, setShowMenu] = useState(false);
     const [showMutemenu, setShowMutemenu] = useState(false);
     const [pos, setPos] = useState({ x: 0, y: 0 });
@@ -21,7 +22,6 @@ export default function HandlRightClick({ children ,id, type , groupId, mytype ,
         e.preventDefault(); 
         setShowMenu(true);
         setPos({ x: e.clientX - window.innerWidth, y: e.clientY });
-        console.log(e.clientX, e.clientY);
     };
     const {socket} :any= useContext(contextdata);
     const handleKick = () => {
@@ -58,6 +58,12 @@ export default function HandlRightClick({ children ,id, type , groupId, mytype ,
         socket.emit("MuteUser", {userId: id, groupId: groupId, timeOffMute: timeOffMute});
         setShowMenu(false);
     }
+    const handleUnmute = () => {
+        if (!socket) return;
+        socket.emit("UnMuteUser", {userId: id, groupId: groupId});
+        setShowMenu(false);
+    }
+    
 
     const handleSetAdmin = () => {
         if (!socket) return;
@@ -86,7 +92,7 @@ export default function HandlRightClick({ children ,id, type , groupId, mytype ,
                     groupInfo text-white rounded-[10px]
                     `}>
                         {
-                            !isBan && mytype && type && mytype >= type &&  type !== 3 && mytype >= 2 && (
+                            !isBan && !isMute && mytype && type && mytype >= type &&  type !== 3 && mytype >= 2 && (
                             <div className=' cursor-pointer relative'>
                                 <p className='py-[10px] px-[20px]' onClick={() => {setShowMutemenu(!showMutemenu);}}>
                                     Mute
@@ -114,6 +120,15 @@ export default function HandlRightClick({ children ,id, type , groupId, mytype ,
                                     )
                                 }
                             </div>)
+                        }
+                        {
+                            isMute && mytype && type && mytype >= type &&  type !== 3 && mytype >= 2 && (
+                                <>
+                                    <div className='py-[10px] px-[20px] cursor-pointer' onClick={()=> handleUnmute()}>
+                                        UnMute
+                                    </div>
+                                </>
+                            )
                         }
                         {
                             !isBan && mytype && type && mytype >= type &&  type !== 3 && mytype >= 2 && (

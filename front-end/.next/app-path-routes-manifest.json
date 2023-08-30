@@ -1,6 +1,6 @@
 {
-  "/page": "/",
   "/favicon.ico/route": "/favicon.ico",
+  "/page": "/",
   "/login/page": "/login",
   "/signup/page": "/signup",
   "/Chat/page": "/Chat",
@@ -9,6 +9,6 @@
   "/Setting/page": "/Setting",
   "/Chat/g/page": "/Chat/g",
   "/Chat/me/page": "/Chat/me",
-  "/Chat/me/[msgId]/page": "/Chat/me/[msgId]",
-  "/Chat/g/[msgId]/page": "/Chat/g/[msgId]"
+  "/Chat/g/[msgId]/page": "/Chat/g/[msgId]",
+  "/Chat/me/[msgId]/page": "/Chat/me/[msgId]"
 }

@@ -37,6 +37,9 @@ let ChatController = exports.ChatController = class ChatController {
         const decoded = (0, jwt_decode_1.default)(token);
         return this.chatService.getChannels(decoded.userId);
     }
+    async isMute(userId, groupId) {
+        return this.chatService.checkMute(+userId, groupId);
+    }
 };
 __decorate([
     (0, common_1.Get)("channel/:id"),
@@ -71,6 +74,15 @@ __decorate([
     __metadata("design:paramtypes", [Object]),
     __metadata("design:returntype", Promise)
 ], ChatController.prototype, "channels", null);
+__decorate([
+    (0, common_1.Get)("is-mute/:userId/:grouptId"),
+    (0, common_1.UseGuards)(jwt_auth_guard_1.JwtAuthGuard),
+    __param(0, (0, common_1.Param)("userId")),
+    __param(1, (0, common_1.Param)("grouptId")),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [String, String]),
+    __metadata("design:returntype", Promise)
+], ChatController.prototype, "isMute", null);
 exports.ChatController = ChatController = __decorate([
     (0, common_1.Controller)('chat'),
     __metadata("design:paramtypes", [chat_service_1.ChatService])

@@ -19,7 +19,6 @@ export default function UsersOnline() {
             <Swiper
             spaceBetween={1}
             slidesPerView={4}
-            onSlideChange={() => console.log('slide change')}
             className="w-full cursor-grab"
             >
                 {user && profiles?.map((profile: any) => (

@@ -15,6 +15,9 @@ const prisma_service_1 = require("./prisma/prisma.service");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 let UserService = exports.UserService = class UserService {
+    checkMute(arg0, groupId) {
+        throw new Error("Method not implemented.");
+    }
     constructor(prisma) {
         this.prisma = prisma;
     }

@@ -478,7 +478,7 @@ __webpack_require__.r(__webpack_exports__);
       },
         {
           'layout': [() => Promise.resolve(/* import() eager */).then(__webpack_require__.bind(__webpack_require__, 2241)), "/Users/asabbar/Desktop/ft_git/front-end/app/layout.tsx"],
-'loading': [() => Promise.resolve(/* import() eager */).then(__webpack_require__.bind(__webpack_require__, 4521)), "/Users/asabbar/Desktop/ft_git/front-end/app/loading.tsx"],
+'loading': [() => Promise.resolve(/* import() eager */).then(__webpack_require__.bind(__webpack_require__, 1340)), "/Users/asabbar/Desktop/ft_git/front-end/app/loading.tsx"],
           metadata: {
     icon: [(async (props) => (await Promise.resolve(/* import() eager */).then(__webpack_require__.bind(__webpack_require__, 3174))).default(props))],
     apple: [],
@@ -630,7 +630,7 @@ function Page() {
             async function fetchIsBlocked() {
                 setTimeout(async ()=>{
                     try {
-                        const res = await axiosInstance/* default */.Z.get(`http://localhost:3000/api/user/is-blocked/${user.id}/${msgId}`);
+                        const res = await axiosInstance/* default */.Z.get(`http://${"10.13.2.5"}:3000/api/user/is-blocked/${user.id}/${msgId}`);
                         if (res.data === null) {
                             return;
                         }
@@ -663,7 +663,7 @@ function Page() {
     (0,react_.useEffect)(()=>{
         async function getReceiver() {
             try {
-                const res = await axiosInstance/* default */.Z.get(`http://localhost:3000/api/user/profile/${msgId}`);
+                const res = await axiosInstance/* default */.Z.get(`http://${"10.13.2.5"}:3000/api/user/profile/${msgId}`);
                 setReceiver(res.data);
             } catch (err) {
                 console.log(err);
@@ -678,23 +678,21 @@ function Page() {
         if (!user || !receiver) return;
         async function fetchMessages() {
             try {
-                const res = await axiosInstance/* default */.Z.get(`http://localhost:3000/api/chat/messages/${user.id}`);
+                const res = await axiosInstance/* default */.Z.get(`http://${"10.13.2.5"}:3000/api/chat/messages/${user.id}`);
                 const onlyMyMessages = res.data.filter((msg)=>{
                     return msg.fromId === user.id && msg.toId === receiver.userId || msg.fromId === receiver.userId && msg.toId === user.id;
                 });
                 setMessages(onlyMyMessages);
-                console.log("onlyMyMessages : ", onlyMyMessages);
             } catch (err) {
                 console.log(err);
             }
         }
         async function fetchIsBlocked() {
             try {
-                const res = await axiosInstance/* default */.Z.get(`http://localhost:3000/api/user/is-blocked/${user.id}/${msgId}`);
+                const res = await axiosInstance/* default */.Z.get(`http://${"10.13.2.5"}:3000/api/user/is-blocked/${user.id}/${msgId}`);
                 if (res.data === null) {
                     return;
                 }
-                console.log("res.data : ", res.data);
                 if (!res.data.iBlocked && !res.data.heBlocked) {
                     setIsBlocked(false);
                     return;
@@ -736,17 +734,18 @@ function Page() {
     const handleSubmit = (e)=>{
         e.preventDefault();
         if (!inputRef.current?.value || !receiver.username) return;
+        const content = inputRef.current?.value.trim();
+        if (content === "") return;
         const payload = {
             room: receiver.username,
             sander: user.username,
             message: {
                 fromId: user.id,
                 toId: receiver.userId,
-                content: inputRef.current.value,
+                content: content,
                 createdAt: new Date().toISOString()
             }
         };
-        console.log("payload : ", payload);
         socket.emit("privet-message", payload);
         inputRef.current.value = "";
     };
@@ -1040,7 +1039,7 @@ const __default__ = proxy.default;
 var __webpack_require__ = require("../../../../webpack-runtime.js");
 __webpack_require__.C(exports);
 var __webpack_exec__ = (moduleId) => (__webpack_require__(__webpack_require__.s = moduleId))
-var __webpack_exports__ = __webpack_require__.X(0, [381,549,990,496,421,88,280,878], () => (__webpack_exec__(2983)));
+var __webpack_exports__ = __webpack_require__.X(0, [381,549,421,420,240,88,924,878], () => (__webpack_exec__(2983)));
 module.exports = __webpack_exports__;
 
 })();

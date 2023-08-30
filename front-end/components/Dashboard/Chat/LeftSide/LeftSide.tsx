@@ -22,7 +22,6 @@ export default function  LeftSide() {
 		if (!socket)  return;
 		socket.on("refresh", (payload:any) => {
 			setRefresh(new Date().getTime().toString());
-			console.log("refresh : ");
 		});
 	}, [socket]);
 
@@ -33,7 +32,7 @@ export default function  LeftSide() {
 		async function getUsers() {
 			try
 			{
-				const resp = await axiosInstance.get('http://localhost:3000/api/user/all');
+				const resp = await axiosInstance.get(`http://${process.env.NEXT_PUBLIC_APP_URL}:3000/api/user/all`);
 					if (resp.data === null) {
 					return;
 				}
@@ -48,7 +47,7 @@ export default function  LeftSide() {
 		async function getProfiles() {
 				try
 				{
-					const resp = await axiosInstance.get('http://localhost:3000/api/user/profiles');
+					const resp = await axiosInstance.get(`http://${process.env.NEXT_PUBLIC_APP_URL}:3000/api/user/profiles`);
 					if (resp.data === null) {
 						return;
 				}
@@ -63,7 +62,7 @@ export default function  LeftSide() {
 		async function getMessages() {
 			try
 			{
-				const resp = await axiosInstance.get(`http://localhost:3000/api/chat/messages/${user?.id}`);
+				const resp = await axiosInstance.get(`http://${process.env.NEXT_PUBLIC_APP_URL}:3000/api/chat/messages/${user?.id}`);
 				if (resp.data === null) {
 					return;
 				}
@@ -74,7 +73,6 @@ export default function  LeftSide() {
 					);
 				});
 				setMessages(resp.data);
-				console.log("get : messages ", resp.data); 
 			}
 			catch (error)
 			{
@@ -83,10 +81,9 @@ export default function  LeftSide() {
 			}
 		}
 		async function getMyChannels() {
-			console.log("getChannels user : ", user);
 			try
 			{
-			  const resp = await axiosInstance.get(`http://localhost:3000/api/chat/myChannels/${user?.id}`);
+			  const resp = await axiosInstance.get(`http://${process.env.NEXT_PUBLIC_APP_URL}:3000/api/chat/myChannels/${user?.id}`);
 			  if (resp.data === null) {
 				return;
 			  }
@@ -98,10 +95,9 @@ export default function  LeftSide() {
 			  return;
 			}
 		  }    async function getChannels() {
-			console.log("getChannels user : ", user);
 			try
 			{
-			  const resp = await axiosInstance.get(`http://localhost:3000/api/chat/channels`);
+			  const resp = await axiosInstance.get(`http://${process.env.NEXT_PUBLIC_APP_URL}:3000/api/chat/channels`);
 			  if (resp.data === null) {
 				return;
 			  }

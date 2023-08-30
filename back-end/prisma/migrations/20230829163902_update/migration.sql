@@ -1,0 +1,3 @@
+-- AlterTable
+ALTER TABLE "Muted" ALTER COLUMN "channelId" DROP NOT NULL,
+ALTER COLUMN "channelId" SET DATA TYPE TEXT;

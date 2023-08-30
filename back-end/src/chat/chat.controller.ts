@@ -49,4 +49,13 @@ export class ChatController {
       const decoded: any = jwtDecode(token);
       return this.chatService.getChannels(decoded.userId);
     }
+
+    @Get("is-mute/:userId/:grouptId")
+    @UseGuards(JwtAuthGuard)
+    async isMute(
+      @Param("userId") userId: string,
+      @Param("grouptId") groupId: string
+    ): Promise<{ iMute: boolean; heMute: boolean }> {
+      return this.chatService.checkMute(+userId, groupId);
+    }
 }

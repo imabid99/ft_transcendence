@@ -25,7 +25,6 @@ export default function Home() {
         {
             Ref.current.classList.remove('right-[-6000px]');
             Ref.current.classList.add('right-[60px]');
-            console.log(Ref.current.classList)
             setShowModal(true)
         }
         else {

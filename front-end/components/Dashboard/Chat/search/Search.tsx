@@ -14,16 +14,15 @@ export default function Search({setShowBody}: Props) {
     const showUsers = profiles?.filter((ur:any) => {
         return ur.username === user?.username ? false : true
     })
-    console.log("showUsers : ",showUsers)
 
     const handelClick = (id:number) => {
         router.push(`/Chat/me/${id}`)
         setShowBody(null)
     }
     const handelClickChannel = (id:number) => {
-        // router.push(`/Chat/channel/${id}`)
         socket?.emit("joinGroup",{groupId: id, userId: user?.id})
         setShowBody(null)
+        router.push(`/Chat/g/${id}`)
     }
 
     return (

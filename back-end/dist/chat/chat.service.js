@@ -26,6 +26,8 @@ let ChatService = exports.ChatService = class ChatService {
                 Owners: true,
                 Admins: true,
                 Messages: true,
+                Band: true,
+                Muts: true,
             },
         });
         const isMumber = channel.Members.some((member) => {
@@ -36,6 +38,16 @@ let ChatService = exports.ChatService = class ChatService {
         }
         delete channel.password;
         delete channel.accessPassword;
+        const isAdmin = channel.Admins.some((admin) => {
+            return admin.id === +myId;
+        });
+        const isOwner = channel.Owners.some((owner) => {
+            return owner.id === +myId;
+        });
+        if (!isAdmin && !isOwner) {
+            delete channel.Band;
+            delete channel.Muts;
+        }
         return channel;
     }
     async getMessages(id) {
@@ -86,6 +98,46 @@ let ChatService = exports.ChatService = class ChatService {
             delete channel.Members;
         });
         return publicChannels;
+    }
+    async checkMute(id, channelId) {
+        const channel = await this.prisma.channels.findUnique({
+            where: {
+                id: channelId,
+            },
+            include: {
+                Members: true,
+                Band: true,
+            },
+        });
+        const isMumber = channel.Members.some((member) => {
+            return member.id === id;
+        });
+        if (!isMumber) {
+            throw new common_1.NotFoundException("Channel not found");
+        }
+        const isMute = channel.Band.some((member) => {
+            return member.id === id;
+        });
+        if (isMute) {
+            const mut = await this.prisma.Muted.findMany({
+                where: {
+                    userId: id,
+                    channelId: channelId,
+                },
+            });
+            const timeNow = new Date();
+            const timeOffMute = new Date(mut[0].timeOffMute);
+            if (mut[0] && timeNow < timeOffMute) {
+                return true;
+            }
+            await this.prisma.Muted.deleteMany({
+                where: {
+                    userId: id,
+                    channelId: channelId,
+                },
+            });
+        }
+        return false;
     }
 };
 exports.ChatService = ChatService = __decorate([
