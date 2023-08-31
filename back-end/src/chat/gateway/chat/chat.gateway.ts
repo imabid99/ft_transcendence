@@ -59,7 +59,6 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
       this.server.emit("refresh");
     }
   }
-  // eslint-disable-next-line @typescript-eslint/no-empty-function, @typescript-eslint/no-unused-vars
   async handleDisconnect(client: Socket) {
     console.log("Disconnect  √");
     const token = client.handshake.headers.authorization?.split(" ")[1];
@@ -125,6 +124,7 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
   @SubscribeMessage("block-user")
   async handleBlockUser(client: any, payload: any): Promise<void> {
     const token = client.handshake.headers.authorization?.split(" ")[1];
+
     try {
       jwt.verify(token, process.env.JWT_SECRET);
     } catch (err) {
@@ -165,7 +165,6 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
         }
       });
       this.server.emit("refresh");
-
     }
   }
 
@@ -191,7 +190,7 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
         },
       });
       if (verifyName[0]) {
-        this.server.to(user.username).emit("errorNotif", {message: `you already have a group with this name`});
+        this.server.to(user.username).emit("errorNotif", {message: `you already have a group with this name`, type: false});
         return;
       }
 
@@ -200,7 +199,6 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
         data: {
           type: payload.groupType,
           name: payload.groupName,
-          accessPassword: payload.accessPassword,
           password: payload.protectedPassword,
           userId: user.id,
           Members: {
@@ -212,10 +210,8 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
             },
           },
           avatar: "",
-          accessIsActived : payload.accessPassword? true : false,
         },
       });
-      this.server.emit("refresh");
       const channel:any = await this.prisma.channels.findUnique({
         where: {
           name: payload.groupName,
@@ -226,16 +222,18 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
       });
       console.log("channel : ", channel);
       channel.Members.map((member) => {
-       const userSocket = this.server.sockets.adapter.rooms.get(member.username);
+        const userSocket = this.server.sockets.adapter.rooms.get(member.username);
         if(userSocket)
         {
           userSocket.forEach((socketId) => { 
             this.server.sockets.sockets.get(socketId).join(channel.id);
           });
         }
-
+        
       }
       );
+      this.server.emit("refresh");
+      this.server.to(user.username).emit("errorNotif", {message: `group created`, type: true});
     }
   }
 
@@ -310,7 +308,7 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
         }
         else
         {
-          this.server.to(user.username).emit("errorNotif", {message: `you are muted `});
+          this.server.to(user.username).emit("errorNotif", {message: `you are muted `, type: false});
           return;
         }
       }
@@ -318,7 +316,7 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
         return ban.id === +user.id;
       }); 
       if (verifyBand) {
-        this.server.to(user.username).emit("errorNotif", {message: `you are banned from this group`});
+        this.server.to(user.username).emit("errorNotif", {message: `you are banned from this group`, type: false});
         return;
       }
       await this.prisma.message.create({
@@ -364,7 +362,7 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
       return member.id === +user.id;
     }); 
     if (!verifyIsMemmber) {
-      this.server.to(user.username).emit("errorNotif", {message: `you are not allowed to leave this group`});
+      this.server.to(user.username).emit("errorNotif", {message: `you are not allowed to leave this group`, type: false});
       return;
     }
 
@@ -373,7 +371,56 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
         return owner.id === +user.id;
       });
       if (verifyOwner && group.Owners.length === 1) {
-        this.server.to(user.username).emit("errorNotif", {message: `you are the only owner of this group`});
+        if(group.Members.length !== 1)
+        {
+          let newOwner = group.Members[group.Members.length - 1];
+          if (newOwner.id === user.id)
+          {
+            newOwner = group.Members[0];
+          }
+          await this.prisma.user.update({
+            where: {
+              id: newOwner.id,
+            },
+            data: {
+              channelsOwner: {
+                connect: {
+                  id: group.id,
+                },
+              },
+            },
+          });
+
+          await this.prisma.channels.update({
+            where: {
+              id: group.id,
+            },
+            data: {
+              Owners: {
+                disconnect: {
+                  id: user.id,
+                },
+              },
+              Members: {
+                disconnect: {
+                  id: user.id,
+                },
+              },
+            },
+          });
+          this.server.to(user.username).emit("errorNotif", {message: `you left this group and a new owner is selected`, type: true});
+        }
+        else
+        {
+          await this.prisma.channels.delete({
+            where: {
+              id: group.id,
+            },
+          });
+          this.server.to(user.username).emit("errorNotif", {message: `you left this group and it is deleted`, type: true});
+        }
+        this.server.emit("refresh");
+
         return;
       }
       const verifyAdmin: boolean = group.Admins.some((admin) => {
@@ -463,6 +510,7 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
           }
         },
       });
+      this.server.to(user.username).emit("errorNotif", {message: `you left this group`, type: true});
       this.server.emit("refresh");
     }
   }
@@ -479,7 +527,7 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
         },
       });
       if (user.id !== payload.userId) {
-        this.server.to(user.username).emit("errorNotif", {message: `you are not allowed to join this group`});
+        this.server.to(user.username).emit("errorNotif", {message: `you are not allowed to join this group`, type: false});
         return;
       }
       const group = await this.prisma.channels.findUnique({
@@ -494,7 +542,7 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
         },
       });
       if (group.type === "private") {
-        this.server.to(user.username).emit("errorNotif", {message: `you are not allowed to join this group`});
+        this.server.to(user.username).emit("errorNotif", {message: `you are not allowed to join this group`, type: false});
         return;
       }
 
@@ -502,14 +550,14 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
         return member.id === +user.id;
       });
       if (verifyIsMemmber) {
-        this.server.to(user.username).emit("errorNotif", {message: `you are already a member of this group`});
+        this.server.to(user.username).emit("errorNotif", {message: `you are already a member of this group`, type: false});
         return;
       }
       const verifyBand: boolean = group.Band.some((ban) => {
         return ban.id === +user.id;
       });
       if (verifyBand) {
-        this.server.to(user.username).emit("errorNotif", {message: `you are banned from this group`});
+        this.server.to(user.username).emit("errorNotif", {message: `you are banned from this group`, type: false});
         return;
       }
       await this.prisma.user.update({
@@ -529,6 +577,79 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
           }
         },
       });
+      this.server.to(user.username).emit("errorNotif", {message: `you are now a member of this group`, type: true});
+      this.server.emit("refresh");
+    }
+  }
+
+  @SubscribeMessage("joinProtectedGroup")
+  async handleJoinProtectedGroup(client: any, payload: any): Promise<void> {
+    const jwt = client.handshake.headers.authorization?.split(" ")[1];
+    if(jwt)
+    {
+      const info:any= jwt_decode(jwt);
+      const user = await this.prisma.user.findUnique({
+        where: {
+          id: info?.userId,
+        },
+      });
+      if (user.id !== payload.userId) {
+        this.server.to(user.username).emit("errorNotif", {message: `you are not allowed to join this group`, type: false});
+        return;
+      }
+      const group = await this.prisma.channels.findUnique({
+        where: {
+          id: payload.groupId,
+        },
+        include: {
+          Members: true,
+          Band: true,
+          Owners: true,
+          Admins: true,
+        },
+      });
+      if (group.type === "private") {
+        this.server.to(user.username).emit("errorNotif", {message: `you are not allowed to join this group`, type: false});
+        return;
+      }
+
+      const verifyIsMemmber: boolean = group.Members.some((member) => {
+        return member.id === +user.id;
+      });
+      if (verifyIsMemmber) {
+        this.server.to(user.username).emit("errorNotif", {message: `you are already a member of this group`, type: false});
+        return;
+      }
+      const verifyBand: boolean = group.Band.some((ban) => {
+        return ban.id === +user.id;
+      });
+      if (verifyBand) {
+        this.server.to(user.username).emit("errorNotif", {message: `you are banned from this group`, type: false});
+        return;
+      }
+      if (group.password !== payload.password) {
+        this.server.to(user.username).emit("errorNotif", {message: `wrong password`, type: false});
+        return;
+      }
+
+      await this.prisma.user.update({
+        where: {
+          id: user.id,
+        },
+        data: {
+          channels: {
+            connect: {
+              id: payload.groupId,
+            },
+          },
+          channelsMember:{
+            connect: {
+              id: payload.groupId,
+            },
+          }
+        },
+      });
+      this.server.to(user.username).emit("errorNotif", {message: `you are now a member of this group`, type: true});
       this.server.emit("refresh");
     }
   }
@@ -560,7 +681,7 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
         return member.id === +user.id;
       }); 
       if (!verifyIsMemmber) {
-        this.server.to(user.username).emit("errorNotif", {message: `you are not allowed to kick this user`});
+        this.server.to(user.username).emit("errorNotif", {message: `you are not allowed to kick this user`, type: false});
         return;
       }
 
@@ -571,7 +692,7 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
         return admin.id === +user.id;
       });
       if (!verifyOwner && !verifyAdmin) {
-        this.server.to(user.username).emit("errorNotif", {message: `you are not allowed to kick this user`});
+        this.server.to(user.username).emit("errorNotif", {message: `you are not allowed to kick this user`, type: false});
         return;
       }
       await this.prisma.user.update({
@@ -654,6 +775,7 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
           },
         });
       }
+      this.server.to(user.username).emit("errorNotif", {message: `this user is kicked`, type: true});
       this.server.emit("refresh");
     }
   }
@@ -683,7 +805,7 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
         return member.id === +user.id;
       }); 
       if (!verifyIsMemmber) {
-        this.server.to(user.username).emit("errorNotif", {message: `you are not allowed to set this user as admin`});
+        this.server.to(user.username).emit("errorNotif", {message: `you are not allowed to set this user as admin`, type: false});
         return;
       }
 
@@ -691,7 +813,7 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
         return owner.id === +user.id;
       });
       if (!verifyOwner) {
-        this.server.to(user.username).emit("errorNotif", {message: `you are not allowed to set this user as admin`});
+        this.server.to(user.username).emit("errorNotif", {message: `you are not allowed to set this user as admin`, type: false});
         return;
       }
       await this.prisma.user.update({
@@ -706,6 +828,7 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
           },
         },
       });
+      this.server.to(user.username).emit("errorNotif", {message: `this user is now an admin`, type: true});
       this.server.emit("refresh");
     }
   }
@@ -736,7 +859,7 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
         return member.id === +user.id;
       }); 
       if (!verifyIsMemmber) {
-        this.server.to(user.username).emit("errorNotif", {message: `you are not allowed to ban this user`});
+        this.server.to(user.username).emit("errorNotif", {message: `you are not allowed to ban this user`, type: false});
         return;
       }
 
@@ -747,7 +870,7 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
         return admin.id === +user.id;
       });
       if (!verifyOwner && !verifyAdmin) {
-        this.server.to(user.username).emit("errorNotif", {message: `you are not allowed to ban this user`});
+        this.server.to(user.username).emit("errorNotif", {message: `you are not allowed to ban this user`, type: false});
         return;
       }
 
@@ -826,6 +949,7 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
           },
         },
       });
+      this.server.to(user.username).emit("errorNotif", {message: `this user is banned`, type: true});
       this.server.emit("refresh");
     }
   }
@@ -855,7 +979,7 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
         return member.id === +user.id;
       }); 
       if (!verifyIsMemmber) {
-        this.server.to(user.username).emit("errorNotif", {message: `you are not allowed to unban this user`});
+        this.server.to(user.username).emit("errorNotif", {message: `you are not allowed to unban this user`, type: false});
         return;
       }
 
@@ -866,7 +990,7 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
         return admin.id === +user.id;
       });
       if (!verifyOwner && !verifyAdmin) {
-        this.server.to(user.username).emit("errorNotif", {message: `you are not allowed to unban this user`});
+        this.server.to(user.username).emit("errorNotif", {message: `you are not allowed to unban this user`, type: false});
         return;
       }
       await this.prisma.user.update({
@@ -881,10 +1005,10 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
           },
         },
       });
+      this.server.to(user.username).emit("errorNotif", {message: `this user is unbanned`, type: true});
       this.server.emit("refresh");
     }
   }
-  //mute user for a limited time
 
   @SubscribeMessage("MuteUser")
   async handleMuteUser(client: any, payload: any): Promise<void> {
@@ -912,7 +1036,7 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
         return member.id === +user.id;
       }); 
       if (!verifyIsMemmber) {
-        this.server.to(user.username).emit("errorNotif", {message: `you are not allowed to mute this user`});
+        this.server.to(user.username).emit("errorNotif", {message: `you are not allowed to mute this user`, type: false});
         return;
       }
 
@@ -923,7 +1047,7 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
         return admin.id === +user.id;
       });
       if (!verifyOwner && !verifyAdmin) {
-        this.server.to(user.username).emit("errorNotif", {message: `you are not allowed to mute this user`});
+        this.server.to(user.username).emit("errorNotif", {message: `you are not allowed to mute this user`, type: false});
         return;
       }
       const verifyMuts: boolean = group.Muts?.some((mut) => {
@@ -931,7 +1055,7 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
       });
       if (verifyMuts)
       {
-        this.server.to(user.username).emit("errorNotif", {message: `this user is already muted`});
+        this.server.to(user.username).emit("errorNotif", {message: `this user is already muted`, type: false});
         return;
       }
 
@@ -954,6 +1078,7 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
           timeOffMute: payload.timeOffMute,
         },
       });
+      this.server.to(user.username).emit("errorNotif", {message: `this user is muted`, type: true});
       this.server.emit("refresh");
     }
   }
@@ -983,7 +1108,7 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
         return member.id === +user.id;
       }); 
       if (!verifyIsMemmber) {
-        this.server.to(user.username).emit("errorNotif", {message: `you are not allowed to unmute this user`});
+        this.server.to(user.username).emit("errorNotif", {message: `you are not allowed to unmute this user`, type: false});
         return;
       }
 
@@ -994,7 +1119,7 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
         return admin.id === +user.id;
       });
       if (!verifyOwner && !verifyAdmin) {
-        this.server.to(user.username).emit("errorNotif", {message: `you are not allowed to unmute this user`});
+        this.server.to(user.username).emit("errorNotif", {message: `you are not allowed to unmute this user`, type: false});
         return;
       }
       await this.prisma.user.update({
@@ -1009,6 +1134,7 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
           },
         },
       });
+      this.server.to(user.username).emit("errorNotif", {message: `this user is unmuted`, type: true});
       this.server.emit("refresh");
     }
   }

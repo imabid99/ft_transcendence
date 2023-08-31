@@ -18,6 +18,7 @@ export declare class ChatGateway implements OnGatewayConnection, OnGatewayDiscon
     handleMessageToGroup(client: any, payload: any): Promise<void>;
     handleExitGroup(client: any, payload: any): Promise<void>;
     handleJoinGroup(client: any, payload: any): Promise<void>;
+    handleJoinProtectedGroup(client: any, payload: any): Promise<void>;
     handleKickUser(client: any, payload: any): Promise<void>;
     handleSetAdmin(client: any, payload: any): Promise<void>;
     handleBanUser(client: any, payload: any): Promise<void>;

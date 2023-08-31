@@ -1,6 +1,6 @@
 'use client'
 
-import { useContext } from "react"
+import { useContext , useState } from "react";
 import { contextdata } from "@/app/contextApi"
 import {useRouter} from "next/navigation"
 import Link from "next/link"
@@ -10,23 +10,31 @@ type Props = {
 
 export default function Search({setShowBody}: Props) {
     const {user, profiles,channels,socket}:any = useContext(contextdata);
+    const [isProtected, setIsProtected] = useState<string|null>(null);
+    const [password, setPassword] = useState<string>("");
     const router = useRouter()
     const showUsers = profiles?.filter((ur:any) => {
         return ur.username === user?.username ? false : true
     })
 
-    const handelClick = (id:number) => {
+    const handelClick = (id:string) => {
         router.push(`/Chat/me/${id}`)
         setShowBody(null)
     }
-    const handelClickChannel = (id:number) => {
+    const handelClickChannel = (id:string, type:string) => {
         socket?.emit("joinGroup",{groupId: id, userId: user?.id})
         setShowBody(null)
         router.push(`/Chat/g/${id}`)
     }
+    const handelClickProtected = (id:string) => {
+        
+        socket?.emit("joinProtectedGroup",{groupId: id, userId: user?.id, password: password})
+        setIsProtected(null)
+        setShowBody(null)
 
+    }
     return (
-        <div className="flex flex-col  overflow-y-scroll  max-h-[calc(100%-270px)] min-h-[calc(100%-135px)] no-scrollbar">
+        <div className="flex flex-col  overflow-y-scroll  max-h-[calc(100%-270px)] min-h-[calc(100%-135px)] no-scrollbar relative ">
             <div className=" flex gap-2 items-center  py-[27px] px-[25px]">
                 <span onClick={() => setShowBody(null)} className="cursor-pointer">
                     <svg width="30" height="30" viewBox="0 0 30 30" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -95,7 +103,7 @@ export default function Search({setShowBody}: Props) {
                             })
                         }
                     </div>
-                    <div className="flex flex-col gap-[20px]">
+                    <div className="flex flex-col gap-[20px] py-[25px]">
                         <p className="text-[20px] font-[500] font-[Poppins] text-[#DEDEDE]">
                             Groups
                         </p>
@@ -103,24 +111,29 @@ export default function Search({setShowBody}: Props) {
                         {
                             channels?.map((channel:any) => {
                                 return (
-                                    <div className="flex items-center gap-[10px] cursor-pointer" onClick={() => handelClickChannel(channel.id)} key={channel.id}
+                                    <div className="justify-between flex items-center gap-[10px]" key={channel.id}
                                     >
-                                        <img
-                                            src="/groupAvatar.jpg"
-                                            alt=""
-                                            className="max-w-[64px] max-h-[64px] min-w-[64px] min-h-[64px] rounded-full object-cover border-[3px] border-[#064A85] border-opacity-25"
-                                        />
-                                        <div>
-                                            <p className="text-[20px] font-[300] font-[Poppins] text-[#034B8A] leading-6  max-w-[400px] truncate">
-                                            {
-                                                channel.name
-                                            }
-                                            </p>
-                                            <span className="text-[#898F94]">
-                                            {
-                                                channel.type
-                                            }
-                                            </span>
+                                        <div className="flex items-center gap-[10px] ">
+                                            <img
+                                                src="/groupAvatar.jpg"
+                                                alt=""
+                                                className="max-w-[64px] max-h-[64px] min-w-[64px] min-h-[64px] rounded-full object-cover border-[3px] border-[#064A85] border-opacity-25"
+                                            />
+                                            <div>
+                                                <p className="text-[20px] font-[300] font-[Poppins] text-[#034B8A] leading-6  max-w-[400px] truncate">
+                                                {
+                                                    channel.name
+                                                }
+                                                </p>
+                                                <span className="text-[#898F94]">
+                                                {
+                                                    channel.type
+                                                }
+                                                </span>
+                                            </div>
+                                        </div>
+                                        <div className="flex items-center justify-center px-[20px] py-[10px] bg-[#0074D9] rounded-[5px] text-[#fff] text-[16px] font-[500] font-[Poppins] cursor-pointer self-end" onClick={() => channel.type=== "protected" ? setIsProtected(channel.id): handelClickChannel(channel.id,channel.type)}>
+                                            Join
                                         </div>
                                     </div>
                                 )
@@ -128,6 +141,29 @@ export default function Search({setShowBody}: Props) {
                         }
                     </div>
             </div>
+            {isProtected && (
+                <>
+                    <div className="fixed bottom-0 left-0 w-full flex justify-center items-center h-full bg-black bg-opacity-50 z-[100]">
+                        <div className="absolute bottom-0 w-full flex justify-center items-center h-full bg-black bg-opacity-50 " onClick={() => setIsProtected(null)}/>
+                        <div className="w-[400px] h-[300px] bg-[#ffffff] flex p-[20px]  flex-col items-center justify-around rounded-[10px] z-[1000]">
+                            <div className="w-full flex justify-center items-center flex-col gap-[10px] h-[20px] text-[#034B8A] text-[20px] font-[500] font-[Poppins]">
+                                Enter password to join this group
+                            </div>
+                            <input type="password" placeholder="password" className="w-[250px] border-b-2 border-[#034B8A] text-[16px] font-[400] font-[Poppins] text-[#898F94] focus:outline-none" onChange={(e) => setPassword(e.target.value)}/>
+                            <span className="flex gap-[10px]">
+                                <button className="px-[20px] py-[10px] bg-[#0074D9] rounded-[5px] text-[#fff] text-[16px] font-[500] font-[Poppins] cursor-pointer" onClick={() => handelClickProtected(isProtected)}>
+                                    Join
+                                </button>
+                                <button className="px-[20px] py-[10px] bg-[#0074D9] rounded-[5px] text-[#fff] text-[16px] font-[500] font-[Poppins] cursor-pointer" 
+                                onClick={() => setIsProtected(null)}>
+                                    Cancel
+                                </button>
+                            </span>
+                        </div>
+                    </div>
+                </>
+            )
+            }
         </div>
     )
 }

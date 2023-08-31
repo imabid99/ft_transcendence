@@ -85,9 +85,36 @@ export default function ChannelInfo({infoRef, handleshowInfo, group, userId}: Ch
                 </p>
                 <div className="w-full flex flex-col gap-[25px] overflow-y-scroll no-scrollbar min-h-[calc(300px)] h-[calc(100%-600px)]  max-h-[calc(100%-600px)] relative">
                     {
-                        group?.Owners.map((owner: any) => {
+                        group?.Members.map((member: any) => {
+                            if (member.id !== userId)  return null;
                             return (
-                                <HandlRightClick mytype={userId == owner.id ? 1 : mytype} type={3} id={owner.id}  key={`${owner.id}`}>
+                                <HandlRightClick mytype={1} type={3} id={member.id}  key={`${member.id}`}>
+                                    <Link href={`/profile/${member.id}`}>
+                                        <div className="w-full flex items-center gap-[10px] justify-between cursor-pointer">
+                                            <span className="flex items-center gap-[10px]">
+                                                <img src="/groupAvatar.jpg" alt="" className="rounded-full w-[60px] h-[60px] object-cover"/>
+                                                <span>
+                                                    <p className="text-[#034B8A] text-[20px] font-[Poppins] font-[500] min-w-[200px]  max-w-[300px] truncate">
+                                                        {member.username}
+                                                    </p>
+                                                </span>
+                                            </span>
+                                        </div>
+                                    </Link>
+                                    <>
+                                        <span className="">
+                                            me
+                                        </span>
+                                    </>
+                                </HandlRightClick>
+                            )
+                        })
+                    }
+                    {
+                        group?.Owners.map((owner: any) => {
+                            if (owner.id === userId)  return null;
+                            return (
+                                <HandlRightClick mytype={mytype} type={3} id={owner.id}  key={`${owner.id}`}>
                                     <Link href={`/profile/${owner.id}`}>
                                         <div className="w-full flex items-center gap-[10px] justify-between cursor-pointer">
                                             <span className="flex items-center gap-[10px]">
@@ -121,11 +148,12 @@ export default function ChannelInfo({infoRef, handleshowInfo, group, userId}: Ch
                     }
                     {
                         group?.Admins.map((admin: any) => {
+                            if (admin.id === userId)  return null;
                             if(group.Muts?.find((mute: any) => mute.id === admin.id)) {
                                 return null;
                             }
                             return (
-                                <HandlRightClick mytype={userId == admin.id ? 1 : mytype} type={2} id={admin.id} groupId={group.id}  key={`${admin.id}`}>
+                                <HandlRightClick mytype={mytype} type={2} id={admin.id} groupId={group.id}  key={`${admin.id}`}>
                                     <Link href={`/profile/${admin.id}`}>
                                         <div className="w-full flex items-center gap-[10px] justify-between cursor-pointer">
                                             <span className="flex items-center gap-[10px]">
@@ -159,6 +187,7 @@ export default function ChannelInfo({infoRef, handleshowInfo, group, userId}: Ch
                     }
                     {
                         group?.Members.map((member: any) => {
+                            if (member.id === userId)  return null;
                             if (group.Owners.find((owner: any) => owner.id === member.id) || group.Admins.find((admin: any) => admin.id === member.id) || group.Muts?.find((mute: any) => mute.id === member.id)) {
                                 return null;
                             }
@@ -197,6 +226,7 @@ export default function ChannelInfo({infoRef, handleshowInfo, group, userId}: Ch
                     }
                     {
                         group?.Muts?.map((mute: any) => {
+                            if (mute.id === userId)  return null;
                             return(
                                 <HandlRightClick mytype={userId == mute.id ? 1 : mytype} type={1} id={mute.id} groupId={group.id}  key={`${mute.id}`} isMute={true}>
                                     <div className='flex  items-center justify-between opacity-60 w-full'>
@@ -213,9 +243,6 @@ export default function ChannelInfo({infoRef, handleshowInfo, group, userId}: Ch
                                             </div>
                                         </Link> 
                                         <>
-                                            <span className="">
-                                                memmber
-                                            </span>
                                             <span className="">
                                                 <svg width="23" height="23" viewBox="0 0 48 48" fill="#AF1C1C" xmlns="http://www.w3.org/2000/svg">
                                                     <path d="M24.86 8.2C24.5352 8.05949 24.1789 8.00767 23.8276 8.04983C23.4762 8.09199 23.1423 8.22663 22.86 8.44L13.3 16H6C5.46957 16 4.96086 16.2107 4.58579 16.5858C4.21071 16.9609 4 17.4696 4 18V30C4 30.5304 4.21071 31.0391 4.58579 31.4142C4.96086 31.7893 5.46957 32 6 32H13.3L22.76 39.56C23.1119 39.8423 23.5489 39.9974 24 40C24.2987 40.0049 24.5941 39.9362 24.86 39.8C25.2003 39.6379 25.4879 39.3829 25.6896 39.0644C25.8913 38.746 25.9989 38.377 26 38V10C25.9989 9.62303 25.8913 9.25404 25.6896 8.93556C25.4879 8.61709 25.2003 8.3621 24.86 8.2ZM22 33.84L15.24 28.44C14.8881 28.1577 14.4511 28.0026 14 28H8V20H14C14.4511 19.9974 14.8881 19.8423 15.24 19.56L22 14.16V33.84ZM39.82 24L43.42 20.42C43.6065 20.2335 43.7544 20.0121 43.8553 19.7685C43.9562 19.5249 44.0082 19.2637 44.0082 19C44.0082 18.7363 43.9562 18.4751 43.8553 18.2315C43.7544 17.9879 43.6065 17.7665 43.42 17.58C43.2335 17.3935 43.0121 17.2456 42.7685 17.1447C42.5249 17.0438 42.2637 16.9918 42 16.9918C41.7363 16.9918 41.4751 17.0438 41.2315 17.1447C40.9879 17.2456 40.7665 17.3935 40.58 17.58L37 21.18L33.42 17.58C33.0434 17.2034 32.5326 16.9918 32 16.9918C31.4674 16.9918 30.9566 17.2034 30.58 17.58C30.2034 17.9566 29.9918 18.4674 29.9918 19C29.9918 19.5326 30.2034 20.0434 30.58 20.42L34.18 24L30.58 27.58C30.3925 27.7659 30.2438 27.9871 30.1422 28.2309C30.0407 28.4746 29.9884 28.736 29.9884 29C29.9884 29.264 30.0407 29.5254 30.1422 29.7692C30.2438 30.0129 30.3925 30.2341 30.58 30.42C30.7659 30.6075 30.9871 30.7562 31.2308 30.8578C31.4746 30.9593 31.736 31.0116 32 31.0116C32.264 31.0116 32.5254 30.9593 32.7692 30.8578C33.0129 30.7562 33.2341 30.6075 33.42 30.42L37 26.82L40.58 30.42C40.7659 30.6075 40.9871 30.7562 41.2308 30.8578C41.4746 30.9593 41.736 31.0116 42 31.0116C42.264 31.0116 42.5254 30.9593 42.7692 30.8578C43.0129 30.7562 43.2341 30.6075 43.42 30.42C43.6075 30.2341 43.7562 30.0129 43.8578 29.7692C43.9593 29.5254 44.0116 29.264 44.0116 29C44.0116 28.736 43.9593 28.4746 43.8578 28.2309C43.7562 27.9871 43.6075 27.7659 43.42 27.58L39.82 24Z"/>
@@ -239,9 +266,7 @@ export default function ChannelInfo({infoRef, handleshowInfo, group, userId}: Ch
                     }
                     {
                         group?.Band?.map((ban: any) => {
-                            if (group.Owners.find((owner: any) => owner.id !== userId) && group.Admins.find((admin: any) => admin.id !== userId)) {
-                                return null;
-                            }
+                            if (ban.id === userId)  return null;
                             return(
                                 <HandlRightClick mytype={userId == ban.id ? 1 : mytype} type={1} id={ban.id} groupId={group.id}  key={`${ban.id}`} isBan={true}>
                                     <div className='flex  items-center justify-between opacity-60 w-full'>
@@ -258,9 +283,6 @@ export default function ChannelInfo({infoRef, handleshowInfo, group, userId}: Ch
                                             </div>
                                         </Link> 
                                         <>
-                                            <span className="">
-                                                memmber
-                                            </span>
                                             {
                                                 userId !== ban.id && (
                                                     <Link href="/Game">

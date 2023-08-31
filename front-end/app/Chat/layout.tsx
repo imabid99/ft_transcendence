@@ -28,7 +28,7 @@ export default function ChatLayout({ children }: { children: React.ReactNode }) 
   useEffect(() => {
     if (!socket) return;
     socket.on('errorNotif', (payload:any) => {
-      setNotifs((notifs) => [...notifs, {message : payload.message, time : payload.time}]);
+      setNotifs((notifs) => [...notifs, {message : payload.message, type : payload.type}]);
     })
     return () => {
       socket.off('errorNotif');
@@ -50,7 +50,7 @@ export default function ChatLayout({ children }: { children: React.ReactNode }) 
         </Head>
         <div className="absolute top-5 right-2 max-h-[230px] overflow-hidden z-[2000]">
           {notifs.map((notif, index) => (
-            <Notif key={index} message={notif.message}/>
+            <Notif key={index} message={notif.message} type={notif.type}/>
           ))}
         </div>
         <div className="h-[100vh] w-[100vw] flex  pl-[150px] bg-[#FAFDFF] lsm:max-lg:overflow-x-hidden lsm:max-lg:pl-[100px]">

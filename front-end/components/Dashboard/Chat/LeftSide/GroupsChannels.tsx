@@ -76,7 +76,6 @@ export default function GroupsChannels() {
                 />)
             })
           }
-
         </div>
         <span className="cursor-pointer p-[15px] transition-all duration-300 ease-in-out"
         onClick={handelShowMore} ref={showMoreRef}>

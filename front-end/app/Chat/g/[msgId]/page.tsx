@@ -9,6 +9,8 @@ import ChannelInfo  from '@/components/Dashboard/Chat/Messages/ChannelInfo';
 import axiosInstance from '@/utils/axiosInstance';
 import { useContext } from 'react';
 import { contextdata } from '@/app/contextApi';
+import NotMemmber from '../NotMemmber';
+
 type Message = {
   fromName :    string,
   content :     string,
@@ -65,6 +67,7 @@ export default function Page() {
           setMessages(res.data.Messages);
           setMember(true);
         } catch (err) {
+          setMember(false);
           console.log(err);
         }
       }
@@ -105,13 +108,7 @@ export default function Page() {
 
   if (!member) {
     return (
-      <div className=' items-center justify-center w-[calc(100%-450px)] min-h-full flex flex-col min-w-[490px] lg:max-xl:w-[calc(100%-350px)] lsm:max-lg:min-w-full '>
-          <h1 className='text-[100px] text-[#034B8A] font-bold'>404</h1>
-          <h1 className='text-[30px] text-[#034B8A] font-bold'>Page Not Found</h1>
-          <Link href="/Chat" className='text-[#AF1C1C] font-bold underline'>
-            Go Back
-          </Link>
-      </div>
+      <NotMemmber />
     )
   }
 
@@ -130,7 +127,6 @@ export default function Page() {
     setShowInfo(!showInfo);
   }
 
-  // sort messages by date
   messages?.sort((a, b) => {
     return new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime()
   })
@@ -145,7 +141,7 @@ export default function Page() {
                 <path d="M7.04118 12.0012C6.56787 12.0017 6.1088 11.8393 5.74118 11.5412L0.64118 7.33117C0.441185 7.17195 0.279673 6.96968 0.168662 6.73941C0.0576506 6.50914 0 6.2568 0 6.00117C0 5.74554 0.0576506 5.49319 0.168662 5.26292C0.279673 5.03265 0.441185 4.83038 0.64118 4.67117L5.74118 0.461168C6.04821 0.215162 6.41818 0.0603538 6.80891 0.0143849C7.19965 -0.031584 7.59544 0.0331352 7.95118 0.201168C8.26035 0.337447 8.52377 0.559841 8.70996 0.841787C8.89615 1.12373 8.99725 1.45331 9.00118 1.79117V10.2112C8.99725 10.549 8.89615 10.8786 8.70996 11.1606C8.52377 11.4425 8.26035 11.6649 7.95118 11.8012C7.66531 11.9312 7.35521 11.9993 7.04118 12.0012Z" fill="#00498A"/>
               </svg>
             </Link>
-            <div className='message__header__left flex items-center cursor-pointer pr-[30px]' onClick={()=>handleshowInfo()}>
+            <div className='message__header__left flex items-center cursor-pointer pr-[30px] z-[1]' onClick={()=>handleshowInfo()}>
               <Avatar url="/userProfile.jpg" status={false} />
               <div className='message__header__left__info ml-2'>
                 <div className='message__header__left__info__name text-[#034B8A] font-[600] font-[Poppins] text-[25px] truncate max-w-[250px] lsm:max-lg:max-w-[150px]'>{`${group?.name}`}</div>
