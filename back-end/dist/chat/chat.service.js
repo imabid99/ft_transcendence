@@ -17,6 +17,7 @@ let ChatService = exports.ChatService = class ChatService {
         this.prisma = prisma;
     }
     async getChannel(myId, channelId) {
+        var _a;
         const channel = await this.prisma.channels.findUnique({
             where: {
                 id: channelId,
@@ -30,7 +31,10 @@ let ChatService = exports.ChatService = class ChatService {
                 Muts: true,
             },
         });
-        const isMumber = channel.Members.some((member) => {
+        if (!channel) {
+            throw new common_1.NotFoundException("Channel not found");
+        }
+        const isMumber = (_a = channel.Members) === null || _a === void 0 ? void 0 : _a.some((member) => {
             return member.id === +myId;
         });
         if (!isMumber) {

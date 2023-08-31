@@ -138,17 +138,6 @@ export default function GroupInfo({setShowBody,setGroupUsers,groupUsers}:GroupIn
                         </label>
                     )
                 }
-                <label htmlFor="accessPass"  className="groupInfo flex flex-col gap-[10px] mt-[30px] ">
-                    <p className="text-[15px] font-[500] font-[Poppins] text-[#00539D] flex gap-[10px]">
-                    Access password
-                    <p className="text-[13px] font-[300] font-[Poppins] text-[#A5BFD6]">
-                        (optional)
-                    </p>
-                    </p>
-                    <input 
-                    onChange={(e) => setAccessPassword(e.target.value)}
-                    type="password" id="accessPass" className="w-full h-[50px]  px-[20px]   bg-[#F9FCFE] pr-[20px] text-[15px] font-[300] font-[Poppins] text-[#A5BFD6] outline-none rounded-[11px]" placeholder="Password" />
-                </label>
             </form>
             <div  onClick={createGroup} className="  bg-[#025063] min-h-[70px] min-w-[70px] rounded-full absolute bottom-[54px] right-[50px] z-[10] flex justify-center items-center cursor-pointer" >
                 <div className="flex justify-center items-center relative">

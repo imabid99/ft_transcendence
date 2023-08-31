@@ -20,7 +20,11 @@ export class ChatService {
           },
     
         });
-        const isMumber: boolean = channel.Members.some((member) => {
+        if (!channel) {
+          throw new NotFoundException("Channel not found");
+        }
+        
+        const isMumber: boolean = channel.Members?.some((member) => {
           return member.id === +myId;
         });
         if (!isMumber) {
