@@ -1138,4 +1138,86 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
       this.server.emit("refresh");
     }
   }
+
+  @SubscribeMessage("removeGroupPass")
+  async handleRemoveGroupPass(client: any, payload: any): Promise<void> {
+    const token = client.handshake.headers.authorization?.split(" ")[1];
+    if(token)
+    {
+      const info:any= jwt_decode(token);
+      const user = await this.prisma.user.findUnique({
+        where: {
+          id: info?.userId,
+        },
+      });
+
+      const group = await this.prisma.channels.findUnique({
+        where: {
+          id: payload.groupId,
+        },
+        include: {
+          Owners: true,
+        },
+      });
+      const verifyOwner: boolean = group.Owners.some((owner) => {
+        return owner.id === +user.id;
+      });
+      if (!verifyOwner) {
+        this.server.to(user.username).emit("errorNotif", {message: `you are not allowed to remove this group password`, type: false});
+        return;
+      }
+      await this.prisma.channels.update({
+        where: {
+          id: payload.groupId,
+        },
+        data: {
+          password: "",
+          type: "public",
+        },
+      });
+      this.server.to(user.username).emit("errorNotif", {message: `group password removed`, type: true});
+      this.server.emit("refresh");
+    }
+  }
+
+  @SubscribeMessage("setGroupPass")
+  async handleSetGroupPass(client: any, payload: any): Promise<void> {
+    const token = client.handshake.headers.authorization?.split(" ")[1];
+    if(token)
+    {
+      const info:any= jwt_decode(token);
+      const user = await this.prisma.user.findUnique({
+        where: {
+          id: info.userId,
+        },
+      });
+
+      const group = await this.prisma.channels.findUnique({
+        where: {
+          id: payload.groupId,
+        },
+        include: {
+          Owners: true,
+        },
+      });
+      const verifyOwner: boolean = group.Owners.some((owner) => {
+        return owner.id === +user.id;
+      });
+      if (!verifyOwner) {
+        this.server.to(user.username).emit("errorNotif", {message: `you are not allowed to set this group password`, type: false});
+        return;
+      }
+      await this.prisma.channels.update({
+        where: {
+          id: payload.groupId,
+        },
+        data: {
+          password: payload.password,
+          type: "protected",
+        },
+      });
+      this.server.to(user.username).emit("errorNotif", {message: `group password set`, type: true});
+      this.server.emit("refresh");
+    }
+  }
 }

@@ -1060,6 +1060,82 @@ let ChatGateway = exports.ChatGateway = class ChatGateway {
             this.server.emit("refresh");
         }
     }
+    async handleRemoveGroupPass(client, payload) {
+        var _a;
+        const token = (_a = client.handshake.headers.authorization) === null || _a === void 0 ? void 0 : _a.split(" ")[1];
+        if (token) {
+            const info = (0, jwt_decode_1.default)(token);
+            const user = await this.prisma.user.findUnique({
+                where: {
+                    id: info === null || info === void 0 ? void 0 : info.userId,
+                },
+            });
+            const group = await this.prisma.channels.findUnique({
+                where: {
+                    id: payload.groupId,
+                },
+                include: {
+                    Owners: true,
+                },
+            });
+            const verifyOwner = group.Owners.some((owner) => {
+                return owner.id === +user.id;
+            });
+            if (!verifyOwner) {
+                this.server.to(user.username).emit("errorNotif", { message: `you are not allowed to remove this group password`, type: false });
+                return;
+            }
+            await this.prisma.channels.update({
+                where: {
+                    id: payload.groupId,
+                },
+                data: {
+                    password: "",
+                    type: "public",
+                },
+            });
+            this.server.to(user.username).emit("errorNotif", { message: `group password removed`, type: true });
+            this.server.emit("refresh");
+        }
+    }
+    async handleSetGroupPass(client, payload) {
+        var _a;
+        const token = (_a = client.handshake.headers.authorization) === null || _a === void 0 ? void 0 : _a.split(" ")[1];
+        if (token) {
+            const info = (0, jwt_decode_1.default)(token);
+            const user = await this.prisma.user.findUnique({
+                where: {
+                    id: info.userId,
+                },
+            });
+            const group = await this.prisma.channels.findUnique({
+                where: {
+                    id: payload.groupId,
+                },
+                include: {
+                    Owners: true,
+                },
+            });
+            const verifyOwner = group.Owners.some((owner) => {
+                return owner.id === +user.id;
+            });
+            if (!verifyOwner) {
+                this.server.to(user.username).emit("errorNotif", { message: `you are not allowed to set this group password`, type: false });
+                return;
+            }
+            await this.prisma.channels.update({
+                where: {
+                    id: payload.groupId,
+                },
+                data: {
+                    password: payload.password,
+                    type: "protected",
+                },
+            });
+            this.server.to(user.username).emit("errorNotif", { message: `group password set`, type: true });
+            this.server.emit("refresh");
+        }
+    }
 };
 __decorate([
     (0, websockets_1.WebSocketServer)(),
@@ -1155,6 +1231,18 @@ __decorate([
     __metadata("design:paramtypes", [Object, Object]),
     __metadata("design:returntype", Promise)
 ], ChatGateway.prototype, "handleUnMuteUser", null);
+__decorate([
+    (0, websockets_1.SubscribeMessage)("removeGroupPass"),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Object, Object]),
+    __metadata("design:returntype", Promise)
+], ChatGateway.prototype, "handleRemoveGroupPass", null);
+__decorate([
+    (0, websockets_1.SubscribeMessage)("setGroupPass"),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Object, Object]),
+    __metadata("design:returntype", Promise)
+], ChatGateway.prototype, "handleSetGroupPass", null);
 exports.ChatGateway = ChatGateway = __decorate([
     (0, websockets_1.WebSocketGateway)({
         cors: {
