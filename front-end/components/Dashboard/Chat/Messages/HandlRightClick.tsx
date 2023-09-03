@@ -49,9 +49,6 @@ export default function HandlRightClick({ children ,id, type , groupId, mytype ,
         else if (time === "1 hour") {
             timeOffMute.setHours(timeOffMute.getHours() + 1);
         }
-        else if (time === "1 day") {
-            timeOffMute.setDate(timeOffMute.getDate() + 1);
-        }
         else if (time === "1 year") {
             timeOffMute.setFullYear(timeOffMute.getFullYear() + 1);
         }
@@ -114,7 +111,7 @@ export default function HandlRightClick({ children ,id, type , groupId, mytype ,
                                             1 hour
                                         </li>
                                         <li className='py-[10px] px-[20px] cursor-pointer' onClick={() => handleMute("1 year")}>
-                                            1 day
+                                            1 year
                                         </li>
                                     </ul>
                                     )

@@ -18,7 +18,6 @@ import { UserService } from "../../../user.service";
     methods: ["GET", "POST"],
   },
 })
-
 export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
   constructor(
     private prisma: PrismaService,
@@ -1104,6 +1103,17 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
           Admins: true,
         },
       });
+      const muts = await this.prisma.Muted.findMany({
+        where: {
+          userId: payload.userId,
+          channelId: payload.groupId,
+        },
+      });
+      if (muts.length === 0)
+      {
+        this.server.to(user.username).emit("errorNotif", {message: `this user is not muted`, type: false});
+        return;
+      }
       const verifyIsMemmber: boolean = group.Members.some((member) => {
         return member.id === +user.id;
       }); 
@@ -1132,6 +1142,11 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
               id: group.id,
             },
           },
+        },
+      });
+      await this.prisma.Muted.delete({
+        where: {
+          id: muts[0].id,
         },
       });
       this.server.to(user.username).emit("errorNotif", {message: `this user is unmuted`, type: true});
@@ -1166,14 +1181,11 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
         this.server.to(user.username).emit("errorNotif", {message: `you are not allowed to remove this group password`, type: false});
         return;
       }
-<<<<<<< HEAD
       if(group.type === "public")
       {
         this.server.to(user.username).emit("errorNotif", {message: `this group already public`, type: false});
         return;
       }
-=======
->>>>>>> 157479dc19e3d6fac07ffb4e71813d393bbb9091
       await this.prisma.channels.update({
         where: {
           id: payload.groupId,

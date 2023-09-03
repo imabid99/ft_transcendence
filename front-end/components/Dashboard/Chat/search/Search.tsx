@@ -45,23 +45,6 @@ export default function Search({setShowBody}: Props) {
                     Users & Groups
                 </p>
             </div>
-            <div className="w-full px-[25px] py-[25px] flex  items-center  border-[#E5E5E5] gap-[10px]">
-                <span>
-                    <svg width="21" height="20" viewBox="0 0 21 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <path
-                        d="M9.32 17C13.915 17 17.64 13.4183 17.64 9C17.64 4.58172 13.915 1 9.32 1C4.72499 1 1 4.58172 1 9C1 13.4183 4.72499 17 9.32 17Z"
-                        stroke="#898F94"
-                        strokeWidth="2"
-                        />
-                        <path
-                        d="M19.7193 18.9984L15.1953 14.6484"
-                        stroke="#898F94"
-                        strokeWidth="2"
-                        />
-                    </svg>
-                </span>
-                <input type="text" placeholder="Search" className="w-[calc(100%-50px)] text-[16px] font-[400] font-[Poppins] text-[#898F94] focus:outline-none border-b-2" />
-            </div>
             <div className="w-full px-[25px] py-[25px] flex flex-col gap-[10px] max-h-[calc(100%-270px)] min-h-[calc(100%-135px)]">
                     <div className="flex flex-col gap-[20px]">
                         <p className="text-[20px] font-[500] font-[Poppins] text-[#DEDEDE]">
@@ -111,7 +94,7 @@ export default function Search({setShowBody}: Props) {
                         {
                             channels?.map((channel:any) => {
                                 return (
-                                    <div className="justify-between flex items-center gap-[10px]" key={channel.id}
+                                    <div className="flex justify-between  items-center gap-[10px]" key={channel.id}
                                     >
                                         <div className="flex items-center gap-[10px] ">
                                             <img
@@ -120,7 +103,7 @@ export default function Search({setShowBody}: Props) {
                                                 className="max-w-[64px] max-h-[64px] min-w-[64px] min-h-[64px] rounded-full object-cover border-[3px] border-[#064A85] border-opacity-25"
                                             />
                                             <div>
-                                                <p className="text-[20px] font-[300] font-[Poppins] text-[#034B8A] leading-6  max-w-[400px] truncate">
+                                                <p className="text-[20px] font-[300] font-[Poppins] text-[#034B8A] leading-6  max-w-[300px] truncate">
                                                 {
                                                     channel.name
                                                 }
@@ -132,7 +115,7 @@ export default function Search({setShowBody}: Props) {
                                                 </span>
                                             </div>
                                         </div>
-                                        <div className="flex items-center justify-center px-[20px] py-[10px] bg-[#0074D9] rounded-[5px] text-[#fff] text-[16px] font-[500] font-[Poppins] cursor-pointer self-end" onClick={() => channel.type=== "protected" ? setIsProtected(channel.id): handelClickChannel(channel.id,channel.type)}>
+                                        <div className="flex items-center justify-center px-[30px] py-[10px] bg-[#366996] rounded-[10px] text-[#fff] text-[14px] font-[500] font-[Poppins] cursor-pointer self-end" onClick={() => channel.type=== "protected" ? setIsProtected(channel.id): handelClickChannel(channel.id,channel.type)}>
                                             Join
                                         </div>
                                     </div>
@@ -143,20 +126,20 @@ export default function Search({setShowBody}: Props) {
             </div>
             {isProtected && (
                 <>
-                    <div className="fixed bottom-0 left-0 w-full flex justify-center items-center h-full bg-black bg-opacity-50 z-[100]">
-                        <div className="absolute bottom-0 w-full flex justify-center items-center h-full bg-black bg-opacity-50 " onClick={() => setIsProtected(null)}/>
-                        <form className="w-[400px] h-[300px] bg-[#ffffff] flex p-[20px]  flex-col items-center justify-around rounded-[10px] z-[1000]">
-                            <div className="w-full flex justify-center items-center flex-col gap-[10px] h-[20px] text-[#034B8A] text-[20px] font-[500] font-[Poppins]">
+                    <div className="fixed bottom-0 left-0 w-full flex justify-center items-center h-full  z-[100]">
+                        <div className="absolute bottom-0 w-full flex justify-center items-center h-full bg-black bg-opacity-5 backdrop-blur-[1.5px] " onClick={() => setIsProtected(null)}/>
+                        <form className="w-[400px]  bg-[#ffffff] flex p-[20px]  flex-col items-center rounded-[30px] z-[1000] gap-[45px] pb-[40px] pt-[30px] shadow-joinGroupModal">
+                            <div className="flex justify-center items-center flex-col gap-[10px]  text-[#034B8A] text-[23px] font-[500] font-[Poppins] max-w-[200px] text-center">
                                 Enter password to join this group
                             </div>
-                            <input autoFocus type="password" placeholder="password" className="w-[250px] border-b-2 border-[#034B8A] text-[16px] font-[400] font-[Poppins] text-[#898F94] focus:outline-none" onChange={(e) => setPassword(e.target.value)}/>
+                            <input autoFocus type="password" placeholder="Password" className="w-[330px] pl-[30px] py-[20px] border-[0.5px] border-[#034B8A] rounded-[20px] text-[16px] font-[400] font-[Poppins] text-[#C6D4E1] focus:outline-none" onChange={(e) => setPassword(e.target.value)}/>
                             <span className="flex gap-[10px]">
-                                <button className="px-[20px] py-[10px] bg-[#0074D9] rounded-[5px] text-[#fff] text-[16px] font-[500] font-[Poppins] cursor-pointer" onClick={() => handelClickProtected(isProtected)}>
-                                    Join
-                                </button>
-                                <button className="px-[20px] py-[10px] bg-[#0074D9] rounded-[5px] text-[#fff] text-[16px] font-[500] font-[Poppins] cursor-pointer" 
+                                <button className="w-[165px] py-[10px] rounded-[15px] text-[16px] font-[500] font-[Poppins] cursor-pointer border-[0.5px] border-[#034B8A] text-[#034B8A]"
                                 onClick={() => setIsProtected(null)}>
                                     Cancel
+                                </button>
+                                <button className="w-[165px] py-[10px] bg-[#366996] rounded-[15px] text-[#fff] text-[16px] font-[500] font-[Poppins] cursor-pointer" onClick={() => handelClickProtected(isProtected)}>
+                                    Join
                                 </button>
                             </span>
                         </form>

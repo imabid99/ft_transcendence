@@ -142,6 +142,10 @@ export class UserService {
       });
       if (!user) return "Not found";
     }
+    else {
+      throw new NotFoundException("User not found");
+      return "Not found";
+    }
     const profile = await this.prisma.profile.findUnique({
       where: {
         userId: +id,

@@ -1027,6 +1027,16 @@ let ChatGateway = exports.ChatGateway = class ChatGateway {
                     Admins: true,
                 },
             });
+            const muts = await this.prisma.Muted.findMany({
+                where: {
+                    userId: payload.userId,
+                    channelId: payload.groupId,
+                },
+            });
+            if (muts.length === 0) {
+                this.server.to(user.username).emit("errorNotif", { message: `this user is not muted`, type: false });
+                return;
+            }
             const verifyIsMemmber = group.Members.some((member) => {
                 return member.id === +user.id;
             });
@@ -1056,6 +1066,11 @@ let ChatGateway = exports.ChatGateway = class ChatGateway {
                     },
                 },
             });
+            await this.prisma.Muted.delete({
+                where: {
+                    id: muts[0].id,
+                },
+            });
             this.server.to(user.username).emit("errorNotif", { message: `this user is unmuted`, type: true });
             this.server.emit("refresh");
         }
@@ -1083,6 +1098,10 @@ let ChatGateway = exports.ChatGateway = class ChatGateway {
             });
             if (!verifyOwner) {
                 this.server.to(user.username).emit("errorNotif", { message: `you are not allowed to remove this group password`, type: false });
+                return;
+            }
+            if (group.type === "public") {
+                this.server.to(user.username).emit("errorNotif", { message: `this group already public`, type: false });
                 return;
             }
             await this.prisma.channels.update({

@@ -89,6 +89,4 @@ export class userController {
   ): Promise<{ iBlocked: boolean; heBlocked: boolean }> {
     return this.userService.isBlocked(userId, tragetId);
   }
-
-
 }
