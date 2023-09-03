@@ -1,6 +1,0 @@
-{
-  "/login/page": "app/login/page.js",
-  "/Chat/page": "app/Chat/page.js",
-  "/Chat/g/[msgId]/page": "app/Chat/g/[msgId]/page.js",
-  "/Chat/me/[msgId]/page": "app/Chat/me/[msgId]/page.js"
-}

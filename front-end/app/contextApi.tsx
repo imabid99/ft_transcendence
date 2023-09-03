@@ -1,5 +1,6 @@
 'use client';
-import { createContext , useState , useEffect, use } from 'react';
+import React from 'react';
+import { createContext , useState , useEffect, useRef } from 'react';
 import { getLocalStorageItem , removeLocalStorageItem } from '@/utils/localStorage';
 import { useRouter } from 'next/navigation';
 import axiosInstance from '@/utils/axiosInstance';
@@ -18,6 +19,9 @@ const ContextProvider = ({ children }: { children: React.ReactNode; }) => {
   const [myChannels, setMyChannels] = useState<any>([]);
   const [channels, setChannels] = useState<any>([]);
   const [loged, setLoged] = useState<boolean>(false);
+  const [mediaDashbord, setMediaDashbord]  = useState<boolean>(false);
+  const dashboardRef = React.useRef<HTMLDivElement | null>(null);
+
   useEffect(() => {
     const getUser = async () => {
       try
@@ -160,7 +164,7 @@ const ContextProvider = ({ children }: { children: React.ReactNode; }) => {
 	}, [user]);
 
   return (
-    <contextdata.Provider value={{socket:socket, user:user, users:users, profiles:profiles , messages:messages,myChannels:myChannels, channels:channels,setChannels:setChannels, setUser:setUser,setMyChannels:setMyChannels, setUsers:setUsers, setProfiles:setProfiles , setMessages:setMessages, setLoged:setLoged , loged:loged}}>
+    <contextdata.Provider value={{socket:socket, dashboardRef:dashboardRef, mediaDashbord:mediaDashbord,user:user, users:users, profiles:profiles , messages:messages,myChannels:myChannels, channels:channels,setChannels:setChannels, setUser:setUser,setMyChannels:setMyChannels, setUsers:setUsers, setProfiles:setProfiles , setMessages:setMessages, setLoged:setLoged , loged:loged, setMediaDashbord:setMediaDashbord}}>
       {children}
     </contextdata.Provider>
   );

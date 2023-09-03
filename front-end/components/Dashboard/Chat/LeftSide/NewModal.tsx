@@ -12,7 +12,7 @@ export default function NewModal({setShowBody}: NewModalProps) {
     const [showModal, setShowModal] = useState(false);
     return (
     
-        <div className=" NewModal bg-[#025063] min-h-[70px] min-w-[70px] rounded-full absolute bottom-[-500px] right-[50px] z-[100] flex justify-center items-center cursor-pointer lsm:max-lg:bottom-[10px]  lsm:max-lg:right-[10px]" onClick={() => {setShowPen(!showPen); setShowModal(!showModal)}}
+        <div className=" NewModal bg-[#025063] min-h-[70px] min-w-[70px] rounded-full absolute bottom-[-500px] right-[50px] z-[90] flex justify-center items-center cursor-pointer lsm:max-lg:bottom-[10px]  lsm:max-lg:right-[10px]" onClick={() => {setShowPen(!showPen); setShowModal(!showModal)}}
         >
             <div className="flex justify-center items-center relative">
                 {showPen ?(
