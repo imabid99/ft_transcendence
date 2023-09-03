@@ -9,12 +9,14 @@ type SelectUsersProps = {
     },
     setGroupUsers: any,
     groupUsers: any
+    
 }
 
 export default function SelectUsers({user,setGroupUsers,groupUsers}: SelectUsersProps) {
 
     const handleClick = (e:any) =>
     {
+
         setTimeout(() => {
             if(e.target.checked)
                 setGroupUsers([...groupUsers,user.userId])
@@ -40,3 +42,4 @@ export default function SelectUsers({user,setGroupUsers,groupUsers}: SelectUsers
         </>
     )
 }
+

@@ -209,3 +209,7 @@ filter: blur(0.5px) drop-shadow(0px 2px 4px rgba(0, 42, 81, 0.10)) drop-shadow(0
 {
   bottom: 54px;
 }
+.myButton
+{
+  background: linear-gradient(90deg, #48C6EF 0%, #6F86D6 100%);
+}

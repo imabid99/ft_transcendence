@@ -24,6 +24,22 @@
 
 ## Description
 
+.env
+JWT_SECRET=
+JWT_EXPIRE=
+
+# postgres
+
+POSTGRES_USER=
+POSTGRES_PASSWORD=
+POSTGRES_DB=
+DATABASE_URL=
+
+UID=
+SECRET=
+
+##
+
 [Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
 
 ## Installation

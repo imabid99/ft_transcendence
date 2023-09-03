@@ -15,6 +15,7 @@ module.exports = {
       'lg': '1024px',
       'md': '768px',
       'sm': '640px',
+      'xs': '430px',
       'lsm': '360px',
     },
     extend: {
@@ -58,6 +59,10 @@ module.exports = {
           '0px 38px 11px 0px rgba(0, 0, 0, 0.00)'
         ],
         '7xl': '0px 4px 46px 0px rgba(0, 0, 0, 0.03)',
+        '8xl':[
+         ' 0px 6px 13px 0px rgba(0, 0, 0, 0.04)', '0px 24px 24px 0px rgba(0, 0, 0, 0.04)', '0px 54px 32px 0px rgba(0, 0, 0, 0.02)',' 0px 95px 38px 0px rgba(0, 0, 0, 0.01)', '0px 149px 42px 0px rgba(0, 0, 0, 0.00)',
+
+        ]
       }
     },
   },
