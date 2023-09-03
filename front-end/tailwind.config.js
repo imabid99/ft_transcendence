@@ -62,6 +62,13 @@ module.exports = {
         '8xl':[
          ' 0px 6px 13px 0px rgba(0, 0, 0, 0.04)', '0px 24px 24px 0px rgba(0, 0, 0, 0.04)', '0px 54px 32px 0px rgba(0, 0, 0, 0.02)',' 0px 95px 38px 0px rgba(0, 0, 0, 0.01)', '0px 149px 42px 0px rgba(0, 0, 0, 0.00)',
 
+        ],
+        'notmember': '1px -1px 0px 26px rgba(220,238,255,0.75)',
+        'notmember1': [
+          '0px 0px 0px 0px rgba(0, 0, 0, 0.07)', '0px 11px 24px 0px rgba(0, 0, 0, 0.07)', '0px 43px 43px 0px rgba(0, 0, 0, 0.06)', '0px 98px 59px 0px rgba(0, 0, 0, 0.03)', '0px 173px 69px 0px rgba(0, 0, 0, 0.01)', '0px 271px 76px 0px rgba(0, 0, 0, 0.00)',
+        ],
+        'joinGroupModal':[
+          '0px 18px 39px 0px rgba(55, 105, 150, 0.02)', '0px 71px 71px 0px rgba(55, 105, 150, 0.02)', '0px 160px 96px 0px rgba(55, 105, 150, 0.01)', '0px 285px 114px 0px rgba(55, 105, 150, 0.00)', '0px 445px 125px 0px rgba(55, 105, 150, 0.00)'
         ]
       }
     },

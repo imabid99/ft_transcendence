@@ -45,13 +45,14 @@ export default function Home() {
             setShow(true)
         }
     }
+    
     return (
         <div className="flex flex-col px-[62px] py-[60px] w-[calc(100%-150px)] bg-[#FAFDFF]  ml-[150px] h-[100vh] overflow-y-scroll gap-[52px] relative no-scrollbar">
             {!show && <div className='w-full h-full fixed top-0 left-0 z-[51]' onClick={() => handelClose(HeadermodalRef)}></div>}
             <Header  show={show} notifRef={notifRef} modalRef={HeadermodalRef} handelShaw={handelShaw} notifIconRef={notifIconRef}/>
 
             <Body leaderRef={leaderRef} handelShaw={handelShaw} />
-            {showModal && <div className=" w-full h-full fixed top-0 left-0 z-[54]  inset-0 bg-white-900 bg-opacity-50 backdrop-blur-sm"/>}
+            {showModal && <div className=" w-full h-full fixed top-0 left-0 z-[54]  inset-0 bg-black bg-opacity-5 backdrop-blur-[1.5px]"/>}
 
             <RightModal leaderRef={leaderRef}>
                 <LeaderModal leaderRef={leaderRef} handelClose={handelClose}/>

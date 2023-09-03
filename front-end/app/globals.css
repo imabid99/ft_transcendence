@@ -202,7 +202,7 @@ filter: blur(0.5px) drop-shadow(0px 2px 4px rgba(0, 42, 81, 0.10)) drop-shadow(0
 .NewModal
 {
   box-shadow: 0px 0px 0px 0px rgba(0, 0, 0, 0.08), 0px 14px 32px 0px rgba(0, 0, 0, 0.08), 0px 57px 57px 0px rgba(0, 0, 0, 0.07), 0px 129px 78px 0px rgba(0, 0, 0, 0.04), 0px 230px 92px 0px rgba(0, 0, 0, 0.01), 0px 359px 101px 0px rgba(0, 0, 0, 0.00);
-  transition: all 0.8s ease;
+  transition: all 0.7s ease;
 }
 
 .chat__left:hover .NewModal

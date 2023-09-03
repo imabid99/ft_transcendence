@@ -9,6 +9,7 @@ import axiosInstance from '@/utils/axiosInstance';
 import { useContext } from 'react';
 import { contextdata } from '@/app//contextApi';
 import { useRouter } from 'next/navigation';
+import NotUser from '../NotUser';
 
 type Message = {
   fromId :    number,
@@ -25,6 +26,7 @@ export default function Page() {
   const [isBlocked, setIsBlocked] = useState<boolean>(false);
   const [isIblocked, setIsIblocked] = useState<boolean>(false);
   const [receiver, setReceiver] = useState<any>(null);
+  const [isUser, setIsUser] = useState<boolean>(true);
   const {user,socket} :any= useContext(contextdata);
   const inputRef = useRef<HTMLInputElement | null>(null);;
   const router = useRouter();
@@ -88,14 +90,13 @@ export default function Page() {
         const res = await axiosInstance.get(`http://${process.env.NEXT_PUBLIC_APP_URL}:3000/api/user/profile/${msgId}`);
         setReceiver(res.data);
       } catch (err) {
+        setIsUser(false);
         console.log(err);
       }
     }
     getReceiver();
-
     return () => {
       setReceiver(null);
-
     }
   }, [])
 
@@ -145,10 +146,13 @@ export default function Page() {
      const scrol = document.querySelector('.message__body');
      if (scrol) {
        scrol.scrollTop = scrol.scrollHeight;
-     }
-   }, [messages])
-
-
+    }
+  }, [messages])
+  
+  if(!isUser)
+  {
+    return <NotUser />
+  }
 
   if(messages === null)
   {
@@ -219,8 +223,8 @@ export default function Page() {
             <div className='w-full h-full  bg-opacity-50 absolute top-0 left-0 z-[1]' onClick={()=>setShow(false)}></div>
           )
         }
-        <div className='message__header flex justify-between items-center px-[42px] py-[20px] bg-[#FFF] lsm:max-lg:px-[10px]' >
-          <div className='message__header__left flex items-center gap-[10px]'>
+        <div className='message__header flex justify-between items-center px-[42px] py-[20px] bg-[#FFF] lsm:max-lg:px-[10px] border-b-[1px] boder-[#EAEAEA]' >
+          <div className='message__header__left flex items-center gap-[10px] '>
             <Link href="/Chat" className='pr-[10px] py-[5px] lg:hidden'>
               <svg width="9" height="13" viewBox="0 0 9 13" fill="none" xmlns="http://www.w3.org/2000/svg">
                 <path d="M7.04118 12.0012C6.56787 12.0017 6.1088 11.8393 5.74118 11.5412L0.64118 7.33117C0.441185 7.17195 0.279673 6.96968 0.168662 6.73941C0.0576506 6.50914 0 6.2568 0 6.00117C0 5.74554 0.0576506 5.49319 0.168662 5.26292C0.279673 5.03265 0.441185 4.83038 0.64118 4.67117L5.74118 0.461168C6.04821 0.215162 6.41818 0.0603538 6.80891 0.0143849C7.19965 -0.031584 7.59544 0.0331352 7.95118 0.201168C8.26035 0.337447 8.52377 0.559841 8.70996 0.841787C8.89615 1.12373 8.99725 1.45331 9.00118 1.79117V10.2112C8.99725 10.549 8.89615 10.8786 8.70996 11.1606C8.52377 11.4425 8.26035 11.6649 7.95118 11.8012C7.66531 11.9312 7.35521 11.9993 7.04118 12.0012Z" fill="#00498A"/>
@@ -313,8 +317,8 @@ export default function Page() {
           }
           </div>
         </div>
-        <div className='w-full min-h-[90px] bg-[#FFF] px-[42px] py-[15px] lsm:max-lg:px-[10px]'>
-          <form className='flex pr-[5px] bg-[#F5FBFF] h-full w-full rounded-[23px] items-center' onSubmit={(e) => handleSubmit(e)}>
+        <div className='w-full min-h-[90px] bg-[#FFF] px-[42px] py-[15px] lsm:max-lg:px-[10px] border-t-[1px] boder-[#EAEAEA]'>
+          <form className='flex pr-[5px] bg-[#F5FBFF] h-full w-full rounded-[23px] items-center ' onSubmit={(e) => handleSubmit(e)}>
             {
               !isBlocked  ? (
                 <>

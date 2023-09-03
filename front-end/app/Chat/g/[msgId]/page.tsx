@@ -134,7 +134,7 @@ export default function Page() {
   return (
       <div className='message w-[calc(100%-450px)] min-h-full flex flex-col min-w-[490px] lg:max-xl:w-[calc(100%-350px)] lsm:max-lg:min-w-full '>
         {show && <div className='message__header__bg w-full h-full absolute top-0 left-0 z-[1]' onClick={() => setShow(false)}></div>}
-        <div className='message__header flex justify-between items-center px-[42px] py-[20px] bg-[#FFF] lsm:max-lg:px-[10px]' >
+        <div className='message__header flex justify-between items-center px-[42px] py-[20px] bg-[#FFF] lsm:max-lg:px-[10px] border-b-[1px] boder-[#EAEAEA]' >
           <div className='message__header__left flex items-center gap-[10px]'>
             <Link href="/Chat" className='pr-[10px] py-[5px] lg:hidden'>
               <svg width="9" height="13" viewBox="0 0 9 13" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -145,6 +145,7 @@ export default function Page() {
               <Avatar url="/userProfile.jpg" status={false} />
               <div className='message__header__left__info ml-2'>
                 <div className='message__header__left__info__name text-[#034B8A] font-[600] font-[Poppins] text-[25px] truncate max-w-[250px] lsm:max-lg:max-w-[150px]'>{`${group?.name}`}</div>
+                <div className='message__header__left__info__status text-[#C0C1C5] text-[16px] font-[Poppins]'>{group?.Members.length} members</div>
               </div>
             </div>
           </div>
@@ -168,7 +169,7 @@ export default function Page() {
           }
           </div>
         </div>
-        <div className='w-full min-h-[90px] bg-[#FFF] px-[42px] py-[15px] lsm:max-lg:px-[10px]'>
+        <div className='w-full min-h-[90px] bg-[#FFF] px-[42px] py-[15px] lsm:max-lg:px-[10px] border-t-[1px] boder-[#EAEAEA]'>
           <form className='flex pr-[5px] bg-[#F5FBFF] h-full w-full rounded-[23px] items-center' onSubmit={(e) => handleSubmit(e)}>
               <input ref={inputRef} type="text" autoFocus  className='lsm:w-[150px] lsm:max-lg:w-[200px] messageInput flex-1 outline-none bg-transparent text-[#064A85] font-[Poppins] font-[500] text-[16px] placeholder-[#064A85] placeholder-opacity-[0.5] px-[15px]' placeholder='Type a message...' />
               <button className='min-w-[33px] h-[50px] flex items-center justify-center mr-[5px] ' type='submit'>
@@ -179,7 +180,7 @@ export default function Page() {
           </form>
         </div>
         {
-          showInfo && <div className="  w-full h-full fixed top-0 left-0 z-[50]  inset-0 bg-white-900 bg-opacity-50 backdrop-blur-sm" onClick={()=>{handleshowInfo()}}/>
+          showInfo && <div className="w-full h-full fixed top-0 left-0 z-[50]  inset-0 bg-black bg-opacity-5 backdrop-blur-[1.5px]" onClick={()=>{handleshowInfo()}}/>
         }
         {group && user && <ChannelInfo infoRef={infoRef} handleshowInfo={handleshowInfo} group={group} userId={user.id}/>}
       </div>
