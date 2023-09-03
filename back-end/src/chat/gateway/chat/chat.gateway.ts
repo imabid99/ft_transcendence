@@ -1166,11 +1166,14 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
         this.server.to(user.username).emit("errorNotif", {message: `you are not allowed to remove this group password`, type: false});
         return;
       }
+<<<<<<< HEAD
       if(group.type === "public")
       {
         this.server.to(user.username).emit("errorNotif", {message: `this group already public`, type: false});
         return;
       }
+=======
+>>>>>>> 157479dc19e3d6fac07ffb4e71813d393bbb9091
       await this.prisma.channels.update({
         where: {
           id: payload.groupId,

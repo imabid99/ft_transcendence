@@ -374,3 +374,4 @@ export default function ChannelInfo({infoRef, handleshowInfo, group, userId}: Ch
         </div>
     )
 }
+
