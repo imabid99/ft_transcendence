@@ -30,20 +30,19 @@ world.gravity.set(0, -9.82, 0);
 
 // CANNON Materials
 
-// const simamaterial = new CANNON.Material('sima')
-// const plasticmaterial = new CANNON.Material('plastic')
-const defaultMaterial = new CANNON.Material('defaultMaterial')
+const simamaterial = new CANNON.Material('sima')
+const plasticmaterial = new CANNON.Material('plastic')
+// const defaultMaterial = new CANNON.Material('defaultMaterial')
 
 const defaultcontactmaterial = new CANNON.ContactMaterial(
-  defaultMaterial,
-  defaultMaterial,
+  simamaterial,
+  plasticmaterial,
   {
-    friction: 0.1,
-    restitution: 0.7
+    friction: 0,
+    restitution: 2
   }
 )
 world.addContactMaterial(defaultcontactmaterial)
-world.defaultContactMaterial = defaultcontactmaterial
 
 //ball physics
 
@@ -52,13 +51,14 @@ const ballshape = new CANNON.Sphere(ballradius)
 const ballBody = new CANNON.Body({
   mass: 3,
   position: new CANNON.Vec3(0, 0, 0),
-  shape: ballshape
+  shape: ballshape,
+  material: plasticmaterial
 })
 world.addBody(ballBody)
 
 window.addEventListener('keydown', (event) => {
   if (event.key === ' ') { // Space key
-    const bounceForce = new CANNON.Vec3(10, 0, 1); // Adjust the force as needed
+    const bounceForce = new CANNON.Vec3(50, 0,20);
     ballBody.applyImpulse(bounceForce, ballBody.position);
   }
 });
@@ -84,14 +84,17 @@ const paddleshape = new CANNON.Box(new CANNON.Vec3(paddlewidth/2, paddleheight/2
 const paddle1body = new CANNON.Body({
   mass: 0,
   shape: paddleshape,
-  position: new CANNON.Vec3(paddle1x, paddle1y, paddle1z)
+  position: new CANNON.Vec3(paddle1x, paddle1y, paddle1z),
+  material: simamaterial
 })
 const paddle2body = new CANNON.Body({
   mass: 0,
   shape: paddleshape,
-  position: new CANNON.Vec3(paddle1x, paddle1y, -paddle1z)
+  position: new CANNON.Vec3(paddle1x, paddle1y, -paddle1z),
+  material: simamaterial
 })
-world.addBody(paddle1body, paddle2body) 
+world.addBody(paddle1body) 
+world.addBody(paddle2body) 
 
 // WALLS physics
 const wallwidth = 7
@@ -106,14 +109,17 @@ const wallshape = new CANNON.Box(new CANNON.Vec3(wallwidth/2, wallheight/2, wall
 const wall1body = new CANNON.Body({
   mass: 0,
   shape: wallshape,
-  position: new CANNON.Vec3(wallx, wally, wallz)
+  position: new CANNON.Vec3(wallx, wally, wallz),
+  material: simamaterial
 })
 const wall2body = new CANNON.Body({
   mass: 0,
   shape: wallshape,
-  position: new CANNON.Vec3(-wallx, wally, wallz)
+  position: new CANNON.Vec3(-wallx, wally, wallz),
+  material: simamaterial
 })
-world.addBody(wall1body, wall2body) 
+world.addBody(wall1body)
+world.addBody(wall2body)
 
 
 
@@ -130,6 +136,8 @@ const wall2 = new THREE.Mesh(wallG, wallM)
 wall2.position.set(-wallx, wally, wallz)
 scene.add(wall2)
 wall2.castShadow = true
+console.log(wall2.position)
+console.log(wall2body.position)
 
 // BOX
 const boxG =  new THREE.BoxGeometry(paddlewidth, paddleheight, paddledepth)
@@ -233,6 +241,21 @@ function updatebox2() {
   }
 }
 
+//BOUNCING
+
+function handleCollision(event) {
+  const contact = event.contact;
+
+  // Check if the collision involves the ball
+  if (contact.bi === ballBody || contact.bj === ballBody) {
+    // Apply an impulse to the ball to simulate bouncing
+    const impulse = new CANNON.Vec3(0, 1, 100); // Adjust the force as needed
+    ballBody.applyImpulse(impulse, ballBody.position);
+  }
+}
+
+// Listen for collisions
+world.addEventListener('beginContact', handleCollision);
 
 
 // render loop
@@ -359,6 +382,9 @@ camera.lookAt(0, 0, 0)
 // Controls
 const controls = new OrbitControls(camera, canvas)
 controls.enableDamping = true
+
+
+// CANNON debug renderer
 
 /**
  * Renderer
