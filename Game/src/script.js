@@ -21,7 +21,23 @@ const scene = new THREE.Scene()
 const textureLoader = new THREE.TextureLoader()
 
 const matcaptexture = textureLoader.load('/textures/matcaps/8.png')
+const golfballtexture = textureLoader.load('/textures/golfball/obeaj.png')
+const cubetextureloader = new THREE.CubeTextureLoader()
 
+// Environment map
+
+// LDR cube texture
+const environmentmap = cubetextureloader.load([
+  'textures/skyMap/px.png',
+  'textures/skyMap/nx.png',
+  'textures/skyMap/py.png',
+  'textures/skyMap/ny.png',
+  'textures/skyMap/pz.png',
+  'textures/skyMap/nz.png'
+])
+
+// scene.environment = environmentmap
+scene.background = environmentmap
 
 //CANNON WORLD
 
@@ -294,21 +310,24 @@ floor2.receiveShadow = true
 
 //BALL
 
-const ballMaterial = new THREE.MeshStandardMaterial({ color: '#FFFFFF' })
+const ballMaterial = new THREE.MeshStandardMaterial()
+
 // const ballMaterial = new THREE.MeshMatcapMaterial({ color: '#F0FFFF' })
 // ballMaterial.matcap = matcaptexture
-
-
+ballMaterial.roughness = 0.02
+ballMaterial.metalness = 1
+// ballMaterial.color = 0x000000
+ballMaterial.envMap = environmentmap
+// ballMaterial.map = golfballtexture
+gui.add(ballMaterial, 'roughness').min(0).max(5).step(0.001)
+gui.add(ballMaterial, 'metalness').min(0).max(5).step(0.001)
 const ball = new THREE.Mesh(
     new THREE.SphereGeometry( ballradius, 32, 16 ),
     ballMaterial
 )
-ballMaterial.roughness = 0.5
-ballMaterial.metalness = 0.1
-ball.position.set(0, 0.4, 0)
+ball.position.set(0, 0.36, 0)
 scene.add(ball)
 ball.castShadow = true
-
 
 
 
@@ -340,7 +359,7 @@ Mylight.shadow.camera.bottom = -25;
 Mylight.shadow.camera.near = -50;
 Mylight.shadow.camera.far = 60;
 
-const Directionallightcamerahelper = new THREE.CameraHelper(Mylight.shadow.camera)
+// const Directionallightcamerahelper = new THREE.CameraHelper(Mylight.shadow.camera)
 // scene.add(Directionallightcamerahelper)
 
 
@@ -382,7 +401,6 @@ camera.lookAt(0, 0, 0)
 // Controls
 const controls = new OrbitControls(camera, canvas)
 controls.enableDamping = true
-
 
 // CANNON debug renderer
 
