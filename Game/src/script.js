@@ -22,6 +22,13 @@ const textureLoader = new THREE.TextureLoader()
 
 const matcaptexture = textureLoader.load('/textures/matcaps/8.png')
 const golfballtexture = textureLoader.load('/textures/golfball/obeaj.png')
+
+const ballstonecolor = textureLoader.load('/textures/ballstone/ballstone_basecolor.jpg')
+const ballstoneambientOcclusion = textureLoader.load('/textures/ballstone/ballstone_ambientOcclusion.jpg')
+const ballstoneheight = textureLoader.load('/textures/ballstone/ballstone_height.png')
+const ballstonenormal = textureLoader.load('/textures/ballstone/ballstone_normal.jpg')
+const ballstoneroughness = textureLoader.load('/textures/ballstone/ballstone_roughness.jpg')
+
 const cubetextureloader = new THREE.CubeTextureLoader()
 
 // Environment map
@@ -75,6 +82,7 @@ world.addBody(ballBody)
 window.addEventListener('keydown', (event) => {
   if (event.key === ' ') { // Space key
     const bounceForce = new CANNON.Vec3(50, 0,20);
+    // const bounceForce = new CANNON.Vec3(10, 0,0);
     ballBody.applyImpulse(bounceForce, ballBody.position);
   }
 });
@@ -133,7 +141,9 @@ const wall2body = new CANNON.Body({
   shape: wallshape,
   position: new CANNON.Vec3(-wallx, wally, wallz),
   material: simamaterial
+  
 })
+
 world.addBody(wall1body)
 world.addBody(wall2body)
 
@@ -141,7 +151,7 @@ world.addBody(wall2body)
 
 // WALLS
 const wallG = new THREE.BoxGeometry(wallwidth, wallheight, walldepth)
-const wallM = new THREE.MeshStandardMaterial({ color: '#F0FFFF' })
+const wallM = new THREE.MeshStandardMaterial({ color: '#F0FFFF'})
 
 const wall1 = new THREE.Mesh(wallG, wallM)
 wall1.position.set(wallx, wally, wallz)
@@ -314,15 +324,24 @@ const ballMaterial = new THREE.MeshStandardMaterial()
 
 // const ballMaterial = new THREE.MeshMatcapMaterial({ color: '#F0FFFF' })
 // ballMaterial.matcap = matcaptexture
-ballMaterial.roughness = 0.02
-ballMaterial.metalness = 1
 // ballMaterial.color = 0x000000
-ballMaterial.envMap = environmentmap
-// ballMaterial.map = golfballtexture
+// ballMaterial.envMap = environmentmap
+ballMaterial.map = ballstonecolor
+ballMaterial.aoMap = ballstoneambientOcclusion
+ballMaterial.aoMapIntensity = 10
+ballMaterial.displacementMap = ballstoneheight
+ballMaterial.displacementScale = 0.01
+ballMaterial.roughnessMap = ballstoneroughness
+ballMaterial.normalMap = ballstonenormal
+ballMaterial.transparent = true
+
+// ballMaterial.roughness = 0.02
+// ballMaterial.metalness = 1
 gui.add(ballMaterial, 'roughness').min(0).max(5).step(0.001)
 gui.add(ballMaterial, 'metalness').min(0).max(5).step(0.001)
 const ball = new THREE.Mesh(
     new THREE.SphereGeometry( ballradius, 32, 16 ),
+    // new THREE.BoxGeometry( 1, 1, 1 ),
     ballMaterial
 )
 ball.position.set(0, 0.36, 0)
@@ -430,7 +449,11 @@ const tick = () =>
 
     ball.position.copy(ballBody.position)
     // console.log(ballBody.position)
-
+    const angularVelocity = ballBody.angularVelocity;
+    const rotationSpeed = 0.1;
+    // ballMaterial.map.rotation += angularVelocity.x * rotationSpeed;
+    // ballMaterial.map.rotation += angularVelocity.y * rotationSpeed;
+    ballMaterial.map.rotation += angularVelocity.z * rotationSpeed;
     // Update controls
     controls.update()
 
