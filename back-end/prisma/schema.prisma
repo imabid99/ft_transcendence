@@ -11,7 +11,7 @@ datasource db {
 }
 
 model User {
-  id             Int         @id @unique @default(autoincrement())
+  id             String      @id @default(uuid())
   id42           Int?
   email          String      @unique
   username       String      @unique @default("")
@@ -30,7 +30,7 @@ model User {
 
 model Profile {
   user            User      @relation(fields: [userId], references: [id])
-  userId          Int       @unique
+  userId          String       @unique
   firstName       String
   lastName        String
   email           String
@@ -54,7 +54,7 @@ model channels {
   password        String?   @default("")
   accessPassword  String?   @default("")
   Creator         User?     @relation(fields: [userId], references: [id])
-  userId          Int?
+  userId          String?
   Members         User[]    @relation("Members")
   Owners          User[]    @relation("Owners")
   Admins          User[]    @relation("Admins")
@@ -73,7 +73,7 @@ model Message {
   content    String
   createdAt  DateTime  @default(now())
   User       User?     @relation(fields: [userId], references: [id])
-  userId     Int?
+  userId     String?
   channels   channels? @relation(fields: [channelsId], references: [id])
   channelsId String?
 }
@@ -82,13 +82,13 @@ model BlockList {
   id        Int   @id @default(autoincrement())
   blockedId Int
   User      User? @relation(fields: [userId], references: [id])
-  userId    Int?
+  userId    String?
 }
 
 model Muted {
   id        Int   @id @default(autoincrement())
   User      User? @relation(fields: [userId], references: [id])
-  userId    Int?
+  userId    String?
   channelId   String?
   timeOnMute DateTime  @default(now())
   timeOffMute DateTime? 

@@ -93,7 +93,7 @@ export class UserService {
   }
 
   async changePass(pass: chPass, id: string) {
-    const user = await this.prisma.user.findUnique({ where: { id: +id } });
+    const user = await this.prisma.user.findUnique({ where: { id: id } });
     const valid = await bcrypt.compare(pass.password, user.password);
 
     if (valid) {
@@ -101,7 +101,7 @@ export class UserService {
       const hash = await bcrypt.hash(pass.newPassword, salt);
       await this.prisma.user.update({
         where: {
-          id: +id,
+          id: id,
         },
         data: {
           password: hash,
@@ -126,7 +126,7 @@ export class UserService {
 
     const user = await this.prisma.user.findUnique({
       where: {
-        id: +userId,
+        id: userId,
       },
     });
 
@@ -137,7 +137,7 @@ export class UserService {
     if (!isNaN(+id)) {
       const user = await this.prisma.user.findUnique({
         where: {
-          id: +id,
+          id: id,
         },
       });
       if (!user) return "Not found";
@@ -194,7 +194,7 @@ export class UserService {
     );
     const user = await this.prisma.user.findUnique({
       where: {
-        id: +decoded.userId,
+        id: decoded.userId,
       },
     });
     delete user.password;

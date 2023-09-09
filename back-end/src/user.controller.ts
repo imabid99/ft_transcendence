@@ -60,7 +60,7 @@ export class userController {
   }
 
   @Get("profiles")
-  // @UseGuards(AuthGuard("jwt"))
+  @UseGuards(AuthGuard("jwt"))
   profile() {
     return this.userService.getProfiles();
   }

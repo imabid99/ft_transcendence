@@ -106,6 +106,7 @@ __decorate([
 ], userController.prototype, "Callback", null);
 __decorate([
     (0, common_1.Get)("profiles"),
+    (0, common_1.UseGuards)((0, passport_1.AuthGuard)("jwt")),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", []),
     __metadata("design:returntype", void 0)
