@@ -63,7 +63,7 @@ export class UserService {
       return "user exist";
     }
   }
-  generateToken(userId: number, username: string, email: string): string {
+  generateToken(userId: string, username: string, email: string): string {
     const token = jwt.sign(
       { userId, username, email },
       process.env.JWT_SECRET,
@@ -134,7 +134,7 @@ export class UserService {
   }
 
   async getProfile(id: string) {
-    if (!isNaN(+id)) {
+    if (!id) {
       const user = await this.prisma.user.findUnique({
         where: {
           id: id,
@@ -148,7 +148,7 @@ export class UserService {
     }
     const profile = await this.prisma.profile.findUnique({
       where: {
-        userId: +id,
+        userId: id,
       },
     });
     return profile;
@@ -171,7 +171,7 @@ export class UserService {
         data: {
           username: user.username,
           email: user.email,
-          id42: +user.fortyTwoId,
+          id42: user.fortyTwoId,
           password: "hhhh",
           profile: {
             create: {
@@ -205,19 +205,19 @@ export class UserService {
     id: string,
     userId: string
   ): Promise<{ iBlocked: boolean; heBlocked: boolean }> {
-    if (isNaN(+id) || isNaN(+userId)) {
+    if (id || userId) {
       return { iBlocked: false, heBlocked: false };
     }
     const blocked = await this.prisma.BlockList.findMany({
       where: {
-        userId: +id,
-        blockedId: +userId,
+        userId: id,
+        blockedId: userId,
       },
     });
     const blocked2 = await this.prisma.BlockList.findMany({
       where: {
-        userId: +userId,
-        blockedId: +id,
+        userId: userId,
+        blockedId: id,
       },
     });
     if (blocked.length > 0) {

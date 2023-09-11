@@ -16,7 +16,7 @@ export declare class UserService {
     getUsers(): Promise<import(".prisma/client").User[]>;
     getProfiles(): Promise<import(".prisma/client").Profile[]>;
     addUser(userData: UserData): Promise<"User created" | "user exist">;
-    generateToken(userId: number, username: string, email: string): string;
+    generateToken(userId: string, username: string, email: string): string;
     login(userData: UserDataLogin): Promise<string>;
     changePass(pass: chPass, id: string): Promise<"invalid password" | "Changed successfully">;
     intraJWT(email: string): Promise<string>;

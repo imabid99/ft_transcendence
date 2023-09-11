@@ -25,7 +25,7 @@ export class ChatService {
         }
         
         const isMumber: boolean = channel.Members?.some((member) => {
-          return member.id === +myId;
+          return member.id === myId;
         });
         if (!isMumber) {
           throw new NotFoundException("Channel not found");
@@ -34,10 +34,10 @@ export class ChatService {
         delete channel.accessPassword;
         // check if i am admin or owner
         const isAdmin: boolean = channel.Admins.some((admin) => {
-          return admin.id === +myId;
+          return admin.id === myId;
         });
         const isOwner: boolean = channel.Owners.some((owner) => {
-          return owner.id === +myId;
+          return owner.id === myId;
         });
         if (!isAdmin && !isOwner) {
           delete channel.Band;
@@ -49,7 +49,7 @@ export class ChatService {
     async getMessages(id: string): Promise<any> {
         const messages = await this.prisma.message.findMany({
         where: {
-            userId: +id,
+            userId: id,
         },
         });
         return messages;
@@ -60,7 +60,7 @@ export class ChatService {
           where: {
             Members: {
               some: {
-                id: +id,
+                id: id,
               },
             },
           },
@@ -101,7 +101,7 @@ export class ChatService {
         return publicChannels;
     }
 
-    async checkMute(id: number, channelId: string): Promise<any> {
+    async checkMute(id: String, channelId: string): Promise<any> {
         const channel = await this.prisma.channels.findUnique({
           where: {
             id: channelId,

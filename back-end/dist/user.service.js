@@ -130,7 +130,7 @@ let UserService = exports.UserService = class UserService {
         return user ? user : null;
     }
     async getProfile(id) {
-        if (!isNaN(+id)) {
+        if (!id) {
             const user = await this.prisma.user.findUnique({
                 where: {
                     id: id,
@@ -145,7 +145,7 @@ let UserService = exports.UserService = class UserService {
         }
         const profile = await this.prisma.profile.findUnique({
             where: {
-                userId: +id,
+                userId: id,
             },
         });
         return profile;
@@ -169,7 +169,7 @@ let UserService = exports.UserService = class UserService {
                 data: {
                     username: user.username,
                     email: user.email,
-                    id42: +user.fortyTwoId,
+                    id42: user.fortyTwoId,
                     password: "hhhh",
                     profile: {
                         create: {
@@ -195,19 +195,19 @@ let UserService = exports.UserService = class UserService {
         return user;
     }
     async isBlocked(id, userId) {
-        if (isNaN(+id) || isNaN(+userId)) {
+        if (id || userId) {
             return { iBlocked: false, heBlocked: false };
         }
         const blocked = await this.prisma.BlockList.findMany({
             where: {
-                userId: +id,
-                blockedId: +userId,
+                userId: id,
+                blockedId: userId,
             },
         });
         const blocked2 = await this.prisma.BlockList.findMany({
             where: {
-                userId: +userId,
-                blockedId: +id,
+                userId: userId,
+                blockedId: id,
             },
         });
         if (blocked.length > 0) {

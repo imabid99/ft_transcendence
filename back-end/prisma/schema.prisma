@@ -26,11 +26,19 @@ model User {
   channelsMuts   channels[]  @relation("MutedUsers")
   channelsBand   channels[]  @relation("BannedUsers")
   muted          Muted[]
+  Friendship     Friendship[]
+}
+
+model Friendship {
+  id     String @id @default(uuid())
+  sender User   @relation(fields: [userId], references: [id])
+  userId String @unique
+  status String @default("") // Accepted , Refused , Blocked , Receaved
 }
 
 model Profile {
   user            User      @relation(fields: [userId], references: [id])
-  userId          String       @unique
+  userId          String    @unique
   firstName       String
   lastName        String
   email           String
@@ -67,9 +75,9 @@ model channels {
 
 model Message {
   id         Int       @id @default(autoincrement())
-  fromId     Int?
-  fromName String?
-  toId       Int?
+  fromId     String?
+  fromName   String?
+  toId       String?
   content    String
   createdAt  DateTime  @default(now())
   User       User?     @relation(fields: [userId], references: [id])
@@ -79,17 +87,17 @@ model Message {
 }
 
 model BlockList {
-  id        Int   @id @default(autoincrement())
+  id        Int     @id @default(autoincrement())
   blockedId Int
-  User      User? @relation(fields: [userId], references: [id])
+  User      User?   @relation(fields: [userId], references: [id])
   userId    String?
 }
 
 model Muted {
-  id        Int   @id @default(autoincrement())
-  User      User? @relation(fields: [userId], references: [id])
-  userId    String?
+  id          Int       @id @default(autoincrement())
+  User        User?     @relation(fields: [userId], references: [id])
+  userId      String?
   channelId   String?
-  timeOnMute DateTime  @default(now())
-  timeOffMute DateTime? 
+  timeOnMute  DateTime  @default(now())
+  timeOffMute DateTime?
 }

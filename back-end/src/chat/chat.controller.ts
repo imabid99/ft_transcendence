@@ -56,6 +56,6 @@ export class ChatController {
       @Param("userId") userId: string,
       @Param("grouptId") groupId: string
     ): Promise<{ iMute: boolean; heMute: boolean }> {
-      return this.chatService.checkMute(+userId, groupId);
+      return this.chatService.checkMute(userId, groupId);
     }
 }

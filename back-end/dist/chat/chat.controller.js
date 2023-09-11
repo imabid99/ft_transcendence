@@ -38,7 +38,7 @@ let ChatController = exports.ChatController = class ChatController {
         return this.chatService.getChannels(decoded.userId);
     }
     async isMute(userId, groupId) {
-        return this.chatService.checkMute(+userId, groupId);
+        return this.chatService.checkMute(userId, groupId);
     }
 };
 __decorate([
