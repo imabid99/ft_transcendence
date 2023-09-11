@@ -1,8 +1,10 @@
 import * as THREE from 'three'
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js'
+import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js'
 import * as dat from 'lil-gui'
 import * as CANNON from 'cannon';
-// import * as Matter from 'matter-js';
+
+
 /**
  * Base
  */
@@ -14,6 +16,37 @@ const canvas = document.querySelector('canvas.webgl')
 
 // Scene
 const scene = new THREE.Scene()
+
+// Models
+
+// const modellight = new THREE.AmbientLight(0xffffff, 10);
+// modellight.position.set(0, 0, 0);
+
+const gltfLoader = new GLTFLoader()
+gltfLoader.load('/models/pinetree/pinetree.glb', (gltf) => {
+  console.log(gltf)
+  // const model1 = gltf.scene
+  // model1.position.set(-30, 0, 0);
+  // model1.scale.set(10, 10, 10);
+  // model1.add(ambientLight);
+  // model1.roughness  = 0
+  // model1.metalness  = 0
+  // scene.add(model1)
+})
+
+gltfLoader.load('/models/trees/Trees.glb', (gltf) => {
+  console.log(gltf)
+  const model = gltf.scene
+  model.position.set(-22, -1, 0);
+  model.scale.set(0.05, 0.05, 0.05);
+  const model2 = model.clone();
+  model2.position.set(26, -1, 0);
+  // model.add(ambientLight);
+  // model.roughness  = 0
+  // model.metalness  = 0
+  scene.add(model)
+  scene.add(model2)
+})
 
 /**
  * Textures
@@ -28,6 +61,69 @@ const ballstoneambientOcclusion = textureLoader.load('/textures/ballstone/ballst
 const ballstoneheight = textureLoader.load('/textures/ballstone/ballstone_height.png')
 const ballstonenormal = textureLoader.load('/textures/ballstone/ballstone_normal.jpg')
 const ballstoneroughness = textureLoader.load('/textures/ballstone/ballstone_roughness.jpg')
+
+
+//Watermelon
+
+const watermeloncolor = textureLoader.load('/textures/watermelon/watermelon_basecolor.jpg')
+const watermelonambientOcclusion = textureLoader.load('/textures/watermelon/watermelon_ambientOcclusion.jpg')
+const watermelonheight = textureLoader.load('/textures/watermelon/watermelon_height.png')
+const watermelonnormal = textureLoader.load('/textures/watermelon/watermelon_normal.jpg')
+const watermelonroughness = textureLoader.load('/textures/watermelon/watermelon_roughness.jpg')
+
+//Grass
+
+const Grasscolor = textureLoader.load('/textures/Grass/Grass_basecolor.jpg')
+const GrassambientOcclusion = textureLoader.load('/textures/Grass/Grass_ambientOcclusion.jpg')
+const Grassheight = textureLoader.load('/textures/Grass/Grass_height.png')
+const Grassnormal = textureLoader.load('/textures/Grass/Grass_normal.jpg')
+const Grassroughness = textureLoader.load('/textures/Grass/Grass_roughness.jpg')
+
+Grasscolor.repeat.set(50,50)
+GrassambientOcclusion.repeat.set(50,50)
+Grassheight.repeat.set(50,50)
+Grassnormal.repeat.set(50,50)
+Grassroughness.repeat.set(50,50)
+
+Grasscolor.wrapS = THREE.RepeatWrapping
+GrassambientOcclusion.wrapS = THREE.RepeatWrapping
+Grassheight.wrapS = THREE.RepeatWrapping
+Grassnormal.wrapS = THREE.RepeatWrapping
+Grassroughness.wrapS = THREE.RepeatWrapping
+
+Grasscolor.wrapT = THREE.RepeatWrapping
+GrassambientOcclusion.wrapT = THREE.RepeatWrapping
+Grassheight.wrapT = THREE.RepeatWrapping
+Grassnormal.wrapT = THREE.RepeatWrapping
+Grassroughness.wrapT = THREE.RepeatWrapping
+
+//Tiles
+
+const Tilescolor = textureLoader.load('/textures/Tiles/Tiles_basecolor.jpg')
+const TilesambientOcclusion = textureLoader.load('/textures/Tiles/Tiles_ambientOcclusion.jpg')
+const Tilesheight = textureLoader.load('/textures/Tiles/Tiles_height.png')
+const Tilesnormal = textureLoader.load('/textures/Tiles/Tiles_normal.jpg')
+const Tilesroughness = textureLoader.load('/textures/Tiles/Tiles_roughness.jpg')
+
+Tilescolor.repeat.set(5,5)
+TilesambientOcclusion.repeat.set(5,5)
+Tilesheight.repeat.set(5,5)
+Tilesnormal.repeat.set(5,5)
+Tilesroughness.repeat.set(5,5)
+
+Tilescolor.wrapS = THREE.RepeatWrapping
+TilesambientOcclusion.wrapS = THREE.RepeatWrapping
+Tilesheight.wrapS = THREE.RepeatWrapping
+Tilesnormal.wrapS = THREE.RepeatWrapping
+Tilesroughness.wrapS = THREE.RepeatWrapping
+
+Tilescolor.wrapT = THREE.RepeatWrapping
+TilesambientOcclusion.wrapT = THREE.RepeatWrapping
+Tilesheight.wrapT = THREE.RepeatWrapping
+Tilesnormal.wrapT = THREE.RepeatWrapping
+Tilesroughness.wrapT = THREE.RepeatWrapping
+
+
 
 const cubetextureloader = new THREE.CubeTextureLoader()
 
@@ -73,19 +169,27 @@ const ballradius = 0.35
 const ballshape = new CANNON.Sphere(ballradius)
 const ballBody = new CANNON.Body({
   mass: 3,
-  position: new CANNON.Vec3(0, 0, 0),
+  position: new CANNON.Vec3(0, 0.4, 0),
   shape: ballshape,
   material: plasticmaterial
 })
 world.addBody(ballBody)
 
+let serve = 0
+
 window.addEventListener('keydown', (event) => {
-  if (event.key === ' ') { // Space key
-    const bounceForce = new CANNON.Vec3(50, 0,20);
-    // const bounceForce = new CANNON.Vec3(10, 0,0);
-    ballBody.applyImpulse(bounceForce, ballBody.position);
+  let servedirection = Math.random() < 0.5 ? -50 : 50
+  if (event.key === ' ' ) 
+  {
+    if(serve == 0)
+    {
+      const bounceForce = new CANNON.Vec3(servedirection, 0,-20);
+      ballBody.applyImpulse(bounceForce, ballBody.position);
+      serve = 1
+    }
   }
 });
+ballBody.angularDamping = 0.1
 
 // floor physics
 const floorshape = new CANNON.Plane()
@@ -162,8 +266,8 @@ const wall2 = new THREE.Mesh(wallG, wallM)
 wall2.position.set(-wallx, wally, wallz)
 scene.add(wall2)
 wall2.castShadow = true
-console.log(wall2.position)
-console.log(wall2body.position)
+// console.log(wall2.position)
+// console.log(wall2body.position)
 
 // BOX
 const boxG =  new THREE.BoxGeometry(paddlewidth, paddleheight, paddledepth)
@@ -269,25 +373,26 @@ function updatebox2() {
 
 //BOUNCING
 
-function handleCollision(event) {
-  const contact = event.contact;
-
-  // Check if the collision involves the ball
-  if (contact.bi === ballBody || contact.bj === ballBody) {
-    // Apply an impulse to the ball to simulate bouncing
-    const impulse = new CANNON.Vec3(0, 1, 100); // Adjust the force as needed
-    ballBody.applyImpulse(impulse, ballBody.position);
-  }
-}
+// function handleCollision(event) {
+//   const contact = event.contact;
+  
+//   // Check if the collision involves the ball
+//   if (contact.bi === ballBody || contact.bj === ballBody) {
+//     // Apply an impulse to the ball to simulate bouncing
+//     const impulse = new CANNON.Vec3(0, 1, 100);
+//     ballBody.applyImpulse(impulse, ballBody.position);
+//   }
+// }
 
 // Listen for collisions
-world.addEventListener('beginContact', handleCollision);
+// world.addEventListener('beginContact', handleCollision);
+
 
 
 // render loop
 function animate() {
   requestAnimationFrame(animate);
-
+  
   // Update box based on key states
   updatebox2();
   updatebox();
@@ -298,25 +403,64 @@ function animate() {
 animate();
 
 // Floor
+
+const floor1material = new THREE.MeshStandardMaterial({ color: '#98FB98', metalness: 0.3,
+roughness: 1.2 })
+
 const floor = new THREE.Mesh(
-    new THREE.PlaneGeometry(20, 20),
-    new THREE.MeshStandardMaterial({ color: '#FFFFFF', metalness: 0.3,
-    roughness: 0.4, })
+  new THREE.PlaneGeometry(20, 20),
+  floor1material
 )
+gui.add(floor1material, 'roughness').min(0).max(5).step(0.001)
+gui.add(floor1material, 'metalness').min(0).max(5).step(0.001)
+
+// floor1material.map = Grasscolor
+// floor1material.aoMap = GrassambientOcclusion
+// floor1material.aoMapIntensity = 10
+// floor1material.displacementMap = Grassheight
+// floor1material.displacementScale = 0.01
+// floor1material.roughnessMap = Grassroughness
+// floor1material.normalMap = Grassnormal
+
 floor.rotation.x = - Math.PI * 0.5
 floor.position.y = 0
 floor.scale.set(10, 10, 10)
 scene.add(floor)
 floor.receiveShadow = true
+floor.geometry.setAttribute('uv2', new THREE.Float32BufferAttribute(floor.geometry.attributes.uv.array, 2))
 
+const floor2material = new THREE.MeshStandardMaterial({ color: '#4682B4' })
 const floor2 = new THREE.Mesh(
     new THREE.PlaneGeometry(20, 20),
-    new THREE.MeshStandardMaterial({ color: '#4682B4' })
+    floor2material
 )
 floor2.rotation.x = - Math.PI * 0.5
 floor2.position.y = 0.01
 scene.add(floor2)
 floor2.receiveShadow = true
+
+floor2material.map = Tilescolor
+floor2material.aoMap = TilesambientOcclusion
+floor2material.aoMapIntensity = 10
+floor2material.displacementMap = Tilesheight
+floor2material.displacementScale = 0.01
+floor2material.roughnessMap = Tilesroughness
+floor2material.normalMap = Tilesnormal
+floor2.geometry.setAttribute('uv2', new THREE.Float32BufferAttribute(floor2.geometry.attributes.uv.array, 2))
+
+// Stripe
+
+const stripematerial = new THREE.MeshStandardMaterial({ color: '#FFFFFF'})
+
+const stripe = new THREE.Mesh(
+  new THREE.PlaneGeometry(20, 0.1),
+  stripematerial
+)
+stripe.receiveShadow = true
+stripe.rotation.x = - Math.PI * 0.5
+stripe.position.y = 0.02
+scene.add(stripe)
+
 
 //BALL
 
@@ -326,17 +470,28 @@ const ballMaterial = new THREE.MeshStandardMaterial()
 // ballMaterial.matcap = matcaptexture
 // ballMaterial.color = 0x000000
 // ballMaterial.envMap = environmentmap
-ballMaterial.map = ballstonecolor
-ballMaterial.aoMap = ballstoneambientOcclusion
+
+
+// ballMaterial.map = ballstonecolor
+// ballMaterial.aoMap = ballstoneambientOcclusion
+// ballMaterial.aoMapIntensity = 10
+// ballMaterial.displacementMap = ballstoneheight
+// ballMaterial.displacementScale = 0.01
+// ballMaterial.roughnessMap = ballstoneroughness
+// ballMaterial.normalMap = ballstonenormal
+
+ballMaterial.map = watermeloncolor
+ballMaterial.aoMap = watermelonambientOcclusion
 ballMaterial.aoMapIntensity = 10
-ballMaterial.displacementMap = ballstoneheight
+ballMaterial.displacementMap = watermelonheight
 ballMaterial.displacementScale = 0.01
-ballMaterial.roughnessMap = ballstoneroughness
-ballMaterial.normalMap = ballstonenormal
+ballMaterial.roughnessMap = watermelonroughness
+ballMaterial.normalMap = watermelonnormal
+
 ballMaterial.transparent = true
 
-// ballMaterial.roughness = 0.02
-// ballMaterial.metalness = 1
+ballMaterial.roughness = 0.3
+ballMaterial.metalness = 0.08
 gui.add(ballMaterial, 'roughness').min(0).max(5).step(0.001)
 gui.add(ballMaterial, 'metalness').min(0).max(5).step(0.001)
 const ball = new THREE.Mesh(
@@ -344,7 +499,11 @@ const ball = new THREE.Mesh(
     // new THREE.BoxGeometry( 1, 1, 1 ),
     ballMaterial
 )
-ball.position.set(0, 0.36, 0)
+ball.position.set(0, 0.4, 0)
+// gui.add(ball.position, 'z').min(0).max(5).step(0.001)
+gui.add(ballBody.position, 'z').min(-20).max(20).step(0.001)
+
+ballBody.position.copy(ball.position)
 scene.add(ball)
 ball.castShadow = true
 
@@ -361,7 +520,7 @@ scene.add(ambientLight)
 
 // Directional light
 const Mylight = new THREE.DirectionalLight('#ffffff', 0.6)
-Mylight.position.set(4, 5, - 2)
+Mylight.position.set(-0.04, 4.5, - 4)
 // gui.add(Mylight, 'intensity').min(0).max(1).step(0.001)
 gui.add(Mylight.position, 'x').min(- 5).max(5).step(0.001)
 gui.add(Mylight.position, 'y').min(- 5).max(10).step(0.001)
@@ -434,6 +593,7 @@ renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2))
 
 renderer.shadowMap.enabled = true
 
+const initialRotation = new THREE.Quaternion();
 /**
  * Animate
  */
@@ -447,13 +607,17 @@ const tick = () =>
     //update physics world
     world.step(1/60, deltatime,3)
 
+    if(ballBody.position.z > 10 || ballBody.position.z < -10)
+    {
+      serve = 0
+      ballBody.position.set(0, 0.4, 0)
+      ballBody.velocity.set(0, 0, 0);
+      ballBody.quaternion.copy(initialRotation)
+      ballBody.angularVelocity.set(0, 0, 0);
+    }
+    ball.quaternion.copy(ballBody.quaternion)
     ball.position.copy(ballBody.position)
-    // console.log(ballBody.position)
-    const angularVelocity = ballBody.angularVelocity;
-    const rotationSpeed = 0.1;
-    // ballMaterial.map.rotation += angularVelocity.x * rotationSpeed;
-    // ballMaterial.map.rotation += angularVelocity.y * rotationSpeed;
-    ballMaterial.map.rotation += angularVelocity.z * rotationSpeed;
+    
     // Update controls
     controls.update()
 
