@@ -23,30 +23,57 @@ const scene = new THREE.Scene()
 // modellight.position.set(0, 0, 0);
 
 const gltfLoader = new GLTFLoader()
-gltfLoader.load('/models/pinetree/pinetree.glb', (gltf) => {
+gltfLoader.load('/models/naturescene/naturescene.glb', (gltf) => {
   console.log(gltf)
-  // const model1 = gltf.scene
-  // model1.position.set(-30, 0, 0);
-  // model1.scale.set(10, 10, 10);
-  // model1.add(ambientLight);
-  // model1.roughness  = 0
-  // model1.metalness  = 0
-  // scene.add(model1)
+  const model1 = gltf.scene
+  model1.position.set(0, 3, 0);
+  model1.scale.set(50, 50, 50);
+  model1.add(ambientLight);
+  model1.roughness  = 0
+  model1.metalness  = 0
+  scene.add(model1)
 })
 
-gltfLoader.load('/models/trees/Trees.glb', (gltf) => {
+gltfLoader.load('/models/rocks/rocks.glb', (gltf) => {
   console.log(gltf)
-  const model = gltf.scene
-  model.position.set(-22, -1, 0);
-  model.scale.set(0.05, 0.05, 0.05);
-  const model2 = model.clone();
-  model2.position.set(26, -1, 0);
-  // model.add(ambientLight);
-  // model.roughness  = 0
-  // model.metalness  = 0
-  scene.add(model)
+  const model1 = gltf.scene
+  model1.position.set(-9, 2, 0);
+  model1.rotation.y = - Math.PI * 0.5
+  model1.scale.set(50, 30, 30);
+
+  model1.traverse((child) => {
+    if (child.isMesh) {
+      const material = child.material;
+
+      if (material.hasOwnProperty('roughness')) {
+        material.roughness = 5;
+      }
+
+      if (material.hasOwnProperty('metalness')) {
+        material.metalness = 0; 
+      }
+    }
+  });
+
+  const model2 = model1.clone()
+  model2.position.set(9, 2, 0);
+  model2.rotation.y = Math.PI * 0.5
+  scene.add(model1)
   scene.add(model2)
 })
+
+// TREES
+
+// gltfLoader.load('/models/trees/Trees.glb', (gltf) => {
+//   console.log(gltf)
+//   const model = gltf.scene
+//   model.position.set(-22, -1, 0);
+//   model.scale.set(0.05, 0.05, 0.05);
+//   const model2 = model.clone();
+//   model2.position.set(26, -1, 0);
+//   scene.add(model)
+//   scene.add(model2)
+// })
 
 /**
  * Textures
@@ -78,6 +105,11 @@ const GrassambientOcclusion = textureLoader.load('/textures/Grass/Grass_ambientO
 const Grassheight = textureLoader.load('/textures/Grass/Grass_height.png')
 const Grassnormal = textureLoader.load('/textures/Grass/Grass_normal.jpg')
 const Grassroughness = textureLoader.load('/textures/Grass/Grass_roughness.jpg')
+
+// Snow Particle
+
+const particlesnow = textureLoader.load('/textures/particles/3.png')
+
 
 Grasscolor.repeat.set(50,50)
 GrassambientOcclusion.repeat.set(50,50)
@@ -255,7 +287,7 @@ world.addBody(wall2body)
 
 // WALLS
 const wallG = new THREE.BoxGeometry(wallwidth, wallheight, walldepth)
-const wallM = new THREE.MeshStandardMaterial({ color: '#F0FFFF'})
+const wallM = new THREE.MeshStandardMaterial({ color: '#3a3a34'})
 
 const wall1 = new THREE.Mesh(wallG, wallM)
 wall1.position.set(wallx, wally, wallz)
@@ -404,15 +436,14 @@ animate();
 
 // Floor
 
-const floor1material = new THREE.MeshStandardMaterial({ color: '#98FB98', metalness: 0.3,
-roughness: 1.2 })
+const floor1material = new THREE.MeshStandardMaterial({ color: '#006b00' })
 
 const floor = new THREE.Mesh(
   new THREE.PlaneGeometry(20, 20),
   floor1material
 )
-gui.add(floor1material, 'roughness').min(0).max(5).step(0.001)
-gui.add(floor1material, 'metalness').min(0).max(5).step(0.001)
+// gui.add(floor1material, 'roughness').min(0).max(5).step(0.001)
+// gui.add(floor1material, 'metalness').min(0).max(5).step(0.001)
 
 // floor1material.map = Grasscolor
 // floor1material.aoMap = GrassambientOcclusion
@@ -492,8 +523,8 @@ ballMaterial.transparent = true
 
 ballMaterial.roughness = 0.3
 ballMaterial.metalness = 0.08
-gui.add(ballMaterial, 'roughness').min(0).max(5).step(0.001)
-gui.add(ballMaterial, 'metalness').min(0).max(5).step(0.001)
+// gui.add(ballMaterial, 'roughness').min(0).max(5).step(0.001)
+// gui.add(ballMaterial, 'metalness').min(0).max(5).step(0.001)
 const ball = new THREE.Mesh(
     new THREE.SphereGeometry( ballradius, 32, 16 ),
     // new THREE.BoxGeometry( 1, 1, 1 ),
@@ -501,20 +532,46 @@ const ball = new THREE.Mesh(
 )
 ball.position.set(0, 0.4, 0)
 // gui.add(ball.position, 'z').min(0).max(5).step(0.001)
-gui.add(ballBody.position, 'z').min(-20).max(20).step(0.001)
+// gui.add(ballBody.position, 'z').min(-20).max(20).step(0.001)
 
 ballBody.position.copy(ball.position)
 scene.add(ball)
 ball.castShadow = true
 
+// PRTICLES
 
+const particlesGeometry = new THREE.BufferGeometry(1, 32, 32)
+
+const count = 20000
+const positions = new Float32Array(count * 3)
+
+for(let i = 0; i < count * 3; i++)
+{
+  positions[i] = (Math.random() - 0.5)* 150
+}
+
+particlesGeometry.setAttribute('position', new THREE.BufferAttribute(positions, 3))
+
+const particlesMaterial = new THREE.PointsMaterial({
+  size: 0.3,
+  sizeAttenuation: true,
+  map: particlesnow,
+  transparent: true,
+  alphaMap: particlesnow,
+  // alphaTest: 0.001,
+  depthWrite: false,
+  blending: THREE.AdditiveBlending
+})
+
+const particles = new THREE.Points(particlesGeometry, particlesMaterial)
+scene.add(particles)
 
 
 /**
  * Lights
  */
 // Ambient light
-const ambientLight = new THREE.AmbientLight('#ffffff', 0.6)
+const ambientLight = new THREE.AmbientLight('#ffffff', 1)
 // gui.add(ambientLight, 'intensity').min(0).max(1).step(0.001)
 scene.add(ambientLight)
 
@@ -522,9 +579,9 @@ scene.add(ambientLight)
 const Mylight = new THREE.DirectionalLight('#ffffff', 0.6)
 Mylight.position.set(-0.04, 4.5, - 4)
 // gui.add(Mylight, 'intensity').min(0).max(1).step(0.001)
-gui.add(Mylight.position, 'x').min(- 5).max(5).step(0.001)
-gui.add(Mylight.position, 'y').min(- 5).max(10).step(0.001)
-gui.add(Mylight.position, 'z').min(- 5).max(5).step(0.001)
+// gui.add(Mylight.position, 'x').min(- 5).max(5).step(0.001)
+// gui.add(Mylight.position, 'y').min(- 5).max(10).step(0.001)
+// gui.add(Mylight.position, 'z').min(- 5).max(5).step(0.001)
 scene.add(Mylight)
 Mylight.castShadow = true
 
@@ -539,6 +596,11 @@ Mylight.shadow.camera.far = 60;
 
 // const Directionallightcamerahelper = new THREE.CameraHelper(Mylight.shadow.camera)
 // scene.add(Directionallightcamerahelper)
+
+// Fog
+
+const fog = new THREE.Fog('#a0978d', 1, 170)
+scene.fog = fog
 
 
 /**
@@ -568,7 +630,7 @@ window.addEventListener('resize', () =>
  * Camera
  */
 // Base camera
-const camera = new THREE.PerspectiveCamera(75, sizes.width / sizes.height, 0.1, 100)
+const camera = new THREE.PerspectiveCamera(75, sizes.width / sizes.height, 0.1, 300)
 camera.position.x = 0
 camera.position.y = 10
 camera.position.z = 20
@@ -592,6 +654,8 @@ renderer.setSize(sizes.width, sizes.height)
 renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2))
 
 renderer.shadowMap.enabled = true
+// renderer.setClearColor('#a0978d')
+
 
 const initialRotation = new THREE.Quaternion();
 /**
@@ -618,6 +682,12 @@ const tick = () =>
     ball.quaternion.copy(ballBody.quaternion)
     ball.position.copy(ballBody.position)
     
+    // Update Particles
+
+    particles.rotation.x = elapsedTime * 0.05
+    // particles.rotation.y = elapsedTime * 0.05
+    particles.rotation.z = elapsedTime * 0.01
+
     // Update controls
     controls.update()
 
