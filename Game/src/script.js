@@ -82,6 +82,7 @@ const textureLoader = new THREE.TextureLoader()
 
 const matcaptexture = textureLoader.load('/textures/matcaps/8.png')
 const golfballtexture = textureLoader.load('/textures/golfball/obeaj.png')
+const tennistexture = textureLoader.load('/textures/tennis/tennis_Color.png')
 
 const ballstonecolor = textureLoader.load('/textures/ballstone/ballstone_basecolor.jpg')
 const ballstoneambientOcclusion = textureLoader.load('/textures/ballstone/ballstone_ambientOcclusion.jpg')
@@ -303,7 +304,8 @@ wall2.castShadow = true
 
 // BOX
 const boxG =  new THREE.BoxGeometry(paddlewidth, paddleheight, paddledepth)
-const boxM = new THREE.MeshStandardMaterial({ color: '#FF0000' })
+// const boxM = new THREE.MeshStandardMaterial({ color: '#FF0000' })
+const boxM = new THREE.MeshStandardMaterial({ color: '#5BAEB7' })
 
 const box = new THREE.Mesh(boxG, boxM)
 box.position.set(paddle1x, paddle1y, paddle1z)
@@ -315,7 +317,7 @@ box2.position.set(paddle1x, paddle1y, -paddle1z)
 box2.castShadow = true
 scene.add(box2)
 
-const boxSpeed = 0.5; 
+const boxSpeed = 0.3; 
 
 
 // Define the key states
@@ -460,7 +462,7 @@ scene.add(floor)
 floor.receiveShadow = true
 floor.geometry.setAttribute('uv2', new THREE.Float32BufferAttribute(floor.geometry.attributes.uv.array, 2))
 
-const floor2material = new THREE.MeshStandardMaterial({ color: '#4682B4' })
+const floor2material = new THREE.MeshStandardMaterial({ color: '#003c71' })
 const floor2 = new THREE.Mesh(
     new THREE.PlaneGeometry(20, 20),
     floor2material
@@ -470,21 +472,21 @@ floor2.position.y = 0.01
 scene.add(floor2)
 floor2.receiveShadow = true
 
-floor2material.map = Tilescolor
-floor2material.aoMap = TilesambientOcclusion
-floor2material.aoMapIntensity = 10
-floor2material.displacementMap = Tilesheight
-floor2material.displacementScale = 0.01
-floor2material.roughnessMap = Tilesroughness
-floor2material.normalMap = Tilesnormal
-floor2.geometry.setAttribute('uv2', new THREE.Float32BufferAttribute(floor2.geometry.attributes.uv.array, 2))
+// floor2material.map = Tilescolor
+// floor2material.aoMap = TilesambientOcclusion
+// floor2material.aoMapIntensity = 10
+// floor2material.displacementMap = Tilesheight
+// floor2material.displacementScale = 0.01
+// floor2material.roughnessMap = Tilesroughness
+// floor2material.normalMap = Tilesnormal
+// floor2.geometry.setAttribute('uv2', new THREE.Float32BufferAttribute(floor2.geometry.attributes.uv.array, 2))
 
-// Stripe
+// Stripe 2
 
 const stripematerial = new THREE.MeshStandardMaterial({ color: '#FFFFFF'})
 
 const stripe = new THREE.Mesh(
-  new THREE.PlaneGeometry(20, 0.1),
+  new THREE.PlaneGeometry(20, 0.2),
   stripematerial
 )
 stripe.receiveShadow = true
@@ -492,6 +494,36 @@ stripe.rotation.x = - Math.PI * 0.5
 stripe.position.y = 0.02
 scene.add(stripe)
 
+const stripe2 = new THREE.Mesh(
+  new THREE.PlaneGeometry(20, 0.03),
+  stripematerial
+)
+stripe2.receiveShadow = true
+stripe2.rotation.z = - Math.PI * 0.5
+stripe2.rotation.x = - Math.PI * 0.5
+stripe2.position.y = 0.02
+scene.add(stripe2)
+
+
+const stripe3 = new THREE.Mesh(
+  new THREE.PlaneGeometry(20, 0.1),
+  stripematerial
+)
+stripe3.receiveShadow = true
+stripe3.rotation.x = - Math.PI * 0.5
+stripe3.position.y = 0.02
+stripe3.position.z = 9.95
+scene.add(stripe3)
+
+const stripe4 = new THREE.Mesh(
+  new THREE.PlaneGeometry(20, 0.1),
+  stripematerial
+)
+stripe4.receiveShadow = true
+stripe4.rotation.x = - Math.PI * 0.5
+stripe4.position.y = 0.02
+stripe4.position.z = -9.95
+scene.add(stripe4)
 
 //BALL
 
@@ -571,7 +603,7 @@ scene.add(particles)
  * Lights
  */
 // Ambient light
-const ambientLight = new THREE.AmbientLight('#ffffff', 1)
+const ambientLight = new THREE.AmbientLight('#ffffff', 1) 
 // gui.add(ambientLight, 'intensity').min(0).max(1).step(0.001)
 scene.add(ambientLight)
 
