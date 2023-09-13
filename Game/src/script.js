@@ -24,6 +24,21 @@ document.body.appendChild(stats.dom);
 // Scene
 const scene = new THREE.Scene()
 
+// SOUND
+ const histsound = new Audio('/sounds/roblox.mp3')
+
+const playHitSound = (collision) =>
+{
+  console.log("YO")
+  const impctstrenght = collision.contact.getImpactVelocityAlongNormal()
+
+  if(impctstrenght > 0.5)
+  {
+    histsound.currentTime = 0
+    histsound.play()
+  }
+}
+
 // Models
 
 // const modellight = new THREE.AmbientLight(0xffffff, 10);
@@ -40,10 +55,39 @@ gltfLoader.load('/models/naturescene/naturescene.glb', (gltf) => {
   model1.metalness  = 0
   model1.traverse((child) => {
     if (child.isMesh) {
-      child.castShadow = true; // Enable shadow casting for each mesh in the model
-      child.receiveShadow = true; // Enable shadow receiving for each mesh in the model
+      child.castShadow = true;
+      child.receiveShadow = true; 
     }
   });
+  scene.add(model1)
+})
+
+gltfLoader.load('/models/house/house.glb', (gltf) => {
+  console.log(gltf)
+  const model1 = gltf.scene
+  model1.position.set(0, 6, 120);
+  model1.scale.set(50, 20, 20);
+  model1.rotation.y = Math.PI
+  model1.traverse((child) => {
+    if (child.isMesh) {
+      const material = child.material;
+
+      if (material.hasOwnProperty('roughness')) {
+        material.roughness = 5;
+      }
+
+      if (material.hasOwnProperty('metalness')) {
+        material.metalness = 0; 
+      }
+    }
+  });
+  model1.traverse((child) => {
+    if (child.isMesh) {
+      child.castShadow = true;
+      child.receiveShadow = true; 
+    }
+  });
+
   scene.add(model1)
 })
 
@@ -65,6 +109,13 @@ gltfLoader.load('/models/bigrock/bigrock.glb', (gltf) => {
       if (material.hasOwnProperty('metalness')) {
         material.metalness = 0; 
       }
+    }
+  });
+
+  model1.traverse((child) => {
+    if (child.isMesh) {
+      child.castShadow = true; 
+      // child.receiveShadow = true;
     }
   });
 
@@ -276,11 +327,14 @@ window.addEventListener('keydown', (event) => {
     {
       const bounceForce = new CANNON.Vec3(servedirection, 0,-20);
       ballBody.applyImpulse(bounceForce, ballBody.position);
+
       serve = 1
     }
   }
 });
 ballBody.angularDamping = 0.1
+
+ballBody.addEventListener('collide', playHitSound)
 
 // floor physics
 const floorshape = new CANNON.Plane()
@@ -736,8 +790,8 @@ Mylight.position.set(-0.04, 4.5, - 4)
 scene.add(Mylight)
 Mylight.castShadow = true
 
-Mylight.shadow.mapSize.width = 1024 * 2;
-Mylight.shadow.mapSize.height = 1024 * 2;
+Mylight.shadow.mapSize.width = 1024 * 10;
+Mylight.shadow.mapSize.height = 1024 * 10;
 Mylight.shadow.camera.left = -120;
 Mylight.shadow.camera.right = 120;
 Mylight.shadow.camera.top = 120;
