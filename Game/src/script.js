@@ -2,7 +2,8 @@ import * as THREE from 'three'
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js'
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js'
 import * as dat from 'lil-gui'
-import * as CANNON from 'cannon';
+import * as CANNON from 'cannon'
+import Stats from 'stats.js'
 
 
 /**
@@ -13,6 +14,12 @@ const gui = new dat.GUI()
 
 // Canvas
 const canvas = document.querySelector('canvas.webgl')
+
+// FPS METER
+
+const stats = new Stats();
+stats.showPanel(0); // 0: FPS, 1: MS (frame time), 2: MB (memory usage)
+document.body.appendChild(stats.dom);
 
 // Scene
 const scene = new THREE.Scene()
@@ -31,15 +38,21 @@ gltfLoader.load('/models/naturescene/naturescene.glb', (gltf) => {
   model1.add(ambientLight);
   model1.roughness  = 0
   model1.metalness  = 0
+  model1.traverse((child) => {
+    if (child.isMesh) {
+      child.castShadow = true; // Enable shadow casting for each mesh in the model
+      child.receiveShadow = true; // Enable shadow receiving for each mesh in the model
+    }
+  });
   scene.add(model1)
 })
 
-gltfLoader.load('/models/rocks/rocks.glb', (gltf) => {
+gltfLoader.load('/models/bigrock/bigrock.glb', (gltf) => {
   console.log(gltf)
   const model1 = gltf.scene
-  model1.position.set(-9, 2, 0);
-  model1.rotation.y = - Math.PI * 0.5
-  model1.scale.set(50, 30, 30);
+  model1.position.set(-10.1, -1.12, -0.34);
+  // model1.rotation.y = - Math.PI * 0.5
+  model1.scale.set(11, 5 , 16.7);
 
   model1.traverse((child) => {
     if (child.isMesh) {
@@ -56,11 +69,39 @@ gltfLoader.load('/models/rocks/rocks.glb', (gltf) => {
   });
 
   const model2 = model1.clone()
-  model2.position.set(9, 2, 0);
-  model2.rotation.y = Math.PI * 0.5
+  model2.position.set(10.1, -1.12, 0.34);
+  model2.rotation.y = Math.PI
   scene.add(model1)
   scene.add(model2)
 })
+
+// gltfLoader.load('/models/rocks/rocks.glb', (gltf) => {
+//   console.log(gltf)
+//   const model1 = gltf.scene
+//   model1.position.set(-9, 2, 0);
+//   model1.rotation.y = - Math.PI * 0.5
+//   model1.scale.set(50, 30, 30);
+
+//   model1.traverse((child) => {
+//     if (child.isMesh) {
+//       const material = child.material;
+
+//       if (material.hasOwnProperty('roughness')) {
+//         material.roughness = 5;
+//       }
+
+//       if (material.hasOwnProperty('metalness')) {
+//         material.metalness = 0; 
+//       }
+//     }
+//   });
+
+//   const model2 = model1.clone()
+//   model2.position.set(9, 2, 0);
+//   model2.rotation.y = Math.PI * 0.5
+//   // scene.add(model1)
+//   // scene.add(model2)
+// })
 
 // TREES
 
@@ -99,6 +140,15 @@ const watermelonheight = textureLoader.load('/textures/watermelon/watermelon_hei
 const watermelonnormal = textureLoader.load('/textures/watermelon/watermelon_normal.jpg')
 const watermelonroughness = textureLoader.load('/textures/watermelon/watermelon_roughness.jpg')
 
+//candyball
+
+const candyballcolor = textureLoader.load('/textures/candyball/candyball_basecolor.jpg')
+const candyballambientOcclusion = textureLoader.load('/textures/candyball/candyball_ambientOcclusion.jpg')
+const candyballheight = textureLoader.load('/textures/candyball/candyball_height.png')
+const candyballnormal = textureLoader.load('/textures/candyball/candyball_normal.jpg')
+const candyballroughness = textureLoader.load('/textures/candyball/candyball_roughness.jpg')
+
+
 //Grass
 
 const Grasscolor = textureLoader.load('/textures/Grass/Grass_basecolor.jpg')
@@ -106,6 +156,14 @@ const GrassambientOcclusion = textureLoader.load('/textures/Grass/Grass_ambientO
 const Grassheight = textureLoader.load('/textures/Grass/Grass_height.png')
 const Grassnormal = textureLoader.load('/textures/Grass/Grass_normal.jpg')
 const Grassroughness = textureLoader.load('/textures/Grass/Grass_roughness.jpg')
+
+//rock
+
+const rockcolor = textureLoader.load('/textures/rock/rock_basecolor.jpg')
+const rockambientOcclusion = textureLoader.load('/textures/rock/rock_ambientOcclusion.jpg')
+const rockheight = textureLoader.load('/textures/rock/rock_height.png')
+const rocknormal = textureLoader.load('/textures/rock/rock_normal.jpg')
+const rockroughness = textureLoader.load('/textures/rock/rock_roughness.jpg')
 
 // Snow Particle
 
@@ -290,14 +348,41 @@ world.addBody(wall2body)
 const wallG = new THREE.BoxGeometry(wallwidth, wallheight, walldepth)
 const wallM = new THREE.MeshStandardMaterial({ color: '#3a3a34'})
 
+
+// wallM.map = rockcolor
+wallM.aoMap = rockambientOcclusion
+wallM.aoMapIntensity = 0.2
+wallM.displacementMap = rockheight
+wallM.displacementScale = 0
+wallM.roughnessMap = rockroughness
+wallM.normalMap = rocknormal
+
+rockcolor.repeat.set(5,5)
+rockambientOcclusion.repeat.set(5,5)
+rockheight.repeat.set(5,5)
+rocknormal.repeat.set(5,5)
+rockroughness.repeat.set(5,5)
+
+rockcolor.wrapS = THREE.RepeatWrapping
+rockambientOcclusion.wrapS = THREE.RepeatWrapping
+rockheight.wrapS = THREE.RepeatWrapping
+rocknormal.wrapS = THREE.RepeatWrapping
+rockroughness.wrapS = THREE.RepeatWrapping
+
+rockcolor.wrapT = THREE.RepeatWrapping
+rockambientOcclusion.wrapT = THREE.RepeatWrapping
+rockheight.wrapT = THREE.RepeatWrapping
+rocknormal.wrapT = THREE.RepeatWrapping
+rockroughness.wrapT = THREE.RepeatWrapping
+
 const wall1 = new THREE.Mesh(wallG, wallM)
 wall1.position.set(wallx, wally, wallz)
-scene.add(wall1)
+// scene.add(wall1)
 wall1.castShadow = true
 
 const wall2 = new THREE.Mesh(wallG, wallM)
 wall2.position.set(-wallx, wally, wallz)
-scene.add(wall2)
+// scene.add(wall2)
 wall2.castShadow = true
 // console.log(wall2.position)
 // console.log(wall2body.position)
@@ -438,7 +523,21 @@ animate();
 
 // Floor
 
-const floor1material = new THREE.MeshStandardMaterial({ color: '#006b00' })
+const floor1material = new THREE.MeshStandardMaterial({ color: '#147114' })
+
+
+// Floor color picker
+// const materialConfig = {
+//   color: floor1material.color.getHex(),
+// };
+
+// const materialFolder = gui.addFolder("Material Configuration");
+// const colorController = materialFolder.addColor(materialConfig, "color");
+
+// colorController.onChange(function (newColor) {
+//   floor1material.color.set(newColor);
+// });
+
 
 const floor = new THREE.Mesh(
   new THREE.PlaneGeometry(20, 20),
@@ -525,6 +624,18 @@ stripe4.position.y = 0.02
 stripe4.position.z = -9.95
 scene.add(stripe4)
 
+const stripe5 = new THREE.Mesh(
+  new THREE.PlaneGeometry(20, 0.5),
+  stripematerial
+)
+stripe5.receiveShadow = true
+stripe5.rotation.x = - Math.PI * 0.5
+stripe5.rotation.y = Math.PI
+stripe5.position.y = 0.02
+// stripe5.position.z = -9.95
+scene.add(stripe5)
+
+
 //BALL
 
 const ballMaterial = new THREE.MeshStandardMaterial()
@@ -543,13 +654,21 @@ const ballMaterial = new THREE.MeshStandardMaterial()
 // ballMaterial.roughnessMap = ballstoneroughness
 // ballMaterial.normalMap = ballstonenormal
 
-ballMaterial.map = watermeloncolor
-ballMaterial.aoMap = watermelonambientOcclusion
-ballMaterial.aoMapIntensity = 10
-ballMaterial.displacementMap = watermelonheight
+// ballMaterial.map = watermeloncolor
+// ballMaterial.aoMap = watermelonambientOcclusion
+// ballMaterial.aoMapIntensity = 10
+// ballMaterial.displacementMap = watermelonheight
+// ballMaterial.displacementScale = 0.01
+// ballMaterial.roughnessMap = watermelonroughness
+// ballMaterial.normalMap = watermelonnormal
+
+ballMaterial.map = candyballcolor
+ballMaterial.aoMap = candyballambientOcclusion
+ballMaterial.aoMapIntensity = 0.1
+ballMaterial.displacementMap = candyballheight
 ballMaterial.displacementScale = 0.01
-ballMaterial.roughnessMap = watermelonroughness
-ballMaterial.normalMap = watermelonnormal
+ballMaterial.roughnessMap = candyballroughness
+ballMaterial.normalMap = candyballnormal
 
 ballMaterial.transparent = true
 
@@ -617,17 +736,20 @@ Mylight.position.set(-0.04, 4.5, - 4)
 scene.add(Mylight)
 Mylight.castShadow = true
 
-Mylight.shadow.mapSize.width = 1024 * 3;
-Mylight.shadow.mapSize.height = 1024 * 3;
-Mylight.shadow.camera.left = -25;
-Mylight.shadow.camera.right = 25;
-Mylight.shadow.camera.top = 25;
-Mylight.shadow.camera.bottom = -25;
+Mylight.shadow.mapSize.width = 1024 * 2;
+Mylight.shadow.mapSize.height = 1024 * 2;
+Mylight.shadow.camera.left = -120;
+Mylight.shadow.camera.right = 120;
+Mylight.shadow.camera.top = 120;
+Mylight.shadow.camera.bottom = -120;
 Mylight.shadow.camera.near = -50;
 Mylight.shadow.camera.far = 60;
 
 // const Directionallightcamerahelper = new THREE.CameraHelper(Mylight.shadow.camera)
 // scene.add(Directionallightcamerahelper)
+
+// const shadowCameraHelper = new THREE.CameraHelper(Mylight.shadow.camera);
+// scene.add(shadowCameraHelper);
 
 // Fog
 
@@ -702,6 +824,8 @@ const tick = () =>
     oldElapsedTime = elapsedTime
     //update physics world
     world.step(1/60, deltatime,3)
+
+    stats.update();
 
     if(ballBody.position.z > 10 || ballBody.position.z < -10)
     {
