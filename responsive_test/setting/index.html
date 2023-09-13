@@ -1,0 +1,114 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body >
+    <div class="h-[100%] w-[] flex justify-center items-center">
+
+        <div class="flex items-center justify-center flex-col xl:flex-row gap-[48px]">
+            <div class="flex flex-col">
+                <div class="w-[260px] h-[700px] mb-[48px] rounded-[20px] p-inf flex items-center flex-col sm:w-[600px]  lg:w-[922px] lg:h-[448px] lg:items-start lg:pl-[50px]">
+                    <p class="text-[#043B6A] text-[20px] font-[600] pt-[20px] lg:text-[25px]">
+                        Personal information
+                    </p>
+                    <div class="flex flex-col gap-[16px] pt-[16px] lg:flex-row">
+                        <img src="Ellipse 188.png" alt="">
+                        <div class="flex flex-col gap-[8px]">
+                            <div class="w-[132] h-[41px] rounded-[12px] text-center bg-[#3887D0] cursor-pointer ">
+                                    <p class="text-[#fff] text-[10px] font-[600] leading-10 " >
+                                        Upload new picture
+                                    </p>
+                                <input type="file" id="img" name="img" accept=".jpg,.jpeg,.png,.gif"  class="w-[132px] h-[41px] opacity-0 cursor-pointer z-[1]" />
+                            </div>
+                            <div>
+                                <input type="reset" class="w-[132px] h-[41px] rounded-[12px] bg-[#F9F9F9] text-[10px] text-[#02539D] font-[600]" value="delete">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="flex flex-col gap-[16px] pt-[24px]">
+                        <div class="flex flex-col gap-[16px] lg:flex-row">
+                            <input type="text" class="text-[#064A85] w-[240px] h-[66px]  rounded-[15px] border-[1px] border-[#DDDDDD]  p-[27px] sm:w-[403px] lg:h-[66px]" placeholder="First name">
+                            <input type="text" class="text-[#064A85] w-[240px] h-[66px]  rounded-[15px] border-[1px] border-[#DDDDDD]  p-[27px] sm:w-[403px] lg:h-[66px]" placeholder="Last name">
+                        </div>
+                        <input type="email" class="text-[#064A85] w-[240px] h-[66px] rounded-[15px] border-[1px] border-[#DDDDDD]  p-[27px] sm:w-[403px] lg:h-[66px]" placeholder="Email">
+                    </div>
+                    <div class="flex flex-col gap-[8px] pt-[24px] lg:flex-row lg:pl-[545px]">
+                        <input type="submit" class=" w-[132px] h-[41px] rounded-[12px] bg-[#3887D0] cursor-pointer text-[#fff] text-[10px] font-[600] b-save" value="Save Changes">
+                        <input type="reset" class=" w-[132px] h-[41px] rounded-[12px] bg-[#F9F9F9] cursor-pointer text-[#02539D] text-[10px] font-[600] b-save" value="Discard">
+                    </div>
+        
+                </div>
+                <div class="w-[260px] h-[460px] rounded-[42px] bg-white p-inf flex items-center flex-col sm:w-[600px] lg:w-[922px] lg:h-[339px] lg:items-start lg:pl-[50px] ">
+                    <p class="text-[#043B6A] text-[20px] font-[600] pt-[20px] lg:text-[25px]">
+                        Password
+                    </p>
+                    <div class="pt-[24px] flex flex-col items-center gap-[16px]">
+                        <div class="flex flex-col gap-[16px]">
+                            <div class="flex flex-col gap-[16px] lg:flex-row">
+                                <input type="password" class="text-[#064A85] w-[240px] h-[66px] rounded-[15px] border-[1px] border-[#DDDDDD]  p-[27px] sm:w-[403px] lg:h-[66px]" placeholder="Old Passwrod">
+                                <input type="password" class="text-[#064A85] w-[240px] h-[66px] rounded-[15px] border-[1px] border-[#DDDDDD]  p-[27px] sm:w-[403px] lg:h-[66px]" placeholder="New Password">
+                            </div>
+                            <input type="password" class="text-[#064A85] w-[240px] h-[66px] rounded-[15px] border-[1px] border-[#DDDDDD]  p-[27px] sm:w-[403px] lg:h-[66px]" placeholder="Confirm Password">
+                        </div>
+                        <div class="flex flex-col gap-[8px] pt-[16px] lg:flex-row lg:pl-[545px]">
+                            <input type="submit" class=" w-[132px] h-[41px] rounded-[12px] bg-[#3887D0] cursor-pointer text-[#fff] text-[10px] font-[600] b-save" value="Save Changes">
+                            <input type="reset" class=" w-[132px] h-[41px] rounded-[12px] bg-[#F9F9F9] cursor-pointer text-[#02539D] text-[10px] font-[600] b-save" value="Discard">
+                        </div>
+                    </div>
+        
+                </div>
+                <div>
+                </div>
+            </div>
+            <div class="flex flex-col">
+                <div class="w-[260px] h-[490px] bg-white rounded-[42px] p-inf mb-[48px] flex items-center flex-col sm:w-[600px] lg:w-[922px] lg:h-[618px] lg:items-start ">
+                    <p class="text-[#043B6A] text-[20px] font-[600] pt-[20px] lg:text-[25px] lg:pl-[50px]">
+                        Two-factor authentication
+                    </p>
+                    <div class="w-[212px] h-[212px] rounded-[15px] border-[1px] border-[#3887D0] mt-[8px] bg-[#F2F2F2] flex items-center justify-center lg:w-[330px] lg:h-[330px] lg:ml-[296px]">
+                        <img src="2fa-qr-code 1.svg" alt="" class="lg:w-[296px] lg:h-[296px]">
+                    </div>
+                    <div class="lg:pl-[289px]">
+                        <p class="text-[8px] text-[#898E94] lg:text-[12px] text-center pt-[16px]">
+                            Enter 6-digit code from your two factor authenticator APP.
+                        </p>
+                    </div>
+                    <div class="flex flex-col gap-[22px] sm:flex-row lg:pl-[289px] pt-[16px]">
+                        <div class="flex gap-[5px]">
+                            <input type="text" class="w-[30px] h-[30px] rounded-[8px] border-[0.5px] border-[#7D8493] bg-[#F8F8F8] indent-[8px] sm:w-[48px] sm:h-[48px] sm:rounded-[15px] sm:indent-[16px]">
+                            <input type="text" class="w-[30px] h-[30px] rounded-[8px] border-[0.5px] border-[#7D8493] bg-[#F8F8F8] indent-[8px] sm:w-[48px] sm:h-[48px] sm:rounded-[15px] sm:indent-[16px]">
+                            <input type="text" class="w-[30px] h-[30px] rounded-[8px] border-[0.5px] border-[#7D8493] bg-[#F8F8F8] indent-[8px] sm:w-[48px] sm:h-[48px] sm:rounded-[15px] sm:indent-[16px]">
+                        </div>
+                        <div class="flex gap-[5px]">
+                            <input type="text" class="w-[30px] h-[30px] rounded-[8px] border-[0.5px] border-[#7D8493] bg-[#F8F8F8] indent-[8px] sm:w-[48px] sm:h-[48px] sm:rounded-[15px] sm:indent-[16px]">
+                            <input type="text" class="w-[30px] h-[30px] rounded-[8px] border-[0.5px] border-[#7D8493] bg-[#F8F8F8] indent-[8px] sm:w-[48px] sm:h-[48px] sm:rounded-[15px] sm:indent-[16px]">
+                            <input type="text" class="w-[30px] h-[30px] rounded-[8px] border-[0.5px] border-[#7D8493] bg-[#F8F8F8] indent-[8px] sm:w-[48px] sm:h-[48px] sm:rounded-[15px] sm:indent-[16px]">
+                        </div>
+                    </div>
+                    <div class="lg:pl-[337px] pt-[16px]">
+                        <input type="submit" class="w-[120px] h-[45px] rounded-[9px] bg-[#F8F8F8] cursor-pointer text-[#7D8493] text-[10px] font-[500] b-save sm:w-[248px] sm:h-[66px] sm:text-[16px]" value="Save Changes">
+                    </div>
+                </div>
+                <div class="w-[260px] h-[270px] bg-white rounded-[42px] p-inf flex items-center  flex-col sm:w-[600px] sm:h-[170px] lg:w-[922px] lg:h-[169px] lg:items-start lg:pl-[50px]">
+                    <p class="text-[#043B6A] text-[20px] font-[600] pt-[20px]">
+                        Close account
+                    </p>
+                        <div class="flex flex-col items-center sm:flex-row lg:w-[830px]">
+                            <p class="text-[#7D8493] text-[14px] w-[100px] font-[400] text-center sm:text-left sm:w-[300px] lg:text-[18px]">
+                                You can permanently delete or temprarily freeze your account.
+                            </p>
+                            <div class="lg:pl-[420px]">
+                                <input type="submit" class=" w-[190px] h-[66px] rounded-[16px] bg-[#F8F8F8] cursor-pointer text-[#7D8493] text-[12px] font-[500] b-save" value="close Account">
+                            </div>
+                        </div>
+                </div>
+    
+            </div>
+        </div>
+    </div>
+</body>
+</html>

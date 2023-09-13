@@ -1,0 +1,9 @@
+.p-inf {
+    box-shadow: 0px 0px 0px 0px rgba(0, 0, 0, 0.02), 0px 72px 159px 0px rgba(0, 0, 0, 0.02), 0px 288px 288px 0px rgba(0, 0, 0, 0.02), 0px 648px 389px 0px rgba(0, 0, 0, 0.01), 0px 1153px 461px 0px rgba(0, 0, 0, 0.00), 0px 1801px 504px 0px rgba(0, 0, 0, 0.00); 
+}
+.b-save {
+    filter: drop-shadow(0px 4px 8px rgba(0, 0, 0, 0.04)) drop-shadow(0px 15px 15px rgba(0, 0, 0, 0.03)) drop-shadow(0px 33px 20px rgba(0, 0, 0, 0.02)) drop-shadow(0px 58px 23px rgba(0, 0, 0, 0.01)) drop-shadow(0px 91px 25px rgba(0, 0, 0, 0.00)); 
+}
+input {
+    outline: none;
+}
