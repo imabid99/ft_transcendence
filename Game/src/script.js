@@ -25,18 +25,18 @@ document.body.appendChild(stats.dom);
 const scene = new THREE.Scene()
 
 // SOUND
- const histsound = new Audio('/sounds/roblox.mp3')
+ const histsound = new Audio('/sounds/cheering.mp3')
 
 const playHitSound = (collision) =>
 {
-  console.log("YO")
   const impctstrenght = collision.contact.getImpactVelocityAlongNormal()
 
   if(impctstrenght > 0.5)
   {
     histsound.currentTime = 0
-    histsound.play()
+    // histsound.play()
   }
+
 }
 
 // Models
@@ -544,21 +544,19 @@ function updatebox2() {
   }
 }
 
-//BOUNCING
+// AI PLAYER
 
-// function handleCollision(event) {
-//   const contact = event.contact;
-  
-//   // Check if the collision involves the ball
-//   if (contact.bi === ballBody || contact.bj === ballBody) {
-//     // Apply an impulse to the ball to simulate bouncing
-//     const impulse = new CANNON.Vec3(0, 1, 100);
-//     ballBody.applyImpulse(impulse, ballBody.position);
-//   }
-// }
+const ballPosition = ballBody.position;
+const ballVelocity = ballBody.velocity;
 
-// Listen for collisions
-// world.addEventListener('beginContact', handleCollision);
+function updateAIPaddle(aiPaddle, ballPosition) {
+  if (ballPosition.x > aiPaddle.position.x) {
+      aiPaddle.moveRight();
+  } else if (ballPosition.x < aiPaddle.position.x) {
+      aiPaddle.moveLeft();
+  }
+}
+
 
 
 
@@ -747,12 +745,16 @@ ball.castShadow = true
 
 const particlesGeometry = new THREE.BufferGeometry(1, 32, 32)
 
-const count = 20000
-const positions = new Float32Array(count * 3)
+const particlecount = 20000
+// const particlespeed = 1
+const snowfallArea = 200;
+const snowflakeFallSpeed = 3;
+const positions = new Float32Array(particlecount * 3)
 
-for(let i = 0; i < count * 3; i++)
-{
-  positions[i] = (Math.random() - 0.5)* 150
+for (let i = 0; i < particlecount * 3; i += 3) {
+    positions[i] = (Math.random() - 0.5) * snowfallArea;
+    positions[i + 1] = Math.random() * snowfallArea;
+    positions[i + 2] = (Math.random() - 0.5) * snowfallArea;
 }
 
 particlesGeometry.setAttribute('position', new THREE.BufferAttribute(positions, 3))
@@ -888,16 +890,41 @@ const tick = () =>
       ballBody.velocity.set(0, 0, 0);
       ballBody.quaternion.copy(initialRotation)
       ballBody.angularVelocity.set(0, 0, 0);
+      // histsound.play()
     }
     ball.quaternion.copy(ballBody.quaternion)
     ball.position.copy(ballBody.position)
+
+
+    // if(ball.position.x > leftLimit && ball.position.x < rightLimit)
+    // {
+    //   box2.position.x = ball.position.x
+    //   paddle2body.position.copy(box2.position)
+    // }
     
+    // Animate snow particles
+    const snowflakePositions = particlesGeometry.attributes.position.array;
+
+    for (let i = 0; i < particlecount * 3; i += 3) {
+        // Update the y-coordinate to simulate falling.
+        snowflakePositions[i + 1] -= snowflakeFallSpeed * deltatime;
+
+        // Reset the snowflake's position if it falls below the scene.
+        if (snowflakePositions[i + 1] < -snowfallArea / 2) {
+            snowflakePositions[i] = (Math.random() - 0.5) * snowfallArea;
+            snowflakePositions[i + 1] = 50 // Reset to above the scene.
+            snowflakePositions[i + 2] = (Math.random() - 0.5) * snowfallArea;
+        }
+    }
+
+    // Ensure the geometry knows it has been updated.
+    particlesGeometry.attributes.position.needsUpdate = true;
+
     // Update Particles
 
-    particles.rotation.x = elapsedTime * 0.05
-    // particles.rotation.y = elapsedTime * 0.05
-    particles.rotation.z = elapsedTime * 0.01
-
+    // particles.rotation.x = elapsedTime * 0.05
+    // particles.rotation.z = elapsedTime * 0.02
+    // console.log("velocity", ballBody.velocity)
     // Update controls
     controls.update()
 
