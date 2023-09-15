@@ -46,7 +46,7 @@ const playHitSound = (collision) =>
 
 const gltfLoader = new GLTFLoader()
 gltfLoader.load('/models/naturescene/naturescene.glb', (gltf) => {
-  console.log(gltf)
+  // console.log(gltf)
   const model1 = gltf.scene
   model1.position.set(0, 3, 0);
   model1.scale.set(50, 50, 50);
@@ -63,7 +63,7 @@ gltfLoader.load('/models/naturescene/naturescene.glb', (gltf) => {
 })
 
 gltfLoader.load('/models/house/house.glb', (gltf) => {
-  console.log(gltf)
+  // console.log(gltf)
   const model1 = gltf.scene
   model1.position.set(0, 6, 120);
   model1.scale.set(50, 20, 20);
@@ -92,7 +92,7 @@ gltfLoader.load('/models/house/house.glb', (gltf) => {
 })
 
 gltfLoader.load('/models/bigrock/bigrock.glb', (gltf) => {
-  console.log(gltf)
+  // console.log(gltf)
   const model1 = gltf.scene
   model1.position.set(-10.1, -1.12, -0.34);
   // model1.rotation.y = - Math.PI * 0.5
@@ -299,8 +299,8 @@ const defaultcontactmaterial = new CANNON.ContactMaterial(
   simamaterial,
   plasticmaterial,
   {
-    friction: 0,
-    restitution: 2
+    friction: 0, 
+    restitution: 1,
   }
 )
 world.addContactMaterial(defaultcontactmaterial)
@@ -310,29 +310,30 @@ world.addContactMaterial(defaultcontactmaterial)
 const ballradius = 0.35
 const ballshape = new CANNON.Sphere(ballradius)
 const ballBody = new CANNON.Body({
-  mass: 3,
+  mass: 1,
   position: new CANNON.Vec3(0, 0.4, 0),
   shape: ballshape,
   material: plasticmaterial
 })
 world.addBody(ballBody)
+ballBody.linearDamping = 0;
 
 let serve = 0
-
+const servePower = 10
 window.addEventListener('keydown', (event) => {
   let servedirection = Math.random() < 0.5 ? -50 : 50
   if (event.key === ' ' ) 
   {
     if(serve == 0)
     {
-      const bounceForce = new CANNON.Vec3(servedirection, 0,-20);
+      const bounceForce = new CANNON.Vec3(servedirection, 0,-servePower);
       ballBody.applyImpulse(bounceForce, ballBody.position);
 
       serve = 1
     }
   }
 });
-ballBody.angularDamping = 0.1
+ballBody.angularDamping = 0
 
 ballBody.addEventListener('collide', playHitSound)
 
@@ -548,30 +549,49 @@ function updatebox2() {
 
 const ballPosition = ballBody.position;
 const ballVelocity = ballBody.velocity;
+const aipaddlespeed = 1
+const AIreactiontime = 2
+const AIreactionvariability = 2
+
+function AImoveRight() {
+  ballBody.position.x += aipaddlespeed
+}
+function AImoveLeft() {
+  ballBody.position.x -= aipaddlespeed
+}
 
 function updateAIPaddle(aiPaddle, ballPosition) {
   if (ballPosition.x > aiPaddle.position.x) {
-      aiPaddle.moveRight();
+      aiPaddle.AImoveRight();
   } else if (ballPosition.x < aiPaddle.position.x) {
-      aiPaddle.moveLeft();
+      aiPaddle.AImoveLeft();
   }
 }
 
-
-
-
-// render loop
-function animate() {
-  requestAnimationFrame(animate);
-  
-  // Update box based on key states
-  updatebox2();
-  updatebox();
-  
-  //   renderer.render(scene, box);
+function delayedAIUpdate() {
+  setTimeout(() => {
+      updateAIPaddle(aiPaddle, ballPosition);
+      delayedAIUpdate();
+  }, AIreactiontime + Math.random() * AIreactionvariability);
 }
 
-animate();
+// delayedAIUpdate();
+
+
+
+
+// // render loop
+// function animate() {
+//   requestAnimationFrame(animate);
+  
+//   // Update box based on key states
+//   updatebox2();
+//   updatebox();
+  
+//   //   renderer.render(scene, box);
+// }
+
+// animate();
 
 // Floor
 
@@ -745,7 +765,7 @@ ball.castShadow = true
 
 const particlesGeometry = new THREE.BufferGeometry(1, 32, 32)
 
-const particlecount = 20000
+const particlecount = 22000
 // const particlespeed = 1
 const snowfallArea = 200;
 const snowflakeFallSpeed = 3;
@@ -880,6 +900,7 @@ const tick = () =>
     oldElapsedTime = elapsedTime
     //update physics world
     world.step(1/60, deltatime,3)
+    ballBody.collisionResponse = true;
 
     stats.update();
 
@@ -895,6 +916,13 @@ const tick = () =>
     ball.quaternion.copy(ballBody.quaternion)
     ball.position.copy(ballBody.position)
 
+    // PLAYER PADDLE CONTROL
+    updatebox2();
+    updatebox();
+
+
+    // AI PADDLE CONTROL
+    // delayedAIUpdate();
 
     // if(ball.position.x > leftLimit && ball.position.x < rightLimit)
     // {
@@ -912,10 +940,19 @@ const tick = () =>
         // Reset the snowflake's position if it falls below the scene.
         if (snowflakePositions[i + 1] < -snowfallArea / 2) {
             snowflakePositions[i] = (Math.random() - 0.5) * snowfallArea;
-            snowflakePositions[i + 1] = 50 // Reset to above the scene.
+            snowflakePositions[i + 1] = (Math.random() - 0.5) * 100 // Reset to above the scene.
             snowflakePositions[i + 2] = (Math.random() - 0.5) * snowfallArea;
         }
     }
+
+
+    function monitorBallVelocity() {
+      const ballVelocity = ballBody.velocity;
+      console.log(`Ball Velocity: x=${ballVelocity.x}, y=${ballVelocity.y}, z=${ballVelocity.z}`);
+    }
+    
+    setInterval(monitorBallVelocity, 10000); 
+    
 
     // Ensure the geometry knows it has been updated.
     particlesGeometry.attributes.position.needsUpdate = true;
