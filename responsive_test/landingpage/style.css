@@ -1,0 +1,42 @@
+.input {
+    outline: none;
+}
+
+.h-text {
+    background: linear-gradient(90deg, #064A85 0%, #FFF 260.04%);
+    background-clip: text;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.t-imad {
+    background: linear-gradient(135deg, #ABDCFF 0%, #0396FF 100%);
+    background-clip: text;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+.t-zak {
+    background: linear-gradient(135deg, #F05F57 0%, #360940 100%);
+    background-clip: text;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+.t-achraf {
+    background: linear-gradient(135deg, #92FFC0 0%, #002661 100%);
+    background-clip: text;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+.t-saad {
+    background: linear-gradient(135deg, #FFF6B7 0%, #F6416C 100%);
+    background-clip: text;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.t-team {
+    background: linear-gradient(20deg, #074C87 0%, #bceeff 100%);
+    background-clip: text;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
