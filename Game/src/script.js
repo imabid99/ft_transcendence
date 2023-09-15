@@ -319,7 +319,7 @@ world.addBody(ballBody)
 ballBody.linearDamping = 0;
 
 let serve = 0
-const servePower = 10
+const servePower = 9
 window.addEventListener('keydown', (event) => {
   let servedirection = Math.random() < 0.5 ? -50 : 50
   if (event.key === ' ' ) 
