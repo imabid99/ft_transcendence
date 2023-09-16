@@ -48,3 +48,12 @@
     -webkit-text-fill-color: transparent;
     filter: blur(0px);
 }
+
+
+.bg-foo {
+    background:url("Frame\ 67.svg");
+}
+  
+  .hover\:bg-bar:hover {
+    background:url("Frame\ 68.svg");
+}
