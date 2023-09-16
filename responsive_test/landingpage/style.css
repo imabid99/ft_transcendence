@@ -40,3 +40,11 @@
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
 }
+
+.t-pong {
+    background: linear-gradient(90deg, #16D9E3 0%, #30C7EC 47%, #46AEF7 100%);
+    background-clip: text;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    filter: blur(0px);
+}
