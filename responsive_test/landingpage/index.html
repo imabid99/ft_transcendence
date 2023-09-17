@@ -1,10 +1,19 @@
 <!doctype html>
 <html>
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <script src="https://cdn.tailwindcss.com"></script>
-  <link rel="stylesheet" href="style.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="style.css">
+    <script>
+    import {
+    Animate,
+    initTE,
+    } from "tw-elements";
+
+    initTE({ Animate });
+    </script>
+    
 </head>
 <body class="bg-[#EAF5FF] ">
     <div class="w-9/12  mx-auto h-[100vh]">
@@ -20,7 +29,7 @@
                     <p class="font-[700] h-text text-[50px] sm-text-[80px] max-w-[600px] text-center xl:text-left">
                         Let The Fun Begin.
                     </p>
-                    <img src="Group 15.svg" alt="" class="absolute z-0 hidden w-[750px] xl:w-[1000px] md:block">
+                    <img src="Group 15.svg" alt="" class="absolute z-0 hidden w-[750px] xl:w-[1000px] md:block animate-bounce">
                     <p class="h-text font-[700]  text-center max-w-[500px] text-[25px] sm:text-[30px]sm:w-[500px] xl:text-left">
                         Whether you're a seasoned pro or a beginner, we have everything you need to improve your game and have fun on the table.
                     </p>
@@ -30,8 +39,8 @@
                 </div>
             </div>
             <div class="">
-                <img src="Frame 118 (1).svg" alt="" class="lg:w-[766px] lg:h-[1061px] xl:block hidden z-1 relative">
-                <img src="Frame 118.svg" alt="" class="xl:hidden pt-[60px]">
+                <img src="Frame 118 (1).svg" alt="" class="lg:w-[766px] lg:h-[1061px] xl:block hidden z-1 relative ">
+                <img src="Frame 118.svg" alt="" class="xl:hidden pt-[60px] animate-bounce">
             </div>
         </div>
         <!-- team -->
