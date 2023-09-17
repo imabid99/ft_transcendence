@@ -5,18 +5,20 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="style.css">
-    <script>
-    import {
-    Animate,
-    initTE,
-    } from "tw-elements";
-
-    initTE({ Animate });
+    <script src="tt.js"></script> 
+                    <!-- <script type="text-javascript">
+                    var pos document.documentElement;
+                    Pos.addEventListener('mousemove', e => {
+                        pos.style.setProperty('--x' e.clientX + 'px')
+                        pos.style.setProperty('--y' e.clientX + 'px')
+                    })
+                </script> -->
+    <script type="text-javascript">
+        var document.documentElement
     </script>
-    
 </head>
 <body class="bg-[#EAF5FF] ">
-    <div class="w-9/12  mx-auto h-[100vh]">
+    <div class="w-9/12  mx-auto h">
         <nav class="py-5  flex justify-between items-center ">
             <img src="Group 44.svg" alt="">
             <button class="w-[77px] h-[28px] rounded-[6px] text-[#fff] text-[9px] font-[700] bg-gradient-to-r from-[#48C6EF] to-[#6F86D6] sm:w-[120px] sm:h-[40px] sm:text-[16px]">Login</button>
@@ -233,10 +235,23 @@
                         </div>
                     </div>
                     <div class="flex items-center flex-col xl:flex-row">
-                        <div class="group relative">
-                            <img src="Frame 69.svg" alt="Normal Image" class="max-w-[200px] max-h-[200px] sm:max-w-[300px] sm:max-h-[300px] md:max-w-[400px] md:max-h-[400px] transition-transform transform group-hover:duration-300 group-hover:opacity-0" />
+                        <!-- <div class="group relative">
+                            <img src="Frame 69.svg" alt="Normal Image" class="max-w-[200px] max-h-[200px] sm:max-w-[300px] sm:max-h-[300px] md:max-w-[400px] md:max-h-[400px]  group-hover:opacity-0" />
                             <img src="Frame 64.svg" alt="Hover Image" class="max-w-[200px] max-h-[200px] sm:max-w-[300px] sm:max-h-[300px] md:max-w-[400px] md:max-h-[400px] absolute inset-0 opacity-0 group-hover:opacity-100" />
+                        </div> -->
+                        <!-- <div class="group relative">
+                            <img src="Frame 69.svg" alt="Normal Image" class="max-w-[200px] max-h-[200px] sm:max-w-[300px] sm:max-h-[300px] md:max-w-[400px] md:max-h-[400px] group-hover:opacity-0 transition-opacity duration-500 ease-in-out" />
+                            <img src="Frame 64.svg" alt="Hover Image" class="max-w-[200px] max-h-[200px] sm:max-w-[300px] sm:max-h-[300px] md:max-w-[400px] md:max-h-[400px] absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 ease-in-out" />
+                        </div> -->
+                        <!-- <div class="group relative">
+                            <img src="Frame 69.svg" alt="Normal Image" class="max-w-[200px] max-h-[200px] sm:max-w-[300px] sm:max-h-[300px] md:max-w-[400px] md:max-h-[400px] group-hover:scale-0 transition-transform duration-500 ease-in-out transform scale-100" />
+                            <img src="Frame 64.svg" alt="Hover Image" class="max-w-[200px] max-h-[200px] sm:max-w-[300px] sm:max-h-[300px] md:max-w-[400px] md:max-h-[400px] absolute inset-0 group-hover:scale-100 transition-transform duration-500 ease-in-out transform scale-0 opacity-0 hover:opacity-100" />
+                        </div> -->      
+                        <div class="group relative">
+                            <img src="Frame 69.svg" alt="Normal Image" class="max-w-[200px] max-h-[200px] sm:max-w-[300px] sm:max-h-[300px] md:max-w-[400px] md:max-h-[400px] group-hover:opacity-0" />
+                            <img src="Frame 64.svg" alt="Hover Image" class="max-w-[200px] max-h-[200px] sm:max-w-[300px] sm:max-h-[300px] md:max-w-[400px] md:max-h-[400px] absolute inset-0 hidden group-hover:block transition-transform duration-500" />
                         </div>
+                        
                         <div class="flex flex-col justify-center items-center xl:items-start xl:justify-start">
                             <p class="text-[20px] sm:text-[24px] xl:text-[40px] font-[700] t-saad">SAAD GMIRA</p>
                             <p class="text-[13px] sm:text-[15px] xl:text-[30px] t-saad font-[700] text-center md:text-left">Game & Full stack developer</p>
@@ -294,8 +309,165 @@
                     </div>
                 </div>
             </div>
+            <!-- About -->
+            <div class="flex flex-col  items-center justify-between pt-[100px] xl:pt-[375px] xl:flex-row-reverse xl:h-[800px]">
+                <div class="space-y-[20px] flex  flex-col items-center xl:items-end xl:mb-[300px] xl:pt-[200px]">
+                    <div class="flex justify-center md:justify-center ">
+                        <p class="text-[40px] t-team font-[700] md:text-[80px] ">PONG</p>
+                    </div>
+                    <div class="text-[16px] font-[700] text-center text-[#064A85] md:text-[30px]  lg:text-right lg:w-[500px]">
+                        <p>Pong is a classic arcade-style video game that was first released in 1972. It is a two-player game that simulates table tennis, with players using virtual paddles to hit a ball back and forth across a digital net. The game is played on a simple black-and-white 2D screen with a low resolution.</p>
+                    </div>
+                </div>
+                <div class="">
+                    <img src="Frame 122.svg" alt="" class="w-[600px]  z-1 relative ">
+                    <!-- <img src="Frame 118.svg" alt="" class="xl:hidden pt-[60px] animate-bounce"> -->
+                    
+                </div>
+            </div>
+            <!-- PONG -->
+            <div class="flex flex-col  items-center justify-between pt-[100px] xl:pt-[700px] xl:flex-row xl:h-[800px] ">
+                <div class="space-y-[20px] flex  flex-col items-center xl:items-start xl:mb-[300px] xl:pt-[200px]">
+                    <div class="flex justify-center md:justify-center">
+                        <p class="text-[40px] t-team font-[700] md:text-[80px] ">About</p>
+                    </div>
+                    <div class="text-[16px] font-[700] text-center text-[#064A85] md:text-[30px]  lg:text-left lg:w-[500px]">
+                        <p>Our game website is a web based platform that allows users to play the classic Pong game directly from their web browser. The website typically provides a simple, user-friendly interface that makes it easy to start and play the game. </p>
+                    </div>
+                </div>
+                <div class="">
+                    <img src="Frame 123.svg" alt="" class="w-[600px]  z-1 relative ">
+                    <!-- <img src="Frame 118.svg" alt="" class="xl:hidden pt-[60px] animate-bounce"> -->
+                    
+                </div>
+            </div>
+            <div class="bg-slate-300 t-team text-[140px] font-[700] text-center pt-[300px] xl:block hidden">FIND & PLAY</div>
+            <!-- SI7R -->
         </div>
-        <!-- PONG -->
+        </div>
+    <!-- <div class="flex flex-col items-center  xl:h-[1000px] bg-slate-300  relative mt-[000px]" style="background-image: url('Slide 16_9 - 9.svg'); background-size: cover;">
+        <div class="top-0 left-0 w-full h-full  t-light z-10" id="pos"></div>
+        <div class="absolute inset-0 flex items-center justify-center z-0">
+            <button class="text-[#fff] t font-[700] rounded-[8px] bg-gradient-to-r from-[#48C6EF] to-[#6F86D6] hover:from-[#48C6EF] hover:to-[#48C6EF] w-[203px] h-[56px]">PLAY NOW</button>
+        </div>
+        <script>
+            var pos = document.getElementById('pos');
+        
+            document.addEventListener('mousemove', e => {
+                pos.style.setProperty('--x', e.clientX + 'px');
+                pos.style.setProperty('--y', e.clientY + 'px');
+            });
+        </script>       
+    </div>
+    <footer class="bg-[#CFE7FD] rounded-[4px]">
+        <div class="mx-auto  p-4 md:flex md:items-center md:justify-between">
+            <img src="[removal 2.svg" alt="">
+          <span class="text-sm text-gray-500 sm:text-center dark:text-gray-400">© 2023 <a>IMABID™</a>. All Rights Reserved.
+        </span>
+        </div> -->
+
+
+
+    <div class=" bg-slate-300  relative xl:block hidden" style="background-image: url('Slide 16_9 - 9.svg'); background-size: cover;">
+        <div class="absolute inset-0 flex items-center justify-center z-0">
+            <button class="text-[#fff] t font-[700] rounded-[8px] bg-gradient-to-r from-[#48C6EF] to-[#6F86D6] hover:from-[#48C6EF] hover:to-[#48C6EF] w-[203px] h-[56px]">PLAY NOW</button>
+        </div>
+        <div class="z-10 mask ">
+
+        </div>
+        <script>
+            // Get a reference to the .mask element.
+            const mask = document.querySelector('.mask');
+            
+            // Add an event to catch mouse movements.
+            document.addEventListener('pointermove', (pos) => {
+                
+                // Calculate mouse position in percentages.
+                let x = parseInt( pos.clientX / window.innerWidth * 100 );
+                let y = parseInt( pos.clientY / window.innerHeight * 100 );
+                
+                // Update the custom property values on the body.
+                mask.style.setProperty('--mouse-x', x + '%');
+                mask.style.setProperty('--mouse-y', y + '%'); 
+                
+            });
+            </script>      
+    </div>
+
+    <!-- <div class="flex flex-col items-center h-full bg-slate-300 relative xl:block hidden" style="background-image: url('Slide 16_9 - 9.svg'); background-size: cover;">
+        <div class="z-10 mask"></div>
+        <script>
+            // Get a reference to the .mask element.
+            const mask = document.querySelector('.mask');
+    
+            // Add an event to catch mouse movements.
+            document.addEventListener('pointermove', (pos) => {
+    
+                // Calculate mouse position in percentages.
+                let x = parseInt(pos.clientX / window.innerWidth * 100);
+                let y = parseInt(pos.clientY / window.innerHeight * 100);
+    
+                // Update the custom property values on the body.
+                mask.style.setProperty('--mouse-x', x + '%');
+                mask.style.setProperty('--mouse-y', y + '%');
+    
+            });
+        </script>
+        <div class="absolute inset-0 flex items-center justify-center z-0">
+            <button class="text-[#fff] t font-[700] rounded-[8px] bg-gradient-to-r from-[#48C6EF] to-[#6F86D6] hover:from-[#48C6EF] hover:to-[#48C6EF] w-[203px] h-[56px]" id="playButton">PLAY NOW</button>
+        </div>
+    </div>
+    
+    <script>
+        // Get a reference to the button element by its id.
+        const playButton = document.getElementById('playButton');
+    
+        // Add a click event listener to the button.
+        playButton.addEventListener('click', function () {
+            // Perform the action you want when the button is clicked.
+            // For example, you can navigate to a new page or trigger some JavaScript function.
+            // You can replace the following line with your desired action.
+            alert("Button Clicked!");
+        });
+    </script> -->
+    
+    
+
+
+
+
+
+
+
+
+    <footer class="bg-[#CFE7FD] rounded-[4px]">
+        <div class="mx-auto  p-4 md:flex md:items-center md:justify-between">
+            <img src="[removal 2.svg" alt="">
+          <span class="text-sm text-gray-500 sm:text-center dark:text-gray-400">© 2023 <a>IMABID™</a>. All Rights Reserved.
+        </span>
+        </div>
+    </footer>
+    
+    <!-- <div class="hello">
+        <div class="mask"></div>
+    <script>
+        // Get a reference to the .mask element.
+    const mask = document.querySelector('.mask');
+
+    // Add an event to catch mouse movements.
+    document.addEventListener('pointermove', (pos) => {
+
+    // Calculate mouse position in percentages.
+    let x = parseInt( pos.clientX / window.innerWidth * 100 );
+    let y = parseInt( pos.clientY / window.innerHeight * 100 );
+
+    // Update the custom property values on the body.
+    mask.style.setProperty('--mouse-x', x + '%');
+    mask.style.setProperty('--mouse-y', y + '%'); 
+
+    });
+    </script>
+    </div> -->
     
 </body>
 </html>
