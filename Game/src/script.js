@@ -25,19 +25,25 @@ document.body.appendChild(stats.dom);
 const scene = new THREE.Scene()
 
 // SOUND
- const histsound = new Audio('/sounds/cheering.mp3')
+const histsound = new Audio('/sounds/hit.mp3')
+const rollsound = new Audio('/sounds/ball_roll.mp3')
 
+rollsound.volume = 0
+histsound.volume = 1
 const playHitSound = (collision) =>
 {
   const impctstrenght = collision.contact.getImpactVelocityAlongNormal()
 
-  if(impctstrenght > 0.5)
+  if(impctstrenght > 0.5 && ballBody.position.x != 0)
   {
     histsound.currentTime = 0
-    // histsound.play()
+    histsound.play()
+    rollsound.pause()
   }
 
 }
+
+
 
 // Models
 
@@ -310,13 +316,22 @@ world.addContactMaterial(defaultcontactmaterial)
 const ballradius = 0.35
 const ballshape = new CANNON.Sphere(ballradius)
 const ballBody = new CANNON.Body({
-  mass: 1,
+  mass: 0.001,
   position: new CANNON.Vec3(0, 0.4, 0),
   shape: ballshape,
   material: plasticmaterial
 })
 world.addBody(ballBody)
 ballBody.linearDamping = 0;
+
+function applyInitialVelocity(ballBody, initialVelocity, angularVelocity) {
+  ballBody.velocity.copy(initialVelocity)
+  ballBody.angularVelocity.copy(angularVelocity)
+}
+
+// const startPosition2 = new CANNON.Vec3(0, 0, 0);
+const initialVelocity = new CANNON.Vec3(-8, 0, -8); 
+const angularVelocity = new CANNON.Vec3(0, 5, 0);
 
 let serve = 0
 const servePower = 9
@@ -326,9 +341,9 @@ window.addEventListener('keydown', (event) => {
   {
     if(serve == 0)
     {
-      const bounceForce = new CANNON.Vec3(servedirection, 0,-servePower);
-      ballBody.applyImpulse(bounceForce, ballBody.position);
-
+      // const bounceForce = new CANNON.Vec3(servedirection, 0,-servePower);
+      // ballBody.applyImpulse(bounceForce, ballBody.position);
+      applyInitialVelocity(ballBody, initialVelocity, angularVelocity)
       serve = 1
     }
   }
@@ -551,7 +566,7 @@ const ballPosition = ballBody.position;
 const ballVelocity = ballBody.velocity;
 const aipaddlespeed = 1
 const AIreactiontime = 2
-const AIreactionvariability = 2
+const AIreactionvariability = 100
 
 function AImoveRight() {
   ballBody.position.x += aipaddlespeed
@@ -568,12 +583,12 @@ function updateAIPaddle(aiPaddle, ballPosition) {
   }
 }
 
-function delayedAIUpdate() {
-  setTimeout(() => {
-      updateAIPaddle(aiPaddle, ballPosition);
-      delayedAIUpdate();
-  }, AIreactiontime + Math.random() * AIreactionvariability);
-}
+// function delayedAIUpdate() {
+//   // setTimeout(() => {
+//       updateAIPaddle(paddle2body, ballPosition);
+//       delayedAIUpdate();
+//   // }, AIreactiontime + Math.random() * AIreactionvariability);
+// }
 
 // delayedAIUpdate();
 
@@ -794,6 +809,25 @@ const particles = new THREE.Points(particlesGeometry, particlesMaterial)
 scene.add(particles)
 
 
+// BALL SPEED SYSTEM
+
+const speedtreshold = 0
+const speedmultiplier = 1.7
+
+ballBody.addEventListener('collide', (e) => {
+  const relativeSpeed = e.contact.getImpactVelocityAlongNormal();
+  if (relativeSpeed > speedtreshold) {
+    console.log("HEUYYY ", relativeSpeed)
+    const currentVelocity = ballBody.velocity;
+    const newVelocity = currentVelocity.scale(speedmultiplier);
+    ballBody.velocity.copy(newVelocity);
+  }
+});
+
+
+
+
+
 /**
  * Lights
  */
@@ -893,6 +927,7 @@ const initialRotation = new THREE.Quaternion();
  */
 const clock = new THREE.Clock()
 let oldElapsedTime = 0
+
 const tick = () =>
 {
     const elapsedTime = clock.getElapsedTime()
@@ -946,12 +981,23 @@ const tick = () =>
     }
 
 
-    function monitorBallVelocity() {
-      const ballVelocity = ballBody.velocity;
-      console.log(`Ball Velocity: x=${ballVelocity.x}, y=${ballVelocity.y}, z=${ballVelocity.z}`);
-    }
+    const rollingThreshold = 0.01;
+
+
+      const isRolling = ballBody.angularVelocity.lengthSquared() > rollingThreshold * rollingThreshold;
+
+      if (isRolling) {
+        rollsound.play()
+      } else {
+        rollsound.pause()
+      }
+
+    // function monitorBallVelocity() {
+    //   const ballVelocity = ballBody.velocity;
+    //   console.log(`Ball Velocity: x=${ballVelocity.x}, y=${ballVelocity.y}, z=${ballVelocity.z}`);
+    // }
     
-    setInterval(monitorBallVelocity, 10000); 
+    // setInterval(monitorBallVelocity, 10000); 
     
 
     // Ensure the geometry knows it has been updated.
