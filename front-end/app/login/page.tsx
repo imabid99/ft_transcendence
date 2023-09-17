@@ -139,9 +139,6 @@ export default function Home() {
       <div className="flex flex-row items-center gap-[2px] pt-[24px]">
         <p className="text-[#064A85] text-[14px] font-[300] sm:text-[18.963px]">
           Don’t have an account?
-          {/* <button className="text-[#6A849E] text-[14px] font-[400] sm:text-[18.963px]">
-            Sign up
-          </button> */}
               <Link href="/signup" className='text-[#6A849E] text-[14px] font-[400] sm:text-[18.963px] pl-[2px]' >
             Sign Up
          </Link>
