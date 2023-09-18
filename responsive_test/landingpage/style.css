@@ -3,7 +3,7 @@
 }
 
 .h-text {
-    background: linear-gradient(90deg, #064A85 0%, #FFF 260.04%);
+    background: linear-gradient(90deg, #d4e3f0 0%, #FFF 260.04%);
     background-clip: text;
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
@@ -35,8 +35,8 @@
 }
 
 .t-team {
-    text-shadow: 0px 0px 0px rgba(0, 42, 81, 0.13), 0px 5px 11px rgba(0, 42, 81, 0.13), 0px 19px 19px rgba(0, 42, 81, 0.11), 0px 44px 26px rgba(0, 42, 81, 0.07), 0px 77px 31px rgba(0, 42, 81, 0.02), 0px 121px 34px rgba(0, 42, 81, 0.00); 
-    background: linear-gradient(90deg, #064A85 0%, #30C7EC 161.79%, #46AEF7 344.24%);
+    text-shadow: 0px 0px 0px rgba(255, 255, 255, 0.13), 0px 5px 11px rgba(0, 42, 81, 0.13), 0px 19px 19px rgba(0, 42, 81, 0.11), 0px 44px 26px rgba(0, 42, 81, 0.07), 0px 77px 31px rgba(0, 42, 81, 0.02), 0px 121px 34px rgba(0, 42, 81, 0.00); 
+    background: linear-gradient(90deg, #feffff 0%, #30C7EC 161.79%, #46AEF7 344.24%);
     background-clip: text;
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent; 
@@ -69,17 +69,19 @@
 } */
 
 .mask {
-  width: 100vw;
-  height: 100vh;
-  background-color: #EAF5FF;
-  mask: radial-gradient(
+    width: 100vw;
+    height: 100vh;
+    background-color: #0d1c34;
+    mask: radial-gradient(
     circle at var(--mouse-x) var(--mouse-y),
     transparent 100px,
     #EAF5FF 150px
-  );
-  -webkit-mask: radial-gradient(
+    );
+    -webkit-mask: radial-gradient(
     circle at var(--mouse-x) var(--mouse-y),
     transparent 40px,
     black 150px
-  );
+    );
 }
+
+
