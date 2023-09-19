@@ -11,10 +11,15 @@
     "vite": "^4.0.4"
   },
   "dependencies": {
+    "@nestjs/common": "^10.2.5",
+    "@nestjs/core": "^10.2.5",
     "cannon": "^0.6.2",
     "cannon-es-debugger": "^1.0.0",
+    "gsap": "^3.5.1",
     "lil-gui": "^0.17.0",
     "matter-js": "^0.19.0",
+    "reflect-metadata": "^0.1.13",
+    "rxjs": "^7.8.1",
     "stats.js": "^0.17.0",
     "three": "^0.148.0"
   }

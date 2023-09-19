@@ -1,6 +1,7 @@
 import * as THREE from 'three'
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js'
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js'
+import { gsap } from 'gsap'
 import * as dat from 'lil-gui'
 import * as CANNON from 'cannon'
 import Stats from 'stats.js'
@@ -24,6 +25,37 @@ document.body.appendChild(stats.dom);
 // Scene
 const scene = new THREE.Scene()
 
+// LOADING OVERLAY
+
+const overlayGeometry = new THREE.PlaneGeometry(2,2,1,1)
+const overlayMaterial = new THREE.ShaderMaterial({
+  // wireframe: true,
+  transparent: true,
+
+  uniforms:
+  {
+    uAlpha: { value: 1 }
+  },
+  vertexShader: `
+    void main()
+    {
+      gl_Position = vec4(position, 1.0);
+    }
+  `,
+  fragmentShader: `
+    uniform float uAlpha;
+    void main()
+    {
+      gl_FragColor = vec4(0.0, 0.0, 0.0, uAlpha);
+    }
+  `
+});
+
+
+const overlay = new THREE.Mesh(overlayGeometry, overlayMaterial)
+// scene.add(overlay) 
+
+
 // SOUND
 const histsound = new Audio('/sounds/hit.mp3')
 const rollsound = new Audio('/sounds/ball_roll.mp3')
@@ -44,13 +76,37 @@ const playHitSound = (collision) =>
 }
 
 
+// LOADING MANAGER
+
+const loadingBarElement = document.querySelector('.loading-bar')
+
+const loadingManager = new THREE.LoadingManager(
+  // Loaded
+  () =>
+  {
+   window.setTimeout(() =>
+    {
+      gsap.to(overlayMaterial.uniforms.uAlpha, { duration: 3, value: 0})
+      loadingBarElement.classList.add("ended")
+      loadingBarElement.style.transform = ''
+    }, 500)
+  },
+
+  // Progress
+  (itemURl, itemsLoaded, itemsTotal) =>
+  {
+    const prograssRatio = itemsLoaded/itemsTotal
+    loadingBarElement.style.transform = 'scaleX('+ prograssRatio +')'
+  }
+
+)
 
 // Models
 
 // const modellight = new THREE.AmbientLight(0xffffff, 10);
 // modellight.position.set(0, 0, 0);
 
-const gltfLoader = new GLTFLoader()
+const gltfLoader = new GLTFLoader(loadingManager)
 gltfLoader.load('/models/naturescene/naturescene.glb', (gltf) => {
   // console.log(gltf)
   const model1 = gltf.scene
@@ -176,7 +232,7 @@ gltfLoader.load('/models/bigrock/bigrock.glb', (gltf) => {
 /**
  * Textures
  */
-const textureLoader = new THREE.TextureLoader()
+const textureLoader = new THREE.TextureLoader(loadingManager)
 
 const matcaptexture = textureLoader.load('/textures/matcaps/8.png')
 const golfballtexture = textureLoader.load('/textures/golfball/obeaj.png')
@@ -273,7 +329,7 @@ Tilesroughness.wrapT = THREE.RepeatWrapping
 
 
 
-const cubetextureloader = new THREE.CubeTextureLoader()
+const cubetextureloader = new THREE.CubeTextureLoader(loadingManager)
 
 // Environment map
 
@@ -289,6 +345,7 @@ const environmentmap = cubetextureloader.load([
 
 // scene.environment = environmentmap
 scene.background = environmentmap
+
 
 //CANNON WORLD
 
@@ -472,7 +529,7 @@ box2.position.set(paddle1x, paddle1y, -paddle1z)
 box2.castShadow = true
 scene.add(box2)
 
-const boxSpeed = 0.3; 
+const boxSpeed = 0.4; 
 
 
 // Define the key states
@@ -563,50 +620,92 @@ function updatebox2() {
 // AI PLAYER
 
 const ballPosition = ballBody.position;
-const ballVelocity = ballBody.velocity;
-const aipaddlespeed = 1
-const AIreactiontime = 2
-const AIreactionvariability = 100
+
+// const ballVelocity = ballBody.velocity;
+const aipaddlespeed = 0.0003
+const AIreactiontime = 20
+const AIreactionvariability = 1000
+// let lastUpdateTime = performance.now();
+
 
 function AImoveRight() {
-  ballBody.position.x += aipaddlespeed
+  paddle2body.position.x += aipaddlespeed
+  // box2.position.x += aipaddlespeed
 }
 function AImoveLeft() {
-  ballBody.position.x -= aipaddlespeed
+  paddle2body.position.x -= aipaddlespeed
+  // box2.position.x -= aipaddlespeed
+  console.log(ballBody.position.z)
 }
 
 function updateAIPaddle(aiPaddle, ballPosition) {
-  if (ballPosition.x > aiPaddle.position.x) {
-      aiPaddle.AImoveRight();
-  } else if (ballPosition.x < aiPaddle.position.x) {
-      aiPaddle.AImoveLeft();
+  // if (ballPosition.x > aiPaddle.position.x && aiPaddle.position.x < rightLimit) {
+  //   AImoveRight();
+  // } else if (ballPosition.x < aiPaddle.position.x && aiPaddle.position.x > leftLimit) {
+  //   AImoveLeft();
+  // }
+  // box2.position.x = paddle2body.position.x
+  if(ballPosition.x > leftLimit && ball.position.x < rightLimit)
+  {
+    box2.position.x = ballPosition.x
+    aiPaddle.position.copy(box2.position)
   }
 }
 
-// function delayedAIUpdate() {
-//   // setTimeout(() => {
-//       updateAIPaddle(paddle2body, ballPosition);
-//       delayedAIUpdate();
-//   // }, AIreactiontime + Math.random() * AIreactionvariability);
-// }
 
-// delayedAIUpdate();
-
-
+function animateAI() {
+  setTimeout(() => {
+      updateAIPaddle(paddle2body, ballPosition);
+      // console.log(ballBody.position.x)
+      // delayedAIUpdate();
+  }, AIreactiontime + Math.random() * AIreactionvariability);
+}
 
 
-// // render loop
-// function animate() {
-//   requestAnimationFrame(animate);
-  
-//   // Update box based on key states
-//   updatebox2();
-//   updatebox();
-  
-//   //   renderer.render(scene, box);
-// }
+// Define some variables for AI movement
+var aiPaddleSpeed = 0.2; // Adjust the speed as needed
+var aiPaddleDelay = 500; // Delay in milliseconds before AI reacts
+var lastAIPaddleMoveTime = 0;
+// const aiPaddle = paddle2body
 
-// animate();
+// function animateAI2() 
+// {
+//   // Inside your game loop or update function
+//   var currentTime = Date.now();
+//   if (currentTime - lastAIPaddleMoveTime >= aiPaddleDelay) {
+//       // Calculate the target position for the AI paddle
+//       var targetX = ballPosition.x;
+
+//       // Add some variability to AI's movement
+//       var randomVariability = Math.random() * 20 - 10; // Adjust as needed
+
+//       // Ensure the AI paddle doesn't move too fast
+//       var maxMove = aiPaddleSpeed * (currentTime - lastAIPaddleMoveTime);
+
+//       // Limit the AI's movement to the left and right limits
+//       if (targetX < leftLimit) {
+//           targetX = leftLimit;
+//       } else if (targetX > rightLimit) {
+//           targetX = rightLimit;
+//       }
+
+//       // Move the AI paddle towards the target position
+//       if (Math.abs(targetX - paddle2body.position.x) > maxMove) {
+//           if (targetX > paddle2body.position.x) {
+//               paddle2body.position.x += maxMove;
+//           } else {
+//               paddle2body.position.x -= maxMove;
+//           }
+//       } else {
+//           paddle2body.position.x = targetX + randomVariability;
+//       }
+
+//       // Update the last move time
+//       lastAIPaddleMoveTime = currentTime;
+//     } 
+//     box2.position.copy(paddle2body.po)
+//   }
+
 
 // Floor
 
@@ -812,12 +911,12 @@ scene.add(particles)
 // BALL SPEED SYSTEM
 
 const speedtreshold = 0
-const speedmultiplier = 1.7
+const speedmultiplier = 1.8 
 
 ballBody.addEventListener('collide', (e) => {
   const relativeSpeed = e.contact.getImpactVelocityAlongNormal();
   if (relativeSpeed > speedtreshold) {
-    console.log("HEUYYY ", relativeSpeed)
+    // console.log("HEUYYY ", relativeSpeed)
     const currentVelocity = ballBody.velocity;
     const newVelocity = currentVelocity.scale(speedmultiplier);
     ballBody.velocity.copy(newVelocity);
@@ -958,6 +1057,13 @@ const tick = () =>
 
     // AI PADDLE CONTROL
     // delayedAIUpdate();
+    animateAI();
+    // animateAI2() 
+
+
+
+
+
 
     // if(ball.position.x > leftLimit && ball.position.x < rightLimit)
     // {
@@ -998,7 +1104,6 @@ const tick = () =>
     // }
     
     // setInterval(monitorBallVelocity, 10000); 
-    
 
     // Ensure the geometry knows it has been updated.
     particlesGeometry.attributes.position.needsUpdate = true;
