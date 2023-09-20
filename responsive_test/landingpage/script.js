@@ -36,3 +36,6 @@ document.addEventListener('pointermove', (pos) => {
     mask.style.setProperty('--mouse-y', y + '%'); 
   
 });
+
+// document.write("hello world");
+// alert("imad abid")
