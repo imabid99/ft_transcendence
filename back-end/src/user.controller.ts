@@ -1,8 +1,6 @@
 import {
-  Body,
   Controller,
   Get,
-  Post,
   UseGuards,
   Req,
   Patch,
@@ -11,12 +9,9 @@ import {
   Request,
 } from "@nestjs/common";
 import { UserService } from "./user.service";
-import { UserData } from "./dtos/user.dto";
-import { UserDataLogin } from "./dtos/user-login.dto";
 import { AuthGuard } from "@nestjs/passport";
 import { chPass } from "./dtos/pass.dto";
 import { JwtAuthGuard } from "./jwt-auth/jwt-auth.guard";
-import jwtDecode from "jwt-decode";
 
 @Controller("user")
 export class userController {
@@ -25,23 +20,6 @@ export class userController {
   @Get("all")
   getUsers(@Headers() headers: any) {
     return this.userService.getUsers();
-  }
-  @Post("signup")
-  signup(@Body() userData: UserData) {
-    if (userData.email && userData.password)
-      return this.userService.addUser(userData);
-    else {
-      return "invalid input";
-    }
-  }
-
-  @Post("login")
-  signin(@Body() userData: UserDataLogin) {
-    if (userData.email && userData.password)
-      return this.userService.login(userData);
-    else {
-      return "invalid input";
-    }
   }
 
   @Patch("pass")
@@ -78,8 +56,8 @@ export class userController {
   }
   @Get("userinfo")
   @UseGuards(JwtAuthGuard)
-  async getUserInfo(@Headers() headers: any): Promise<void> {
-    return this.userService.getUserInfo(headers.authorization);
+  async getUserInfo(@Req() req): Promise<void> {
+    return this.userService.getUserInfo(req.user.id);
   }
   @Get("is-blocked/:userId/:tragetId")
   @UseGuards(JwtAuthGuard)

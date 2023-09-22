@@ -4,6 +4,7 @@ import { userController } from "./user.controller";
 import { AppService } from "./app.service";
 import { PrismaModule } from "./prisma/prisma.module";
 import { UserService } from "./user.service";
+import { AuthService } from "./auth.service";
 import { PassportModule } from "@nestjs/passport";
 import { JwtModule } from "@nestjs/jwt";
 import { JwtStrategy } from "./jwt.strategy";
@@ -21,6 +22,6 @@ import { ChatModule } from "./chat/chat.module";
     ChatModule,
   ],
   controllers: [AppController, userController],
-  providers: [AppService, UserService, JwtStrategy, FortyTwoStrategy],
+  providers: [AppService,AuthService, UserService, JwtStrategy, FortyTwoStrategy],
 })
 export class AppModule {}

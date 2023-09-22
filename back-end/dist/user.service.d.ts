@@ -18,7 +18,7 @@ export declare class UserService {
     addUser(userData: UserData): Promise<"User created" | "user exist">;
     generateToken(userId: string, username: string, email: string): string;
     login(userData: UserDataLogin): Promise<string>;
-    changePass(pass: chPass, id: string): Promise<"invalid password" | "Changed successfully">;
+    changePass(pass: chPass, id: string): Promise<"invalid password" | "Changed successfully">; 
     intraJWT(email: string): Promise<string>;
     validateUser(data: any): Promise<import(".prisma/client").User>;
     getProfile(id: string): Promise<import(".prisma/client").Profile | "Not found">;
