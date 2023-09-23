@@ -10,6 +10,13 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+enum FriendshipStatus {
+  ACCEPTED
+  REFUSED
+  BLOCKED
+  PENDING
+}
+
 model User {
   id             String      @id @default(uuid())
   id42           Int?
@@ -26,14 +33,20 @@ model User {
   channelsMuts   channels[]  @relation("MutedUsers")
   channelsBand   channels[]  @relation("BannedUsers")
   muted          Muted[]
-  Friendship     Friendship[]
+  sentRequests  Friendship[] @relation("FriendshipSender")
+  receivedRequests Friendship[] @relation("FriendshipReceiver")
 }
 
 model Friendship {
-  id     String @id @default(uuid())
-  sender User   @relation(fields: [userId], references: [id])
-  userId String @unique
-  status String @default("") // Accepted , Refused , Blocked , Receaved
+  id        String @id @default(uuid())
+  senderId  String 
+  receiverId String
+  status    FriendshipStatus @default(PENDING)
+  
+  sender    User @relation(name: "FriendshipSender", fields: [senderId], references: [id])
+  receiver  User @relation(name: "FriendshipReceiver", fields: [receiverId], references: [id])
+  
+  @@unique([senderId, receiverId])
 }
 
 model Profile {
