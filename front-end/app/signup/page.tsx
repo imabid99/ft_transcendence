@@ -43,16 +43,16 @@ export default function Home() {
     if (!email || !password || !password2 || !firstName || !lastName || !userName) return;
     if (password !== password2) return;
     try {
-      const response = await axios.post(`http://${process.env.NEXT_PUBLIC_APP_URL}:3000/api/user/signup`, {
+      const response = await axios.post(`http://${process.env.NEXT_PUBLIC_APP_URL}:3000/api/auth/signup`, {
         email: email,
         password: password,
         firstName: firstName,
         lastName: lastName,
         username: userName,
-       });
-       if (response.status !== 200) 
+      });
+      if (response.status !== 200) 
         router.push('/login');
-       
+      
     } catch (e:any) 
     {
       console.log("Error : ", e.response.data);
