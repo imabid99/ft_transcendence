@@ -6,9 +6,9 @@
         <script src="https://cdn.tailwindcss.com"></script>
         <link rel="stylesheet" href="style.css">
     </head>
-    <body>
-        <div class="flex flex-col">
-            <div class="flex max-w-[922px] xl:w-[922px] xl:h-[823px] rounded-[42px] sh-d ">
+    <body class="bg-slate-400">
+        <div class="flex justify-center  bg-gradient-to-br from-white to-blue-200 items-center xl:h-[100vh] flex-col xl:flex-row gap-[40px] ">
+            <div class="bg-white flex max-w-[922px] w-[100%] xl:h-[823px] rounded-[42px] sh-d ">
                 <div class="mx-auto w-11/12 mt-[34px]">
                     <div class="relative w-12/12 h-[185px] rounded-[25px] overflow-hidden">
                         <img src="Rectangle 93.svg" alt="" class="object-cover object-top w-full h-full">
@@ -24,7 +24,7 @@
                             <input type="file" id="imageUpload" class="absolute hidden cursor-pointer">
                         </div>
                         <div class="pt-[100px] gap-[15px] sm:pt-0 flex flex-col sm:flex-row pl-[40px] sm:items-center sm:pl-[200px] sm:justify-between">
-                            <div class="sm:text-center pt-[10px]">                                
+                            <div class=" pt-[10px]">                                
                                 <p class="text-[25px] font-[600] text-[#020025]">
                                     Ahmed kamal
                                 </p>
@@ -38,13 +38,26 @@
                                 <button class="w-[30px] h-[29px] rounded-[9px] bg-[#5085AB] flex items-center justify-center gap-[5px]">
                                     <img src="Vector(1).svg" alt="">
                                 </button>
-                                <button class="w-[30px] h-[29px] rounded-[9px] bg-[#5085AB] flex items-center justify-center gap-[5px]">
+                                <button id="settingsButton" class="w-[30px] h-[29px] rounded-[9px] bg-[#5085AB] flex items-center justify-center gap-[5px]">
                                     <img src="Vector(2).svg" alt="">
                                 </button>
+                                <div id="settingsMenu" class="hidden absolute mt-[80px] bg-white border border-gray-300 shadow-lg rounded-lg  w-40">
+                                    <ul>
+                                        <li class="px-4 py-2 hover:bg-gray-100 cursor-pointer">Option 1</li>
+                                    </ul>
+                                </div>
+                                <script>
+                                    const settingsButton = document.getElementById('settingsButton');
+                                    const settingsMenu = document.getElementById('settingsMenu');
+                                                                    
+                                    settingsButton.addEventListener('click', () => {
+                                        settingsMenu.classList.toggle('hidden');
+                                    });
+                                </script>
                             </div>
                         </div>
                     </div>
-                    <div class="pt-[40px]">
+                    <div class="pt-[40px] xl:pt-[10px]">
                         <div class="sh-l w-12/12 h-[220px] sm:h-[117px] rounded-[34px] bg-[#EFF8FF] flex items-center gap-[20px] sm:gap-[50px] flex-col sm:flex-row">
                             <div class="pt-[20px] sm:pt-[0px] sm:pl-[40px] ">   
                                 <div class=" text-[#0E559D] text-[24px] font-[400]">My Level</div>
@@ -152,49 +165,49 @@
                         </div>
                     </div>
             </div>     
-            <div class="bg-white flex max-w-[922px] xl:w-[922px] xl:h-[823px] rounded-[42px]  sh-d flex-col ">
-                <div class="pt-[62px] pl-[45px] text-white">
-                    <div class="flex items-center">
-                        <img src="group.svg" alt="">
-                        <span class="pl-[10px] text-[#064A85] text-[20px] font-[400]">Achievements - <span>0</span> / 7</span>
+            <div class="bg-white flex max-w-[922px] w-[100%]  xl:h-[823px] rounded-[42px]  sh-d flex-col ">
+                    <div class="mx-auto w-12/12 flex items-center pt-[30px] flex-col">
+                        <div class="pb-10">
+                            <div class="flex ">
+                                <img src="group.svg" alt="">
+                                <span class="pl-[10px] text-[#064A85] text-[15px] sm:text-[20px] font-[400]">Achievements - <span>0</span> / 7</span>
+                            </div>
+                        </div>
+                        <div class="flex items-center  flex-col w-12/12 gap-[30px] lg:gap-0 pb-[30px]">
+                            <div class="flex items-center justify-center  gap-[30px] flex-col sm:flex-row">
+                                <div class="">
+                                    <img src="Air.svg" alt="" class="">
+                                </div>
+                                <div class="">
+                                    <img src="Horor.svg" alt="" class="">
+                                </div>
+                            </div>
+                            <div class="flex items-center justify-center gap-[30px] flex-col sm:flex-row">
+                                <div class="">
+                                    <img src="Grand copy.svg" alt="" class="">
+                                </div>
+                                <div class="">
+                                    <img src="Grand.svg" alt="" class="">
+                                </div>
+                                <div class="lg:block hidden">
+                                    <img src="Luck.svg" alt="" class="">
+                                </div>
+                            </div>
+                            <div class="flex items-center justify-center gap-[30px] flex-col sm:flex-row">
+                                <div class="">
+                                    <img src="Unb.svg" alt="" class="">
+                                </div>
+                                <div class="">
+                                    <img src="iron.svg" alt="" class="">
+                                </div>
+                            </div>
+                            <div>
+                                <div class="pb-[30px] block lg:hidden">
+                                    <img src="Luck.svg" alt="" class="">
+                                </div>
+                            </div>
+                        </div>
                     </div>
-                </div>
-                <div class="mx-auto w-12/12 flex items-center pt-[30px]">
-                    <div class="flex items-center  flex-col w-12/12 gap-[30px] lg:gap-0">
-                        <div class="flex items-center justify-center  gap-[30px] flex-col sm:flex-row">
-                            <div class="">
-                                <img src="Air.svg" alt="" class="">
-                            </div>
-                            <div class="">
-                                <img src="Horor.svg" alt="" class="">
-                            </div>
-                        </div>
-                        <div class="flex items-center justify-center gap-[30px] flex-col sm:flex-row">
-                            <div class="">
-                                <img src="Grand copy.svg" alt="" class="">
-                            </div>
-                            <div class="">
-                                <img src="Grand.svg" alt="" class="">
-                            </div>
-                            <div class="lg:block hidden">
-                                <img src="Luck.svg" alt="" class="">
-                            </div>
-                        </div>
-                        <div class="flex items-center justify-center gap-[30px] flex-col sm:flex-row">
-                            <div class="">
-                                <img src="Unb.svg" alt="" class="">
-                            </div>
-                            <div class="">
-                                <img src="iron.svg" alt="" class="">
-                            </div>
-                        </div>
-                        <div>
-                            <div class="pb-[30px] block lg:hidden">
-                                <img src="Luck.svg" alt="" class="">
-                            </div>
-                        </div>
-                    </div>
-
                 </div>
             </div>              
         </div>
