@@ -1,7 +1,7 @@
 
 export default function Page() {
   return (
-<div className="flex items-center h-[100%] flex-col 4xl:flex-row gap-[40px] w-[100%] 4xl:justify-center">
+<div className="flex items-center h-[100vh] flex-col 3xl:flex-row gap-[40px] w-[100vw] 3xl:justify-center">
   <div className=" flex max-w-[922px] w-[100%] xl:h-[823px] rounded-[42px] sh-d ">
     <div className="mx-auto w-11/12 mt-[34px]">
       <div className="relative w-12/12 h-[185px] rounded-[25px] overflow-hidden">
@@ -12,7 +12,7 @@ export default function Page() {
         />
         <label
           htmlFor="imageUpload"
-          className="t-ba absolute top-[15px] right-[15px] text-white text-center leading-5 w-[92px] h-[21px] text-[7px] rounded-[5px] cursor-pointer"
+          className="t-ba absolute top-[15px] right-[15px] text-white text-center leading-5 w-[92px] h-[21px] text-[7px] rounded-[5px] cursor-pointer transform hover:scale-110 transition-transform duration-300"
         >
           Upload Cover
         </label>
@@ -33,7 +33,7 @@ export default function Page() {
             htmlFor="imageUpload"
             className="absolute left-[150px] -top-[44px] cursor-pointer "
           >
-            <img id="imageUpload" src="group-70.svg" />
+            <img id="imageUpload" src="group-70.svg" className="transform hover:scale-125 transition-transform duration-300" />
           </label>
           <input
             type="file"
@@ -99,7 +99,7 @@ export default function Page() {
       <div className="flex flex-col xl:flex-row items-center xl:pb-[390px]">
         <div className="flex gap-[64px] sm:gap-[30px] pt-[30px] flex-col sm:flex-row">
           <div className="flex gap-[64px] flex-col">
-            <div className="w-[180px] h-[100px] bg-[#BBE3FF] rounded-[24px] flex items-center pl-[20px] gap-[17px] g-sh">
+            <div className="w-[180px] h-[100px] bg-[#BBE3FF] rounded-[24px] flex items-center pl-[20px] gap-[17px] g-sh transform hover:scale-105 transition-transform duration-300">
               <img src="pgroup-78.svg" alt="" className="w-[36px] h-[36px]" />
               <div>
                 <div className="text-[#0367A6] text-[17px] font-[500]">
@@ -108,7 +108,7 @@ export default function Page() {
                 <div className="text-[20px] font-[600] text-[#007BC8]">0</div>
               </div>
             </div>
-            <div className="w-[180px] h-[100px] bg-[#C1FFFB] rounded-[24px] flex items-center pl-[20px] gap-[17px] s-sh">
+            <div className="w-[180px] h-[100px] bg-[#C1FFFB] rounded-[24px] flex items-center pl-[20px] gap-[17px] s-sh transform hover:scale-105 transition-transform duration-300">
               <img src="group-83.svg" alt="" className="w-[36px] h-[36px]" />
               <div>
                 <div className="text-[#12A099] text-[17px] font-[500]">
@@ -119,7 +119,7 @@ export default function Page() {
             </div>
           </div>
           <div className="flex gap-[64px] flex-col">
-            <div className="w-[180px] h-[100px] bg-[#C2FFDE] rounded-[24px] flex items-center pl-[20px] gap-[17px] w-sh">
+            <div className="w-[180px] h-[100px] bg-[#C2FFDE] rounded-[24px] flex items-center pl-[20px] gap-[17px] w-sh transform hover:scale-105 transition-transform duration-300">
               <img src="group-82.svg" alt="" className="w-[36px] h-[36px]" />
               <div>
                 <div className="text-[#27B270] text-[17px] font-[500]">
@@ -128,7 +128,7 @@ export default function Page() {
                 <div className="text-[20px] font-[600] text-[#10884F]">0</div>
               </div>
             </div>
-            <div className="w-[180px] h-[100px] bg-[#FFCCCC] rounded-[24px] flex items-center pl-[20px] gap-[17px] l-sh">
+            <div className="w-[180px] h-[100px] bg-[#FFCCCC] rounded-[24px] flex items-center pl-[20px] gap-[17px] l-sh transform hover:scale-105 transition-transform duration-300">
               <img src="group-84.svg" alt="" className="w-[36px] h-[36px]" />
               <div>
                 <div className="text-[#CA4E4E] text-[17px] font-[500]">
@@ -221,34 +221,34 @@ export default function Page() {
       </div>
       <div className="flex items-center  flex-col w-12/12 gap-[30px] lg:gap-0 pb-[30px]">
         <div className="flex items-center justify-center  gap-[30px] flex-col sm:flex-row">
-          <div className="">
+          <div className="transform hover:scale-110 transition-transform duration-300">
             <img src="Air.svg" alt="" className="" />
           </div>
-          <div className="">
+          <div className="transform hover:scale-110 transition-transform duration-300">
             <img src="Horor.svg" alt="" className="" />
           </div>
         </div>
         <div className="flex items-center justify-center gap-[30px] flex-col sm:flex-row">
-          <div className="">
+          <div className="transform hover:scale-110 transition-transform duration-300">
             <img src="Grand copy.svg" alt="" className="" />
           </div>
-          <div className="">
+          <div className="transform hover:scale-110 transition-transform duration-300">
             <img src="Grand.svg" alt="" className="" />
           </div>
-          <div className="lg:block hidden">
+          <div className="lg:block hidden transform hover:scale-110 transition-transform duration-300">
             <img src="Luck.svg" alt="" className="" />
           </div>
         </div>
         <div className="flex items-center justify-center gap-[30px] flex-col sm:flex-row">
-          <div className="">
+        <div className="transform hover:scale-110 transition-transform duration-300">
             <img src="Unb.svg" alt="" className="" />
-          </div>
-          <div className="">
+        </div>
+          <div className="transform hover:scale-110 transition-transform duration-300">
             <img src="iron.svg" alt="" className="" />
           </div>
         </div>
         <div>
-          <div className="pb-[30px] block lg:hidden">
+          <div className="pb-[30px] block lg:hidden transform hover:scale-110 transition-transform duration-300">
             <img src="Luck.svg" alt="" className="" />
           </div>
         </div>

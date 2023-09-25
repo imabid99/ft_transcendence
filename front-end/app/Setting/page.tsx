@@ -59,12 +59,12 @@ export default function Page() {
           <input
             type="submit"
             className=" w-[132px] h-[41px] rounded-[12px] bg-[#3887D0] cursor-pointer text-[#fff] text-[10px] font-[600] b-save"
-            defaultValue="Save Changes"
+            value="Save Changes"
           />
           <input
             type="reset"
             className=" w-[132px] h-[41px] rounded-[12px] bg-[#F9F9F9] cursor-pointer text-[#02539D] text-[10px] font-[600] b-save"
-            defaultValue="Discard"
+            value="Discard"
           />
         </div>
       </div>
@@ -103,12 +103,12 @@ export default function Page() {
           <input
             type="submit"
             className=" w-[132px] h-[41px] rounded-[12px] bg-[#3887D0] cursor-pointer text-[#fff] text-[10px] font-[600] b-save"
-            defaultValue="Save Changes"
+            value="Save Changes"
           />
           <input
             type="reset"
             className=" w-[132px] h-[41px] rounded-[12px] bg-[#F9F9F9] cursor-pointer text-[#02539D] text-[10px] font-[600] b-save"
-            defaultValue="Discard"
+            value="Discard"
           />
         </div>
       </div>
@@ -166,7 +166,7 @@ export default function Page() {
           <input
             type="submit"
             className=" w-[160px] h-[50px] rounded-[12px] bg-[#3887D0] cursor-pointer text-[#fff] text-[13px] font-[600] b-save"
-            defaultValue="Save Changes"
+            value="Save Changes"
           />
         </div>
       </div>
@@ -174,15 +174,15 @@ export default function Page() {
         <div className="text-[20px] text-center sm:text-left sm:text-[25px] font-[600] text-[#043B6A] pt-[20px] sm:pl-[40px] pb-[28px]">
           Close Account
         </div>
-        <div className="flex flex-col items-center w-full sm:flex-row pb-[40px] gap-[16px]">
+        <div className="flex flex-col items-center w-full sm:flex-row pb-[40px] gap-[16px] justify-between">
           <div className="text-[#7D8493] text-[20px] font-[400] text-center sm:text-left w-[50%] sm:pl-[50px]">
             You can permanently delete or temprarily freeze your account.
           </div>
-          <div className="flex justify-center items-center sm:w-[50%] pl-[200px]">
+          <div className="flex justify-center items-center sm:pr-[40px]">
             <input
               type="submit"
               className="w-[160px] h-[50px] rounded-[12px] bg-[#3887D0] cursor-pointer text-[#fff] text-[13px] font-[600] b-save"
-              defaultValue="Close Account"
+              value="Close Account"
             />
           </div>
         </div>
