@@ -1,8 +1,8 @@
 
 export default function Page() {
   return (
-  <div className="flex flex-col xl:flex-row w-[100%] bg-blue-500 items-center justify-center h-[100vh]">
-    <div className="flex flex-col bg-black w-[100%] items-center">
+  <div className="flex flex-col 3xl:flex-row items-center w-[100%] gap-[50px]">
+    <div className="flex flex-col w-[100%] items-center 3xl:items-end gap-[50px]">
       <div className="max-w-[922px] w-[100%] xl:h-[448px] rounded-[42px] p-inf bg-white">
         <div className="text-[20px] text-center sm:text-left sm:text-[25px] font-[600] text-[#043B6A] pt-[20px] sm:pl-[40px] ">
           Personal Information
@@ -113,7 +113,7 @@ export default function Page() {
         </div>
       </div>
     </div>
-    <div className="flex flex-col w-[100%] bg-red-600 items-center">
+    <div className="flex flex-col w-[100%] items-center 3xl:items-start gap-[50px] ">
       <div className="bg-white rounded-[20px] p-inf  flex items-center flex-col max-w-[922px] w-[100%] xl:h-[618px] sm:items-start ">
         <div className="text-[20px] text-center sm:text-left sm:text-[25px] font-[600] text-[#043B6A] pt-[20px] sm:pl-[40px] pb-[28px]">
           Two-factor authentication
@@ -178,11 +178,11 @@ export default function Page() {
           <div className="text-[#7D8493] text-[20px] font-[400] text-center sm:text-left w-[50%] sm:pl-[50px]">
             You can permanently delete or temprarily freeze your account.
           </div>
-          <div className="flex justify-center items-center sm:w-[50%]">
+          <div className="flex justify-center items-center sm:w-[50%] pl-[200px]">
             <input
               type="submit"
               className="w-[160px] h-[50px] rounded-[12px] bg-[#3887D0] cursor-pointer text-[#fff] text-[13px] font-[600] b-save"
-              defaultValue="Save Changes"
+              defaultValue="Close Account"
             />
           </div>
         </div>
