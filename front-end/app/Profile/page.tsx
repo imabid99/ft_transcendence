@@ -2,7 +2,7 @@
   export default function Page() {
     return (
       <div className="flex items-center h-[100vh] flex-col 3xl:flex-row gap-[40px] w-[100vw] 3xl:justify-center">
-        <div className=" flex max-w-[922px] w-[100%] xl:h-[823px] rounded-[42px] sh-d ">
+        <div className=" flex max-w-[922px] w-[100%] xl:h-[823px] rounded-[42px] sh-d bg-white">
           <div className="mx-auto w-11/12 mt-[34px]">
             <div className="relative w-12/12 h-[185px] rounded-[25px] overflow-hidden">
               <img
@@ -139,7 +139,7 @@
                   </div>
                 </div>
               </div>
-              <div className="bg-[#EFF8FF] mb-[70px] xl:mb-[0px] w-11/12 sm:w-[400px] sm:h-[264px] rounded-[34px] daily-sh mt-[30px] xl:ml-[63px] flex flex-col items-center sm:items-start">
+              <div className="bg-[#EFF8FF] mb-[70px] xl:mb-[0px] w-[180px] sm:w-[400px] sm:h-[264px] rounded-[34px] daily-sh mt-[30px] xl:ml-[63px] flex flex-col items-center sm:items-start">
                 <div className="sm:pl-[34px] pt-[25px] text-[#0E559D] text-[16px] font-[400]">
                   Daily Play Time
                 </div>
@@ -178,7 +178,7 @@
                       </div>
                     </div>
                   </div>
-                  <div className="flex gap-[34px]">
+                  <div className="flex gap-[34px] pb-[25px] sm:pb-0">
                     <div className="flex flex-col  items-center">
                       <div className="h-[145px] rounded-[8px] bg-[#C0D4E9] w-[16px] flex flex-col-reverse">
                         <div className="w-[16px] week-sh rounded-[8px] h-[20%]" />

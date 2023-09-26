@@ -1,9 +1,9 @@
 
 export default function Page() {
   return (
-    <div className="flex flex-col 3xl:flex-row items-center w-[100%] gap-[50px]">
+    <div className="flex flex-col 3xl:flex-row items-center w-[100%] gap-[50px] h-screen">
       <div className="flex flex-col w-[100%] items-center 3xl:items-end gap-[50px]">
-        <div className="max-w-[922px] w-[100%] xl:h-[448px] rounded-[42px] p-inf bg-white">
+        <div className="3xl:max-w-[922px] max-w-[1200px] w-11/12  xl:h-[448px] rounded-[42px] p-inf bg-white">
           <div className="text-[20px] text-center sm:text-left sm:text-[25px] font-[600] text-[#043B6A] pt-[20px] sm:pl-[40px] ">
             Personal Information
           </div>
@@ -14,7 +14,7 @@ export default function Page() {
             <div className="flex flex-col sm:pl-[24px] gap-[5px] ">
               <label
                 htmlFor="imageUpload"
-                className="bg-[#3887D0] text-white  w-[132px] h-[41px] text-center leading-10  text-[10px] cursor-pointer rounded-[12px]"
+                className="bg-[#3887D0] text-white  w-[132px] h-[41px] text-center leading-10  text-[10px] cursor-pointer rounded-[12px] hover:bg-[#2f71af]"
               >
                 Upload New Picture
               </label>
@@ -23,7 +23,7 @@ export default function Page() {
                 id="imageUpload"
                 className="hidden cursor-pointer"
               />
-              <button className="bg-[#F9F9F9] text-[#02539D] text-[10px] font-[600] w-[132px] h-[41px] rounded-[12px]">
+              <button className="bg-[#F9F9F9] text-[#02539D] text-[10px] font-[600] w-[132px] h-[41px] rounded-[12px] hover:bg-[#f0f0f0]">
                 Delete
               </button>
             </div>
@@ -68,7 +68,7 @@ export default function Page() {
             />
           </div>
         </div>
-        <div className="max-w-[922px] w-[100%] xl:h-[339px] rounded-[42px] p-inf bg-white">
+        <div className="3xl:max-w-[922px] max-w-[1200px] w-11/12 xl:h-[339px] rounded-[42px] p-inf bg-white">
           <div className="text-[20px] text-center sm:text-left sm:text-[25px] font-[600] text-[#043B6A] pt-[20px] sm:pl-[40px] pb-[28px]">
             Password
           </div>
@@ -114,7 +114,7 @@ export default function Page() {
         </div>
       </div>
       <div className="flex flex-col w-[100%] items-center 3xl:items-start gap-[50px] ">
-        <div className="bg-white rounded-[20px] p-inf  flex items-center flex-col max-w-[922px] w-[100%] xl:h-[618px] sm:items-start ">
+        <div className="bg-white rounded-[20px] p-inf  flex items-center flex-col 3xl:max-w-[922px] max-w-[1200px] w-11/12 xl:h-[618px] sm:items-start ">
           <div className="text-[20px] text-center sm:text-left sm:text-[25px] font-[600] text-[#043B6A] pt-[20px] sm:pl-[40px] pb-[28px]">
             Two-factor authentication
           </div>
@@ -170,7 +170,7 @@ export default function Page() {
             />
           </div>
         </div>
-        <div className=" bg-white rounded-[20px] p-inf flex  flex-col  max-w-[922px] w-[100%] xl:h-[169px] items-center sm:items-start">
+        <div className=" bg-white rounded-[20px] p-inf flex  flex-col  3xl:max-w-[922px] max-w-[1200px] w-11/12 xl:h-[169px] items-center sm:items-start">
           <div className="text-[20px] text-center sm:text-left sm:text-[25px] font-[600] text-[#043B6A] pt-[20px] sm:pl-[40px] pb-[28px]">
             Close Account
           </div>
