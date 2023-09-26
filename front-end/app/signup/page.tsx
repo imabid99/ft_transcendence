@@ -15,7 +15,6 @@ export default function Home() {
   const [isloading, setIsLoading] = useState(true);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [password2, setPassword2] = useState('');
   const [firstName, setfirstName] = useState('');
   const [lastName, setlastName] = useState('');
   const [userName, setuserName] = useState('');
@@ -40,19 +39,18 @@ export default function Home() {
   const handleSubmit = async (e:any) =>
   {
     e.preventDefault();
-    if (!email || !password || !password2 || !firstName || !lastName || !userName) return;
-    if (password !== password2) return;
+    if (!email || !password|| !firstName || !lastName || !userName) return;
     try {
-      const response = await axios.post(`http://${process.env.NEXT_PUBLIC_APP_URL}:3000/api/auth/signup`, {
+      const response = await axios.post(`http://${process.env.NEXT_PUBLIC_APP_URL}:3000/api/user/signup`, {
         email: email,
         password: password,
         firstName: firstName,
         lastName: lastName,
         username: userName,
-      });
-      if (response.status !== 200) 
+       });
+       if (response.status !== 200) 
         router.push('/login');
-      
+       
     } catch (e:any) 
     {
       console.log("Error : ", e.response.data);
@@ -181,12 +179,6 @@ export default function Home() {
               <input
                 onChange={(e:any) => setPassword(e.target.value)}
                 type="password"
-                className="text-[#064A85] h-[50px] rounded-[11px] border-[1px] border-[#DDDDDD]  p-[27px] w-12/12"
-                placeholder="Password"
-              />
-              <input
-                onChange={(e:any) => setPassword2(e.target.value)}
-                type="confirm-password"
                 className="text-[#064A85] h-[50px] rounded-[11px] border-[1px] border-[#DDDDDD]  p-[27px] w-12/12"
                 placeholder="Password"
               />
