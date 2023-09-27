@@ -356,8 +356,8 @@
         </nav>
         <!-- hero -->
         <div class="flex flex-col  items-center justify-between xl:flex-row h-[1100px]  xl:h-[800px]  xl:pt-[200px]">
-            <div class="space-y-[20px] flex  flex-col items-center xl:items-start xl:mb-[300px]">
-                <div class="flex flex-col space-y-[10px] items-center xl:items-start ">
+            <div class="space-y-[20px] flex  flex-col items-center xl:items-start xl:mb-[300px] slideInLeft">
+                <div class="flex flex-col space-y-[10px] items-center xl:items-start">
                     <div class="font-[700] h-text text-[50px] sm-text-[80px] max-w-[600px] text-center xl:text-left">Ping <span class="t-pong w-28">PONG</span></div> 
                     <p class="font-[700] h-text text-[50px] sm-text-[80px] max-w-[600px] text-center xl:text-left">
                         Let The Fun Begin.
@@ -372,7 +372,7 @@
                 </div>
             </div>
             <div class="">
-                <img src="Frame 118 (1).svg" alt="" class="lg:w-[766px] lg:h-[1061px] xl:block hidden z-1 relative ">
+                <img src="Frame 118 (1).svg" alt="" class="lg:w-[766px] lg:h-[1061px] xl:block hidden z-1 relative  slideInRight ml-[130px]">
                 <img src="Frame 118.svg" alt="" class="xl:hidden pt-[60px] animate-bounce">
             </div>
         </div>
@@ -638,11 +638,38 @@
                         <p>Pong is a classic arcade-style video game that was first released in 1972. It is a two-player game that simulates table tennis, with players using virtual paddles to hit a ball back and forth across a digital net. The game is played on a simple black-and-white 2D screen with a low resolution.</p>
                     </div>
                 </div>
-                <div class="">
+                <!-- <div class="">
                     <img src="Frame 122.svg" alt="" class="w-[600px]  z-1 relative ">
-                    <!-- <img src="Frame 118.svg" alt="" class="xl:hidden pt-[60px] animate-bounce"> -->
-                    
+                </div> -->
+                <div class="scroll-trigger">
+                    <img src="Frame 122.svg" alt="" class="w-[600px]  z-1 relative animate-slide-in">
                 </div>
+                <script>
+                    // Function to check if an element is in the viewport
+// Function to check if an element is in the viewport
+function isInViewport(element) {
+    const rect = element.getBoundingClientRect();
+    return (
+        rect.top >= 0 &&
+        rect.left >= 0 &&
+        rect.bottom <= (window.innerHeight || document.documentElement.clientHeight) &&
+        rect.right <= (window.innerWidth || document.documentElement.clientWidth)
+    );
+}
+
+// Function to handle the scroll event
+function handleScroll() {
+    const element = document.querySelector('.scroll-trigger img');
+    if (isInViewport(element) && !element.classList.contains('animate')) {
+        element.classList.add('animate');
+    }
+}
+
+// Add a scroll event listener to trigger the animation when scrolling
+window.addEventListener('scroll', handleScroll);
+
+
+                </script>
             </div>
             <!-- PONG -->
             <div class="flex flex-col  items-center justify-between pt-[100px] xl:pt-[700px] xl:flex-row xl:h-[800px] ">

@@ -1,8 +1,8 @@
 
   export default function Page() {
     return (
-      <div className="flex items-center h-[100vh] flex-col 3xl:flex-row gap-[40px] w-[100vw] 3xl:justify-center">
-        <div className=" flex max-w-[922px] w-[100%] xl:h-[823px] rounded-[42px] sh-d bg-white">
+      <div className="flex items-center flex-col 3xl:flex-row gap-[40px] w-[100%] 3xl:justify-center">
+        <div className=" flex max-w-[922px] w-11/12 xl:h-[823px] rounded-[42px] sh-d bg-white">
           <div className="mx-auto w-11/12 mt-[34px]">
             <div className="relative w-12/12 h-[185px] rounded-[25px] overflow-hidden">
               <img
@@ -99,7 +99,7 @@
             <div className="flex flex-col xl:flex-row items-center xl:pb-[390px]">
               <div className="flex gap-[64px] sm:gap-[30px] pt-[30px] flex-col sm:flex-row">
                 <div className="flex gap-[64px] flex-col">
-                  <div className="w-[180px] h-[100px] bg-[#BBE3FF] rounded-[24px] flex items-center pl-[20px] gap-[17px] g-sh transform hover:scale-105 transition-transform duration-300">
+                  <div className="w-[180px] h-[100px] bg-[#BBE3FF] hover:bg-[#a2d8ff] rounded-[24px] flex items-center pl-[20px] gap-[17px] g-sh transform hover:scale-105 transition-transform duration-300">
                     <img src="pgroup-78.svg" alt="" className="w-[36px] h-[36px]" />
                     <div>
                       <div className="text-[#0367A6] text-[17px] font-[500]">
@@ -108,7 +108,7 @@
                       <div className="text-[20px] font-[600] text-[#007BC8]">0</div>
                     </div>
                   </div>
-                  <div className="w-[180px] h-[100px] bg-[#C1FFFB] rounded-[24px] flex items-center pl-[20px] gap-[17px] s-sh transform hover:scale-105 transition-transform duration-300">
+                  <div className="w-[180px] h-[100px] bg-[#C1FFFB] hover:bg-[#9dfcf6] rounded-[24px] flex items-center pl-[20px] gap-[17px] s-sh transform hover:scale-105 transition-transform duration-300">
                     <img src="group-83.svg" alt="" className="w-[36px] h-[36px]" />
                     <div>
                       <div className="text-[#12A099] text-[17px] font-[500]">
@@ -119,7 +119,7 @@
                   </div>
                 </div>
                 <div className="flex gap-[64px] flex-col">
-                  <div className="w-[180px] h-[100px] bg-[#C2FFDE] rounded-[24px] flex items-center pl-[20px] gap-[17px] w-sh transform hover:scale-105 transition-transform duration-300">
+                  <div className="w-[180px] h-[100px] bg-[#C2FFDE] hover:bg-[#9cffca]  rounded-[24px] flex items-center pl-[20px] gap-[17px] w-sh transform hover:scale-105 transition-transform duration-300">
                     <img src="group-82.svg" alt="" className="w-[36px] h-[36px]" />
                     <div>
                       <div className="text-[#27B270] text-[17px] font-[500]">
@@ -128,7 +128,7 @@
                       <div className="text-[20px] font-[600] text-[#10884F]">0</div>
                     </div>
                   </div>
-                  <div className="w-[180px] h-[100px] bg-[#FFCCCC] rounded-[24px] flex items-center pl-[20px] gap-[17px] l-sh transform hover:scale-105 transition-transform duration-300">
+                  <div className="w-[180px] h-[100px] bg-[#FFCCCC] hover:bg-[#feaeae] rounded-[24px] flex items-center pl-[20px] gap-[17px] l-sh transform hover:scale-105 transition-transform duration-300">
                     <img src="group-84.svg" alt="" className="w-[36px] h-[36px]" />
                     <div>
                       <div className="text-[#CA4E4E] text-[17px] font-[500]">
@@ -209,7 +209,7 @@
             </div>
           </div>
         </div>
-        <div className="bg-white flex max-w-[922px] w-[100%]  xl:h-[823px] rounded-[42px]  sh-d flex-col ">
+        <div className="bg-white flex max-w-[922px] w-11/12  xl:h-[823px] rounded-[42px]  sh-d flex-col ">
           <div className="mx-auto w-12/12 flex items-center pt-[30px] flex-col">
             <div className="pb-10">
               <div className="flex ">
