@@ -1,6 +1,8 @@
 import Image from "next/image"
 import Dashboard from "@/components/Dashboard/Dashboard/Dashboard"
 import HomeDash from "@/components/Dashboard/Home/Home"
+// import Game from './path/to/page.tsx';
+
 export default function Page() {
   return (
     // <div className="h-[100vh] w-[100vw] flex justify-center items-center bg-[#EAF5FF]">
