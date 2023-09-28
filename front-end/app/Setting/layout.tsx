@@ -1,6 +1,7 @@
 import "../globals.css";
 import Head from "next/head";
 import Dashboard from '@/components/Dashboard/Dashboard/Dashboard'
+import Header from "../../components/Dashboard/Home/Header/Header"
 export const metadata = {
   title: "Inbox",
   description: "ft_transcendence",
