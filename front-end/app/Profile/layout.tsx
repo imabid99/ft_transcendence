@@ -22,7 +22,7 @@ export default function ChatLayout({
         <link rel="icon" href="/favicon.ico" />
       </Head>
         <div className="h-[100vh] w-[100vw] flex  pl-[150px] bg-[#FAFDFF] lsm:max-lg:overflow-x-hidden lsm:max-lg:pl-[100px] lsm:max-sm:pl-[0px]">
-          <Dashboard path='setting'/>
+          <Dashboard path='Profile'/>
           {children}
         </div>
     </>

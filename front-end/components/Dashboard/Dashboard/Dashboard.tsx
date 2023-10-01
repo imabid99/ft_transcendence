@@ -36,7 +36,7 @@ export default function Nav( {path} : Props) {
                                 </div>
                             </Link>
                             <Link href='/Profile' >
-                                <div  id="User"  className={path === "User" ? "dashboardIcons active" : "dashboardIcons"}>
+                                <div  id="User"  className={path === "Profile" ? "dashboardIcons active" : "dashboardIcons"}>
                                     <svg  id="User"  width="34" height="34" viewBox="0 0 27 34" fill="none" xmlns="http://www.w3.org/2000/svg">
                                         <path  id="User"  d="M13.2048 21.7449C20.3662 21.7449 26.4096 22.9086 26.4096 27.3983C26.4096 31.8896 20.3265 33.012 13.2048 33.012C6.04512 33.012 0 31.8484 0 27.3587C0 22.8673 6.0831 21.7449 13.2048 21.7449ZM13.2048 0C18.0561 0 21.9431 3.88556 21.9431 8.73342C21.9431 13.5813 18.0561 17.4685 13.2048 17.4685C8.35518 17.4685 4.46655 13.5813 4.46655 8.73342C4.46655 3.88556 8.35518 0 13.2048 0Z" fill="#00539D" />
                                     </svg>
