@@ -74,6 +74,14 @@ export class UserService {
     return this.generateToken(user.id, user.username, user.email);
   }
 
+  async googleJWT(email: string) {
+    const user = await this.prisma.user.findUnique({
+      where: { email },
+    });
+
+    return this.generateToken(user.id, user.username, user.email);
+  }
+
   async validateUser(data: any) {
     const { userId } = data;
 
@@ -149,14 +157,29 @@ export class UserService {
     }
   }
 
-  async getUserInfo(id: string): Promise<any> {
+  async validateGoogleUser(user: any): Promise<any> {
     try {
-      const user = await this.prisma.user.findUnique({
-        where: {
-          id,
-        },
+      const exist = await this.prisma.user.findUnique({
+        where: { email: user.email },
       });
-      delete user.password;
+      if (!exist) {
+        await this.prisma.user.create({
+          data: {
+            username: "user.username",
+            email: user.email,
+            idGoogle: user.googleId,
+            password: "google",
+            profile: {
+              create: {
+                firstName: user.firstName,
+                lastName: user.lastName,
+                email: user.email,
+                username: "user.username",
+              },
+            },
+          },
+        });
+      }
       return user;
     } catch (error) {
       throw new InternalServerErrorException("Internal server error");
@@ -188,5 +211,14 @@ export class UserService {
       return { iBlocked: false, heBlocked: true };
     }
     return { iBlocked: false, heBlocked: false };
+  }
+  async getUserInfo(id: string): Promise<any> {
+    const user = await this.prisma.user.findUnique({
+      where: {
+        id,
+      },
+    });
+    delete user.password;
+    return user;
   }
 }
