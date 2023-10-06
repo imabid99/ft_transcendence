@@ -213,3 +213,72 @@ filter: blur(0.5px) drop-shadow(0px 2px 4px rgba(0, 42, 81, 0.10)) drop-shadow(0
 {
   background: linear-gradient(90deg, #48C6EF 0%, #6F86D6 100%);
 }
+
+
+.lp {
+  box-shadow: 0px 0px 0px 0px rgba(9, 29, 42, 0.09), 0px 39px 85px 0px rgba(9, 29, 42, 0.09), 0px 154px 154px 0px rgba(9, 29, 42, 0.07), 0px 347px 208px 0px rgba(9, 29, 42, 0.04), 0px 618px 247px 0px rgba(9, 29, 42, 0.01), 0px 965px 270px 0px rgba(9, 29, 42, 0.00);
+}
+
+input {
+  outline: none;
+}
+
+.l-inp {
+  box-shadow: 0px 0px 0px 0px rgba(0, 0, 0, 0.07), 0px 11px 24px 0px rgba(0, 0, 0, 0.07), 0px 43px 43px 0px rgba(0, 0, 0, 0.06), 0px 98px 59px 0px rgba(0, 0, 0, 0.03), 0px 173px 69px 0px rgba(0, 0, 0, 0.01), 0px 271px 76px 0px rgba(0, 0, 0, 0.00);
+}
+
+.sh-d {
+  box-shadow: 0px 0px 0px 0px rgba(0, 0, 0, 0.02), 0px 72px 159px 0px rgba(0, 0, 0, 0.02), 0px 288px 288px 0px rgba(0, 0, 0, 0.02), 0px 648px 389px 0px rgba(0, 0, 0, 0.01), 0px 1153px 461px 0px rgba(0, 0, 0, 0.00), 0px 1801px 504px 0px rgba(0, 0, 0, 0.00);
+}
+
+.t-ba {
+  background: linear-gradient(180deg, rgba(87, 107, 124, 0.86) -42.86%, rgba(87, 107, 124, 0.00) 128.57%);
+  backdrop-filter: blur(3px);
+}
+
+.sh-l {
+  box-shadow: 0px 0px 0px 0px rgba(14, 84, 157, 0.01), 0px 15px 33px 0px rgba(14, 84, 157, 0.01), 0px 59px 59px 0px rgba(14, 84, 157, 0.01), 0px 134px 80px 0px rgba(14, 84, 157, 0.01), 0px 238px 95px 0px rgba(14, 84, 157, 0.00), 0px 371px 104px 0px rgba(14, 84, 157, 0.00);
+}
+
+.sh-level
+{
+  background: linear-gradient(90deg, #0D559D 0%, #8BC0F4 100.01%);
+}
+
+.g-sh {
+  box-shadow: 0px 0px 0px 0px rgba(5, 103, 165, 0.05), 0px 5px 11px 0px rgba(5, 103, 165, 0.04), 0px 20px 20px 0px rgba(5, 103, 165, 0.04), 0px 45px 27px 0px rgba(5, 103, 165, 0.02), 0px 79px 32px 0px rgba(5, 103, 165, 0.01), 0px 124px 35px 0px rgba(5, 103, 165, 0.00);
+}
+
+.s-sh {
+  box-shadow: 0px 0px 0px 0px rgba(20, 160, 154, 0.05), 0px 5px 11px 0px rgba(20, 160, 154, 0.04), 0px 20px 20px 0px rgba(20, 160, 154, 0.04), 0px 45px 27px 0px rgba(20, 160, 154, 0.02), 0px 79px 32px 0px rgba(20, 160, 154, 0.01), 0px 124px 35px 0px rgba(20, 160, 154, 0.00);
+}
+
+.w-sh {
+  box-shadow: 0px 0px 0px 0px rgba(40, 177, 110, 0.05), 0px 5px 11px 0px rgba(40, 177, 110, 0.04), 0px 20px 20px 0px rgba(40, 177, 110, 0.04), 0px 45px 27px 0px rgba(40, 177, 110, 0.02), 0px 79px 32px 0px rgba(40, 177, 110, 0.01), 0px 124px 35px 0px rgba(40, 177, 110, 0.00);
+}
+
+.l-sh {
+  box-shadow: 0px 0px 0px 0px rgba(202, 77, 77, 0.05), 0px 5px 11px 0px rgba(202, 77, 77, 0.04), 0px 20px 20px 0px rgba(202, 77, 77, 0.04), 0px 45px 27px 0px rgba(202, 77, 77, 0.02), 0px 79px 32px 0px rgba(202, 77, 77, 0.01), 0px 124px 35px 0px rgba(202, 77, 77, 0.00);
+}
+
+.daily-sh {
+  box-shadow: 0px 0px 0px 0px rgba(0, 0, 0, 0.02), 0px 11px 24px 0px rgba(0, 0, 0, 0.02), 0px 44px 44px 0px rgba(0, 0, 0, 0.02), 0px 99px 59px 0px rgba(0, 0, 0, 0.01), 0px 176px 70px 0px rgba(0, 0, 0, 0.00), 0px 275px 77px 0px rgba(0, 0, 0, 0.00);
+}
+
+.week-sh {
+  background: linear-gradient(180deg, #90C4F8 0%, #0D559D 100%);
+}
+
+.s-div {
+  box-shadow: 0px 0px 0px 0px rgba(0, 0, 0, 0.02), 0px 72px 159px 0px rgba(0, 0, 0, 0.02), 0px 288px 288px 0px rgba(0, 0, 0, 0.02), 0px 648px 389px 0px rgba(0, 0, 0, 0.01), 0px 1153px 461px 0px rgba(0, 0, 0, 0.00), 0px 1801px 504px 0px rgba(0, 0, 0, 0.00);
+}
+
+.p-inf {
+  box-shadow: 0px 0px 0px 0px rgba(0, 0, 0, 0.02), 0px 72px 159px 0px rgba(0, 0, 0, 0.02), 0px 288px 288px 0px rgba(0, 0, 0, 0.02), 0px 648px 389px 0px rgba(0, 0, 0, 0.01), 0px 1153px 461px 0px rgba(0, 0, 0, 0.00), 0px 1801px 504px 0px rgba(0, 0, 0, 0.00); 
+}
+.b-save {
+  filter: drop-shadow(0px 4px 8px rgba(0, 0, 0, 0.04)) drop-shadow(0px 15px 15px rgba(0, 0, 0, 0.03)) drop-shadow(0px 33px 20px rgba(0, 0, 0, 0.02)) drop-shadow(0px 58px 23px rgba(0, 0, 0, 0.01)) drop-shadow(0px 91px 25px rgba(0, 0, 0, 0.00)); 
+}
+input {
+  outline: none;
+}
