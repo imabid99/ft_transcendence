@@ -19,7 +19,8 @@ enum FriendshipStatus {
 
 model User {
   id             String      @id @default(uuid())
-  id42           Int?
+  id42           String?
+  idGoogle       String?
   email          String      @unique
   username       String      @unique @default("")
   password       String
