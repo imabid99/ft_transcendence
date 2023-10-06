@@ -26,14 +26,33 @@ import { Perf } from "r3f-perf";
 import * as THREE from "three";
 
 const Game = () => {
-  const naturemodel = useLoader(
+	const naturemodel = useLoader(
 	GLTFLoader,
 	"/Game_Assets/models/naturescene/naturescene.glb"
-  );
-  const siderock = useLoader(
+	);
+	useEffect(() => {
+	const object = naturemodel.scene as THREE.Object3D;
+	object.traverse((child) => {
+		if (child instanceof THREE.Mesh) {
+		child.castShadow = true;
+		child.receiveShadow = true;
+		}
+	});
+	}, [naturemodel]);
+
+	const siderock = useLoader(
 	GLTFLoader,
 	"/Game_Assets//models/bigrock/bigrock.glb"
-  );
+	);
+	useEffect(() => {
+	const object = siderock.scene as THREE.Object3D;
+	object.traverse((child) => {
+		if (child instanceof THREE.Mesh) {
+		child.castShadow = true;
+		child.receiveShadow = true;
+		}
+	});
+	}, [siderock]);
   const siderock2 = siderock.scene.clone();
   const controls = useControls({});
   const { sunPosition } = useControls("sky", {
