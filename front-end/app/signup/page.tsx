@@ -57,6 +57,9 @@ export default function Home() {
       return;
     }
   }
+  const styling = {
+    backgroundImage: `url('lala.png')`,
+  }
   return (
     // <div className="flex justify-center items-center w-screen h-screen bg-gray-50 dark:bg-gray-900">
     //    <div className="w-full bg-white rounded-lg shadow dark:border md:mt-0 sm:max-w-md xl:p-0 dark:bg-gray-800 dark:border-gray-700">
@@ -111,37 +114,37 @@ export default function Home() {
     //   </div>
     // </div>
     <>
-  <div className="bg-gradient-to-r from-blue-500 to-cyan-500 h-[100vh] bg-[46e4e1beddaa3825f3d815f7f7ef8134.jpeg] w-[100%] flex justify-around items-center">
-    <div className=" w-[100vw] h-full bg-white flex flex-row items-center justify-center md:w-11/12 md:h-[735px] md:rounded-[61px] xl:max-w-[1404px] xl:mx-auto">
+  <div className=" h-[100vh] w-[100%] flex justify-around items-center bgImg bg-no-repeat bg-cover bg-center" style={styling}>
+    <div className=" w-[100vw] h-full  bg-blue-200 bg-opacity-0 backdrop-blur-lg flex flex-row items-center justify-center md:w-11/12 md:h-[735px] md:rounded-[61px] xl:max-w-[1404px] xl:mx-auto">
       <div className="w-[100%] flex flex-col items-center justify-center xl:w-[35%]">
-        <div className="font-[600] text-[40px] text-[#064A85] sm:text-[66px]">
+        <div className="font-[600] text-[40px] text-white sm:text-[66px]">
           Welcome !
         </div>
-        <div className="font-[600] text-[#6A849E] text-[20px] sm:text-[35px]">
+        <div className="font-[600] text-white text-[20px] sm:text-[35px]">
           Let The Fun Begin.
         </div>
         <div className="flex flex-col pt-[20px] gap-[16px] sm:flex-row w-full items-center justify-center">
-          <button className="flex justify-evenly items-center w-[170px] h-[52px] border-[1px] rounded-[11px] border-[#DDDDDD] cursor-pointer">
+          <button className="flex justify-evenly items-center w-[170px] h-[52px] border-[0.1px] rounded-[11px] border-white cursor-pointer">
             <img src="goog.svg" alt="" className="w-[20.153px] h-[20.56px]" />
-            <p className="text-[#000] text-[10px] font-[400] cursor-pointer">
+            <p className="text-white text-[10px] font-[400] cursor-pointer">
               Log in with google
             </p>
           </button>
-          <button className="flex justify-evenly items-center w-[170px] h-[52px] border-[1px] rounded-[11px] border-[#DDDDDD] cursor-pointer">
+          <button className="flex justify-evenly items-center w-[170px] h-[52px] border-[0.1px] rounded-[11px] border-white cursor-pointer">
             <img
               src="423918.logowik 1.png"
               alt=""
               className="w-[25px] h-[21px]"
             />
-            <p className="text-[#000] text-[10px] font-[400] cursor-pointer">
+            <p className="text-white text-[10px] font-[400] cursor-pointer">
               Log in with intra
             </p>
           </button>
         </div>
         <div className="flex w-full pt-[20px] justify-center  gap-[10px] items-center">
-          <div className="w-[61px] h-[1px] bg-[#C9C9C9]" />
-          <p className="text-[#DBDBDB] text-[15px] font-[400]">OR</p>
-          <div className="w-[61px] h-[1px] bg-[#C9C9C9]" />
+          <div className="w-[61px] h-[1px] bg-white" />
+          <p className="text-white text-[15px] font-[400]">OR</p>
+          <div className="w-[61px] h-[1px] bg-white" />
         </div>
         <div className=" w-full">
           <form
@@ -154,32 +157,32 @@ export default function Home() {
                 <input
                   onChange={(e:any) => setfirstName(e.target.value)}
                   type="firstName"
-                  className="text-[#064A85] h-[50px] rounded-[11px] border-[1px] border-[#DDDDDD]  p-[27px] w-12/12 sm:w-6/12"
+                  className="text-[#064A85] h-[50px] rounded-[11px] border-[0.1px] border-white  p-[27px] w-12/12 sm:w-6/12  bg-white bg-opacity-10 backdrop-blur-lg placeholder:text-white"
                   placeholder="First name"
                 />
                 <input
                   onChange={(e:any) => setlastName(e.target.value)}
                   type="lastName"
-                  className=" text-[#064A85] h-[50px] rounded-[11px] border-[1px] border-[#DDDDDD]  p-[27px] w-12/12 sm:w-6/12"
+                  className=" text-[#064A85] h-[50px] rounded-[11px] border-[0.1px] border-white  p-[27px] w-12/12 sm:w-6/12  bg-white bg-opacity-10 backdrop-blur-lg placeholder:text-white"
                   placeholder="Last name"
                 />
               </div>
               <input
                 onChange={(e:any) => setuserName(e.target.value)}
                 type="userName"
-                className="text-[#064A85] h-[50px] rounded-[11px] border-[1px] border-[#DDDDDD]  p-[27px] w-12/12"
+                className="text-[#064A85] h-[50px] rounded-[11px] border-[0.1px] border-white  p-[27px] w-12/12  bg-white bg-opacity-10 backdrop-blur-lg placeholder:text-white"
                 placeholder="Username"
               />
               <input
                 onChange={(e:any) => setEmail(e.target.value)}
                 type="email"
-                className="text-[#064A85] h-[50px] rounded-[11px] border-[1px] border-[#DDDDDD]  p-[27px] w-12/12"
-                placeholder="Email or Username"
+                className="text-[#064A85] h-[50px] rounded-[11px] border-[0.1px] border-white  p-[27px] w-12/12  bg-white bg-opacity-10 backdrop-blur-lg placeholder:text-white"
+                placeholder="Email"
               />
               <input
                 onChange={(e:any) => setPassword(e.target.value)}
                 type="password"
-                className="text-[#064A85] h-[50px] rounded-[11px] border-[1px] border-[#DDDDDD]  p-[27px] w-12/12"
+                className="text-[#064A85] h-[50px] rounded-[11px] border-[0.1px] border-white  p-[27px] w-12/12  bg-white bg-opacity-10 backdrop-blur-lg placeholder:text-white"
                 placeholder="Password"
               />
             </div>
@@ -187,9 +190,9 @@ export default function Home() {
           </form>
         </div>
         <div className="flex flex-row items-center gap-[2px] pt-[24px]">
-        <p className="text-[#064A85] text-[14px] font-[300] sm:text-[18.963px]">
+        <p className="text-white text-[14px] font-[300] sm:text-[18.963px]">
         Already have an account?
-              <Link href="/login" className='text-[#6A849E] text-[14px] font-[400] sm:text-[18.963px] pl-[2px]' >
+              <Link href="/login" className='text-[#eee] text-[14px] font-[400] sm:text-[18.963px] pl-[2px]' >
             Login
          </Link>
         </p>
