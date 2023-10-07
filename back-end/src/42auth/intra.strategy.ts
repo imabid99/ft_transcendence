@@ -7,9 +7,9 @@ import { UserService } from '../user.service';
 export class FortyTwoStrategy extends PassportStrategy(Strategy, '42') {
   constructor(private readonly userService: UserService) {
     super({
-      clientID: process.env.UID,
-      clientSecret: process.env.SECRET,
-      callbackURL: 'http://127.0.0.1:3000/api/user/intra',
+      clientID: process.env.UID_42,
+      clientSecret: process.env.SECRET_42,
+      callbackURL: process.env.CALLBACK_URL_42,
     });
   }
 
@@ -26,4 +26,3 @@ export class FortyTwoStrategy extends PassportStrategy(Strategy, '42') {
     return user;
   }
 }
-
