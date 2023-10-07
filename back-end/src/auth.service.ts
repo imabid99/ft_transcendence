@@ -10,6 +10,8 @@ import { UserData } from "./dtos/user.dto";
 import { UserDataLogin } from "./dtos/user-login.dto";
 import * as bcrypt from "bcrypt";
 import { UserService } from "./user.service";
+import e from "express";
+import { ExceptionsHandler } from "@nestjs/core/exceptions/exceptions-handler";
 
 @Injectable()
 export class AuthService {
@@ -41,7 +43,7 @@ export class AuthService {
         throw new NotFoundException("User not found");
       }
     } catch (error) {
-      throw new InternalServerErrorException("Internal server error");
+      throw error;
     }
   }
 
@@ -80,8 +82,7 @@ export class AuthService {
         },
       });
     } catch (error) {
-      console.log(error);
-      throw new InternalServerErrorException("Internal server error");
+      throw error;
     }
   }
   

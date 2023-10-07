@@ -67,7 +67,7 @@ export default function Home() {
     e.preventDefault();
     if (!email || !password|| !firstName || !lastName || !userName) return;
     try {
-      const response = await axios.post(`http://${process.env.NEXT_PUBLIC_APP_URL}:3000/api/user/signup`, {
+      const response = await axios.post(`http://${process.env.NEXT_PUBLIC_APP_URL}:3000/api/auth/signup`, {
         email: email,
         password: password,
         firstName: firstName,
