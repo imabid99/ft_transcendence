@@ -1,4 +1,3 @@
-
 export default function Page() {
   return (
     <div className="flex flex-col 3xl:flex-row items-center w-[100%] gap-[50px] h-screen">
@@ -42,7 +41,7 @@ export default function Page() {
                 type="text"
                 name=""
                 id=""
-                placeholder="First name"
+                placeholder="Last name"
               />
             </div>
             <div className="w-11/12">
@@ -51,7 +50,7 @@ export default function Page() {
                 type="text"
                 name=""
                 id=""
-                placeholder="First name"
+                placeholder="Email"
               />
             </div>
           </div>
@@ -73,29 +72,29 @@ export default function Page() {
             Password
           </div>
           <div className="items-center flex flex-col gap-[16px]">
-            <div className="flex  gap-[16px] w-11/12 flex-col sm:flex-row">
-              <input
-                className="w-full h-[66px] border-[1px] border-[#D8D8D8] rounded-[15px] placeholder:indent-[24px] indent-[24px]"
-                type="text"
-                name=""
-                id=""
-                placeholder="First name"
-              />
-              <input
-                className="w-full h-[66px] border-[1px] border-[#D8D8D8] rounded-[15px] placeholder:indent-[24px] indent-[24px]"
-                type="text"
-                name=""
-                id=""
-                placeholder="First name"
-              />
-            </div>
             <div className="w-11/12">
               <input
                 className="w-full sm:w-[49%] h-[66px] border-[1px] border-[#D8D8D8] rounded-[15px] placeholder:indent-[24px] indent-[24px]"
                 type="text"
                 name=""
                 id=""
-                placeholder="First name"
+                placeholder="Old password"
+              />
+            </div>
+            <div className="flex  gap-[16px] w-11/12 flex-col sm:flex-row">
+              <input
+                className="w-full h-[66px] border-[1px] border-[#D8D8D8] rounded-[15px] placeholder:indent-[24px] indent-[24px]"
+                type="text"
+                name=""
+                id=""
+                placeholder="New password"
+              />
+              <input
+                className="w-full h-[66px] border-[1px] border-[#D8D8D8] rounded-[15px] placeholder:indent-[24px] indent-[24px]"
+                type="text"
+                name=""
+                id=""
+                placeholder="Confirm password"
               />
             </div>
           </div>
