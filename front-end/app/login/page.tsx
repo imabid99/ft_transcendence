@@ -46,11 +46,11 @@ export default function Home() {
       return;
     };
     try {
-      const response = await axios.post(`http://${process.env.NEXT_PUBLIC_APP_URL}:3000/api/user/login`, {
+      const response = await axios.post(`http://${process.env.NEXT_PUBLIC_APP_URL}:3000/api/auth/login`, {
         email: email,
         password: password,
-       });
-       setLocalStorageItem("Token", response.data);
+      });
+      setLocalStorageItem("Token", response.data);
     } catch (e:any) 
     {
       console.log("Error : ", e.response.data);

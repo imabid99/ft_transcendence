@@ -11,7 +11,7 @@ import {
     Request,
   } from "@nestjs/common";
   import { ChatService } from "./chat.service";
-  import { JwtAuthGuard } from "../jwt-auth/jwt-auth.guard";
+  import { AuthGuard } from "@nestjs/passport";
   import jwtDecode from "jwt-decode";
 
 @Controller('chat')
@@ -19,7 +19,7 @@ export class ChatController {
     constructor(private chatService: ChatService) {}
     //hadi 5asha tkon fchat
     @Get("channel/:id")
-    @UseGuards(JwtAuthGuard)
+    @UseGuards(AuthGuard("jwt"))
     async channel(
         @Param("id") id: string,
         @Headers() headers: any
@@ -31,19 +31,19 @@ export class ChatController {
 
       //hadi 5asha tkon fchat
     @Get("messages/:id")
-    @UseGuards(JwtAuthGuard)
+      @UseGuards(AuthGuard("jwt"))
     messages(@Param() params: any) {
         return this.chatService.getMessages(params.id);
     }
 
     @Get("myChannels/:id")
-    @UseGuards(JwtAuthGuard)
+    @UseGuards(AuthGuard("jwt"))
     async myChannels(@Param("id") id: string): Promise<any> {
       return this.chatService.getMyChannels(id);
     }
     
     @Get("channels")
-    @UseGuards(JwtAuthGuard)
+    @UseGuards(AuthGuard("jwt"))
     async channels(@Headers() headers: any): Promise<any> {
       const token = headers.authorization.split(" ")[1];
       const decoded: any = jwtDecode(token);
@@ -51,11 +51,11 @@ export class ChatController {
     }
 
     @Get("is-mute/:userId/:grouptId")
-    @UseGuards(JwtAuthGuard)
+    @UseGuards(AuthGuard("jwt"))
     async isMute(
       @Param("userId") userId: string,
       @Param("grouptId") groupId: string
     ): Promise<{ iMute: boolean; heMute: boolean }> {
-      return this.chatService.checkMute(+userId, groupId);
+      return this.chatService.checkMute(userId, groupId);
     }
 }

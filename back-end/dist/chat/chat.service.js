@@ -35,7 +35,7 @@ let ChatService = exports.ChatService = class ChatService {
             throw new common_1.NotFoundException("Channel not found");
         }
         const isMumber = (_a = channel.Members) === null || _a === void 0 ? void 0 : _a.some((member) => {
-            return member.id === +myId;
+            return member.id === myId;
         });
         if (!isMumber) {
             throw new common_1.NotFoundException("Channel not found");
@@ -43,10 +43,10 @@ let ChatService = exports.ChatService = class ChatService {
         delete channel.password;
         delete channel.accessPassword;
         const isAdmin = channel.Admins.some((admin) => {
-            return admin.id === +myId;
+            return admin.id === myId;
         });
         const isOwner = channel.Owners.some((owner) => {
-            return owner.id === +myId;
+            return owner.id === myId;
         });
         if (!isAdmin && !isOwner) {
             delete channel.Band;
@@ -57,7 +57,7 @@ let ChatService = exports.ChatService = class ChatService {
     async getMessages(id) {
         const messages = await this.prisma.message.findMany({
             where: {
-                userId: +id,
+                userId: id,
             },
         });
         return messages;
@@ -67,7 +67,7 @@ let ChatService = exports.ChatService = class ChatService {
             where: {
                 Members: {
                     some: {
-                        id: +id,
+                        id: id,
                     },
                 },
             },

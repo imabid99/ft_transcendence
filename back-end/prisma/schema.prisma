@@ -10,9 +10,17 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+enum FriendshipStatus {
+  ACCEPTED
+  REFUSED
+  BLOCKED
+  PENDING
+}
+
 model User {
-  id             Int         @id @unique @default(autoincrement())
-  id42           Int?
+  id             String      @id @default(uuid())
+  id42           String?
+  idGoogle       String?
   email          String      @unique
   username       String      @unique @default("")
   password       String
@@ -26,11 +34,25 @@ model User {
   channelsMuts   channels[]  @relation("MutedUsers")
   channelsBand   channels[]  @relation("BannedUsers")
   muted          Muted[]
+  sentRequests  Friendship[] @relation("FriendshipSender")
+  receivedRequests Friendship[] @relation("FriendshipReceiver")
+}
+
+model Friendship {
+  id        String @id @default(uuid())
+  senderId  String 
+  receiverId String
+  status    FriendshipStatus @default(PENDING)
+  
+  sender    User @relation(name: "FriendshipSender", fields: [senderId], references: [id])
+  receiver  User @relation(name: "FriendshipReceiver", fields: [receiverId], references: [id])
+  
+  @@unique([senderId, receiverId])
 }
 
 model Profile {
   user            User      @relation(fields: [userId], references: [id])
-  userId          Int       @unique
+  userId          String    @unique
   firstName       String
   lastName        String
   email           String
@@ -54,7 +76,7 @@ model channels {
   password        String?   @default("")
   accessPassword  String?   @default("")
   Creator         User?     @relation(fields: [userId], references: [id])
-  userId          Int?
+  userId          String?
   Members         User[]    @relation("Members")
   Owners          User[]    @relation("Owners")
   Admins          User[]    @relation("Admins")
@@ -67,29 +89,29 @@ model channels {
 
 model Message {
   id         Int       @id @default(autoincrement())
-  fromId     Int?
-  fromName String?
-  toId       Int?
+  fromId     String?
+  fromName   String?
+  toId       String?
   content    String
   createdAt  DateTime  @default(now())
   User       User?     @relation(fields: [userId], references: [id])
-  userId     Int?
+  userId     String?
   channels   channels? @relation(fields: [channelsId], references: [id])
   channelsId String?
 }
 
 model BlockList {
-  id        Int   @id @default(autoincrement())
+  id        Int     @id @default(autoincrement())
   blockedId Int
-  User      User? @relation(fields: [userId], references: [id])
-  userId    Int?
+  User      User?   @relation(fields: [userId], references: [id])
+  userId    String?
 }
 
 model Muted {
-  id        Int   @id @default(autoincrement())
-  User      User? @relation(fields: [userId], references: [id])
-  userId    Int?
+  id          Int       @id @default(autoincrement())
+  User        User?     @relation(fields: [userId], references: [id])
+  userId      String?
   channelId   String?
-  timeOnMute DateTime  @default(now())
-  timeOffMute DateTime? 
+  timeOnMute  DateTime  @default(now())
+  timeOffMute DateTime?
 }

@@ -15,59 +15,19 @@ const prisma_service_1 = require("./prisma/prisma.service");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 let UserService = exports.UserService = class UserService {
-    checkMute(arg0, groupId) {
-        throw new Error("Method not implemented.");
-    }
     constructor(prisma) {
         this.prisma = prisma;
     }
+    checkMute(arg0, groupId) {
+        throw new Error("Method not implemented.");
+    }
     async getUsers() {
         const users = await this.prisma.user.findMany();
-        users.forEach((user) => {
-            delete user.password;
-        });
         return users;
     }
     async getProfiles() {
         const profiles = await this.prisma.profile.findMany();
         return profiles;
-    }
-    async addUser(userData) {
-        let exist = await this.prisma.user.findUnique({
-            where: {
-                email: userData.email,
-            },
-        });
-        if (!exist) {
-            exist = await this.prisma.user.findUnique({
-                where: {
-                    username: userData.username,
-                },
-            });
-        }
-        if (!exist) {
-            const salt = await bcrypt.genSalt();
-            const hash = await bcrypt.hash(userData.password, salt);
-            await this.prisma.user.create({
-                data: {
-                    username: userData.username,
-                    email: userData.email,
-                    password: hash,
-                    profile: {
-                        create: {
-                            firstName: userData.firstName,
-                            lastName: userData.lastName,
-                            email: userData.email,
-                            username: userData.username,
-                        },
-                    },
-                },
-            });
-            return "User created";
-        }
-        else {
-            return "user exist";
-        }
     }
     generateToken(userId, username, email) {
         const token = jwt.sign({ userId, username, email }, process.env.JWT_SECRET, {
@@ -75,46 +35,37 @@ let UserService = exports.UserService = class UserService {
         });
         return token;
     }
-    async login(userData) {
-        let user;
-        if (userData.email) {
-            user = await this.prisma.user.findUnique({
-                where: { email: userData.email },
-            });
-        }
-        if (user) {
-            const valid = await bcrypt.compare(userData.password, user.password);
-            if (valid)
-                return this.generateToken(user.id, user.username, user.email);
+    async changePass(pass, id) {
+        const user = await this.prisma.user.findUnique({ where: { id: id } });
+        const valid = await bcrypt.compare(pass.password, user.password);
+        try {
+            if (valid) {
+                const salt = await bcrypt.genSalt();
+                const hash = await bcrypt.hash(pass.newPassword, salt);
+                await this.prisma.user.update({
+                    where: {
+                        id: id,
+                    },
+                    data: {
+                        password: hash,
+                    },
+                });
+            }
             else {
-                return "invalid password";
+                throw new common_1.NotFoundException("User not found");
             }
         }
-        else {
-            throw "invalid creds";
-        }
-    }
-    async changePass(pass, id) {
-        const user = await this.prisma.user.findUnique({ where: { id: +id } });
-        const valid = await bcrypt.compare(pass.password, user.password);
-        if (valid) {
-            const salt = await bcrypt.genSalt();
-            const hash = await bcrypt.hash(pass.newPassword, salt);
-            await this.prisma.user.update({
-                where: {
-                    id: +id,
-                },
-                data: {
-                    password: hash,
-                },
-            });
-            return "Changed successfully";
-        }
-        else {
-            return "invalid password";
+        catch (error) {
+            throw new common_1.InternalServerErrorException("Internal server error");
         }
     }
     async intraJWT(email) {
+        const user = await this.prisma.user.findUnique({
+            where: { email },
+        });
+        return this.generateToken(user.id, user.username, user.email);
+    }
+    async googleJWT(email) {
         const user = await this.prisma.user.findUnique({
             where: { email },
         });
@@ -124,31 +75,36 @@ let UserService = exports.UserService = class UserService {
         const { userId } = data;
         const user = await this.prisma.user.findUnique({
             where: {
-                id: +userId,
+                id: userId,
             },
         });
         return user ? user : null;
     }
     async getProfile(id) {
-        if (!isNaN(+id)) {
-            const user = await this.prisma.user.findUnique({
-                where: {
-                    id: +id,
-                },
-            });
-            if (!user)
-                return "Not found";
+        try {
+            if (!id) {
+                const user = await this.prisma.user.findUnique({
+                    where: {
+                        id: id,
+                    },
+                });
+                if (!user) {
+                    throw new common_1.NotFoundException("User not found");
+                }
+                const profile = await this.prisma.profile.findUnique({
+                    where: {
+                        userId: id,
+                    },
+                });
+                return profile;
+            }
+            else {
+                throw new common_1.BadRequestException("Invalid input");
+            }
         }
-        else {
-            throw new common_1.NotFoundException("User not found");
-            return "Not found";
+        catch (error) {
+            throw new common_1.InternalServerErrorException("Internal server error");
         }
-        const profile = await this.prisma.profile.findUnique({
-            where: {
-                userId: +id,
-            },
-        });
-        return profile;
     }
     async validateJwtToken(token) {
         try {
@@ -156,58 +112,81 @@ let UserService = exports.UserService = class UserService {
             return decoded;
         }
         catch (error) {
-            console.log("error : ", error);
-            return null;
+            throw new common_1.BadRequestException("Invalid token");
         }
     }
     async validateIntraUser(user) {
-        const exist = await this.prisma.user.findUnique({
-            where: { email: user.email },
-        });
-        if (!exist) {
-            await this.prisma.user.create({
-                data: {
-                    username: user.username,
-                    email: user.email,
-                    id42: +user.fortyTwoId,
-                    password: "hhhh",
-                    profile: {
-                        create: {
-                            firstName: user.firstName,
-                            lastName: user.lastName,
-                            email: user.email,
-                            username: user.username,
+        try {
+            const exist = await this.prisma.user.findUnique({
+                where: { email: user.email },
+            });
+            if (!exist) {
+                await this.prisma.user.create({
+                    data: {
+                        username: user.username,
+                        email: user.email,
+                        id42: user.fortyTwoId,
+                        password: "42",
+                        profile: {
+                            create: {
+                                firstName: user.firstName,
+                                lastName: user.lastName,
+                                email: user.email,
+                                username: user.username,
+                            },
                         },
                     },
-                },
-            });
+                });
+            }
+            return user;
         }
-        return user;
+        catch (error) {
+            throw new common_1.InternalServerErrorException("Internal server error");
+        }
     }
-    async getUserInfo(token) {
-        const decoded = jwt.verify(token.split(" ")[1], process.env.JWT_SECRET);
-        const user = await this.prisma.user.findUnique({
-            where: {
-                id: +decoded.userId,
-            },
-        });
-        delete user.password;
-        return user;
+    async validateGoogleUser(user) {
+        try {
+            const exist = await this.prisma.user.findUnique({
+                where: { email: user.email },
+            });
+            if (!exist) {
+                await this.prisma.user.create({
+                    data: {
+                        username: "user.username",
+                        email: user.email,
+                        idGoogle: user.googleId,
+                        password: "google",
+                        profile: {
+                            create: {
+                                firstName: user.firstName,
+                                lastName: user.lastName,
+                                email: user.email,
+                                username: "user.username",
+                            },
+                        },
+                    },
+                });
+            }
+            return user;
+        }
+        catch (error) {
+            throw new common_1.InternalServerErrorException("Internal server error");
+        }
     }
     async isBlocked(id, userId) {
-        if (isNaN(+id) || isNaN(+userId)) {
+        if (id || userId) {
             return { iBlocked: false, heBlocked: false };
         }
         const blocked = await this.prisma.BlockList.findMany({
             where: {
-                userId: +id,
-                blockedId: +userId,
+                userId: id,
+                blockedId: userId,
             },
         });
         const blocked2 = await this.prisma.BlockList.findMany({
             where: {
-                userId: +userId,
-                blockedId: +id,
+                userId: userId,
+                blockedId: id,
             },
         });
         if (blocked.length > 0) {
@@ -217,6 +196,15 @@ let UserService = exports.UserService = class UserService {
             return { iBlocked: false, heBlocked: true };
         }
         return { iBlocked: false, heBlocked: false };
+    }
+    async getUserInfo(id) {
+        const user = await this.prisma.user.findUnique({
+            where: {
+                id,
+            },
+        });
+        delete user.password;
+        return user;
     }
 };
 exports.UserService = UserService = __decorate([

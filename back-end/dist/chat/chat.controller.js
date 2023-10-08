@@ -15,7 +15,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.ChatController = void 0;
 const common_1 = require("@nestjs/common");
 const chat_service_1 = require("./chat.service");
-const jwt_auth_guard_1 = require("../jwt-auth/jwt-auth.guard");
+const passport_1 = require("@nestjs/passport");
 const jwt_decode_1 = require("jwt-decode");
 let ChatController = exports.ChatController = class ChatController {
     constructor(chatService) {
@@ -38,12 +38,12 @@ let ChatController = exports.ChatController = class ChatController {
         return this.chatService.getChannels(decoded.userId);
     }
     async isMute(userId, groupId) {
-        return this.chatService.checkMute(+userId, groupId);
+        return this.chatService.checkMute(userId, groupId);
     }
 };
 __decorate([
     (0, common_1.Get)("channel/:id"),
-    (0, common_1.UseGuards)(jwt_auth_guard_1.JwtAuthGuard),
+    (0, common_1.UseGuards)((0, passport_1.AuthGuard)("jwt")),
     __param(0, (0, common_1.Param)("id")),
     __param(1, (0, common_1.Headers)()),
     __metadata("design:type", Function),
@@ -52,7 +52,7 @@ __decorate([
 ], ChatController.prototype, "channel", null);
 __decorate([
     (0, common_1.Get)("messages/:id"),
-    (0, common_1.UseGuards)(jwt_auth_guard_1.JwtAuthGuard),
+    (0, common_1.UseGuards)((0, passport_1.AuthGuard)("jwt")),
     __param(0, (0, common_1.Param)()),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [Object]),
@@ -60,7 +60,7 @@ __decorate([
 ], ChatController.prototype, "messages", null);
 __decorate([
     (0, common_1.Get)("myChannels/:id"),
-    (0, common_1.UseGuards)(jwt_auth_guard_1.JwtAuthGuard),
+    (0, common_1.UseGuards)((0, passport_1.AuthGuard)("jwt")),
     __param(0, (0, common_1.Param)("id")),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [String]),
@@ -68,7 +68,7 @@ __decorate([
 ], ChatController.prototype, "myChannels", null);
 __decorate([
     (0, common_1.Get)("channels"),
-    (0, common_1.UseGuards)(jwt_auth_guard_1.JwtAuthGuard),
+    (0, common_1.UseGuards)((0, passport_1.AuthGuard)("jwt")),
     __param(0, (0, common_1.Headers)()),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [Object]),
@@ -76,7 +76,7 @@ __decorate([
 ], ChatController.prototype, "channels", null);
 __decorate([
     (0, common_1.Get)("is-mute/:userId/:grouptId"),
-    (0, common_1.UseGuards)(jwt_auth_guard_1.JwtAuthGuard),
+    (0, common_1.UseGuards)((0, passport_1.AuthGuard)("jwt")),
     __param(0, (0, common_1.Param)("userId")),
     __param(1, (0, common_1.Param)("grouptId")),
     __metadata("design:type", Function),

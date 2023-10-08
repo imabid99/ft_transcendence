@@ -17,9 +17,9 @@ const user_service_1 = require("../user.service");
 let FortyTwoStrategy = exports.FortyTwoStrategy = class FortyTwoStrategy extends (0, passport_1.PassportStrategy)(passport_42_1.Strategy, '42') {
     constructor(userService) {
         super({
-            clientID: process.env.UID,
-            clientSecret: process.env.SECRET,
-            callbackURL: 'http://127.0.0.1:3000/api/user/intra',
+            clientID: process.env.UID_42,
+            clientSecret: process.env.SECRET_42,
+            callbackURL: process.env.CALLBACK_URL_42,
         });
         this.userService = userService;
     }
