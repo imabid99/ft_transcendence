@@ -1,4 +1,3 @@
-
 export default function Page() {
   return (
     <div className="flex flex-col 3xl:flex-row items-center w-[100%] gap-[50px] h-screen">
