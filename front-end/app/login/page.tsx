@@ -99,7 +99,7 @@ export default function Home() {
               Don’t have an account?
                   <Link href="/signup" className='text-[#6A849E] text-[14px] font-[400] sm:text-[18.963px] pl-[2px]' >
                 Sign Up
-             </Link>
+            </Link>
             </p>
           </div>
         </div>
