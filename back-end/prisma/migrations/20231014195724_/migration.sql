@@ -10,6 +10,7 @@ CREATE TABLE "User" (
     "username" TEXT NOT NULL DEFAULT '',
     "password" TEXT NOT NULL,
     "twoFASecret" TEXT NOT NULL,
+    "twoFAActive" BOOLEAN NOT NULL DEFAULT false,
 
     CONSTRAINT "User_pkey" PRIMARY KEY ("id")
 );

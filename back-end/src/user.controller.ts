@@ -7,6 +7,7 @@ import {
   Param,
   Headers,
   Request,
+  Delete,
 } from "@nestjs/common";
 import { UserService } from "./user.service";
 import { AuthGuard } from "@nestjs/passport";
@@ -55,5 +56,10 @@ export class userController {
   @UseGuards(AuthGuard("jwt"))
   async getUserInfo(@Req() req): Promise<void> {
     return this.userService.getUserInfo(req.user.id);
+  }
+  @Delete("delete")
+  @UseGuards(AuthGuard("jwt"))
+  async deleteUser(@Req() req): Promise<void> {
+    return this.userService.deleteUser(req.user.id);
   }
 }

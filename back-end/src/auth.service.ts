@@ -140,6 +140,68 @@ export class AuthService {
       throw error;
     }
   }
+  async enable2FA(id : string, token : string): Promise<any> {
+    try {
+      const user = await this.prisma.user.findUnique({
+        where: {
+          id,
+        },
+      });
+      console.log(token);
+      const verified = speakeasy.totp.verify({
+        secret: user.twoFASecret,
+        encoding: 'base32',
+        token: token
+      });
+      
+      if (verified) {
+        await this.prisma.user.update({
+          where: {
+            id,
+          },
+          data: {
+            twoFAActive: true
+          }
+        });
+        return ('Updated successfully!');
+      } else {
+        throw new BadRequestException("Invalid token");
+      }
+    } catch (error) {
+      throw error;
+    }
+  }
+  async disable2FA(id : string, token : string): Promise<any> {
+    try {
+      const user = await this.prisma.user.findUnique({
+        where: {
+          id,
+        },
+      });
+
+      const verified = speakeasy.totp.verify({
+        secret: user.twoFASecret,
+        encoding: 'base32',
+        token: token
+      });
+      
+      if (verified) {
+        await this.prisma.user.update({
+          where: {
+            id,
+          },
+          data: {
+            twoFAActive: false
+          }
+        });
+        return ('Updated successfully!');
+      } else {
+        throw new BadRequestException("Invalid token");
+      }
+    } catch (error) {
+      throw error;
+    }
+  }
   
   async validateIntraUser(user: any): Promise<any> {
     try {

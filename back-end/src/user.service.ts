@@ -124,6 +124,19 @@ export class UserService {
     }
   }
 
+  async deleteUser(id: string) : Promise<any> {
+    try {
+      this.prisma.user.delete({
+        where: {
+          id,
+        },
+      });
+      return 
+    } catch (error) {
+      throw error;
+    }
+  }
+
   async isBlocked(
     id: string,
     userId: string

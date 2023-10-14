@@ -31,6 +31,18 @@ export default function Page() {
       return;
     }
   }
+  const deleteUser = async (e : any) => {
+    e.preventDefault();
+    
+    try {
+      const response = await axiosInstance.delete(`http://${process.env.NEXT_PUBLIC_APP_URL}:3000/api/auth/delete_user`);
+      console.log("response : ", response);
+    } catch (e : any) {
+      console.log("Error : ", e.response?.data || e.message);
+      return;
+    }
+  }
+
   useEffect(() => {
     qrcode({ preventDefault: () => {} });
   }, []);

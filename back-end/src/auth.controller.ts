@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Post, Req , Res, UseGuards} from "@nestjs/common";
+import { Body, Controller, Get, Patch, Post, Req , Res, UseGuards} from "@nestjs/common";
 import { AuthService } from "./auth.service";
 import { UserService } from "./user.service";
 import { UserData } from "./dtos/user.dto";
@@ -53,5 +53,22 @@ export class authController {
 
       res.setHeader('Content-Type', 'image/png');
       res.send(qrBuffer);
+  }
+  @Patch('2fa_enable')
+  @UseGuards(AuthGuard("jwt"))
+  async enable2FA(@Req() req,@Body() body): Promise<void> {
+      await this.authService.enable2FA(req.user.id, body.code);
+  }
+
+  @Patch('2fa_disable')
+  @UseGuards(AuthGuard("jwt"))
+  async disable2FA(@Req() req,@Body() body): Promise<void> {
+      await this.authService.disable2FA(req.user.id, body.code);
+  }
+
+  @Post('2fa_verify')
+  @UseGuards(AuthGuard("jwt"))
+  async verify2FA(@Req() req,@Body() body): Promise<void> {
+      await this.authService.verify2FA(req.user.id, body.code);
   }
 }
