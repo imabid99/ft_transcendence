@@ -2,10 +2,11 @@ import { Injectable } from '@nestjs/common';
 import { PassportStrategy } from '@nestjs/passport';
 import { Strategy } from 'passport-42';
 import { UserService } from '../user.service';
+import { AuthService } from 'src/auth.service';
 
 @Injectable()
 export class FortyTwoStrategy extends PassportStrategy(Strategy, '42') {
-  constructor(private readonly userService: UserService) {
+  constructor(private readonly userService: UserService, private readonly authService: AuthService) {
     super({
       clientID: process.env.UID_42,
       clientSecret: process.env.SECRET_42,
@@ -22,7 +23,7 @@ export class FortyTwoStrategy extends PassportStrategy(Strategy, '42') {
       firstName: name.givenName,
       lastName: name.familyName,
     };
-    const user = await this.userService.validateIntraUser(userData);
+    const user = await this.authService.validateIntraUser(userData);
     return user;
   }
 }

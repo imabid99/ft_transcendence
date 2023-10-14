@@ -24,6 +24,7 @@ model User {
   email          String      @unique
   username       String      @unique @default("")
   password       String
+  twoFASecret    String
   profile        Profile?
   dmMessages     Message[]
   BlockList      BlockList[]

@@ -1,4 +1,39 @@
+'use client';
+import {useRouter} from 'next/navigation';
+import axios from 'axios';
+import Link from 'next/link';
+import {
+  useState,
+  useEffect,
+  useContext
+} from 'react';
+import { setLocalStorageItem, getLocalStorageItem, removeLocalStorageItem } from '@/utils/localStorage';
+import jwt_decode from "jwt-decode";
+import { contextdata } from '@/app/contextApi';
+import axiosInstance from '@/utils/axiosInstance';
+
+
 export default function Page() {
+  const [qrCodeSrc, setQrCodeSrc] = useState("2fa-qr-code 1.svg");
+
+  const qrcode = async (e : any) => {
+    e.preventDefault();
+    
+    try {
+      const response = await axiosInstance.get(`http://${process.env.NEXT_PUBLIC_APP_URL}:3000/api/auth/2fa_qr`, {
+        responseType: 'blob' // specify that we expect a Blob
+      });
+      const blob = new Blob([response.data], { type: 'image/png' }); 
+      const objectURL = URL.createObjectURL(blob);
+      setQrCodeSrc(objectURL); // set the Data URL as the image source
+    } catch (e : any) {
+      console.log("Error : ", e.response?.data || e.message);
+      return;
+    }
+  }
+  useEffect(() => {
+    qrcode({ preventDefault: () => {} });
+  }, []);
   return (
     <div className="flex flex-col 3xl:flex-row items-center w-[100%] gap-[50px] h-screen">
       <div className="flex flex-col w-[100%] items-center 3xl:items-end gap-[50px]">
@@ -120,7 +155,7 @@ export default function Page() {
           <div className="w-[100%] flex justify-center">
             <div className="w-[212px] h-[212px] rounded-[15px] border-[1px] border-[#3887D0] bg-[#F2F2F2] flex items-center justify-center lg:w-[330px] lg:h-[330px]">
               <img
-                src="2fa-qr-code 1.svg"
+                src={qrCodeSrc}
                 alt=""
                 className="lg:w-[296px] lg:h-[296px]"
               />

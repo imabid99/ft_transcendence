@@ -124,64 +124,6 @@ export class UserService {
     }
   }
 
-  async validateIntraUser(user: any): Promise<any> {
-    try {
-      const exist = await this.prisma.user.findUnique({
-        where: { email: user.email },
-      });
-      if (!exist) {
-        await this.prisma.user.create({
-          data: {
-            username: user.username,
-            email: user.email,
-            id42: user.fortyTwoId,
-            password: "42",
-            profile: {
-              create: {
-                firstName: user.firstName,
-                lastName: user.lastName,
-                email: user.email,
-                username: user.username,
-              },
-            },
-          },
-        });
-      }
-      return user;
-    } catch (error) {
-      throw new InternalServerErrorException("Internal server error");
-    }
-  }
-
-  async validateGoogleUser(user: any): Promise<any> {
-    try {
-      const exist = await this.prisma.user.findUnique({
-        where: { email: user.email },
-      });
-      if (!exist) {
-        await this.prisma.user.create({
-          data: {
-            username: "user.username",
-            email: user.email,
-            idGoogle: user.googleId,
-            password: "google",
-            profile: {
-              create: {
-                firstName: user.firstName,
-                lastName: user.lastName,
-                email: user.email,
-                username: "user.username",
-              },
-            },
-          },
-        });
-      }
-      return user;
-    } catch (error) {
-      throw new InternalServerErrorException("Internal server error");
-    }
-  }
-
   async isBlocked(
     id: string,
     userId: string

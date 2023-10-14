@@ -1,9 +1,10 @@
-import { Body, Controller, Get, Post, Req , UseGuards} from "@nestjs/common";
+import { Body, Controller, Get, Post, Req , Res, UseGuards} from "@nestjs/common";
 import { AuthService } from "./auth.service";
 import { UserService } from "./user.service";
 import { UserData } from "./dtos/user.dto";
 import { UserDataLogin } from "./dtos/user-login.dto";
 import { AuthGuard } from "@nestjs/passport";
+import { Response } from 'express';
 
 @Controller("auth")
 export class authController {
@@ -43,5 +44,14 @@ export class authController {
   @UseGuards(AuthGuard("google")) 
   CallbackGoogle(@Req() req): Promise<string> {
     return this.userService.googleJWT(req.user.email);
+  }
+    
+  @Get('2fa_qr')
+  @UseGuards(AuthGuard("jwt"))
+  async Get2FA_qr(@Req() req,@Res() res: Response): Promise<void> {
+      const qrBuffer = await this.authService.generate2FAQrCode(req.user.id);
+
+      res.setHeader('Content-Type', 'image/png');
+      res.send(qrBuffer);
   }
 }
