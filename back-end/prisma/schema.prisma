@@ -102,7 +102,7 @@ model Message {
 
 model BlockList {
   id        Int     @id @default(autoincrement())
-  blockedId Int
+  blockedId String
   User      User?   @relation(fields: [userId], references: [id])
   userId    String?
 }

@@ -44,12 +44,12 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
       myChannels.map((channel) => {
         client.join(channel.id);
       });
-      if (this.server.sockets.adapter.rooms.get(decoded.username)?.size !== 1) {
+      if (this.server.sockets.adapter.rooms.get(decoded.username)?.size !== 1 || (await this.prisma.profile.findMany()).length === 0){
         return;
       }
-      await this.prisma.profile.update({
+      await this.prisma.profile?.update({
         where: {
-          userId: decoded.userId,
+          userId: decoded?.userId,
         },
         data: {
           status: "online",
@@ -63,7 +63,7 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
     const token = client.handshake.headers.authorization?.split(" ")[1];
     if (token) {
       const decoded: any = jwt_decode(token);
-      if (this.server.sockets.adapter.rooms.get(decoded.username) !== undefined)
+      if (this.server.sockets.adapter.rooms.get(decoded.username) !== undefined || (await this.prisma.profile.findMany()).length === 0)
         return;
       await this.prisma.profile.update({
         where: {

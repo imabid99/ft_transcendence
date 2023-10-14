@@ -10,6 +10,7 @@ import SelectUsersBody from '../group/SelectUsersBody'
 import GroupInfo from '../group/GroupInfo'
 import Search from "../search/Search";
 import axiosInstance from "@/utils/axiosInstance";
+import SearchChat from "./SearchChat";
 
 export default function  LeftSide() {
 
@@ -119,7 +120,7 @@ export default function  LeftSide() {
 	return (
 		<>	
 			<div className="chat__left w-[450px]  bg-[#FFF] border-r-[1px] relative overflow-hidden lg:max-xl:w-[350px] lsm:max-lg:w-full">
-					<div className="chat__left__head flex justify-between items-center border-b-[1px]  border-[#E5E5E5] pl-[42px] pr-[25px] lsm:max-lg:px-[10px]">
+					<div className="chat__left__head flex justify-between items-center border-b-[1px]  border-[#E5E5E5] pl-[42px] pr-[25px] lsm:max-lg:px-[10px] h-[100px]">
 						<div className="flex items-center py-[35px] justify-between lsm:max-sm:gap-[20px] lsm:max-sm:px-[20px]">
 							<div className="hidden lsm:max-sm:block cursor-pointer" onClick={() => {
 								setMediaDashbord(true)
@@ -145,7 +146,7 @@ export default function  LeftSide() {
 								</p>
 							</div>
 						</div>
-						{
+						{/* {
 							!showBody &&
 							<div className="z-[10] bg-[#EDFAFF]  cursor-pointer w-[54px] h-[54px] notifShadow flex justify-center items-center rounded-[20px] hover:bg-[#e0f2f9]" onClick={() => {setShowBody("search")}}>
 								<svg width="21" height="20" viewBox="0 0 21 20" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -161,11 +162,12 @@ export default function  LeftSide() {
 									/>
 								</svg>
 							</div>
-						}
+						} */}
 					</div>
 					{
 						!showBody && (
 							<>
+								<SearchChat />
 								<UsersOnline />
 								<div id="scroll" className="max-h-[calc(100%-299px)] overflow-y-scroll no-scrollbar h-[calc(100%-299px)] px-[25px] py-[25px] flex flex-col gap-[25px]">
 									<GroupsChannels />
