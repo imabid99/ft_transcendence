@@ -1,7 +1,11 @@
+-- CreateEnum
+CREATE TYPE "FriendshipStatus" AS ENUM ('ACCEPTED', 'REFUSED', 'BLOCKED', 'PENDING');
+
 -- CreateTable
 CREATE TABLE "User" (
-    "id" SERIAL NOT NULL,
-    "id42" INTEGER,
+    "id" TEXT NOT NULL,
+    "id42" TEXT,
+    "idGoogle" TEXT,
     "email" TEXT NOT NULL,
     "username" TEXT NOT NULL DEFAULT '',
     "password" TEXT NOT NULL,
@@ -10,8 +14,18 @@ CREATE TABLE "User" (
 );
 
 -- CreateTable
+CREATE TABLE "Friendship" (
+    "id" TEXT NOT NULL,
+    "senderId" TEXT NOT NULL,
+    "receiverId" TEXT NOT NULL,
+    "status" "FriendshipStatus" NOT NULL DEFAULT 'PENDING',
+
+    CONSTRAINT "Friendship_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
 CREATE TABLE "Profile" (
-    "userId" INTEGER NOT NULL,
+    "userId" TEXT NOT NULL,
     "firstName" TEXT NOT NULL,
     "lastName" TEXT NOT NULL,
     "email" TEXT NOT NULL,
@@ -35,7 +49,7 @@ CREATE TABLE "channels" (
     "name" TEXT NOT NULL,
     "password" TEXT DEFAULT '',
     "accessPassword" TEXT DEFAULT '',
-    "userId" INTEGER,
+    "userId" TEXT,
     "avatar" TEXT,
     "accessIsActived" BOOLEAN NOT NULL DEFAULT false,
 
@@ -45,12 +59,12 @@ CREATE TABLE "channels" (
 -- CreateTable
 CREATE TABLE "Message" (
     "id" SERIAL NOT NULL,
-    "fromId" INTEGER,
+    "fromId" TEXT,
     "fromName" TEXT,
-    "toId" INTEGER,
+    "toId" TEXT,
     "content" TEXT NOT NULL,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    "userId" INTEGER,
+    "userId" TEXT,
     "channelsId" TEXT,
 
     CONSTRAINT "Message_pkey" PRIMARY KEY ("id")
@@ -59,8 +73,8 @@ CREATE TABLE "Message" (
 -- CreateTable
 CREATE TABLE "BlockList" (
     "id" SERIAL NOT NULL,
-    "blockedId" INTEGER NOT NULL,
-    "userId" INTEGER,
+    "blockedId" TEXT NOT NULL,
+    "userId" TEXT,
 
     CONSTRAINT "BlockList_pkey" PRIMARY KEY ("id")
 );
@@ -68,8 +82,8 @@ CREATE TABLE "BlockList" (
 -- CreateTable
 CREATE TABLE "Muted" (
     "id" SERIAL NOT NULL,
-    "userId" INTEGER,
-    "channelId" INTEGER NOT NULL,
+    "userId" TEXT,
+    "channelId" TEXT,
     "timeOnMute" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "timeOffMute" TIMESTAMP(3),
 
@@ -78,42 +92,42 @@ CREATE TABLE "Muted" (
 
 -- CreateTable
 CREATE TABLE "_Owners" (
-    "A" INTEGER NOT NULL,
+    "A" TEXT NOT NULL,
     "B" TEXT NOT NULL
 );
 
 -- CreateTable
 CREATE TABLE "_Admins" (
-    "A" INTEGER NOT NULL,
+    "A" TEXT NOT NULL,
     "B" TEXT NOT NULL
 );
 
 -- CreateTable
 CREATE TABLE "_Members" (
-    "A" INTEGER NOT NULL,
+    "A" TEXT NOT NULL,
     "B" TEXT NOT NULL
 );
 
 -- CreateTable
 CREATE TABLE "_MutedUsers" (
-    "A" INTEGER NOT NULL,
+    "A" TEXT NOT NULL,
     "B" TEXT NOT NULL
 );
 
 -- CreateTable
 CREATE TABLE "_BannedUsers" (
-    "A" INTEGER NOT NULL,
+    "A" TEXT NOT NULL,
     "B" TEXT NOT NULL
 );
-
--- CreateIndex
-CREATE UNIQUE INDEX "User_id_key" ON "User"("id");
 
 -- CreateIndex
 CREATE UNIQUE INDEX "User_email_key" ON "User"("email");
 
 -- CreateIndex
 CREATE UNIQUE INDEX "User_username_key" ON "User"("username");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "Friendship_senderId_receiverId_key" ON "Friendship"("senderId", "receiverId");
 
 -- CreateIndex
 CREATE UNIQUE INDEX "Profile_userId_key" ON "Profile"("userId");
@@ -150,6 +164,12 @@ CREATE UNIQUE INDEX "_BannedUsers_AB_unique" ON "_BannedUsers"("A", "B");
 
 -- CreateIndex
 CREATE INDEX "_BannedUsers_B_index" ON "_BannedUsers"("B");
+
+-- AddForeignKey
+ALTER TABLE "Friendship" ADD CONSTRAINT "Friendship_senderId_fkey" FOREIGN KEY ("senderId") REFERENCES "User"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "Friendship" ADD CONSTRAINT "Friendship_receiverId_fkey" FOREIGN KEY ("receiverId") REFERENCES "User"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "Profile" ADD CONSTRAINT "Profile_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE RESTRICT ON UPDATE CASCADE;

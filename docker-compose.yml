@@ -25,7 +25,7 @@ services:
   backend:
     image: node:16
     working_dir: /app
-    command: bash -c "npm install && npm run build && npx prisma migrate dev && npm run start:dev"
+    command: bash -c "npm install && npm run build && npm run start:dev"
     volumes:
       - ./back-end:/app
     ports:

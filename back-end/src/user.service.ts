@@ -96,24 +96,20 @@ export class UserService {
 
   async getProfile(id: string) {
     try {
-      if (!id) {
-        const user = await this.prisma.user.findUnique({
-          where: {
-            id: id,
-          },
-        });
-        if (!user) {
-          throw new NotFoundException("User not found");
-        }
-        const profile = await this.prisma.profile.findUnique({
-          where: {
-            userId: id,
-          },
-        });
-        return profile;
-      } else {
-        throw new BadRequestException("Invalid input");
+      const user = await this.prisma.user.findUnique({
+        where: {
+          id: id,
+        },
+      });
+      if (!user) {
+        throw new NotFoundException("User not found");
       }
+      const profile = await this.prisma.profile.findUnique({
+        where: {
+          userId: id,
+        },
+      });
+      return profile;
     } catch (error) {
       throw new InternalServerErrorException("Internal server error");
     }
