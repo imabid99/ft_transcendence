@@ -150,7 +150,7 @@ export default function Page() {
             </div>
           </div>
         </div>
-        <div className='message__body flex-1 flex flex-col max-h-[calc(100%-208px)] overflow-y-scroll no-scrollbar'>
+        <div className='message__body flex-1 flex flex-col max-h-[calc(100%-200px)] overflow-y-scroll no-scrollbar'>
           <div className='chat__start w-full flex flex-col items-center justify-start mt-[32px] gap-[16px] self-start'>
               <img src="/userProfile.jpg" alt=""  className='w-[150px] h-[150px] rounded-full outline outline-[6px] outline-[#FFF]
               message-avatar-shadow object-cover
