@@ -27,7 +27,6 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
   server: SocketIO.Server;
 
   async handleConnection(client: Socket) {
-    console.log("client  √");
     const token = client.handshake.headers.authorization?.split(" ")[1];
     if (token) {
       const decoded: any = jwt_decode(token);
@@ -59,7 +58,6 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
     }
   }
   async handleDisconnect(client: Socket) {
-    console.log("Disconnect  √");
     const token = client.handshake.headers.authorization?.split(" ")[1];
     if (token) {
       const decoded: any = jwt_decode(token);
@@ -219,7 +217,6 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
           Members: true,
         },
       });
-      console.log("channel : ", channel);
       channel.Members.map((member) => {
         const userSocket = this.server.sockets.adapter.rooms.get(member.username);
         if(userSocket)
@@ -242,7 +239,6 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
   async handleRefresh(client: any, payload: any): Promise<void> {
     const jwt = client.handshake.headers.authorization?.split(" ")[1];
     if (jwt) {
-      console.log("refresh : ", "done");
       this.server.emit("refresh", payload);
     }
   }
@@ -326,9 +322,7 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
         },
       });
 
-      console.log("sockets id in room : ", this.server.sockets.adapter.rooms.get(payload.groupId));
       this.server.to(payload.groupId).emit("message-to-group", payload.message);
-      console.log("message-to-group : ", payload.message.content , " to : ", payload.groupId);
       this.server.emit("refresh");
     }
   }

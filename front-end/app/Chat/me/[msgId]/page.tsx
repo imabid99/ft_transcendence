@@ -55,6 +55,7 @@ export default function Page() {
         setTimeout(async () => {
           try {
             const res = await axiosInstance.get(`http://${process.env.NEXT_PUBLIC_APP_URL}:3000/api/user/is-blocked/${user.id}/${msgId}`);
+            console.log("heree block refresh : ", res.data);
             if (res.data === null) {
               return;
             }
