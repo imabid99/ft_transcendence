@@ -1,20 +1,28 @@
 'use client';
 import { useContext, useState } from 'react';
 import { contextdata } from '@/app/contextApi';
+import axiosInstance from '@/utils/axiosInstance';
 
 
 export default function Page() {
   
     const [avatar, setAvatar] = useState<any>(null);
-    const [previewUrl, setPreviewUrl] = useState<string>("nouser.avif");
     const [previewUrl1, setPreviewUrl1] = useState<string>("first4.png");
+    const [previewUrl, setPreviewUrl] = useState<string>("");
     const {profiles, user}:any = useContext(contextdata);
     const myProfile = profiles?.find((profile:any) => profile.userId === user.id);
     const name = `${myProfile?.firstName} ${myProfile?.lastName}`;
+    // const [previewUrl, setPreviewUrl] = useState<string>(`http://${process.env.NEXT_PUBLIC_APP_URL}/${myProfile.avatar}`);
     function handleFileInputChange(e: any, setPreviewUrl: any) {
       const file = e.target.files?.[0];
+      const formData = new FormData();
+      formData.append('file', file);
       const maxFileSize = 1024 * 1024 * 5;
-    
+      axiosInstance.post(`http://${process.env.NEXT_PUBLIC_APP_URL}:3000/api/user/upload/avatar`, formData).then((res) => {
+        console.log(res);
+      }).catch((err) => {
+        console.log(err);
+      });
       if (file) {
         if (file.size > maxFileSize) {
           alert("File is too large. Please upload a file smaller than 5 MB.");
@@ -23,6 +31,7 @@ export default function Page() {
         setPreviewUrl(URL.createObjectURL(file));
       }
     }
+    console.log("myProfile", myProfile)
     return (
     <div className="flex items-center flex-col 3xl:flex-row gap-[40px] w-[100%] 3xl:justify-center">
         <div className=" flex max-w-[922px] w-11/12 xl:h-[823px] rounded-[42px] sh-d bg-white">
@@ -55,7 +64,7 @@ export default function Page() {
                     <picture>
                       <img
                       className="rounded-full w-full h-full object-cover"
-                      src={previewUrl}
+                      src={`http://${process.env.NEXT_PUBLIC_APP_URL}/${myProfile?.avatar}`}
                       alt=""
                       />
                     </picture>

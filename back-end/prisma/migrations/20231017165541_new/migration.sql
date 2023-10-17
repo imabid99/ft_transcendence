@@ -35,7 +35,7 @@ CREATE TABLE "Profile" (
     "status" TEXT NOT NULL DEFAULT 'offline',
     "lastMessage" TEXT,
     "lastMessageTime" TIMESTAMP(3),
-    "avatar" TEXT,
+    "avatar" TEXT NOT NULL DEFAULT 'uploads/nouser.avif',
     "background" TEXT,
     "gaemePlayed" INTEGER NOT NULL DEFAULT 0,
     "win" INTEGER NOT NULL DEFAULT 0,

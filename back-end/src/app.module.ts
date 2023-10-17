@@ -12,6 +12,7 @@ import { FortyTwoStrategy } from "./42auth/intra.strategy";
 import { ChatModule } from "./chat/chat.module";
 import { authController } from "./auth.controller";
 import { GoogleStrategy } from "./google/google.starategy";
+import { MulterModule } from '@nestjs/platform-express';
 
 @Module({
   imports: [
@@ -22,6 +23,9 @@ import { GoogleStrategy } from "./google/google.starategy";
       signOptions: { expiresIn: "1d" },
     }),
     ChatModule,
+    MulterModule.register({
+      dest: './uploads',
+    })
   ],
   controllers: [AppController, userController, authController],
   providers: [
