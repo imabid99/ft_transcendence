@@ -2,13 +2,27 @@
 import { useContext, useState } from 'react';
 import { contextdata } from '@/app/contextApi';
 
+
 export default function Page() {
+  
     const [avatar, setAvatar] = useState<any>(null);
     const [previewUrl, setPreviewUrl] = useState<string>("nouser.avif");
     const [previewUrl1, setPreviewUrl1] = useState<string>("first4.png");
     const {profiles, user}:any = useContext(contextdata);
     const myProfile = profiles?.find((profile:any) => profile.userId === user.id);
     const name = `${myProfile?.firstName} ${myProfile?.lastName}`;
+    function handleFileInputChange(e: any, setPreviewUrl: any) {
+      const file = e.target.files?.[0];
+      const maxFileSize = 1024 * 1024 * 5;
+    
+      if (file) {
+        if (file.size > maxFileSize) {
+          alert("File is too large. Please upload a file smaller than 5 MB.");
+          return;
+        }
+        setPreviewUrl(URL.createObjectURL(file));
+      }
+    }
     return (
     <div className="flex items-center flex-col 3xl:flex-row gap-[40px] w-[100%] 3xl:justify-center">
         <div className=" flex max-w-[922px] w-11/12 xl:h-[823px] rounded-[42px] sh-d bg-white">
@@ -32,27 +46,7 @@ export default function Page() {
                 type="file"
                 id="imageUpload"
                 className="absolute hidden cursor-pointer"
-                onChange=
-                {(e) => 
-                    {
-                  const file = e.target.files?.[0];
-                  const maxFileSize = 1024 * 1024 * 5;
-                    if (file) 
-                        {
-                        console.log(file);
-                        const maxFileSize = 1024 * 1024 * 5;
-                        if (file.size > maxFileSize) {
-                        alert
-                        (
-                            "File is too large. Please upload a file smaller than 5 MB."
-                        );
-                        return;
-                        }
-                        setPreviewUrl1(URL.createObjectURL(file));
-                        setAvatar(file);
-                        }
-                    }
-                }
+                onChange={(e) => handleFileInputChange(e, setPreviewUrl1)}
               />
             </div>
             <div className=" w-12/12 h-[200px] sm:h-[120px]">
@@ -77,27 +71,7 @@ export default function Page() {
                 type="file"
                 id="upload"
                 className="absolute hidden cursor-pointer"
-                onChange=
-                {(e) => 
-                    {
-                  const file = e.target.files?.[0];
-                  const maxFileSize = 1024 * 1024 * 5;
-                    if (file) 
-                        {
-                        console.log(file);
-                        const maxFileSize = 1024 * 1024 * 5;
-                        if (file.size > maxFileSize) {
-                        alert
-                        (
-                            "File is too large. Please upload a file smaller than 5 MB."
-                        );
-                        return;
-                        }
-                        setPreviewUrl(URL.createObjectURL(file));
-                        // setAvatar(file);
-                        }
-                    }
-                }
+                onChange={(e) => handleFileInputChange(e, setPreviewUrl)}
               />
               </div>
               <div className="pt-[100px] gap-[15px] sm:pt-0 flex flex-col sm:flex-row pl-[40px] sm:items-center sm:pl-[200px] sm:justify-between">

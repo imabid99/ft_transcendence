@@ -90,7 +90,8 @@ export default function Home() {
 
   return (
     <>
-  <div className=" h-[100vh] w-[100%] flex justify-around items-center bgImg bg-no-repeat bg-cover bg-center" style={styling}>
+    {/* /*style={{ backgroundImage: 'url("first4.png")' }}    style={styling}*/}
+  <div className=" h-[100vh] w-[100%] flex justify-around items-center bgImg bg-no-repeat bg-cover bg-center" style={{ backgroundImage: 'url("first4.png")' }}> 
     <div className=" w-[100vw] h-full  bg-blue-200 bg-opacity-0 backdrop-blur-lg flex flex-row items-center justify-center md:w-11/12 md:h-[735px] md:rounded-[61px] xl:max-w-[1404px] xl:mx-auto">
       <div className="w-[100%] flex flex-col items-center justify-center xl:w-[35%]">
         <div className="font-[600] text-[40px] text-white sm:text-[66px]">
@@ -174,8 +175,9 @@ export default function Home() {
         </p>
       </div>
       </div>
-      <div className="xl:block hidden">
-        <img src="Frame 101.png" alt="" className="mt-[-112px] ml-[60px]" />
+      <div className="xl:block hidden relative">
+        <img src="Frame 101-PhotoRoom.png" alt="" className=" relative mt-[-112px] ml-[60px]" />
+        <img src="heroball.png" alt="" className="mt-[-200px] ml-[60px]  top-[440px] left-[45px] animateball absolute" />
       </div>
     </div>
   </div>

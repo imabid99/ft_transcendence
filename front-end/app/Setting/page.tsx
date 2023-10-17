@@ -15,7 +15,9 @@ import axiosInstance from '@/utils/axiosInstance';
 
 export default function Page() {
   const [qrCodeSrc, setQrCodeSrc] = useState("2fa-qr-code 1.svg");
-
+  const [avatar, setAvatar] = useState<any>(null);
+  const [previewUrl, setPreviewUrl] = useState<string>("nouser.avif");
+  
   const qrcode = async (e : any) => {
     e.preventDefault();
     
@@ -27,10 +29,11 @@ export default function Page() {
       const objectURL = URL.createObjectURL(blob);
       setQrCodeSrc(objectURL); // set the Data URL as the image source
     } catch (e : any) {
-      console.log("Error : ", e.response?.data || e.message);
+      console.log("Error : ", e.response?.data || e.message); 
       return;
     }
   }
+
   const deleteUser = async (e : any) => {
     e.preventDefault();
     
@@ -43,6 +46,25 @@ export default function Page() {
     }
   }
 
+  function handleFileChange(e : any) {
+    const file = e.target.files?.[0];
+    const maxFileSize = 1024 * 1024 * 5;
+  
+    if (file) {
+      if (file.size > maxFileSize) {
+        alert("File is too large. Please upload a file smaller than 5 MB.");
+        return;
+      }
+      setPreviewUrl(URL.createObjectURL(file));
+      // setAvatar(file);
+    }
+  }
+
+  function handleDeletePhoto() {
+    setPreviewUrl("nouser.avif");
+    // setAvatar(null);
+  }
+
   useEffect(() => {
     qrcode({ preventDefault: () => {} });
   }, []);
@@ -53,14 +75,20 @@ export default function Page() {
           <div className="text-[20px] text-center sm:text-left sm:text-[25px] font-[600] text-[#043B6A] pt-[20px] sm:pl-[40px] ">
             Personal Information
           </div>
-          <div className="flex items-center flex-col sm:flex-row pb-4 sm:pl-[40px] pt-[18px]">
-            <div className="pb-4">
-              <img src="Ellipse 188.png" alt="" />
+          <div className="flex items-center flex-col sm:flex-row pb-4 sm:pl-[40px] pt-[4px]">
+            <div className=" w-[130px]  h-[130px] rounded-full  border-[3px] border-[#3887D0]">
+              <picture>
+                <img
+                className="rounded-full w-full h-full object-cover"
+                src={previewUrl}
+                alt=""
+                />
+              </picture>
             </div>
             <div className="flex flex-col sm:pl-[24px] gap-[5px] ">
               <label
                 htmlFor="imageUpload"
-                className="bg-[#3887D0] text-white  w-[132px] h-[41px] text-center leading-10  text-[10px] cursor-pointer rounded-[12px] hover:bg-[#2f71af]"
+                className="bg-[#3887D0] text-white  w-[132px] h-[41px] text-center leading-10  text-[10px] cursor-pointer rounded-[12px] hover:bg-[#2f71af] b-save"
               >
                 Upload New Picture
               </label>
@@ -68,8 +96,9 @@ export default function Page() {
                 type="file"
                 id="imageUpload"
                 className="hidden cursor-pointer"
+                onChange={handleFileChange}
               />
-              <button className="bg-[#F9F9F9] text-[#02539D] text-[10px] font-[600] w-[132px] h-[41px] rounded-[12px] hover:bg-[#f0f0f0]">
+              <button onClick={handleDeletePhoto} className="bg-[#F9F9F9] text-[#02539D] text-[10px] font-[600] w-[132px] h-[41px] rounded-[12px] hover:bg-[#f0f0f0] b-reset">
                 Delete
               </button>
             </div>

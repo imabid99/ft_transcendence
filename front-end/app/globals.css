@@ -383,3 +383,24 @@ input {
     background-position: 208px;
   }
 }
+
+
+.animateball {
+	animation: bounce 1.3s linear infinite;
+}
+
+@keyframes bounce {
+	0% {
+		transform: translateY(0);
+		animation-timing-function: ease-out;
+	}
+
+	50% {
+			transform: translateY(-10rem);
+			animation-timing-function: ease-in; 
+	}
+	100% {
+		transform: translateY(0);
+		animation-timing-function: ease-out; 
+	}
+}
