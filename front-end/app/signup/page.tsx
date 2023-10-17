@@ -91,7 +91,7 @@ export default function Home() {
   return (
     <>
     {/* /*style={{ backgroundImage: 'url("first4.png")' }}    style={styling}*/}
-  <div className=" h-[100vh] w-[100%] flex justify-around items-center bgImg bg-no-repeat bg-cover bg-center" style={{ backgroundImage: 'url("first4.png")' }}> 
+  <div className=" h-[100vh] w-[100%] flex justify-around items-center bgImg bg-no-repeat bg-cover bg-center" style={{ backgroundImage: 'url("backfilter.svg")' }}> 
     <div className=" w-[100vw] h-full  bg-blue-200 bg-opacity-0 backdrop-blur-lg flex flex-row items-center justify-center md:w-11/12 md:h-[735px] md:rounded-[61px] xl:max-w-[1404px] xl:mx-auto">
       <div className="w-[100%] flex flex-col items-center justify-center xl:w-[35%]">
         <div className="font-[600] text-[40px] text-white sm:text-[66px]">

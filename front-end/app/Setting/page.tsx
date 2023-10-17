@@ -75,7 +75,7 @@ export default function Page() {
           <div className="text-[20px] text-center sm:text-left sm:text-[25px] font-[600] text-[#043B6A] pt-[20px] sm:pl-[40px] ">
             Personal Information
           </div>
-          <div className="flex items-center flex-col sm:flex-row pb-4 sm:pl-[40px] pt-[4px]">
+          <div className="flex items-center flex-col sm:flex-row pb-4 sm:pl-[40px] pt-[4px] gap-[6px]">
             <div className=" w-[130px]  h-[130px] rounded-full  border-[3px] border-[#3887D0]">
               <picture>
                 <img
