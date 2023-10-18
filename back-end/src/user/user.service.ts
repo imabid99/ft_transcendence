@@ -4,8 +4,8 @@ import {
   InternalServerErrorException,
   BadRequestException,
 } from "@nestjs/common";
-import { PrismaService } from "./prisma/prisma.service";
-import { chPass } from "./dtos/pass.dto";
+import { PrismaService } from "../prisma/prisma.service";
+import { chPass } from "../dtos/pass.dto";
 import * as bcrypt from "bcrypt";
 import * as jwt from "jsonwebtoken";
 
@@ -124,14 +124,24 @@ export class UserService {
     }
   }
 
-  async deleteUser(id: string) : Promise<any> {
+  async deleteUser(id: string): Promise<any> {
+    const uniqueSuffix = Date.now().toString();
     try {
-      this.prisma.user.delete({
+      await this.prisma.user.update({
         where: {
-          id,
+          id: id,
+        },
+        data: {
+          deleted: true,
+          username: {
+            set: `username_deleted_${uniqueSuffix}`,
+          },
+          email: {
+            set: `email_deleted_${uniqueSuffix}`,
+          },
         },
       });
-      return 
+      return;
     } catch (error) {
       throw error;
     }
@@ -171,31 +181,5 @@ export class UserService {
     });
     delete user.password;
     return user;
-  }
-  async uploadAvatar(path: string, userId: string): Promise<any> {
-    try {
-      await this.prisma.profile.update({
-        where: {
-          userId,
-        },
-        data: {
-          avatar: path,
-        },
-      });
-    } catch (error) {
-      throw error;
-    }
-  }
-  async getAvatar(userId: string): Promise<any> {
-    try {
-      const avatar = await this.prisma.profile.findUnique({
-        where: {
-          userId,
-        },
-      });
-      return avatar;
-    } catch (error) {
-      throw error;
-    }
   }
 }

@@ -5,11 +5,11 @@ import {
   UnauthorizedException,
   BadRequestException,
 } from "@nestjs/common";
-import { PrismaService } from "./prisma/prisma.service";
-import { UserData } from "./dtos/user.dto";
-import { UserDataLogin } from "./dtos/user-login.dto";
+import { PrismaService } from "../prisma/prisma.service";
+import { UserData } from "../dtos/user.dto";
+import { UserDataLogin } from "../dtos/user-login.dto";
 import * as bcrypt from "bcrypt";
-import { UserService } from "./user.service";
+import { UserService } from "../user/user.service";
 import * as QRCode from "qrcode";
 import * as speakeasy from "speakeasy";
 import { v4 as uuidv4 } from "uuid";
@@ -72,7 +72,7 @@ export class AuthService {
           username: userData.username,
           email: userData.email,
           password: hash,
-          twoFASecret : this.generate2FASecret(),
+          twoFASecret: this.generate2FASecret(),
           profile: {
             create: {
               firstName: userData.firstName,
@@ -99,7 +99,7 @@ export class AuthService {
     return secret.base32;
   }
 
-  async generate2FAQrCode(id : string): Promise<Buffer> {
+  async generate2FAQrCode(id: string): Promise<Buffer> {
     try {
       const user = await this.prisma.user.findUnique({
         where: {
@@ -117,7 +117,7 @@ export class AuthService {
       throw error;
     }
   }
-  async verify2FA(id : string, token : string): Promise<any> {
+  async verify2FA(id: string, token: string): Promise<any> {
     try {
       const user = await this.prisma.user.findUnique({
         where: {
@@ -127,12 +127,12 @@ export class AuthService {
 
       const verified = speakeasy.totp.verify({
         secret: user.twoFASecret,
-        encoding: 'base32',
-        token: token
+        encoding: "base32",
+        token: token,
       });
-      
+
       if (verified) {
-        return ('Verification successful!');
+        return "Verification successful!";
       } else {
         throw new BadRequestException("Invalid token");
       }
@@ -140,7 +140,7 @@ export class AuthService {
       throw error;
     }
   }
-  async enable2FA(id : string, token : string): Promise<any> {
+  async enable2FA(id: string, token: string): Promise<any> {
     try {
       const user = await this.prisma.user.findUnique({
         where: {
@@ -150,20 +150,20 @@ export class AuthService {
       console.log(token);
       const verified = speakeasy.totp.verify({
         secret: user.twoFASecret,
-        encoding: 'base32',
-        token: token
+        encoding: "base32",
+        token: token,
       });
-      
+
       if (verified) {
         await this.prisma.user.update({
           where: {
             id,
           },
           data: {
-            twoFAActive: true
-          }
+            twoFAActive: true,
+          },
         });
-        return ('Updated successfully!');
+        return "Updated successfully!";
       } else {
         throw new BadRequestException("Invalid token");
       }
@@ -171,7 +171,7 @@ export class AuthService {
       throw error;
     }
   }
-  async disable2FA(id : string, token : string): Promise<any> {
+  async disable2FA(id: string, token: string): Promise<any> {
     try {
       const user = await this.prisma.user.findUnique({
         where: {
@@ -181,20 +181,20 @@ export class AuthService {
 
       const verified = speakeasy.totp.verify({
         secret: user.twoFASecret,
-        encoding: 'base32',
-        token: token
+        encoding: "base32",
+        token: token,
       });
-      
+
       if (verified) {
         await this.prisma.user.update({
           where: {
             id,
           },
           data: {
-            twoFAActive: false
-          }
+            twoFAActive: false,
+          },
         });
-        return ('Updated successfully!');
+        return "Updated successfully!";
       } else {
         throw new BadRequestException("Invalid token");
       }
@@ -202,7 +202,7 @@ export class AuthService {
       throw error;
     }
   }
-  
+
   async validateIntraUser(user: any): Promise<any> {
     try {
       const exist = await this.prisma.user.findUnique({
@@ -214,7 +214,7 @@ export class AuthService {
             username: user.username,
             email: user.email,
             id42: user.fortyTwoId,
-            twoFASecret : this.generate2FASecret(),
+            twoFASecret: this.generate2FASecret(),
             password: "42",
             profile: {
               create: {
@@ -232,7 +232,7 @@ export class AuthService {
       throw new InternalServerErrorException("Internal server error");
     }
   }
-  
+
   async validateGoogleUser(user: any): Promise<any> {
     try {
       const exist = await this.prisma.user.findUnique({
@@ -244,7 +244,7 @@ export class AuthService {
             username: "user.username",
             email: user.email,
             idGoogle: user.googleId,
-            twoFASecret : this.generate2FASecret(),
+            twoFASecret: this.generate2FASecret(),
             password: "google",
             profile: {
               create: {
@@ -262,5 +262,4 @@ export class AuthService {
       throw new InternalServerErrorException("Internal server error");
     }
   }
-  
 }

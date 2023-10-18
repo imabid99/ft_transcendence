@@ -1,10 +1,19 @@
-import { Body, Controller, Get, Patch, Post, Req , Res, UseGuards} from "@nestjs/common";
+import {
+  Body,
+  Controller,
+  Get,
+  Patch,
+  Post,
+  Req,
+  Res,
+  UseGuards,
+} from "@nestjs/common";
 import { AuthService } from "./auth.service";
-import { UserService } from "./user.service";
-import { UserData } from "./dtos/user.dto";
-import { UserDataLogin } from "./dtos/user-login.dto";
+import { UserService } from "../user/user.service";
+import { UserData } from "../dtos/user.dto";
+import { UserDataLogin } from "../dtos/user-login.dto";
 import { AuthGuard } from "@nestjs/passport";
-import { Response } from 'express';
+import { Response } from "express";
 
 @Controller("auth")
 export class authController {
@@ -33,7 +42,7 @@ export class authController {
   Callback42(@Req() req): Promise<string> {
     return this.userService.intraJWT(req.user.email);
   }
-  
+
   @Get("oauth2/google")
   @UseGuards(AuthGuard("google"))
   async authGoogle(): Promise<void> {
@@ -41,34 +50,34 @@ export class authController {
   }
 
   @Get("oauth2/google/callback")
-  @UseGuards(AuthGuard("google")) 
+  @UseGuards(AuthGuard("google"))
   CallbackGoogle(@Req() req): Promise<string> {
     return this.userService.googleJWT(req.user.email);
   }
-    
-  @Get('2fa_qr')
-  @UseGuards(AuthGuard("jwt"))
-  async Get2FA_qr(@Req() req,@Res() res: Response): Promise<void> {
-      const qrBuffer = await this.authService.generate2FAQrCode(req.user.id);
 
-      res.setHeader('Content-Type', 'image/png');
-      res.send(qrBuffer);
-  }
-  @Patch('2fa_enable')
+  @Get("2fa_qr")
   @UseGuards(AuthGuard("jwt"))
-  async enable2FA(@Req() req,@Body() body): Promise<void> {
-      await this.authService.enable2FA(req.user.id, body.code);
-  }
+  async Get2FA_qr(@Req() req, @Res() res: Response): Promise<void> {
+    const qrBuffer = await this.authService.generate2FAQrCode(req.user.id);
 
-  @Patch('2fa_disable')
+    res.setHeader("Content-Type", "image/png");
+    res.send(qrBuffer);
+  }
+  @Patch("2fa_enable")
   @UseGuards(AuthGuard("jwt"))
-  async disable2FA(@Req() req,@Body() body): Promise<void> {
-      await this.authService.disable2FA(req.user.id, body.code);
+  async enable2FA(@Req() req, @Body() body): Promise<void> {
+    await this.authService.enable2FA(req.user.id, body.code);
   }
 
-  @Post('2fa_verify')
+  @Patch("2fa_disable")
   @UseGuards(AuthGuard("jwt"))
-  async verify2FA(@Req() req,@Body() body): Promise<void> {
-      await this.authService.verify2FA(req.user.id, body.code);
+  async disable2FA(@Req() req, @Body() body): Promise<void> {
+    await this.authService.disable2FA(req.user.id, body.code);
+  }
+
+  @Post("2fa_verify")
+  @UseGuards(AuthGuard("jwt"))
+  async verify2FA(@Req() req, @Body() body): Promise<void> {
+    await this.authService.verify2FA(req.user.id, body.code);
   }
 }
