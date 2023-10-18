@@ -15,7 +15,9 @@ import axiosInstance from '@/utils/axiosInstance';
 
 export default function Page() {
   const [qrCodeSrc, setQrCodeSrc] = useState("2fa-qr-code 1.svg");
-
+  const [avatar, setAvatar] = useState<any>(null);
+  const [previewUrl, setPreviewUrl] = useState<string>("nouser.avif");
+  
   const qrcode = async (e : any) => {
     e.preventDefault();
     
@@ -27,10 +29,11 @@ export default function Page() {
       const objectURL = URL.createObjectURL(blob);
       setQrCodeSrc(objectURL); // set the Data URL as the image source
     } catch (e : any) {
-      console.log("Error : ", e.response?.data || e.message);
+      console.log("Error : ", e.response?.data || e.message); 
       return;
     }
   }
+
   const deleteUser = async (e : any) => {
     e.preventDefault();
     
@@ -43,6 +46,25 @@ export default function Page() {
     }
   }
 
+  function handleFileChange(e : any) {
+    const file = e.target.files?.[0];
+    const maxFileSize = 1024 * 1024 * 5;
+  
+    if (file) {
+      if (file.size > maxFileSize) {
+        alert("File is too large. Please upload a file smaller than 5 MB.");
+        return;
+      }
+      setPreviewUrl(URL.createObjectURL(file));
+      // setAvatar(file);
+    }
+  }
+
+  function handleDeletePhoto() {
+    setPreviewUrl("nouser.avif");
+    // setAvatar(null);
+  }
+
   useEffect(() => {
     qrcode({ preventDefault: () => {} });
   }, []);
@@ -53,14 +75,20 @@ export default function Page() {
           <div className="text-[20px] text-center sm:text-left sm:text-[25px] font-[600] text-[#043B6A] pt-[20px] sm:pl-[40px] ">
             Personal Information
           </div>
-          <div className="flex items-center flex-col sm:flex-row pb-4 sm:pl-[40px] pt-[18px]">
-            <div className="pb-4">
-              <img src="Ellipse 188.png" alt="" />
+          <div className="flex items-center flex-col sm:flex-row pb-4 sm:pl-[40px] pt-[4px] gap-[6px]">
+            <div className=" w-[130px]  h-[130px] rounded-full  border-[3px] border-[#3887D0]">
+              <picture>
+                <img
+                className="rounded-full w-full h-full object-cover"
+                src={previewUrl}
+                alt=""
+                />
+              </picture>
             </div>
             <div className="flex flex-col sm:pl-[24px] gap-[5px] ">
               <label
                 htmlFor="imageUpload"
-                className="bg-[#3887D0] text-white  w-[132px] h-[41px] text-center leading-10  text-[10px] cursor-pointer rounded-[12px] hover:bg-[#2f71af]"
+                className="bg-[#3887D0] text-white  w-[132px] h-[41px] text-center leading-10  text-[10px] cursor-pointer rounded-[12px] hover:bg-[#2f71af] b-save"
               >
                 Upload New Picture
               </label>
@@ -68,13 +96,14 @@ export default function Page() {
                 type="file"
                 id="imageUpload"
                 className="hidden cursor-pointer"
+                onChange={handleFileChange}
               />
-              <button className="bg-[#F9F9F9] text-[#02539D] text-[10px] font-[600] w-[132px] h-[41px] rounded-[12px] hover:bg-[#f0f0f0]">
+              <button onClick={handleDeletePhoto} className="bg-[#F9F9F9] text-[#02539D] text-[10px] font-[600] w-[132px] h-[41px] rounded-[12px] hover:bg-[#f0f0f0] b-reset">
                 Delete
               </button>
             </div>
           </div>
-          <div className="items-center flex flex-col gap-[16px]">
+          <form className="items-center flex flex-col gap-[16px]">
             <div className="flex  gap-[16px] w-11/12 flex-col sm:flex-row">
               <input
                 className="w-full h-[66px] border-[1px] border-[#D8D8D8] rounded-[15px] placeholder:indent-[24px] indent-[24px]"
@@ -100,25 +129,25 @@ export default function Page() {
                 placeholder="Email"
               />
             </div>
-          </div>
-          <div className="flex flex-col sm:flex-row justify-center items-center sm:justify-end gap-[8px] pt-[24px] pb-[28px] sm:w-12/12 sm:pr-[40px]">
-            <input
-              type="submit"
-              className=" w-[132px] h-[41px] rounded-[12px] bg-[#3887D0] cursor-pointer text-[#fff] text-[10px] font-[600] b-save"
-              value="Save Changes"
-            />
-            <input
-              type="reset"
-              className=" w-[132px] h-[41px] rounded-[12px] bg-[#F9F9F9] cursor-pointer text-[#02539D] text-[10px] font-[600] b-save"
-              value="Discard"
-            />
-          </div>
+            <div className="flex flex-col sm:flex-row justify-center items-center sm:justify-end gap-[8px] w-11/12 pb-[35px] xl:pb-0">
+                <input
+                  type="submit"
+                  className="w-[160px] h-[50px] rounded-[12px]  cursor-pointer text-[#fff] text-[13px] font-[600] b-save"
+                  value="Save Changes"
+                />
+                <input
+                  type="reset"
+                  className="w-[160px] h-[50px] rounded-[12px] cursor-pointer text-[#02539D] text-[13px] font-[600] bg-[#F9F9F9] b-reset"
+                  value="Discard"
+                />
+            </div>
+          </form>
         </div>
         <div className="3xl:max-w-[922px] max-w-[1200px] w-11/12 xl:h-[339px] rounded-[42px] p-inf bg-white">
           <div className="text-[20px] text-center sm:text-left sm:text-[25px] font-[600] text-[#043B6A] pt-[20px] sm:pl-[40px] pb-[28px]">
             Password
           </div>
-          <div className="items-center flex flex-col gap-[16px]">
+          <form className="items-center flex flex-col gap-[16px]">
             <div className="w-11/12">
               <input
                 className="w-full sm:w-[49%] h-[66px] border-[1px] border-[#D8D8D8] rounded-[15px] placeholder:indent-[24px] indent-[24px]"
@@ -144,19 +173,19 @@ export default function Page() {
                 placeholder="Confirm password"
               />
             </div>
-          </div>
-          <div className="flex flex-col sm:flex-row justify-center items-center sm:justify-end gap-[8px] pt-[24px] pb-[40px] sm:w-12/12 sm:pr-[40px]">
-            <input
-              type="submit"
-              className=" w-[132px] h-[41px] rounded-[12px] bg-[#3887D0] cursor-pointer text-[#fff] text-[10px] font-[600] b-save"
-              value="Save Changes"
-            />
-            <input
-              type="reset"
-              className=" w-[132px] h-[41px] rounded-[12px] bg-[#F9F9F9] cursor-pointer text-[#02539D] text-[10px] font-[600] b-save"
-              value="Discard"
-            />
-          </div>
+            <div className="flex flex-col sm:flex-row justify-center items-center sm:justify-end gap-[8px] w-11/12 pt-[10px] pb-[40px] xl:pb-0">
+                <input
+                  type="submit"
+                  className="w-[160px] h-[50px] rounded-[12px]  cursor-pointer text-[#fff] text-[13px] font-[600] b-save"
+                  value="Save Changes"
+                />
+                <input
+                  type="reset"
+                  className="w-[160px] h-[50px] rounded-[12px] cursor-pointer text-[#02539D] text-[13px] font-[600] bg-[#F9F9F9] b-reset"
+                  value="Discard"
+                />
+              </div>
+          </form>
         </div>
       </div>
       <div className="flex flex-col w-[100%] items-center 3xl:items-start gap-[50px] ">
@@ -208,13 +237,18 @@ export default function Page() {
               />
             </div>
           </div>
-          <div className="flex justify-center items-center pt-[24px] pb-[40px] w-[100%]  ">
-            <input
-              type="submit"
-              className=" w-[160px] h-[50px] rounded-[12px] bg-[#3887D0] cursor-pointer text-[#fff] text-[13px] font-[600] b-save"
-              value="Save Changes"
-            />
-          </div>
+          <div className="flex flex-col sm:flex-row justify-center items-center  pt-[24px] pb-[40px] gap-[8px] w-full  xl:pb-0">
+                <input
+                  type="submit"
+                  className="w-[160px] h-[50px] rounded-[12px]  cursor-pointer text-[#fff] text-[13px] font-[600] b-authS"
+                  value="Enable"
+                />
+                <input
+                  type="reset"
+                  className="w-[160px] h-[50px] rounded-[12px] cursor-pointer text-[#fff] text-[13px] font-[600] bg-[#F9F9F9] b-authR"
+                  value="Disable"
+                />
+            </div>
         </div>
         <div className=" bg-white rounded-[20px] p-inf flex  flex-col  3xl:max-w-[922px] max-w-[1200px] w-11/12 xl:h-[169px] items-center sm:items-start">
           <div className="text-[20px] text-center sm:text-left sm:text-[25px] font-[600] text-[#043B6A] pt-[20px] sm:pl-[40px] pb-[28px]">
@@ -227,7 +261,7 @@ export default function Page() {
             <div className="flex justify-center items-center sm:pr-[40px]">
               <input
                 type="submit"
-                className="w-[160px] h-[50px] rounded-[12px] bg-[#3887D0] cursor-pointer text-[#fff] text-[13px] font-[600] b-save"
+                className="w-[160px] h-[50px] rounded-[12px]  cursor-pointer text-[#fff] text-[13px] font-[600] b-save"
                 value="Close Account"
               />
             </div>

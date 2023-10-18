@@ -27,7 +27,7 @@ export default function Header({show, modalRef,handelShaw,notifRef,notifIconRef}
                 '>
                     <div className='lg:max-2xl:hidden'>
                         <p className="text-[18px] font-[500] text-[#AEBAC7]  2xl:max-3xl:text-[15px]">Welcome</p>
-                        {show ? <p className="text-[25px] font-[700] 2xl:max-3xl:text-[20px]  2xl:max-3xl:w-[150px]">{name}</p> : <p className="text-[25px] font-[700] 2xl:max-3xl:text-[20px]  2xl:max-3xl:w-[150px]"></p>}
+                        {name ? <p className="text-[25px] font-[700] 2xl:max-3xl:text-[20px]  2xl:max-3xl:w-[150px]">{name}</p> : <p className="text-[25px] font-[700] 2xl:max-3xl:text-[20px]  2xl:max-3xl:w-[150px]"></p>}
                     </div>
                     <div className="flex gap-[20px] items-center z-[0] bg-[#FFF] searchShadow rounded-[20px]">
                         <div className="flex items-center gap-[10px] p-[32px] pr-0">

@@ -2,6 +2,8 @@ import { NestFactory } from "@nestjs/core";
 import { AppModule } from "./app.module";
 import { PrismaService } from "./prisma/prisma.service";
 import * as cors from 'cors';
+import * as express from 'express';
+import { join } from 'path';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
@@ -9,6 +11,7 @@ async function bootstrap() {
     origin: 'http://localhost:1337',
     credentials: true
   }));
+  app.use('/uploads', express.static(join(__dirname, '..', 'uploads')));
   app.setGlobalPrefix("api");
   const prismaService = app.get(PrismaService);
   await prismaService.enableShutdownHooks(app);

@@ -9,7 +9,7 @@ import * as SocketIO from "socket.io";
 import * as jwt from "jsonwebtoken";
 import jwt_decode from "jwt-decode";
 import { PrismaService } from "../../../prisma/prisma.service";
-import { UserService } from "../../../user.service";
+import { UserService } from "../../../user/user.service";
 
 
 @WebSocketGateway({

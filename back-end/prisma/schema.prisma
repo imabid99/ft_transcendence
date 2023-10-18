@@ -26,6 +26,7 @@ model User {
   password       String
   twoFASecret    String
   twoFAActive    Boolean     @default(false)
+  deleted        Boolean     @default(false)
   profile        Profile?
   dmMessages     Message[]
   BlockList      BlockList[]
@@ -36,20 +37,21 @@ model User {
   channelsMuts   channels[]  @relation("MutedUsers")
   channelsBand   channels[]  @relation("BannedUsers")
   muted          Muted[]
-  sentRequests  Friendship[] @relation("FriendshipSender")
-  receivedRequests Friendship[] @relation("FriendshipReceiver")
+  sent      Friendship[] @relation("FriendshipSender")
+  received  Friendship[] @relation("FriendshipReceiver")
+  actions   Friendship[] @relation("FriendshipAction")
 }
 
 model Friendship {
-  id        String @id @default(uuid())
-  senderId  String 
-  receiverId String
-  status    FriendshipStatus @default(PENDING)
-  
-  sender    User @relation(name: "FriendshipSender", fields: [senderId], references: [id])
-  receiver  User @relation(name: "FriendshipReceiver", fields: [receiverId], references: [id])
-  
-  @@unique([senderId, receiverId])
+  id            Int               @id @default(autoincrement())
+  senderId      String
+  receiverId    String
+  status        FriendshipStatus
+  actionUserId  String
+  timestamp     DateTime         @default(now())
+  sender        User             @relation("FriendshipSender", fields: [senderId], references: [id])
+  receiver      User             @relation("FriendshipReceiver", fields: [receiverId], references: [id])
+  actionUser    User             @relation("FriendshipAction", fields: [actionUserId], references: [id])
 }
 
 model Profile {
@@ -62,8 +64,8 @@ model Profile {
   status          String    @default("offline")
   lastMessage     String?
   lastMessageTime DateTime?
-  avatar          String?
-  background      String?
+  avatar          String    @default("uploads/first3.png")
+  cover           String    @default("uploads/first3.png")
   gaemePlayed     Int       @default(0)
   win             Int       @default(0)
   lose            Int       @default(0)
