@@ -15,6 +15,8 @@ import { GoogleStrategy } from "./google/google.starategy";
 import { MulterModule } from "@nestjs/platform-express";
 import { uploadController } from "./upload/upload.controller";
 import { friendshipController } from "./friendship/friendship.controller";
+import { UploadService } from "./upload/upload.service";
+import { FriendshipService } from "./friendship/friendship.service";
 
 @Module({
   imports: [
@@ -34,9 +36,11 @@ import { friendshipController } from "./friendship/friendship.controller";
     AppService,
     AuthService,
     UserService,
+    UploadService,
     JwtStrategy,
     GoogleStrategy,
     FortyTwoStrategy,
+    FriendshipService,
   ],
 })
 export class AppModule {}
