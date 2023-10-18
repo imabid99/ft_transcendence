@@ -4,7 +4,7 @@ import {
   UnauthorizedException,
 } from "@nestjs/common";
 import { Request, Response, NextFunction } from "express";
-import { UserService } from "../user.service";
+import { UserService } from "../user/user.service";
 import * as jwt from "jsonwebtoken";
 
 interface AuthenticatedRequest extends Request {
