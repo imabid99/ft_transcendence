@@ -62,7 +62,7 @@ model Profile {
   status          String    @default("offline")
   lastMessage     String?
   lastMessageTime DateTime?
-  avatar          String?
+  avatar          String    @default("uploads/first3.png")
   background      String?
   gaemePlayed     Int       @default(0)
   win             Int       @default(0)

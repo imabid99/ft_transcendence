@@ -170,4 +170,30 @@ export class UserService {
     delete user.password;
     return user;
   }
+  async uploadAvatar(path: string, userId: string): Promise<any> {
+    try {
+      await this.prisma.profile.update({
+        where: {
+          userId,
+        },
+        data: {
+          avatar: path,
+        },
+      });
+    } catch (error) {
+      throw error;
+    }
+  }
+  async getAvatar(userId: string): Promise<any> {
+    try {
+      const avatar = await this.prisma.profile.findUnique({
+        where: {
+          userId,
+        },
+      });
+      return avatar;
+    } catch (error) {
+      throw error;
+    }
+  }
 }

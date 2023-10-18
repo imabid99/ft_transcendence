@@ -1,15 +1,49 @@
+'use client';
+import { useContext, useState } from 'react';
+import { contextdata } from '@/app/contextApi';
+import axiosInstance from '@/utils/axiosInstance';
 
-  export default function Page() {
+
+export default function Page() {
+  
+    const [avatar, setAvatar] = useState<any>(null);
+    const [previewUrl1, setPreviewUrl1] = useState<string>("first4.png");
+    const [previewUrl, setPreviewUrl] = useState<string>("");
+    const {profiles, user}:any = useContext(contextdata);
+    const myProfile = profiles?.find((profile:any) => profile.userId === user.id);
+    const name = `${myProfile?.firstName} ${myProfile?.lastName}`;
+    // const [previewUrl, setPreviewUrl] = useState<string>(`http://${process.env.NEXT_PUBLIC_APP_URL}/${myProfile.avatar}`);
+    function handleFileInputChange(e: any, setPreviewUrl: any) {
+      const file = e.target.files?.[0];
+      const formData = new FormData();
+      formData.append('file', file);
+      const maxFileSize = 1024 * 1024 * 5;
+      axiosInstance.post(`http://${process.env.NEXT_PUBLIC_APP_URL}:3000/api/user/upload/avatar`, formData).then((res) => {
+        console.log(res);
+      }).catch((err) => {
+        console.log(err);
+      });
+      if (file) {
+        if (file.size > maxFileSize) {
+          alert("File is too large. Please upload a file smaller than 5 MB.");
+          return;
+        }
+        setPreviewUrl(URL.createObjectURL(file));
+      }
+    }
+    console.log("myProfile", myProfile)
     return (
-      <div className="flex items-center flex-col 3xl:flex-row gap-[40px] w-[100%] 3xl:justify-center">
+    <div className="flex items-center flex-col 3xl:flex-row gap-[40px] w-[100%] 3xl:justify-center">
         <div className=" flex max-w-[922px] w-11/12 xl:h-[823px] rounded-[42px] sh-d bg-white">
-          <div className="mx-auto w-11/12 mt-[34px]">
+        <div className="mx-auto w-11/12 mt-[34px]">
             <div className="relative w-12/12 h-[185px] rounded-[25px] overflow-hidden">
-              <img
-                src="Rectangle 93.svg"
-                alt=""
-                className="object-cover object-top w-full h-full"
-              />
+                    <picture>
+                      <img
+                          src={previewUrl1}
+                          alt=""
+                          className="object-cover object-top w-full h-full"
+                      />
+                    </picture>
               <label
                 htmlFor="imageUpload"
                 className="t-ba absolute top-[15px] right-[15px] text-white text-center leading-5 w-[92px] h-[21px] text-[7px] rounded-[5px] cursor-pointer transform hover:scale-110 transition-transform duration-300"
@@ -17,34 +51,61 @@
                 Upload Cover
               </label>
               <input
+                name="avatar"
                 type="file"
                 id="imageUpload"
-                className="absolute top-[15px] right-[15px] hidden cursor-pointer"
+                className="absolute hidden cursor-pointer"
+                onChange={(e) => handleFileInputChange(e, setPreviewUrl1)}
               />
             </div>
             <div className=" w-12/12 h-[200px] sm:h-[120px]">
               <div className="relative ">
-                <img
-                  className="absolute left-[40px] -top-[52px]"
-                  src="Ellipse 187.svg"
-                  alt=""
-                />
+                <div className="absolute  w-[150px]  h-[150px] rounded-full left-[43px] -top-[52px] border-[5px] border-white">
+                    <picture>
+                      <img
+                      className="rounded-full w-full h-full object-cover"
+                      src={`http://${process.env.NEXT_PUBLIC_APP_URL}/${myProfile?.avatar}`}
+                      alt=""
+                      />
+                    </picture>
+                </div>
                 <label
-                  htmlFor="imageUpload"
+                  htmlFor="upload"
                   className="absolute left-[150px] -top-[44px] cursor-pointer "
                 >
                   <img id="imageUpload" src="group-70.svg" className="transform hover:scale-125 transition-transform duration-300" />
                 </label>
                 <input
-                  type="file"
-                  id="imageUpload"
-                  className="absolute hidden cursor-pointer"
-                />
+                name="avatar"
+                type="file"
+                id="upload"
+                className="absolute hidden cursor-pointer"
+                onChange={(e) => handleFileInputChange(e, setPreviewUrl)}
+              />
               </div>
               <div className="pt-[100px] gap-[15px] sm:pt-0 flex flex-col sm:flex-row pl-[40px] sm:items-center sm:pl-[200px] sm:justify-between">
-                <div className=" pt-[10px]">
-                  <p className="text-[25px] font-[600] text-[#020025]">Ahmed kamal</p>
-                  <p className="text-[15px] text-[#6E869B] font-[600]">akamal</p>
+                <div className="pt-[10px]">
+                    {
+                        myProfile ?
+                        (
+                            <>
+                                <p className="text-[25px] font-[600] text-[#020025]">{name}</p>
+                                <p className="text-[15px] text-[#6E869B] font-[600]">{myProfile?.username}</p>
+                            </>
+
+                        )
+
+                        :
+                        (
+                            <div className="container">
+                            <div className="post">
+                                <div className="line"></div>
+                                <div className="line"></div>
+                            </div>
+
+                            </div>
+                        )
+                    }
                 </div>
                 <div className=" flex items-center gap-[5px]">
                   <button className="w-[91px] h-[29px] rounded-[9px] bg-[#5085AB] flex items-center justify-center gap-[5px]">
@@ -96,7 +157,7 @@
                 </div>
               </div>
             </div>
-            <div className="flex flex-col xl:flex-row items-center xl:pb-[390px]">
+            <div className="flex flex-col xl:flex-row items-center xl:pb-[70px]">
               <div className="flex gap-[64px] sm:gap-[30px] pt-[30px] flex-col sm:flex-row">
                 <div className="flex gap-[64px] flex-col">
                   <div className="w-[180px] h-[100px] bg-[#BBE3FF] hover:bg-[#a2d8ff] rounded-[24px] flex items-center pl-[20px] gap-[17px] g-sh transform hover:scale-105 transition-transform duration-300">
