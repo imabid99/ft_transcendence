@@ -151,9 +151,6 @@ export class UserService {
     id: string,
     userId: string
   ): Promise<{ iBlocked: boolean; heBlocked: boolean }> {
-    if (id || userId) {
-      return { iBlocked: false, heBlocked: false };
-    }
     const blocked = await this.prisma.BlockList.findMany({
       where: {
         userId: id,
