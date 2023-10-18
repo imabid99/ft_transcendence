@@ -146,30 +146,13 @@ export default function  LeftSide() {
 								</p>
 							</div>
 						</div>
-						{/* {
-							!showBody &&
-							<div className="z-[10] bg-[#EDFAFF]  cursor-pointer w-[54px] h-[54px] notifShadow flex justify-center items-center rounded-[20px] hover:bg-[#e0f2f9]" onClick={() => {setShowBody("search")}}>
-								<svg width="21" height="20" viewBox="0 0 21 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-									<path
-									d="M9.32 17C13.915 17 17.64 13.4183 17.64 9C17.64 4.58172 13.915 1 9.32 1C4.72499 1 1 4.58172 1 9C1 13.4183 4.72499 17 9.32 17Z"
-									stroke="#034B8A"
-									strokeWidth="2"
-									/>
-									<path
-									d="M19.7193 18.9984L15.1953 14.6484"
-									stroke="#034B8A"
-									strokeWidth="2"
-									/>
-								</svg>
-							</div>
-						} */}
 					</div>
 					{
 						!showBody && (
 							<>
 								<SearchChat />
 								<UsersOnline />
-								<div id="scroll" className="max-h-[calc(100%-299px)] overflow-y-scroll no-scrollbar h-[calc(100%-299px)] px-[25px] py-[25px] flex flex-col gap-[25px]">
+								<div id="scroll" className="max-h-[calc(100%-299px)] overflow-y-scroll no-scrollbar h-[calc(100%-329px)] px-[25px] py-[25px] flex flex-col gap-[25px]">
 									<GroupsChannels />
 									<UsersDm />
 								</div>

@@ -70,7 +70,7 @@ export default function SearchChat() {
 			/>
 			{
 				showBody && (
-					<div className="absolute top-[80px] rounded-[15px] w-[calc(100%-50px)] h-[400px] bg-[#FFF] z-[2] py-[25px] flex flex-col gap-[20px] overflow-y-scroll no-scrollbar">
+					<div className="absolute top-[85px] rounded-[15px] w-[calc(100%-50px)] h-[400px] bg-[#FFF] z-[2] py-[25px] px-[25px] flex flex-col gap-[20px] overflow-y-scroll no-scrollbar p-inf">
 						{
 							users?.map((user: any) => {
 								return(
