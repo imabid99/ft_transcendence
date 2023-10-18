@@ -170,6 +170,7 @@ export class UserService {
     }
     return { iBlocked: false, heBlocked: false };
   }
+
   async getUserInfo(id: string): Promise<any> {
     const user = await this.prisma.user.findUnique({
       where: {
