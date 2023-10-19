@@ -33,7 +33,7 @@ export default function SelectUsersBody({setShowBody,setGroupUsers,groupUsers}:s
                 {
                     user && profiles?.map((profile: any) => (
                         profile.userId !== user.id &&
-                        <SelectUsers key={user.id} groupUsers={groupUsers} setGroupUsers={setGroupUsers} user={{name: `${profile.firstName} ${profile.lastName}`, username: `${profile.username}`, url: '/userProfile.jpg', userId : profile.userId}} />
+                        <SelectUsers key={user.id} groupUsers={groupUsers} setGroupUsers={setGroupUsers} user={{name: `${profile.firstName} ${profile.lastName}`, username: `${profile.username}`, url: `http://${process.env.NEXT_PUBLIC_APP_URL}:3000/${profile.avatar}`, userId : profile.userId}} />
                     ))
                 }
             </form>

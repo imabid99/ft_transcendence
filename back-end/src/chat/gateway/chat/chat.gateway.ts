@@ -1,3 +1,4 @@
+import { Profile } from './../../../../node_modules/.prisma/client/index.d';
 import {
   SubscribeMessage,
   WebSocketGateway,
@@ -17,6 +18,7 @@ import { UserService } from "../../../user/user.service";
     origin: true,
     methods: ["GET", "POST"],
   },
+  namespace: "chat",
 })
 export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
   constructor(
@@ -30,52 +32,74 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
     const token = client.handshake.headers.authorization?.split(" ")[1];
     if (token) {
       const decoded: any = jwt_decode(token);
-      client.join(decoded.username);
-      const myChannels = await this.prisma.channels.findMany({
-        where: {
-          Members: {
-            some: {
-              id: decoded.userId,
+      try
+      {
+        await this.prisma.profile.findUnique({
+          where: {
+            userId: decoded.userId,
+          },
+        });
+        client.join(decoded.username);
+        const myChannels = await this.prisma.channels.findMany({
+          where: {
+            Members: {
+              some: {
+                id: decoded.userId,
+              },
             },
           },
-        },
-      });
-      myChannels.map((channel) => {
-        client.join(channel.id);
-      });
-      if (this.server.sockets.adapter.rooms.get(decoded.username)?.size !== 1 || (await this.prisma.profile.findMany()).length === 0){
-        return;
+        });
+        myChannels.map((channel) => {
+          client.join(channel.id);
+        });
+        if (this.server.sockets.adapter?.rooms?.get(decoded.username)?.size > 1){
+          return;
+        }
+        await this.prisma.profile?.update({
+          where: {
+            userId: decoded?.userId,
+          },
+          data: {
+            status: "online",
+          },
+        });
+        this.server.emit("refresh");
       }
-      await this.prisma.profile?.update({
-        where: {
-          userId: decoded?.userId,
-        },
-        data: {
-          status: "online",
-        },
-      });
-      this.server.emit("refresh");
+      catch(err){
+        console.log("err : ", err.message);
+      }
     }
   }
   async handleDisconnect(client: Socket) {
     const token = client.handshake.headers.authorization?.split(" ")[1];
     if (token) {
       const decoded: any = jwt_decode(token);
-      if (this.server.sockets.adapter.rooms.get(decoded.username) !== undefined || (await this.prisma.profile.findMany()).length === 0)
-        return;
-      await this.prisma.profile.update({
-        where: {
-          userId: decoded.userId,
-        },
-        data: {
-          status: "offline",
-        },
-      });
-
-      this.server.emit("refresh");
+      try
+      {
+        const Profile = await this.prisma.profile.findUnique({
+          where: {
+            userId: decoded.userId,
+          },
+        });
+        if (this.server.sockets.adapter?.rooms?.get(decoded.username)?.size > 1){
+          return;
+        }
+        await this.prisma.profile.update({
+          where: {
+            userId: decoded.userId,
+          },
+          data: {
+            status: "offline",
+          },
+        });
+  
+        this.server.emit("refresh");
+      }
+      catch(err){
+        console.log("err : ", err.message);
+      }
     }
   }
-
 
   @SubscribeMessage("privet-message")
   async handlePrivetMessage(_client: any, payload: any): Promise<void> {
@@ -218,7 +242,7 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
         },
       });
       channel.Members.map((member) => {
-        const userSocket = this.server.sockets.adapter.rooms.get(member.username);
+        const userSocket = this.server.sockets.adapter?.rooms?.get(member.username);
         if(userSocket)
         {
           userSocket.forEach((socketId) => { 

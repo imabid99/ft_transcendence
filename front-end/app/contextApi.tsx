@@ -52,7 +52,7 @@ const ContextProvider = ({ children }: { children: React.ReactNode; }) => {
     if (!user || user === undefined) {
       return;
     }
-    newSocket = io(`http://${process.env.NEXT_PUBLIC_APP_URL}:3000`, {
+    newSocket = io(`http://${process.env.NEXT_PUBLIC_APP_URL}:3000/chat`, {
       extraHeaders: {
         Authorization: `Bearer ${getLocalStorageItem("Token")}`,
       }

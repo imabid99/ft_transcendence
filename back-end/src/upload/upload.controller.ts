@@ -17,7 +17,7 @@ import { customStorage } from "./multer-config";
 export class uploadController {
   constructor(private uploadService: UploadService) {}
 
-  @Post("upload/avatar")
+  @Post("avatar")
   @UseInterceptors(FileInterceptor("file", { storage: customStorage }))
   @UseGuards(AuthGuard("jwt"))
   async uploadAvatar(
@@ -32,7 +32,7 @@ export class uploadController {
   async getAvatar(@Req() req): Promise<void> {
     return this.uploadService.getAvatar(req.user.id);
   }
-  @Post("upload/cover")
+  @Post("cover")
   @UseInterceptors(FileInterceptor("file", { storage: customStorage }))
   @UseGuards(AuthGuard("jwt"))
   async uploadCover(
@@ -48,7 +48,7 @@ export class uploadController {
     return this.uploadService.getCover(req.user.id);
   }
 
-  @Post("upload/channelAvatar/:id")
+  @Post("channelAvatar/:id")
   @UseInterceptors(FileInterceptor("file", { storage: customStorage }))
   @UseGuards(AuthGuard("jwt"))
   async uploadChannelAvatar(
