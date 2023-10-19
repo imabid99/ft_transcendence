@@ -16,6 +16,8 @@ const jwt = require("jsonwebtoken");
 const jwt_decode_1 = require("jwt-decode");
 const prisma_service_1 = require("../../../prisma/prisma.service");
 const user_service_1 = require("../../../user.service");
+const passport_1 = require("@nestjs/passport");
+const common_1 = require("@nestjs/common");
 let ChatGateway = exports.ChatGateway = class ChatGateway {
     constructor(prisma, userService) {
         this.prisma = prisma;
@@ -1168,6 +1170,7 @@ __decorate([
 ], ChatGateway.prototype, "handlePrivetMessage", null);
 __decorate([
     (0, websockets_1.SubscribeMessage)("block-user"),
+    (0, common_1.UseGuards)((0, passport_1.AuthGuard)("jwt")),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [Object, Object]),
     __metadata("design:returntype", Promise)

@@ -9,6 +9,7 @@ import { JwtModule } from "@nestjs/jwt";
 import { JwtStrategy } from "./jwt.strategy";
 import { FortyTwoStrategy } from "./42auth/intra.strategy";
 import { ChatModule } from "./chat/chat.module";
+import { GameModule } from './game/game.module';
 
 @Module({
   imports: [
@@ -19,6 +20,7 @@ import { ChatModule } from "./chat/chat.module";
       signOptions: { expiresIn: "1d" },
     }),
     ChatModule,
+    GameModule,
   ],
   controllers: [AppController, userController],
   providers: [AppService, UserService, JwtStrategy, FortyTwoStrategy],

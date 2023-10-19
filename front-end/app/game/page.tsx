@@ -1,4 +1,4 @@
-"use client";
+'use client';
 
 import { Canvas, useFrame } from "@react-three/fiber";
 import React, { useRef, useState, useEffect, useMemo } from "react";
@@ -32,6 +32,10 @@ import * as THREE from "three";
 import { EffectComposer, Bloom, Vignette } from '@react-three/postprocessing'
 import { RigidBody, vec3, useRapier ,RapierRigidBody , Physics, CuboidCollider } from "@react-three/rapier";
 import { Vector3 } from "three";
+import "../globals.css";
+import  Model1  from "./model1";
+import  Model2  from "./model2";
+import  Model3  from "./model3";
 // import { useRapier } from '@dimforge/rapier3d-react';
 // import KeyboardControls, { boxRef } from "./keyboardcontrols";
 // import PlayerPaddle from "./keyboardcontrols";
@@ -48,38 +52,40 @@ const Game = () => {
   ], []);
 
 
-  const naturemodel = useLoader(
-	GLTFLoader,
-	"/Game_Assets/models/naturescene/naturescene.glb"
-  );
+//   const naturemodel = useLoader(
+// 	GLTFLoader,
+// 	"/Game_Assets/models/naturescene/naturescene.glb"
+//   );
 //   const naturemodel = useGLTF("/Game_Assets/models/naturescene/naturescene.glb");
 //   const naturemodel = importmodel("/Game_Assets/models/naturescene/naturescene.glb");
-  useEffect(() => {
-	const object = naturemodel.scene as THREE.Object3D;
-	object.traverse((child) => {
-	  if (child instanceof THREE.Mesh) {
-		child.castShadow = true;
-		child.receiveShadow = true;
-	  }
-	});
-  }, [naturemodel]);
+//   useEffect(() => {
+// 	const object = naturemodel.scene as THREE.Object3D;
+// 	object.traverse((child) => {
+// 	  if (child instanceof THREE.Mesh) {
+// 		child.castShadow = true;
+// 		child.receiveShadow = true;
+// 	  }
+// 	});
+//   }, [naturemodel]);
 
-  const siderock = useLoader(
-	GLTFLoader,
-	"/Game_Assets/models/bigrock/bigrock.glb"
-  );
+//   const siderock = useLoader(
+// 	GLTFLoader,
+// 	"/Game_Assets/models/bigrock/bigrock.glb"
+//   );
 //   const siderock = useGLTF("/Game_Assets/models/bigrock/bigrock.glb");
 //   const siderock = importmodel("/Game_Assets/models/bigrock/bigrock.glb");
-  useEffect(() => {
-	const object = siderock.scene as THREE.Object3D;
-	object.traverse((child) => {
-	  if (child instanceof THREE.Mesh) {
-		child.castShadow = true;
-		child.receiveShadow = true;
-	  }
-	});
-  }, [siderock]);
-  const siderock2 = siderock.scene.clone();
+//   useEffect(() => {
+// 	const object = siderock.scene as THREE.Object3D;
+// 	object.traverse((child) => {
+// 	  if (child instanceof THREE.Mesh) {
+// 		child.castShadow = true;
+// 		child.receiveShadow = true;
+// 	  }
+// 	});
+//   }, [siderock]);
+//   const siderock2 = siderock.scene.clone();
+
+
   const controls = useControls({});
   const { sunPosition } = useControls("sky", {
 	sunPosition: [-0.07, -0.03, -0.75],
@@ -151,9 +157,9 @@ const Game = () => {
 			if (playerbodyRef.current && playerRef.current) {
 				const linvel = playerbodyRef.current?.linvel();
 				if (isMovingLeft && linvel?.x < 3 && playerbodyRef.current.translation().x > -4.1) {
-					playerbodyRef.current.applyImpulse({ x: -13, y: 0, z: 0 }, true);
+					playerbodyRef.current.applyImpulse({ x: -8, y: 0, z: 0 }, true);
 				} else if (isMovingRight && linvel?.x > -3 && playerbodyRef.current.translation().x < 4) {
-					playerbodyRef.current.applyImpulse({ x: 13, y: 0, z: 0 }, true);
+					playerbodyRef.current.applyImpulse({ x: 8, y: 0, z: 0 }, true);
 				}
 				const currentPaddle1Position = playerbodyRef.current.translation().z;
 				// console.log(currentPaddle1Position)
@@ -224,9 +230,9 @@ const Game = () => {
 			if (AIbodyRef.current && AIRef.current) {
 				const linvel = AIbodyRef.current?.linvel();
 				if (isMovingLeft && linvel?.x < 3 && AIbodyRef.current.translation().x > -4.1) {
-					AIbodyRef.current.applyImpulse({ x: -13, y: 0, z: 0 }, true);
+					AIbodyRef.current.applyImpulse({ x: -8, y: 0, z: 0 }, true);
 				} else if (isMovingRight && linvel?.x > -3 && AIbodyRef.current.translation().x < 4) {
-					AIbodyRef.current.applyImpulse({ x: 13, y: 0, z: 0 }, true);
+					AIbodyRef.current.applyImpulse({ x: 8, y: 0, z: 0 }, true);
 				}
 
 				const currentPaddle1Position = AIbodyRef.current.translation().z;
@@ -358,10 +364,10 @@ const Game = () => {
 	const Scoreboard = ({ p1_count, p2_count }: ScoreboardProps) => {
 		return (
 			<>
-				<Text receiveShadow color="White" anchorX="center" anchorY="middle" position={[-3.3, 0.05, -4.8]} scale={[6, 6, 6]} font={"/Game_Assets/Fonts/Pixelify Sans_Regular.json"} rotation={[Math.PI / 2, Math.PI , Math.PI]}>
+				<Text receiveShadow color="White" anchorX="center" anchorY="middle" position={[-3.3, 0.05, -4.8]} scale={[6, 6, 6]} rotation={[Math.PI / 2, Math.PI , Math.PI]}>
 				{p1_count}
 				</Text>
-				<Text receiveShadow color="White" anchorX="center" anchorY="middle" position={[3.4, 0.05, 5.5]} scale={[6, 6, 6]} font="pixelfyfont" rotation={[Math.PI / 2, Math.PI , Math.PI]}>
+				<Text receiveShadow color="White" anchorX="center" anchorY="middle" position={[3.4, 0.05, 5.5]} scale={[6, 6, 6]} rotation={[Math.PI / 2, Math.PI , Math.PI]}>
 				{p2_count}
 				</Text>
 			</>
@@ -442,7 +448,7 @@ const Game = () => {
 			<RigidBody restitution={1} friction={0} linearDamping={20} ref={playerbodyRef} enabledRotations={[false, false, false]} >
 				<RoundedBox
 					ref={playerRef}
-					args={[4, 1, 0.3]}
+					args={[3, 1, 0.3]}
 					position={[0, 0.5, 9]}
 					radius={0.15} 
 					smoothness={4}
@@ -467,7 +473,7 @@ const Game = () => {
 			<RigidBody restitution={1} friction={0} linearDamping={20} ref={AIbodyRef} enabledRotations={[false, false, false]} >
 				<RoundedBox
 					ref={AIRef}
-					args={[4, 1, 0.3]}
+					args={[3, 1, 0.3]}
 					position={[0, 0.5, -9]}
 					radius={0.15} 
 					smoothness={4}
@@ -522,36 +528,10 @@ const Game = () => {
 				</mesh>
 			</RigidBody> */}
 
-			<RigidBody restitution={1.1} friction={0} type="fixed" colliders="hull">
-				<primitive
-					object={siderock.scene}
-					castShadow
-					receiveShadow
-					position={[-10.1, -1.12, -0.34]}
-					scale={[11, 5 , 16.7]}
-				/>
-			</RigidBody>
-
-			<RigidBody restitution={1.1}  friction={0} type="fixed" colliders="hull">
-				<primitive
-					object={siderock2}
-					castShadow
-					receiveShadow
-					position={[10.1, -1.12, 0.34]}
-					scale={[11, 5 , 16.7]}
-					rotation-y={Math.PI}
-				/>
-			</RigidBody>
-
-			<primitive
-				object={naturemodel.scene}
-				castShadow
-				receiveShadow
-				position={[0, 3, 0]}
-				scale={[50, 50, 50]}
-				// roughness={0}
-				// metalness={0}
-			/>
+			
+			<Model3/>
+			<Model2/>
+			<Model1/>
 		</Physics>
 		
 		

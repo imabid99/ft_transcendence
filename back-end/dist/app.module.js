@@ -18,6 +18,7 @@ const jwt_1 = require("@nestjs/jwt");
 const jwt_strategy_1 = require("./jwt.strategy");
 const intra_strategy_1 = require("./42auth/intra.strategy");
 const chat_module_1 = require("./chat/chat.module");
+const game_module_1 = require("./game/game.module");
 let AppModule = exports.AppModule = class AppModule {
 };
 exports.AppModule = AppModule = __decorate([
@@ -30,6 +31,7 @@ exports.AppModule = AppModule = __decorate([
                 signOptions: { expiresIn: "1d" },
             }),
             chat_module_1.ChatModule,
+            game_module_1.GameModule,
         ],
         controllers: [app_controller_1.AppController, user_controller_1.userController],
         providers: [app_service_1.AppService, user_service_1.UserService, jwt_strategy_1.JwtStrategy, intra_strategy_1.FortyTwoStrategy],

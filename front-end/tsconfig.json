@@ -23,6 +23,6 @@
       "@/*": ["./*"]
     }
   },
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts", "components/Dashboard/Chat/Messages/LeftMessagesGroup.tsx"],
+  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts", "components/Dashboard/Chat/Messages/LeftMessagesGroup.tsx", "app/Game/model1.ts"],
   "exclude": ["node_modules"]
 }

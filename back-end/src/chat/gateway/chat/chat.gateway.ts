@@ -10,6 +10,9 @@ import * as jwt from "jsonwebtoken";
 import jwt_decode from "jwt-decode";
 import { PrismaService } from "../../../prisma/prisma.service";
 import { UserService } from "../../../user.service";
+import { AuthGuard } from "@nestjs/passport";
+import { JwtAuthGuard } from "../../../jwt-auth/jwt-auth.guard";
+import { UseGuards } from "@nestjs/common";
 
 
 @WebSocketGateway({
@@ -23,6 +26,7 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
     private prisma: PrismaService,
     private userService: UserService
   ) {}
+
   @WebSocketServer()
   server: SocketIO.Server;
 
@@ -121,6 +125,7 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
   }
   
   @SubscribeMessage("block-user")
+  @UseGuards(AuthGuard("jwt"))
   async handleBlockUser(client: any, payload: any): Promise<void> {
     const token = client.handshake.headers.authorization?.split(" ")[1];
 
