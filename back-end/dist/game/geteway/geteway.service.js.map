@@ -1,1 +1,1 @@
-{"version":3,"file":"geteway.service.js","sourceRoot":"","sources":["../../../src/game/geteway/geteway.service.ts"],"names":[],"mappings":";;;;;;;;;AAAA,2CAA4C;AAGrC,IAAM,cAAc,4BAApB,MAAM,cAAc;CAAG,CAAA;yBAAjB,cAAc;IAD1B,IAAA,mBAAU,GAAE;GACA,cAAc,CAAG"}
+{"version":3,"file":"geteway.service.js","sourceRoot":"","sources":["../../../src/Game/geteway/geteway.service.ts"],"names":[],"mappings":";;;;;;;;;AAAA,2CAA4C;AAGrC,IAAM,cAAc,4BAApB,MAAM,cAAc;CAAG,CAAA;yBAAjB,cAAc;IAD1B,IAAA,mBAAU,GAAE;GACA,cAAc,CAAG"}

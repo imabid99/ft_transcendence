@@ -137,7 +137,7 @@ export default function ChannelInfo({infoRef, handleshowInfo, group, userId}: Ch
                                     <Link href={`/profile/${member.id}`}>
                                         <div className="w-full flex items-center gap-[10px] justify-between cursor-pointer">
                                             <span className="flex items-center gap-[10px]">
-                                                <img src="/groupAvatar.jpg" alt="" className="rounded-full w-[60px] h-[60px] object-cover"/>
+                                                <img src={`http://${process.env.NEXT_PUBLIC_APP_URL}:3000/${member.avatar}`} alt="" className="rounded-full w-[60px] h-[60px] object-cover"/>
                                                 <span>
                                                     <p className="text-[#034B8A] text-[20px] font-[Poppins] font-[500] min-w-[200px]  max-w-[300px] truncate">
                                                         {member.username}

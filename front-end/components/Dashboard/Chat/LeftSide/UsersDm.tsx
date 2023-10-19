@@ -2,10 +2,12 @@ import Channel from "../Channel/Channel"
 import { useContext } from 'react';
 import { contextdata } from '@/app/contextApi';
 import { getLastMessage } from "@/utils/getLastMessage";
+
 type constextType = {
     user: any,
     users: any,
-  };
+};
+
 export default function UsersDm() {
     const {profiles, user, messages} :any= useContext(contextdata);
     messages?.sort((a: any, b: any) => {
@@ -55,7 +57,7 @@ export default function UsersDm() {
                 return (
                   ur.userId === user.id  || getLastMessage(messages, ur.userId)?.content === undefined   ?  null : 
                   (<Channel
-                    avatar="/userProfile.jpg"
+                    avatar={`http://${process.env.NEXT_PUBLIC_APP_URL}:3000/${ur.avatar}`}
                     channel={`${ur.firstName} ${ur.lastName}`}
                     lastMessage={getLastMessage(messages, ur.userId)?.content}
                     lastMessageTime={getLastMessage(messages, ur.userId)?.createdAt.toString().split('T')[1].split('.')[0].slice(0,5)}

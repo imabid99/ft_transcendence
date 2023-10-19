@@ -279,6 +279,128 @@ input {
 .b-save {
   filter: drop-shadow(0px 4px 8px rgba(0, 0, 0, 0.04)) drop-shadow(0px 15px 15px rgba(0, 0, 0, 0.03)) drop-shadow(0px 33px 20px rgba(0, 0, 0, 0.02)) drop-shadow(0px 58px 23px rgba(0, 0, 0, 0.01)) drop-shadow(0px 91px 25px rgba(0, 0, 0, 0.00)); 
 }
+.b-reset {
+  filter: drop-shadow(0px 4px 8px rgba(0, 0, 0, 0.04)) drop-shadow(0px 15px 15px rgba(0, 0, 0, 0.03)) drop-shadow(0px 33px 20px rgba(0, 0, 0, 0.02)) drop-shadow(0px 58px 23px rgba(0, 0, 0, 0.01)) drop-shadow(0px 91px 25px rgba(0, 0, 0, 0.00)); 
+}
+
 input {
   outline: none;
+}
+
+.b-reset {
+  transition: 0.5s;
+  background-size: 200% auto;
+}
+
+.b-authR {
+  background-image: linear-gradient(to right, #E47C7C 0%, #E47C7C 51%, #cf5b5b 100%);
+}
+.b-authR {
+  transition: 0.5s;
+  background-size: 200% auto;
+}
+.b-authR:hover {
+  opacity: 1;
+  transform: scale(1.03);
+  background-position: right center;
+}
+.b-authS {
+  background-image: linear-gradient(to right, #61BB98 0%, #61BB98 51%, #40a07b 100%);
+}
+.b-authS {
+  transition: 0.5s;
+  background-size: 200% auto;
+}
+.b-authS:hover {
+  opacity: 1;
+  transform: scale(1.03);
+  background-position: right center;
+}
+
+.b-save {
+  background-image: linear-gradient(to right, #3887D0 0%, #3887D0 51%, #69a7e1 100%);
+}
+.b-reset {
+  background-image: linear-gradient(to right, #F9F9F9 0%, #F9F9F9 51%, #ececec 100%);
+}
+.b-save:hover {
+  opacity: 1;
+  transform: scale(1.03);
+  background-position: right center;
+}
+.b-reset:hover {
+  opacity: 1;
+  transform: scale(1.03);
+  background-position: right center;
+}
+
+
+
+.b-save {
+  transition: 0.5s;
+  background-size: 200% auto;
+}
+
+.container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.post {
+  width: 220px;
+  height: 60px;
+}
+.post .line {
+  float: left;
+  width: 140px;
+  height: 16px;
+  margin-top: 12px;
+  border-radius: 7px;
+  background-image: linear-gradient(90deg, #F4F4F4 0px, rgba(229, 229, 229, 0.8) 40px, #F4F4F4 80px);
+  background-size: 600px;
+  animation: shine-lines 2s infinite ease-out;
+}
+
+.post .line ~ .line {
+  background-color: #ddd;
+}
+
+@keyframes shine-lines {
+  0% {
+    background-position: -100px;
+  }
+  40%, 100% {
+    background-position: 140px;
+  }
+}
+@keyframes shine-avatar {
+  0% {
+    background-position: -32px;
+  }
+  40%, 100% {
+    background-position: 208px;
+  }
+}
+
+
+.animateball {
+	animation: bounce 1.3s linear infinite;
+}
+
+@keyframes bounce {
+	0% {
+		transform: translateY(0);
+		animation-timing-function: ease-out;
+	}
+
+	50% {
+			transform: translateY(-10rem);
+			animation-timing-function: ease-in; 
+	}
+	100% {
+		transform: translateY(0);
+		animation-timing-function: ease-out; 
+	}
 }

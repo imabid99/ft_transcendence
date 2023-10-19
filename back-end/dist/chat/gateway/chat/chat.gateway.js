@@ -15,64 +15,81 @@ const SocketIO = require("socket.io");
 const jwt = require("jsonwebtoken");
 const jwt_decode_1 = require("jwt-decode");
 const prisma_service_1 = require("../../../prisma/prisma.service");
-const user_service_1 = require("../../../user.service");
-const passport_1 = require("@nestjs/passport");
-const common_1 = require("@nestjs/common");
+const user_service_1 = require("../../../user/user.service");
 let ChatGateway = exports.ChatGateway = class ChatGateway {
     constructor(prisma, userService) {
         this.prisma = prisma;
         this.userService = userService;
     }
     async handleConnection(client) {
-        var _a, _b;
-        console.log("client  √");
+        var _a, _b, _c, _d, _e;
         const token = (_a = client.handshake.headers.authorization) === null || _a === void 0 ? void 0 : _a.split(" ")[1];
         if (token) {
             const decoded = (0, jwt_decode_1.default)(token);
-            client.join(decoded.username);
-            const myChannels = await this.prisma.channels.findMany({
-                where: {
-                    Members: {
-                        some: {
-                            id: decoded.userId,
+            try {
+                await this.prisma.profile.findUnique({
+                    where: {
+                        userId: decoded.userId,
+                    },
+                });
+                client.join(decoded.username);
+                const myChannels = await this.prisma.channels.findMany({
+                    where: {
+                        Members: {
+                            some: {
+                                id: decoded.userId,
+                            },
                         },
                     },
-                },
-            });
-            myChannels.map((channel) => {
-                client.join(channel.id);
-            });
-            if (((_b = this.server.sockets.adapter.rooms.get(decoded.username)) === null || _b === void 0 ? void 0 : _b.size) !== 1) {
-                return;
+                });
+                myChannels.map((channel) => {
+                    client.join(channel.id);
+                });
+                if (((_d = (_c = (_b = this.server.sockets.adapter) === null || _b === void 0 ? void 0 : _b.rooms) === null || _c === void 0 ? void 0 : _c.get(decoded.username)) === null || _d === void 0 ? void 0 : _d.size) > 1) {
+                    return;
+                }
+                await ((_e = this.prisma.profile) === null || _e === void 0 ? void 0 : _e.update({
+                    where: {
+                        userId: decoded === null || decoded === void 0 ? void 0 : decoded.userId,
+                    },
+                    data: {
+                        status: "online",
+                    },
+                }));
+                this.server.emit("refresh");
             }
-            await this.prisma.profile.update({
-                where: {
-                    userId: decoded.userId,
-                },
-                data: {
-                    status: "online",
-                },
-            });
-            this.server.emit("refresh");
+            catch (err) {
+                console.log("err : ", err.message);
+            }
         }
     }
     async handleDisconnect(client) {
-        var _a;
-        console.log("Disconnect  √");
+        var _a, _b, _c, _d;
         const token = (_a = client.handshake.headers.authorization) === null || _a === void 0 ? void 0 : _a.split(" ")[1];
         if (token) {
             const decoded = (0, jwt_decode_1.default)(token);
-            if (this.server.sockets.adapter.rooms.get(decoded.username) !== undefined)
-                return;
-            await this.prisma.profile.update({
-                where: {
-                    userId: decoded.userId,
-                },
-                data: {
-                    status: "offline",
-                },
-            });
-            this.server.emit("refresh");
+            try {
+                const Profile = await this.prisma.profile.findUnique({
+                    where: {
+                        userId: decoded.userId,
+                    },
+                });
+                if (((_d = (_c = (_b = this.server.sockets.adapter) === null || _b === void 0 ? void 0 : _b.rooms) === null || _c === void 0 ? void 0 : _c.get(decoded.username)) === null || _d === void 0 ? void 0 : _d.size) > 1) {
+                    return;
+                }
+                await this.prisma.profile.update({
+                    where: {
+                        userId: decoded.userId,
+                    },
+                    data: {
+                        status: "offline",
+                    },
+                });
+                this.server.emit("refresh");
+            }
+            catch (err) {
+                console.log("err : ", err.message);
+            }
         }
     }
     async handlePrivetMessage(_client, payload) {
@@ -86,7 +103,7 @@ let ChatGateway = exports.ChatGateway = class ChatGateway {
                 username: payload.sander,
             },
         });
-        const verifyBlock = await this.userService.isBlocked(receiver.id.toString(), sander.id.toString());
+        const verifyBlock = await this.userService.isBlocked(receiver.id, sander.id);
         if (verifyBlock.iBlocked || verifyBlock.heBlocked) {
             return;
         }
@@ -209,9 +226,9 @@ let ChatGateway = exports.ChatGateway = class ChatGateway {
                     Members: true,
                 },
             });
-            console.log("channel : ", channel);
             channel.Members.map((member) => {
-                const userSocket = this.server.sockets.adapter.rooms.get(member.username);
+                var _a, _b;
+                const userSocket = (_b = (_a = this.server.sockets.adapter) === null || _a === void 0 ? void 0 : _a.rooms) === null || _b === void 0 ? void 0 : _b.get(member.username);
                 if (userSocket) {
                     userSocket.forEach((socketId) => {
                         this.server.sockets.sockets.get(socketId).join(channel.id);
@@ -226,7 +243,6 @@ let ChatGateway = exports.ChatGateway = class ChatGateway {
         var _a;
         const jwt = (_a = client.handshake.headers.authorization) === null || _a === void 0 ? void 0 : _a.split(" ")[1];
         if (jwt) {
-            console.log("refresh : ", "done");
             this.server.emit("refresh", payload);
         }
     }
@@ -251,13 +267,13 @@ let ChatGateway = exports.ChatGateway = class ChatGateway {
                 },
             });
             const verifyIsMemmber = group.Members.some((member) => {
-                return member.id === +user.id;
+                return member.id === user.id;
             });
             if (!verifyIsMemmber) {
                 return;
             }
             const verifyMuts = group.Muts.some((mut) => {
-                return mut.id === +user.id;
+                return mut.id === user.id;
             });
             if (verifyMuts) {
                 const mut = await this.prisma.Muted.findMany({
@@ -293,7 +309,7 @@ let ChatGateway = exports.ChatGateway = class ChatGateway {
                 }
             }
             const verifyBand = group.Band.some((ban) => {
-                return ban.id === +user.id;
+                return ban.id === user.id;
             });
             if (verifyBand) {
                 this.server.to(user.username).emit("errorNotif", { message: `you are banned from this group`, type: false });
@@ -306,9 +322,7 @@ let ChatGateway = exports.ChatGateway = class ChatGateway {
                     channelsId: group.id,
                 },
             });
-            console.log("sockets id in room : ", this.server.sockets.adapter.rooms.get(payload.groupId));
             this.server.to(payload.groupId).emit("message-to-group", payload.message);
-            console.log("message-to-group : ", payload.message.content, " to : ", payload.groupId);
             this.server.emit("refresh");
         }
     }
@@ -335,14 +349,14 @@ let ChatGateway = exports.ChatGateway = class ChatGateway {
                 },
             });
             const verifyIsMemmber = group.Members.some((member) => {
-                return member.id === +user.id;
+                return member.id === user.id;
             });
             if (!verifyIsMemmber) {
                 this.server.to(user.username).emit("errorNotif", { message: `you are not allowed to leave this group`, type: false });
                 return;
             }
             const verifyOwner = group.Owners.some((owner) => {
-                return owner.id === +user.id;
+                return owner.id === user.id;
             });
             if (verifyOwner && group.Owners.length === 1) {
                 if (group.Members.length !== 1) {
@@ -393,10 +407,10 @@ let ChatGateway = exports.ChatGateway = class ChatGateway {
                 return;
             }
             const verifyAdmin = group.Admins.some((admin) => {
-                return admin.id === +user.id;
+                return admin.id === user.id;
             });
             const verifyMuts = group.Muts.some((mut) => {
-                return mut.id === +user.id;
+                return mut.id === user.id;
             });
             if (verifyMuts) {
                 await this.prisma.user.update({
@@ -413,7 +427,7 @@ let ChatGateway = exports.ChatGateway = class ChatGateway {
                 });
             }
             const verifyBand = group.Band.some((ban) => {
-                return ban.id === +user.id;
+                return ban.id === user.id;
             });
             if (verifyBand) {
                 await this.prisma.user.update({
@@ -508,14 +522,14 @@ let ChatGateway = exports.ChatGateway = class ChatGateway {
                 return;
             }
             const verifyIsMemmber = group.Members.some((member) => {
-                return member.id === +user.id;
+                return member.id === user.id;
             });
             if (verifyIsMemmber) {
                 this.server.to(user.username).emit("errorNotif", { message: `you are already a member of this group`, type: false });
                 return;
             }
             const verifyBand = group.Band.some((ban) => {
-                return ban.id === +user.id;
+                return ban.id === user.id;
             });
             if (verifyBand) {
                 this.server.to(user.username).emit("errorNotif", { message: `you are banned from this group`, type: false });
@@ -572,14 +586,14 @@ let ChatGateway = exports.ChatGateway = class ChatGateway {
                 return;
             }
             const verifyIsMemmber = group.Members.some((member) => {
-                return member.id === +user.id;
+                return member.id === user.id;
             });
             if (verifyIsMemmber) {
                 this.server.to(user.username).emit("errorNotif", { message: `you are already a member of this group`, type: false });
                 return;
             }
             const verifyBand = group.Band.some((ban) => {
-                return ban.id === +user.id;
+                return ban.id === user.id;
             });
             if (verifyBand) {
                 this.server.to(user.username).emit("errorNotif", { message: `you are banned from this group`, type: false });
@@ -633,17 +647,17 @@ let ChatGateway = exports.ChatGateway = class ChatGateway {
                 },
             });
             const verifyIsMemmber = group.Members.some((member) => {
-                return member.id === +user.id;
+                return member.id === user.id;
             });
             if (!verifyIsMemmber) {
                 this.server.to(user.username).emit("errorNotif", { message: `you are not allowed to kick this user`, type: false });
                 return;
             }
             const verifyOwner = group.Owners.some((owner) => {
-                return owner.id === +user.id;
+                return owner.id === user.id;
             });
             const verifyAdmin = group.Admins.some((admin) => {
-                return admin.id === +user.id;
+                return admin.id === user.id;
             });
             if (!verifyOwner && !verifyAdmin) {
                 this.server.to(user.username).emit("errorNotif", { message: `you are not allowed to kick this user`, type: false });
@@ -651,7 +665,7 @@ let ChatGateway = exports.ChatGateway = class ChatGateway {
             }
             await this.prisma.user.update({
                 where: {
-                    id: +payload.userId,
+                    id: payload.userId,
                 },
                 data: {
                     channels: {
@@ -667,7 +681,7 @@ let ChatGateway = exports.ChatGateway = class ChatGateway {
                 },
             });
             const verifyAdmin2 = group.Admins.some((admin) => {
-                return admin.id === +payload.userId;
+                return admin.id === payload.userId;
             });
             if (verifyAdmin2) {
                 await this.prisma.user.update({
@@ -684,7 +698,7 @@ let ChatGateway = exports.ChatGateway = class ChatGateway {
                 });
             }
             const verifyMuts = group.Muts.some((mut) => {
-                return mut.id === +payload.userId;
+                return mut.id === payload.userId;
             });
             if (verifyMuts) {
                 await this.prisma.user.update({
@@ -707,7 +721,7 @@ let ChatGateway = exports.ChatGateway = class ChatGateway {
                 });
             }
             const verifyBand = group.Band.some((ban) => {
-                return ban.id === +payload.userId;
+                return ban.id === payload.userId;
             });
             if (verifyBand) {
                 await this.prisma.user.update({
@@ -748,14 +762,14 @@ let ChatGateway = exports.ChatGateway = class ChatGateway {
                 },
             });
             const verifyIsMemmber = group.Members.some((member) => {
-                return member.id === +user.id;
+                return member.id === user.id;
             });
             if (!verifyIsMemmber) {
                 this.server.to(user.username).emit("errorNotif", { message: `you are not allowed to set this user as admin`, type: false });
                 return;
             }
             const verifyOwner = group.Owners.some((owner) => {
-                return owner.id === +user.id;
+                return owner.id === user.id;
             });
             if (!verifyOwner) {
                 this.server.to(user.username).emit("errorNotif", { message: `you are not allowed to set this user as admin`, type: false });
@@ -763,7 +777,7 @@ let ChatGateway = exports.ChatGateway = class ChatGateway {
             }
             await this.prisma.user.update({
                 where: {
-                    id: +payload.userId,
+                    id: payload.userId,
                 },
                 data: {
                     channelsAdmin: {
@@ -799,24 +813,24 @@ let ChatGateway = exports.ChatGateway = class ChatGateway {
                 },
             });
             const verifyIsMemmber = group.Members.some((member) => {
-                return member.id === +user.id;
+                return member.id === user.id;
             });
             if (!verifyIsMemmber) {
                 this.server.to(user.username).emit("errorNotif", { message: `you are not allowed to ban this user`, type: false });
                 return;
             }
             const verifyOwner = group.Owners.some((owner) => {
-                return owner.id === +user.id;
+                return owner.id === user.id;
             });
             const verifyAdmin = group.Admins.some((admin) => {
-                return admin.id === +user.id;
+                return admin.id === user.id;
             });
             if (!verifyOwner && !verifyAdmin) {
                 this.server.to(user.username).emit("errorNotif", { message: `you are not allowed to ban this user`, type: false });
                 return;
             }
             const verifyAdmin2 = group.Admins.some((admin) => {
-                return admin.id === +payload.userId;
+                return admin.id === payload.userId;
             });
             if (verifyAdmin2) {
                 await this.prisma.user.update({
@@ -833,7 +847,7 @@ let ChatGateway = exports.ChatGateway = class ChatGateway {
                 });
             }
             const verifyMuts = group.Muts.some((mut) => {
-                return mut.id === +payload.userId;
+                return mut.id === payload.userId;
             });
             if (verifyMuts) {
                 await this.prisma.user.update({
@@ -857,7 +871,7 @@ let ChatGateway = exports.ChatGateway = class ChatGateway {
             }
             await this.prisma.user.update({
                 where: {
-                    id: +payload.userId,
+                    id: payload.userId,
                 },
                 data: {
                     channels: {
@@ -874,7 +888,7 @@ let ChatGateway = exports.ChatGateway = class ChatGateway {
             });
             await this.prisma.user.update({
                 where: {
-                    id: +payload.userId,
+                    id: payload.userId,
                 },
                 data: {
                     channelsBand: {
@@ -909,17 +923,17 @@ let ChatGateway = exports.ChatGateway = class ChatGateway {
                 },
             });
             const verifyIsMemmber = group.Members.some((member) => {
-                return member.id === +user.id;
+                return member.id === user.id;
             });
             if (!verifyIsMemmber) {
                 this.server.to(user.username).emit("errorNotif", { message: `you are not allowed to unban this user`, type: false });
                 return;
             }
             const verifyOwner = group.Owners.some((owner) => {
-                return owner.id === +user.id;
+                return owner.id === user.id;
             });
             const verifyAdmin = group.Admins.some((admin) => {
-                return admin.id === +user.id;
+                return admin.id === user.id;
             });
             if (!verifyOwner && !verifyAdmin) {
                 this.server.to(user.username).emit("errorNotif", { message: `you are not allowed to unban this user`, type: false });
@@ -927,7 +941,7 @@ let ChatGateway = exports.ChatGateway = class ChatGateway {
             }
             await this.prisma.user.update({
                 where: {
-                    id: +payload.userId,
+                    id: payload.userId,
                 },
                 data: {
                     channelsBand: {
@@ -963,24 +977,24 @@ let ChatGateway = exports.ChatGateway = class ChatGateway {
                 },
             });
             const verifyIsMemmber = group.Members.some((member) => {
-                return member.id === +user.id;
+                return member.id === user.id;
             });
             if (!verifyIsMemmber) {
                 this.server.to(user.username).emit("errorNotif", { message: `you are not allowed to mute this user`, type: false });
                 return;
             }
             const verifyOwner = group.Owners.some((owner) => {
-                return owner.id === +user.id;
+                return owner.id === user.id;
             });
             const verifyAdmin = group.Admins.some((admin) => {
-                return admin.id === +user.id;
+                return admin.id === user.id;
             });
             if (!verifyOwner && !verifyAdmin) {
                 this.server.to(user.username).emit("errorNotif", { message: `you are not allowed to mute this user`, type: false });
                 return;
             }
             const verifyMuts = (_b = group.Muts) === null || _b === void 0 ? void 0 : _b.some((mut) => {
-                return mut.id === +payload.userId;
+                return mut.id === payload.userId;
             });
             if (verifyMuts) {
                 this.server.to(user.username).emit("errorNotif", { message: `this user is already muted`, type: false });
@@ -988,7 +1002,7 @@ let ChatGateway = exports.ChatGateway = class ChatGateway {
             }
             await this.prisma.user.update({
                 where: {
-                    id: +payload.userId,
+                    id: payload.userId,
                 },
                 data: {
                     channelsMuts: {
@@ -1040,17 +1054,17 @@ let ChatGateway = exports.ChatGateway = class ChatGateway {
                 return;
             }
             const verifyIsMemmber = group.Members.some((member) => {
-                return member.id === +user.id;
+                return member.id === user.id;
             });
             if (!verifyIsMemmber) {
                 this.server.to(user.username).emit("errorNotif", { message: `you are not allowed to unmute this user`, type: false });
                 return;
             }
             const verifyOwner = group.Owners.some((owner) => {
-                return owner.id === +user.id;
+                return owner.id === user.id;
             });
             const verifyAdmin = group.Admins.some((admin) => {
-                return admin.id === +user.id;
+                return admin.id === user.id;
             });
             if (!verifyOwner && !verifyAdmin) {
                 this.server.to(user.username).emit("errorNotif", { message: `you are not allowed to unmute this user`, type: false });
@@ -1058,7 +1072,7 @@ let ChatGateway = exports.ChatGateway = class ChatGateway {
             }
             await this.prisma.user.update({
                 where: {
-                    id: +payload.userId,
+                    id: payload.userId,
                 },
                 data: {
                     channelsMuts: {
@@ -1096,7 +1110,7 @@ let ChatGateway = exports.ChatGateway = class ChatGateway {
                 },
             });
             const verifyOwner = group.Owners.some((owner) => {
-                return owner.id === +user.id;
+                return owner.id === user.id;
             });
             if (!verifyOwner) {
                 this.server.to(user.username).emit("errorNotif", { message: `you are not allowed to remove this group password`, type: false });
@@ -1138,7 +1152,7 @@ let ChatGateway = exports.ChatGateway = class ChatGateway {
                 },
             });
             const verifyOwner = group.Owners.some((owner) => {
-                return owner.id === +user.id;
+                return owner.id === user.id;
             });
             if (!verifyOwner) {
                 this.server.to(user.username).emit("errorNotif", { message: `you are not allowed to set this group password`, type: false });
@@ -1170,7 +1184,6 @@ __decorate([
 ], ChatGateway.prototype, "handlePrivetMessage", null);
 __decorate([
     (0, websockets_1.SubscribeMessage)("block-user"),
-    (0, common_1.UseGuards)((0, passport_1.AuthGuard)("jwt")),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [Object, Object]),
     __metadata("design:returntype", Promise)
@@ -1271,6 +1284,7 @@ exports.ChatGateway = ChatGateway = __decorate([
             origin: true,
             methods: ["GET", "POST"],
         },
+        namespace: "chat",
     }),
     __metadata("design:paramtypes", [prisma_service_1.PrismaService,
         user_service_1.UserService])

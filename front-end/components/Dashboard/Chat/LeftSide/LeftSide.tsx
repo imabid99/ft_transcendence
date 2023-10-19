@@ -10,6 +10,7 @@ import SelectUsersBody from '../group/SelectUsersBody'
 import GroupInfo from '../group/GroupInfo'
 import Search from "../search/Search";
 import axiosInstance from "@/utils/axiosInstance";
+import SearchChat from "./SearchChat";
 
 export default function  LeftSide() {
 
@@ -18,7 +19,6 @@ export default function  LeftSide() {
 	const [refresh, setRefresh] = useState<string>("");
 
 	const {user,setUsers,setProfiles,setMessages ,socket,setMyChannels,setChannels, dashboardRef,setMediaDashbord} :any= useContext(contextdata);
-	
 	useEffect(() => {
 		if (!socket)  return;
 		socket.on("refresh", () => {
@@ -116,11 +116,10 @@ export default function  LeftSide() {
 		getMessages();
 		getMyChannels();
 	}, [refresh, user])
-
 	return (
 		<>	
 			<div className="chat__left w-[450px]  bg-[#FFF] border-r-[1px] relative overflow-hidden lg:max-xl:w-[350px] lsm:max-lg:w-full">
-					<div className="chat__left__head flex justify-between items-center border-b-[1px]  border-[#E5E5E5] pl-[42px] pr-[25px] lsm:max-lg:px-[10px]">
+					<div className="chat__left__head flex justify-between items-center border-b-[1px]  border-[#E5E5E5] pl-[42px] pr-[25px] lsm:max-lg:px-[10px] h-[100px]">
 						<div className="flex items-center py-[35px] justify-between lsm:max-sm:gap-[20px] lsm:max-sm:px-[20px]">
 							<div className="hidden lsm:max-sm:block cursor-pointer" onClick={() => {
 								setMediaDashbord(true)
@@ -132,7 +131,7 @@ export default function  LeftSide() {
 							</div>
 							<div className="flex items-center gap-[10px]">
 								<img
-									src="/userProfile.jpg"
+									src={`http://${process.env.NEXT_PUBLIC_APP_URL}:3000/${user?.profile.avatar}`}
 									alt=""
 									className="max-w-[64px] max-h-[64px] min-w-[64px] min-h-[64px] rounded-full object-cover border-[3px] border-[#064A85] border-opacity-25"
 								/>
@@ -146,38 +145,19 @@ export default function  LeftSide() {
 								</p>
 							</div>
 						</div>
-						{
-							!showBody &&
-							<div className="z-[10] bg-[#EDFAFF]  cursor-pointer w-[54px] h-[54px] notifShadow flex justify-center items-center rounded-[20px] hover:bg-[#e0f2f9]" onClick={() => {setShowBody("search")}}>
-								<svg width="21" height="20" viewBox="0 0 21 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-									<path
-									d="M9.32 17C13.915 17 17.64 13.4183 17.64 9C17.64 4.58172 13.915 1 9.32 1C4.72499 1 1 4.58172 1 9C1 13.4183 4.72499 17 9.32 17Z"
-									stroke="#034B8A"
-									strokeWidth="2"
-									/>
-									<path
-									d="M19.7193 18.9984L15.1953 14.6484"
-									stroke="#034B8A"
-									strokeWidth="2"
-									/>
-								</svg>
-							</div>
-						}
 					</div>
 					{
 						!showBody && (
 							<>
+								<SearchChat />
 								<UsersOnline />
-								<div id="scroll" className="max-h-[calc(100%-299px)] overflow-y-scroll no-scrollbar h-[calc(100%-299px)] px-[25px] py-[25px] flex flex-col gap-[25px]">
+								<div id="scroll" className="max-h-[calc(100%-299px)] overflow-y-scroll no-scrollbar h-[calc(100%-329px)] px-[25px] py-[25px] flex flex-col gap-[25px]">
 									<GroupsChannels />
 									<UsersDm />
 								</div>
 								<NewModal setShowBody={setShowBody}/>
 							</>
 						)
-					}
-					{
-						showBody === 'newChat' 
 					}
 					{
 						showBody === 'selectUsers' && <SelectUsersBody setShowBody={setShowBody} setGroupUsers={setGroupUsers} groupUsers={groupUsers} />

@@ -10,6 +10,7 @@ import {
 import { setLocalStorageItem, getLocalStorageItem, removeLocalStorageItem } from '@/utils/localStorage';
 import jwt_decode from "jwt-decode";
 import { contextdata } from '@/app/contextApi';
+import { imageOptimizer } from 'next/dist/server/image-optimizer';
 
 export default function Home() {
 
@@ -46,11 +47,11 @@ export default function Home() {
       return;
     };
     try {
-      const response = await axios.post(`http://${process.env.NEXT_PUBLIC_APP_URL}:3000/api/user/login`, {
+      const response = await axios.post(`http://${process.env.NEXT_PUBLIC_APP_URL}:3000/api/auth/login`, {
         email: email,
         password: password,
-       });
-       setLocalStorageItem("Token", response.data);
+      });
+      setLocalStorageItem("Token", response.data);
     } catch (e:any) 
     {
       console.log("Error : ", e.response.data);
@@ -63,7 +64,7 @@ export default function Home() {
     }, 1000);
   }
   return (
-    <div className="h-[100vh] w-[100%] bg-gradient-to-r from-cyan-500 to-blue-500 flex justify-around items-center">
+    <div className="h-[100vh] w-[100%] bg-gradient-to-r from-cyan-500 to-blue-500 flex justify-around items-center bg-no-repeat bg-cover bg-center" style={{ backgroundImage: 'url("first4.png")' }}>
       <div className="h-[100vh] w-[100vw] bg-white flex flex-row items-center justify-center md:w-11/12 md:h-[735px] md:rounded-[61px] xl:max-w-[1404px] xl:mx-auto">
         <div className="flex flex-col items-center justify-center">
           <p className="font-[600] text-[40px] text-[#064A85] sm:text-[66px]">
@@ -99,7 +100,7 @@ export default function Home() {
               Don’t have an account?
                   <Link href="/signup" className='text-[#6A849E] text-[14px] font-[400] sm:text-[18.963px] pl-[2px]' >
                 Sign Up
-             </Link>
+            </Link>
             </p>
           </div>
         </div>

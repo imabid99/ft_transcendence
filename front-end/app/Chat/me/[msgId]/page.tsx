@@ -31,7 +31,7 @@ export default function Page() {
   const inputRef = useRef<HTMLInputElement | null>(null);;
   const router = useRouter();
 
-  if (user?.id === parseInt(msgId)) 
+  if (user?.id === msgId) 
   {
     router.push('/Chat');
   }
@@ -55,6 +55,7 @@ export default function Page() {
         setTimeout(async () => {
           try {
             const res = await axiosInstance.get(`http://${process.env.NEXT_PUBLIC_APP_URL}:3000/api/user/is-blocked/${user.id}/${msgId}`);
+            console.log("heree block refresh : ", res.data);
             if (res.data === null) {
               return;
             }
@@ -208,12 +209,9 @@ export default function Page() {
 
 
   
-  /* sort messages by date */
   messages?.sort((a, b) => {
     return new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime()
   })
-
-  /* scroll to bottom */
 
   return (
       <div className='message w-[calc(100%-450px)] min-h-full flex flex-col min-w-[490px] lg:max-xl:w-[calc(100%-350px)] lsm:max-lg:min-w-full relative'>
@@ -223,15 +221,15 @@ export default function Page() {
             <div className='w-full h-full  bg-opacity-50 absolute top-0 left-0 z-[1]' onClick={()=>setShow(false)}></div>
           )
         }
-        <div className='message__header flex justify-between items-center px-[42px] py-[20px] bg-[#FFF] lsm:max-lg:px-[10px] border-b-[1px] boder-[#EAEAEA]' >
-          <div className='message__header__left flex items-center gap-[10px] '>
+        <div className='message__header flex justify-between items-center px-[42px] py-[20px] bg-[#FFF] lsm:max-lg:px-[10px] border-b-[1px] boder-[#EAEAEA] h-[100px]' >
+          <div className='message__header__left flex items-center gap-[10px]  '>
             <Link href="/Chat" className='pr-[10px] py-[5px] lg:hidden'>
               <svg width="9" height="13" viewBox="0 0 9 13" fill="none" xmlns="http://www.w3.org/2000/svg">
                 <path d="M7.04118 12.0012C6.56787 12.0017 6.1088 11.8393 5.74118 11.5412L0.64118 7.33117C0.441185 7.17195 0.279673 6.96968 0.168662 6.73941C0.0576506 6.50914 0 6.2568 0 6.00117C0 5.74554 0.0576506 5.49319 0.168662 5.26292C0.279673 5.03265 0.441185 4.83038 0.64118 4.67117L5.74118 0.461168C6.04821 0.215162 6.41818 0.0603538 6.80891 0.0143849C7.19965 -0.031584 7.59544 0.0331352 7.95118 0.201168C8.26035 0.337447 8.52377 0.559841 8.70996 0.841787C8.89615 1.12373 8.99725 1.45331 9.00118 1.79117V10.2112C8.99725 10.549 8.89615 10.8786 8.70996 11.1606C8.52377 11.4425 8.26035 11.6649 7.95118 11.8012C7.66531 11.9312 7.35521 11.9993 7.04118 12.0012Z" fill="#00498A"/>
               </svg>
             </Link>
             <Link href={`/Profile/${receiver?.userId}`} className='message__header__left flex items-center cursor-pointer pr-[30px]'>
-              <Avatar url="/userProfile.jpg" status={false} />
+              <Avatar url={`http://${process.env.NEXT_PUBLIC_APP_URL}:3000/${receiver.avatar}`} status={false} />
               <div className='message__header__left__info ml-2'>
                 <div className='message__header__left__info__name text-[#034B8A] font-[600] font-[Poppins] text-[25px] truncate max-w-[250px] lsm:max-lg:max-w-[150px]'>{`${receiver?.firstName} ${receiver?.lastName}`}</div>
                 <div className='message__header__left__info__status text-[#C0C1C5] text-[16px] font-[Poppins]'>{receiver?.status}</div>
@@ -295,9 +293,9 @@ export default function Page() {
             </div>)}
           </div>
         </div>
-        <div className='message__body flex-1 flex flex-col max-h-[calc(100%-208px)] overflow-y-scroll no-scrollbar'>
+        <div className='message__body flex-1 flex flex-col max-h-[calc(100%-200px)] overflow-y-scroll no-scrollbar'>
           <div className='chat__start w-full flex flex-col items-center justify-start mt-[32px] gap-[16px] self-start'>
-              <img src="/userProfile.jpg" alt=""  className='w-[150px] h-[150px] rounded-full outline outline-[6px] outline-[#FFF]
+              <img src={`http://${process.env.NEXT_PUBLIC_APP_URL}:3000/${receiver.avatar}`} alt=""  className='w-[150px] h-[150px] rounded-full outline outline-[6px] outline-[#FFF]
               message-avatar-shadow object-cover
               '/>
               <span className='text-center max-w-[80%]'>
@@ -311,20 +309,22 @@ export default function Page() {
                 message.fromId !== user.id ?
                 (!isBlocked && <LeftMessages key={`i+${index}`} message={message} sender={receiver}/>)
                 :
-                (<RightMessages key={`i+${index}`} message={message} />)
+                (<RightMessages key={`i+${index}`} message={message}  avatar={user.profile.avatar}/>)
               )
             })
           }
           </div>
         </div>
-        <div className='w-full min-h-[90px] bg-[#FFF] px-[42px] py-[15px] lsm:max-lg:px-[10px] border-t-[1px] boder-[#EAEAEA]'>
-          <form className='flex pr-[5px] bg-[#F5FBFF] h-full w-full rounded-[23px] items-center ' onSubmit={(e) => handleSubmit(e)}>
+        <div className='w-full min-h-[90px] bg-[#FFF] px-[42px] py-[15px] lsm:max-lg:px-[10px] border-t-[1px] boder-[#EAEAEA] h-[100px] flex justify-center items-center'>
+          <form className='flex  h-full w-full  items-center gap-[12px]' onSubmit={(e) => handleSubmit(e)}>
             {
               !isBlocked  ? (
                 <>
-                  <input ref={inputRef} type="text" autoFocus  className='lsm:w-[150px] lsm:max-lg:w-[200px] messageInput flex-1 outline-none bg-transparent text-[#064A85] font-[Poppins] font-[500] text-[16px] placeholder-[#064A85] placeholder-opacity-[0.5] px-[15px]' placeholder='Type a message...' />
-                  <button className='min-w-[33px] h-[50px] flex items-center justify-center mr-[5px] ' type='submit'>
-                    <svg  viewBox="0 0 38 34" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <div className='h-full flex items-center justify-center bg-[#F5FBFF] w-[calc(100%-80px)] rounded-[23px]'>
+                    <input ref={inputRef} type="text" autoFocus  className='w-full messageInput flex-1 outline-none bg-transparent text-[#064A85] font-[Poppins] font-[500] text-[16px] placeholder-[#064A85] placeholder-opacity-[0.5] px-[15px] ' placeholder='Type a message...' />
+                  </div>
+                  <button className='w-[70px] h-[70px] flex items-center justify-center bg-[#F5FBFF]  rounded-full ' type='submit'>
+                    <svg  viewBox="0 0 38 34" fill="none" xmlns="http://www.w3.org/2000/svg" width={34} height={33}>
                       <path  d="M2.2635 13.6044C-0.636006 10.1992 1.30472 4.94392 5.70971 4.27612L30.4903 0.516263C35.2364 -0.205318 38.7122 4.93021 36.2783 9.06811L23.5786 30.6777C21.3215 34.5189 15.7229 34.3663 13.6377 30.41L9.77073 23.0739L22.5082 14.453C22.9244 14.1714 23.211 13.7351 23.3051 13.2401C23.3991 12.7452 23.2929 12.2321 23.0098 11.8138C22.7267 11.3955 22.2898 11.1062 21.7954 11.0096C21.3009 10.9129 20.7894 11.0169 20.3732 11.2985L7.63729 19.9184L2.26507 13.6033L2.2635 13.6044Z" fill="#064A85" />
                     </svg> 
                   </button>

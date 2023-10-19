@@ -13,15 +13,17 @@ exports.FortyTwoStrategy = void 0;
 const common_1 = require("@nestjs/common");
 const passport_1 = require("@nestjs/passport");
 const passport_42_1 = require("passport-42");
-const user_service_1 = require("../user.service");
-let FortyTwoStrategy = exports.FortyTwoStrategy = class FortyTwoStrategy extends (0, passport_1.PassportStrategy)(passport_42_1.Strategy, '42') {
-    constructor(userService) {
+const user_service_1 = require("../user/user.service");
+const auth_service_1 = require("../auth/auth.service");
+let FortyTwoStrategy = exports.FortyTwoStrategy = class FortyTwoStrategy extends (0, passport_1.PassportStrategy)(passport_42_1.Strategy, "42") {
+    constructor(userService, authService) {
         super({
-            clientID: process.env.UID,
-            clientSecret: process.env.SECRET,
-            callbackURL: 'http://127.0.0.1:3000/api/user/intra',
+            clientID: process.env.UID_42,
+            clientSecret: process.env.SECRET_42,
+            callbackURL: process.env.CALLBACK_URL_42,
         });
         this.userService = userService;
+        this.authService = authService;
     }
     async validate(accessToken, refreshToken, profile, done) {
         const { id, username, emails, name } = profile;
@@ -32,12 +34,13 @@ let FortyTwoStrategy = exports.FortyTwoStrategy = class FortyTwoStrategy extends
             firstName: name.givenName,
             lastName: name.familyName,
         };
-        const user = await this.userService.validateIntraUser(userData);
+        const user = await this.authService.validateIntraUser(userData);
         return user;
     }
 };
 exports.FortyTwoStrategy = FortyTwoStrategy = __decorate([
     (0, common_1.Injectable)(),
-    __metadata("design:paramtypes", [user_service_1.UserService])
+    __metadata("design:paramtypes", [user_service_1.UserService,
+        auth_service_1.AuthService])
 ], FortyTwoStrategy);
 //# sourceMappingURL=intra.strategy.js.map

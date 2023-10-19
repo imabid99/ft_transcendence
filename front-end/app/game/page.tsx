@@ -23,7 +23,6 @@ import {
   Text
 } from "@react-three/drei";
 // import { useGLTF, Environment } from "@react-three/drei";
-import {importmodel} from "@/components/Dashboard/Game/importmodel";
 import { useLoader } from "@react-three/fiber";
 import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader";
 import { useControls } from "leva";
@@ -40,12 +39,14 @@ import  Model3  from "./model3";
 // import KeyboardControls, { boxRef } from "./keyboardcontrols";
 // import PlayerPaddle from "./keyboardcontrols";
 
-export const Controls = {
-	left: "left",
-	right: "right",
-}
 
 const Game = () => {
+
+	const Controls = {
+		left: "left",
+		right: "right",
+	}	
+
 	const map = useMemo(() => [
 	{ name: Controls.left, keys: ['ArrowLeft']},
 	{ name: Controls.right, keys: ['ArrowRight']}

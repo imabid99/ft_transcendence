@@ -26,7 +26,7 @@ export default function Channel({avatar, channel, lastMessage, lastMessageTime, 
                 </span>
             </div>
             <div className="flex flex-col items-end gap-[13px]">
-                {
+                {/* {
                     !notification ?
                     (
                         <span>
@@ -44,7 +44,7 @@ export default function Channel({avatar, channel, lastMessage, lastMessageTime, 
                     )
 
 
-                }
+                } */}
                 <p className="text-[#C0C1C5] text-[14] font-[Poppins] font-[300]">
                     {lastMessageTime}
                 </p>

@@ -5,10 +5,11 @@ type ModalRef = {
     modalRef: any,
     name: string,
     username: string,
+    avatar: string
 }
 
 
-export default function UserModal ({modalRef, name, username}: ModalRef) {
+export default function UserModal ({modalRef, name, username, avatar}: ModalRef) {
     return (
         <div className='modal-user absolute w-[270px] h-[292px]  bg-[#FFF] bottom-[0px] left-[75px] z-[55] rounded-[37px] translate-y-[300px] -translate-x-[85px] overflow-hidden  flex-col items-end justify-center hidden'
             ref={modalRef}>
@@ -24,7 +25,9 @@ export default function UserModal ({modalRef, name, username}: ModalRef) {
                 <div className='flex flex-col items-center gap-[10px] w-full h-full justify-end z-[2] '>
                     <div className="relative after:animate-ping">
                         <img className="w-[110px] h-[110px] rounded-full outline  outline-[5px] outline-[#FFF] object-cover" 
-                        src="/userProfile.jpg" alt="" />
+                        src={
+                            `http://${process.env.NEXT_PUBLIC_APP_URL}:3000/${avatar}`
+                        } alt="" />
                     </div>
                     <div className='text-center'>
                         <p className="font-[Poppins] text-[16px] font-[600] text-[#00539D]">{name}</p>

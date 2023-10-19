@@ -134,7 +134,7 @@ export default function Page() {
   return (
       <div className='message w-[calc(100%-450px)] min-h-full flex flex-col min-w-[490px] lg:max-xl:w-[calc(100%-350px)] lsm:max-lg:min-w-full '>
         {show && <div className='message__header__bg w-full h-full absolute top-0 left-0 z-[1]' onClick={() => setShow(false)}></div>}
-        <div className='message__header flex justify-between items-center px-[42px] py-[20px] bg-[#FFF] lsm:max-lg:px-[10px] border-b-[1px] boder-[#EAEAEA]' >
+        <div className='message__header flex justify-between items-center px-[42px] py-[20px] bg-[#FFF] lsm:max-lg:px-[10px] border-b-[1px] boder-[#EAEAEA] h-[100px]' >
           <div className='message__header__left flex items-center gap-[10px]'>
             <Link href="/Chat" className='pr-[10px] py-[5px] lg:hidden'>
               <svg width="9" height="13" viewBox="0 0 9 13" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -150,7 +150,7 @@ export default function Page() {
             </div>
           </div>
         </div>
-        <div className='message__body flex-1 flex flex-col max-h-[calc(100%-208px)] overflow-y-scroll no-scrollbar'>
+        <div className='message__body flex-1 flex flex-col max-h-[calc(100%-200px)] overflow-y-scroll no-scrollbar'>
           <div className='chat__start w-full flex flex-col items-center justify-start mt-[32px] gap-[16px] self-start'>
               <img src="/userProfile.jpg" alt=""  className='w-[150px] h-[150px] rounded-full outline outline-[6px] outline-[#FFF]
               message-avatar-shadow object-cover
@@ -163,20 +163,22 @@ export default function Page() {
           {
             user && messages?.map((message:Message, index) => {
               return (
-                message.fromName !== user.username ? (<LeftMessagesGroup key={`i+${index}`} message={message} />) : (<RightMessages key={`i+${index}`} message={message} />)
+                message.fromName !== user.username ? (<LeftMessagesGroup key={`i+${index}`} message={message} />) : (<RightMessages key={`i+${index}`} message={message} avatar={user.profile.avatar} />)
               )
             })
           }
           </div>
         </div>
-        <div className='w-full min-h-[90px] bg-[#FFF] px-[42px] py-[15px] lsm:max-lg:px-[10px] border-t-[1px] boder-[#EAEAEA]'>
-          <form className='flex pr-[5px] bg-[#F5FBFF] h-full w-full rounded-[23px] items-center' onSubmit={(e) => handleSubmit(e)}>
-              <input ref={inputRef} type="text" autoFocus  className='lsm:w-[150px] lsm:max-lg:w-[200px] messageInput flex-1 outline-none bg-transparent text-[#064A85] font-[Poppins] font-[500] text-[16px] placeholder-[#064A85] placeholder-opacity-[0.5] px-[15px]' placeholder='Type a message...' />
-              <button className='min-w-[33px] h-[50px] flex items-center justify-center mr-[5px] ' type='submit'>
-                <svg  viewBox="0 0 38 34" fill="none" xmlns="http://www.w3.org/2000/svg">
-                  <path  d="M2.2635 13.6044C-0.636006 10.1992 1.30472 4.94392 5.70971 4.27612L30.4903 0.516263C35.2364 -0.205318 38.7122 4.93021 36.2783 9.06811L23.5786 30.6777C21.3215 34.5189 15.7229 34.3663 13.6377 30.41L9.77073 23.0739L22.5082 14.453C22.9244 14.1714 23.211 13.7351 23.3051 13.2401C23.3991 12.7452 23.2929 12.2321 23.0098 11.8138C22.7267 11.3955 22.2898 11.1062 21.7954 11.0096C21.3009 10.9129 20.7894 11.0169 20.3732 11.2985L7.63729 19.9184L2.26507 13.6033L2.2635 13.6044Z" fill="#064A85" />
-                </svg> 
-              </button>
+        <div className='w-full min-h-[90px] bg-[#FFF] px-[42px] py-[15px] lsm:max-lg:px-[10px] border-t-[1px] boder-[#EAEAEA] h-[100px] flex justify-center items-center'>
+          <form className='flex  h-full w-full  items-center gap-[12px]' onSubmit={(e) => handleSubmit(e)}>
+            <div className='h-full flex items-center justify-center bg-[#F5FBFF] w-[calc(100%-80px)] rounded-[23px]'>
+              <input ref={inputRef} type="text" autoFocus  className='w-full messageInput flex-1 outline-none bg-transparent text-[#064A85] font-[Poppins] font-[500] text-[16px] placeholder-[#064A85] placeholder-opacity-[0.5] px-[15px] ' placeholder='Type a message...' />
+            </div>
+            <button className='w-[70px] h-[70px] flex items-center justify-center bg-[#F5FBFF]  rounded-full ' type='submit'>
+              <svg  viewBox="0 0 38 34" fill="none" xmlns="http://www.w3.org/2000/svg" width={34} height={33}>
+                <path  d="M2.2635 13.6044C-0.636006 10.1992 1.30472 4.94392 5.70971 4.27612L30.4903 0.516263C35.2364 -0.205318 38.7122 4.93021 36.2783 9.06811L23.5786 30.6777C21.3215 34.5189 15.7229 34.3663 13.6377 30.41L9.77073 23.0739L22.5082 14.453C22.9244 14.1714 23.211 13.7351 23.3051 13.2401C23.3991 12.7452 23.2929 12.2321 23.0098 11.8138C22.7267 11.3955 22.2898 11.1062 21.7954 11.0096C21.3009 10.9129 20.7894 11.0169 20.3732 11.2985L7.63729 19.9184L2.26507 13.6033L2.2635 13.6044Z" fill="#064A85" />
+              </svg> 
+            </button>
           </form>
         </div>
         {

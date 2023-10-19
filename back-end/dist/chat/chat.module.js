@@ -9,7 +9,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.ChatModule = void 0;
 const common_1 = require("@nestjs/common");
 const chat_gateway_1 = require("./gateway/chat/chat.gateway");
-const user_service_1 = require("../user.service");
+const user_service_1 = require("../user/user.service");
 const chat_controller_1 = require("./chat.controller");
 const chat_service_1 = require("./chat.service");
 let ChatModule = exports.ChatModule = class ChatModule {

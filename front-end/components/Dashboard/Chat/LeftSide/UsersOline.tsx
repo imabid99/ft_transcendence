@@ -11,7 +11,7 @@ export default function UsersOnline() {
     const {profiles, user} :any= useContext(contextdata);
 
     return (
-      <div className="chat__left__bottom flex flex-col gap-[24px] px-[25px] py-[25px] w-full">
+      <div className="chat__left__bottom flex flex-col gap-[24px] px-[25px] py-[25px] w-full mt-[10px]">
         <div className="chat__left__bottom__online__users flex flex-col gap-[20px] w-full lg:max-xl:w-[300px]" >
             <p className="text-[20px] font-[500] font-[Poppins] text-[#DEDEDE]">
             Online Now
@@ -25,7 +25,7 @@ export default function UsersOnline() {
                     profile.status === "online" && profile.userId !== user.id &&
                     <SwiperSlide key={profile.userId}>
                         <Link href={`/Chat/me/${profile.userId}`}>
-                            <Avatars url="/userProfile.jpg" status={true} />
+                            <Avatars url={`http://${process.env.NEXT_PUBLIC_APP_URL}:3000/${profile.avatar}`} status={true} />
                         </Link>
                     </SwiperSlide>
                 ))}
