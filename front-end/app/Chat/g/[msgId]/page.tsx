@@ -163,7 +163,7 @@ export default function Page() {
           {
             user && messages?.map((message:Message, index) => {
               return (
-                message.fromName !== user.username ? (<LeftMessagesGroup key={`i+${index}`} message={message} />) : (<RightMessages key={`i+${index}`} message={message} />)
+                message.fromName !== user.username ? (<LeftMessagesGroup key={`i+${index}`} message={message} />) : (<RightMessages key={`i+${index}`} message={message} avatar={user.profile.avatar} />)
               )
             })
           }

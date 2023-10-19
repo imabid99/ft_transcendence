@@ -209,12 +209,9 @@ export default function Page() {
 
 
   
-  /* sort messages by date */
   messages?.sort((a, b) => {
     return new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime()
   })
-
-  /* scroll to bottom */
 
   return (
       <div className='message w-[calc(100%-450px)] min-h-full flex flex-col min-w-[490px] lg:max-xl:w-[calc(100%-350px)] lsm:max-lg:min-w-full relative'>
@@ -232,7 +229,7 @@ export default function Page() {
               </svg>
             </Link>
             <Link href={`/Profile/${receiver?.userId}`} className='message__header__left flex items-center cursor-pointer pr-[30px]'>
-              <Avatar url="/userProfile.jpg" status={false} />
+              <Avatar url={`http://${process.env.NEXT_PUBLIC_APP_URL}:3000/${receiver.avatar}`} status={false} />
               <div className='message__header__left__info ml-2'>
                 <div className='message__header__left__info__name text-[#034B8A] font-[600] font-[Poppins] text-[25px] truncate max-w-[250px] lsm:max-lg:max-w-[150px]'>{`${receiver?.firstName} ${receiver?.lastName}`}</div>
                 <div className='message__header__left__info__status text-[#C0C1C5] text-[16px] font-[Poppins]'>{receiver?.status}</div>
@@ -298,7 +295,7 @@ export default function Page() {
         </div>
         <div className='message__body flex-1 flex flex-col max-h-[calc(100%-200px)] overflow-y-scroll no-scrollbar'>
           <div className='chat__start w-full flex flex-col items-center justify-start mt-[32px] gap-[16px] self-start'>
-              <img src="/userProfile.jpg" alt=""  className='w-[150px] h-[150px] rounded-full outline outline-[6px] outline-[#FFF]
+              <img src={`http://${process.env.NEXT_PUBLIC_APP_URL}:3000/${receiver.avatar}`} alt=""  className='w-[150px] h-[150px] rounded-full outline outline-[6px] outline-[#FFF]
               message-avatar-shadow object-cover
               '/>
               <span className='text-center max-w-[80%]'>
@@ -312,7 +309,7 @@ export default function Page() {
                 message.fromId !== user.id ?
                 (!isBlocked && <LeftMessages key={`i+${index}`} message={message} sender={receiver}/>)
                 :
-                (<RightMessages key={`i+${index}`} message={message} />)
+                (<RightMessages key={`i+${index}`} message={message}  avatar={user.profile.avatar}/>)
               )
             })
           }

@@ -8,7 +8,7 @@ import { join } from 'path';
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
   app.use(cors({
-    origin: 'http://localhost:1337',
+    origin: '*',
     credentials: true
   }));
   app.use('/uploads', express.static(join(__dirname, '..', 'uploads')));

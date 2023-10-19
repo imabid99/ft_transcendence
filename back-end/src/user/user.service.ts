@@ -176,6 +176,9 @@ export class UserService {
       where: {
         id,
       },
+      include: {
+        profile: true,
+      },
     });
     delete user.password;
     return user;

@@ -116,7 +116,6 @@ export default function  LeftSide() {
 		getMessages();
 		getMyChannels();
 	}, [refresh, user])
-
 	return (
 		<>	
 			<div className="chat__left w-[450px]  bg-[#FFF] border-r-[1px] relative overflow-hidden lg:max-xl:w-[350px] lsm:max-lg:w-full">
@@ -132,7 +131,7 @@ export default function  LeftSide() {
 							</div>
 							<div className="flex items-center gap-[10px]">
 								<img
-									src="/userProfile.jpg"
+									src={`http://${process.env.NEXT_PUBLIC_APP_URL}:3000/${user?.profile.avatar}`}
 									alt=""
 									className="max-w-[64px] max-h-[64px] min-w-[64px] min-h-[64px] rounded-full object-cover border-[3px] border-[#064A85] border-opacity-25"
 								/>
@@ -159,9 +158,6 @@ export default function  LeftSide() {
 								<NewModal setShowBody={setShowBody}/>
 							</>
 						)
-					}
-					{
-						showBody === 'newChat' 
 					}
 					{
 						showBody === 'selectUsers' && <SelectUsersBody setShowBody={setShowBody} setGroupUsers={setGroupUsers} groupUsers={groupUsers} />

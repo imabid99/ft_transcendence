@@ -57,7 +57,7 @@ export default function Search({setShowBody}: Props) {
                                     <div className="flex items-center gap-[10px] cursor-pointer" onClick={() => handelClick(ur.userId)} key={ur.userId}
                                     >
                                         <img
-                                            src="/userProfile.jpg"
+                                            src={`http://${process.env.NEXT_PUBLIC_APP_URL}:3000/${ur.avatar}`}
                                             alt=""
                                             className="max-w-[64px] max-h-[64px] min-w-[64px] min-h-[64px] rounded-full object-cover border-[3px] border-[#064A85] border-opacity-25"
                                         />
