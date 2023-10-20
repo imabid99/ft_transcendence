@@ -28,7 +28,7 @@ export default function  LeftSide() {
 
 	useEffect(() => {
 		if (!user) {
-		  return;
+			return;
 		}
 		async function getUsers() {
 			try

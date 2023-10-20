@@ -6,32 +6,47 @@ import axiosInstance from '@/utils/axiosInstance';
 
 export default function Page() {
   
-    const [avatar, setAvatar] = useState<any>(null);
-    const [previewUrl1, setPreviewUrl1] = useState<string>("first4.png");
-    const [previewUrl, setPreviewUrl] = useState<string>("");
-    const {profiles, user}:any = useContext(contextdata);
+    const {profiles, user, socket}:any = useContext(contextdata);
     const myProfile = profiles?.find((profile:any) => profile.userId === user.id);
     const name = `${myProfile?.firstName} ${myProfile?.lastName}`;
-    // const [previewUrl, setPreviewUrl] = useState<string>(`http://${process.env.NEXT_PUBLIC_APP_URL}/${myProfile.avatar}`);
-    function handleFileInputChange(e: any, setPreviewUrl: any) {
-      const file = e.target.files?.[0];
-      const formData = new FormData();
-      formData.append('file', file);
-      const maxFileSize = 1024 * 1024 * 5;
-      axiosInstance.post(`http://${process.env.NEXT_PUBLIC_APP_URL}:3000/api/upload/avatar`, formData).then((res) => {
-        console.log(res);
-      }).catch((err) => {
-        console.log(err);
-      });
-      if (file) {
-        if (file.size > maxFileSize) {
-          alert("File is too large. Please upload a file smaller than 5 MB.");
+
+    // function handleFileInputChange(e:any) 
+    // {
+    //   const file = e.target.files?.[0];
+    //   const formData = new FormData();
+    //   formData.append('file', file);
+    //   const maxFileSize = 1024 * 1024 * 5;
+    //   axiosInstance.post(`http://${process.env.NEXT_PUBLIC_APP_URL}:3000/api/upload/avatar`, formData).then((res) => {
+    //       console.log(res);
+    //       socket.emit('refresh', {userId: user.id});
+    //   }).catch((err) => {
+    //     console.log(err);
+    //   });
+    // }
+    function handleFileInputChange(e: any, type: 'avatar' | 'cover') {
+        const file = e.target.files?.[0];
+        if (!file) {
           return;
         }
-        setPreviewUrl(URL.createObjectURL(file));
+      
+        const formData = new FormData();
+        formData.append('file', file);
+        const maxFileSize = 1024 * 1024 * 5;
+        const uploadEndpoint = type === 'avatar'
+          ? `http://${process.env.NEXT_PUBLIC_APP_URL}:3000/api/upload/avatar`
+          : `http://${process.env.NEXT_PUBLIC_APP_URL}:3000/api/upload/cover`;
+      
+        axiosInstance
+          .post(uploadEndpoint, formData)
+          .then((res) => {
+            socket.emit('refresh', { userId: user.id });
+          })
+          .catch((err) => {
+            console.log(err);
+          });
       }
-    }
-    console.log("myProfile", myProfile)
+    const avatarUrl = `http://${process.env.NEXT_PUBLIC_APP_URL}:3000/${myProfile?.avatar}`;
+    const coverUrl = `http://${process.env.NEXT_PUBLIC_APP_URL}:3000/${myProfile?.cover}`;
     return (
         <div className="flex items-center flex-col 3xl:flex-row gap-[40px] w-[100%] 3xl:justify-center">
             <div className=" flex max-w-[922px] w-11/12 xl:h-[823px] rounded-[42px] sh-d bg-white">
@@ -39,7 +54,7 @@ export default function Page() {
                 <div className="relative w-12/12 h-[185px] rounded-[25px] overflow-hidden">
                         <picture>
                         <img
-                            src={`http://${process.env.NEXT_PUBLIC_APP_URL}:3000/${myProfile?.cover}`}
+                            src={coverUrl}
                             alt=""
                             className="object-cover object-top w-full h-full"
                         />
@@ -55,7 +70,7 @@ export default function Page() {
                     type="file"
                     id="imageUpload"
                     className="absolute hidden cursor-pointer"
-                    onChange={(e) => handleFileInputChange(e, setPreviewUrl1)}
+                    onChange={(e) => handleFileInputChange(e, 'cover')}
                 />
                 </div>
                 <div className=" w-12/12 h-[200px] sm:h-[120px]">
@@ -64,7 +79,7 @@ export default function Page() {
                         <picture>
                         <img
                         className="rounded-full w-full h-full object-cover"
-                        src={`http://${process.env.NEXT_PUBLIC_APP_URL}:3000/${myProfile?.avatar}`}
+                        src={avatarUrl}
                         alt=""
                         />
                         </picture>
@@ -80,7 +95,7 @@ export default function Page() {
                     type="file"
                     id="upload"
                     className="absolute hidden cursor-pointer"
-                    onChange={(e) => handleFileInputChange(e, setPreviewUrl)}
+                    onChange={(e) => handleFileInputChange(e, 'avatar')}
                 />
                 </div>
                 <div className="pt-[100px] gap-[15px] sm:pt-0 flex flex-col sm:flex-row pl-[40px] sm:items-center sm:pl-[200px] sm:justify-between">
@@ -283,29 +298,30 @@ export default function Page() {
                 <div className="flex items-center  flex-col w-12/12 gap-[30px] lg:gap-0 pb-[30px]">
                 <div className="flex items-center justify-center  gap-[30px] flex-col sm:flex-row">
                     <div className="transform hover:scale-110 transition-transform duration-300">
-                    <img src="Air.svg" alt="" className="" />
+                    <img src="airwa.svg" alt="" className="" />
+                    <img src="Airplanetest.svg" alt="" className="absolute top-[60px] left-0" />
                     </div>
                     <div className="transform hover:scale-110 transition-transform duration-300">
-                    <img src="Horor.svg" alt="" className="" />
+                    <img src="horrorwh.svg" alt="" className="" />
                     </div>
                 </div>
                 <div className="flex items-center justify-center gap-[30px] flex-col sm:flex-row">
                     <div className="transform hover:scale-110 transition-transform duration-300">
-                    <img src="Grand copy.svg" alt="" className="" />
+                    <img src="kingwk.svg" alt="" className="" />
                     </div>
                     <div className="transform hover:scale-110 transition-transform duration-300">
-                    <img src="Grand.svg" alt="" className="" />
+                    <img src="gwg.svg" alt="" className="" />
                     </div>
                     <div className="lg:block hidden transform hover:scale-110 transition-transform duration-300">
-                    <img src="Luck.svg" alt="" className="" />
+                    <img src="bwb.svg" alt="" className="" />
                     </div>
                 </div>
                 <div className="flex items-center justify-center gap-[30px] flex-col sm:flex-row">
                 <div className="transform hover:scale-110 transition-transform duration-300">
-                    <img src="Unb.svg" alt="" className="" />
+                    <img src="unbwb.svg" alt="" className="" />
                 </div>
                     <div className="transform hover:scale-110 transition-transform duration-300">
-                    <img src="iron.svg" alt="" className="" />
+                    <img src="ironwr.svg" alt="" className="" />
                     </div>
                 </div>
                 <div>
