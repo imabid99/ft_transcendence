@@ -55,7 +55,7 @@ CREATE TABLE "channels" (
     "password" TEXT DEFAULT '',
     "accessPassword" TEXT DEFAULT '',
     "userId" TEXT,
-    "avatar" TEXT,
+    "avatar" TEXT NOT NULL DEFAULT 'uploads/groupAvatar.jpg',
     "accessIsActived" BOOLEAN NOT NULL DEFAULT false,
 
     CONSTRAINT "channels_pkey" PRIMARY KEY ("id")

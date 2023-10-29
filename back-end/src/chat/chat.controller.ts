@@ -17,19 +17,15 @@ import {
 @Controller('chat')
 export class ChatController {
     constructor(private chatService: ChatService) {}
-    //hadi 5asha tkon fchat
     @Get("channel/:id")
     @UseGuards(AuthGuard("jwt"))
     async channel(
         @Param("id") id: string,
-        @Headers() headers: any
+        @Req() req
     ): Promise<any> {
-        const token = headers.authorization.split(" ")[1];
-        const decoded: any = jwtDecode(token);
-        return this.chatService.getChannel(decoded?.userId.toString(), id);
+        return this.chatService.getChannel(req.user.id, id);
     }
 
-      //hadi 5asha tkon fchat
     @Get("messages/:id")
       @UseGuards(AuthGuard("jwt"))
     messages(@Param() params: any) {
@@ -44,10 +40,8 @@ export class ChatController {
     
     @Get("channels")
     @UseGuards(AuthGuard("jwt"))
-    async channels(@Headers() headers: any): Promise<any> {
-      const token = headers.authorization.split(" ")[1];
-      const decoded: any = jwtDecode(token);
-      return this.chatService.getChannels(decoded.userId);
+    async channels(@Req() req): Promise<any> {
+      return this.chatService.getChannels(req.user.id);
     }
 
     @Get("is-mute/:userId/:grouptId")
@@ -57,5 +51,11 @@ export class ChatController {
       @Param("grouptId") groupId: string
     ): Promise<{ iMute: boolean; heMute: boolean }> {
       return this.chatService.checkMute(userId, groupId);
+    }
+
+    @Get('myBlocked')
+    @UseGuards(AuthGuard('jwt'))
+    async myBlocked(@Req() req): Promise<any> {
+      return this.chatService.getMyBlocked(req.user.id);
     }
 }
