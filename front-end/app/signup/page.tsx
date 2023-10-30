@@ -104,7 +104,7 @@ export default function Home() {
           <button className="flex justify-evenly items-center w-[170px] h-[52px] border-[0.1px] rounded-[11px] border-white cursor-pointer">
             <img src="goog.svg" alt="" className="w-[20.153px] h-[20.56px]" />
             <p className="text-white text-[10px] font-[400] cursor-pointer">
-              Log in with google
+              Log in with google 
             </p>
           </button>
           <button className="flex justify-evenly items-center w-[170px] h-[52px] border-[0.1px] rounded-[11px] border-white cursor-pointer">

@@ -122,31 +122,6 @@ export default function Page() {
                             )
                         }
                     </div>
-                    <div className=" flex items-center gap-[5px]">
-                    <button className="w-[91px] h-[29px] rounded-[9px] bg-[#5085AB] flex items-center justify-center gap-[5px]">
-                        <img src="Vector.svg" alt="" />
-                        <p className="text-[#fff] text-[8px] font-[500]">Message</p>
-                    </button>
-                    <button className="w-[30px] h-[29px] rounded-[9px] bg-[#5085AB] flex items-center justify-center gap-[5px]">
-                        <img src="Vector(1).svg" alt="" />
-                    </button>
-                    <button
-                        id="settingsButton"
-                        className="w-[30px] h-[29px] rounded-[9px] bg-[#5085AB] flex items-center justify-center gap-[5px]"
-                    >
-                        <img src="Vector(2).svg" alt="" />
-                    </button>
-                    <div
-                        id="settingsMenu"
-                        className="hidden absolute mt-[80px] bg-white border border-gray-300 shadow-lg rounded-lg  w-40"
-                    >
-                        <ul>
-                        <li className="px-4 py-2 hover:bg-gray-100 cursor-pointer">
-                            Option 1
-                        </li>
-                        </ul>
-                    </div>
-                    </div>
                 </div>
                 </div>
                 <div className="pt-[40px] xl:pt-[10px]">
