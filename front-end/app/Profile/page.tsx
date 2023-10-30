@@ -26,25 +26,23 @@ export default function Page() {
     function handleFileInputChange(e: any, type: 'avatar' | 'cover') {
         const file = e.target.files?.[0];
         if (!file) {
-          return;
+            return;
         }
-      
         const formData = new FormData();
         formData.append('file', file);
         const maxFileSize = 1024 * 1024 * 5;
         const uploadEndpoint = type === 'avatar'
-          ? `http://${process.env.NEXT_PUBLIC_APP_URL}:3000/api/upload/avatar`
-          : `http://${process.env.NEXT_PUBLIC_APP_URL}:3000/api/upload/cover`;
-      
+            ? `http://${process.env.NEXT_PUBLIC_APP_URL}:3000/api/upload/avatar`
+            : `http://${process.env.NEXT_PUBLIC_APP_URL}:3000/api/upload/cover`;
         axiosInstance
-          .post(uploadEndpoint, formData)
-          .then((res) => {
+            .post(uploadEndpoint, formData)
+            .then((res) => {
             socket.emit('refresh', { userId: user.id });
-          })
-          .catch((err) => {
+        })
+        .catch((err) => {
             console.log(err);
-          });
-      }
+        });
+    }
     const avatarUrl = `http://${process.env.NEXT_PUBLIC_APP_URL}:3000/${myProfile?.avatar}`;
     const coverUrl = `http://${process.env.NEXT_PUBLIC_APP_URL}:3000/${myProfile?.cover}`;
     return (
@@ -271,39 +269,39 @@ export default function Page() {
                 </div>
                 </div>
                 <div className="flex items-center  flex-col w-12/12 gap-[30px] lg:gap-0 pb-[30px]">
-                <div className="flex items-center justify-center  gap-[30px] flex-col sm:flex-row">
-                    <div className="transform hover:scale-110 transition-transform duration-300">
-                    <img src="airwa.svg" alt="" className="" />
-                    <img src="Airplanetest.svg" alt="" className="absolute top-[60px] left-0" />
+                    <div className="flex items-center justify-center  gap-[30px] flex-col sm:flex-row">
+                        <div className="transform hover:scale-110 transition-transform duration-300">
+                        <img src="airwa.svg" alt="" className="" />
+                        <img src="Airplanetest.svg" alt="" className="absolute top-[60px] left-0" />
+                        </div>
+                        <div className="transform hover:scale-110 transition-transform duration-300">
+                        <img src="horrorwh.svg" alt="" className="" />
+                        </div>
                     </div>
-                    <div className="transform hover:scale-110 transition-transform duration-300">
-                    <img src="horrorwh.svg" alt="" className="" />
+                    <div className="flex items-center justify-center gap-[30px] flex-col sm:flex-row">
+                        <div className="transform hover:scale-110 transition-transform duration-300">
+                        <img src="kingwk.svg" alt="" className="" />
+                        </div>
+                        <div className="transform hover:scale-110 transition-transform duration-300">
+                        <img src="gwg.svg" alt="" className="" />
+                        </div>
+                        <div className="lg:block hidden transform hover:scale-110 transition-transform duration-300">
+                        <img src="bwb.svg" alt="" className="" />
+                        </div>
                     </div>
-                </div>
-                <div className="flex items-center justify-center gap-[30px] flex-col sm:flex-row">
-                    <div className="transform hover:scale-110 transition-transform duration-300">
-                    <img src="kingwk.svg" alt="" className="" />
+                    <div className="flex items-center justify-center gap-[30px] flex-col sm:flex-row">
+                        <div className="transform hover:scale-110 transition-transform duration-300">
+                            <img src="unbwb.svg" alt="" className="" />
+                        </div>
+                        <div className="transform hover:scale-110 transition-transform duration-300">
+                        <img src="ironwr.svg" alt="" className="" />
+                        </div>
                     </div>
-                    <div className="transform hover:scale-110 transition-transform duration-300">
-                    <img src="gwg.svg" alt="" className="" />
+                    <div>
+                        <div className="pb-[30px] block lg:hidden transform hover:scale-110 transition-transform duration-300">
+                        <img src="Luck.svg" alt="" className="" />
+                        </div>
                     </div>
-                    <div className="lg:block hidden transform hover:scale-110 transition-transform duration-300">
-                    <img src="bwb.svg" alt="" className="" />
-                    </div>
-                </div>
-                <div className="flex items-center justify-center gap-[30px] flex-col sm:flex-row">
-                <div className="transform hover:scale-110 transition-transform duration-300">
-                    <img src="unbwb.svg" alt="" className="" />
-                </div>
-                    <div className="transform hover:scale-110 transition-transform duration-300">
-                    <img src="ironwr.svg" alt="" className="" />
-                    </div>
-                </div>
-                <div>
-                    <div className="pb-[30px] block lg:hidden transform hover:scale-110 transition-transform duration-300">
-                    <img src="Luck.svg" alt="" className="" />
-                    </div>
-                </div>
                 </div>
             </div>
             </div>
