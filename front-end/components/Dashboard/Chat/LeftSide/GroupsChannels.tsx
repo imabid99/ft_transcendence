@@ -27,6 +27,7 @@ export default function GroupsChannels() {
       );
     }
   });
+  console.log(myChannels);
   return (
       <div className="chat__left__bottom__groups flex flex-col  justify-center items-center">
         <span className="flex items-center justify-start gap-[10px] w-full mb-[20px]">
@@ -62,17 +63,17 @@ export default function GroupsChannels() {
         </span>
         <div className="flex flex-col gap-[20px] overflow-y-hidden max-h-[235px] min-h-[235px]rounded-[5px] w-full" ref={groupsChannelsRef}>
           {
-            myChannels?.map((mychannel: any) => {
+            myChannels?.map((channel: any) => {
               return(
               <Channel
-                avatar="/groupAvatar.jpg"
-                channel={mychannel.name}
-                lastMessage={getLastMessageGroup(mychannel.Messages)?.content}
-                lastMessageTime={getLastMessageGroup(mychannel.Messages)?.createdAt.toString().split('T')[1].split('.')[0].slice(0,5)}
+                avatar={`http://${process.env.NEXT_PUBLIC_APP_URL}:3000/${channel.avatar}`}
+                channel={channel.name}
+                lastMessage={getLastMessageGroup(channel.Messages)?.content}
+                lastMessageTime={getLastMessageGroup(channel.Messages)?.createdAt.toString().split('T')[1].split('.')[0].slice(0,5)}
                 notification={0}
                 active={false}
-                link={`g/${mychannel.id}`}
-                key={`key : ${mychannel.id}`}
+                link={`g/${channel.id}`}
+                key={`key : ${channel.id}`}
                 />)
             })
           }

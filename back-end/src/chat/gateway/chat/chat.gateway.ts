@@ -52,7 +52,7 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
         myChannels.map((channel) => {
           client.join(channel.id);
         });
-        if (this.server.sockets.adapter?.rooms?.get(decoded.username)?.size > 1){
+        if ((this.server?.adapter as any)?.rooms?.get(decoded.username)?.size > 1){
           return;
         }
         await this.prisma.profile?.update({
@@ -81,7 +81,7 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
             userId: decoded.userId,
           },
         });
-        if (this.server.sockets.adapter?.rooms?.get(decoded.username)?.size > 1){
+        if ((this.server?.adapter as any)?.rooms?.get(decoded.username)?.size >= 1){
           return;
         }
         await this.prisma.profile.update({
@@ -230,7 +230,6 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
               id: user.id,
             },
           },
-          avatar: "",
         },
       });
       const channel:any = await this.prisma.channels.findUnique({
@@ -259,12 +258,8 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
 
   
   
-  @SubscribeMessage("refresh")
+  @SubscribeMessage("refresh-event")
   async handleRefresh(client: any, payload: any): Promise<void> {
-    const jwt = client.handshake.headers.authorization?.split(" ")[1];
-    if (jwt) {
-      this.server.emit("refresh", payload);
-    }
   }
   @SubscribeMessage("message-to-group")
   async handleMessageToGroup(client: any, payload: any): Promise<void>
@@ -356,6 +351,8 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
   const jwt = client.handshake.headers.authorization?.split(" ")[1];
   if(jwt)
   {
+    console.log("leaveGroup payload : ", payload);
+
     const info:any= jwt_decode(jwt);
     const user = await this.prisma.user.findUnique({
       where: {

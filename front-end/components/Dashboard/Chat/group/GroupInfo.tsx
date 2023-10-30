@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import { useRouter } from 'next/navigation'
 import { useContext } from "react";
 import { contextdata } from "@/app/contextApi";
+import axiosInstance from "@/utils/axiosInstance";
 type GroupInfoProps =
 {
     setShowBody : any,
@@ -55,8 +56,26 @@ export default function GroupInfo({setShowBody,setGroupUsers,groupUsers}:GroupIn
 			router.push(`/Chat`)
 		}, 1000);
 	}
+    // const handleUploadImage = (e: any) => {
+    //     const file = e.target.files?.[0];
+    //     const formData = new FormData();
+    //     formData.append('file', file);
+    //     const maxFileSize = 1024 * 1024 * 5;
+    //     axiosInstance.post(`http://${process.env.NEXT_PUBLIC_APP_URL}:3000/api/upload/avatar`, formData).then((res) => {
+    //       console.log(res);
+    //     }).catch((err) => {
+    //       console.log(err);
+    //       return;
+    //     });
+    //     if (file) {
+    //       if (file.size > maxFileSize) {
+    //         alert("File is too large. Please upload a file smaller than 5 MB.");
+    //         return;
+    //       }
+    //     }
+    // }
     return (
-        <div className="flex flex-col  overflow-y-scroll  max-h-[calc(100%-270px)] min-h-[calc(100%-135px)] ">
+        <div className="flex flex-col  overflow-y-scroll  max-h-[calc(100%-270px)] min-h-[calc(100%-135px)] no-scrollbar">
             <div className=" flex gap-2 items-center  py-[27px] px-[25px]">
                 <span onClick={() => {setShowBody("selectUsers") ;setGroupUsers([])}} className="cursor-pointer">
                     <svg width="30" height="30" viewBox="0 0 30 30" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -93,7 +112,7 @@ export default function GroupInfo({setShowBody,setGroupUsers,groupUsers}:GroupIn
                     )
                     :
                     (
-                        <label htmlFor="GroupName" className=" groupInfo flex items-center ">
+                        <label htmlFor="GroupName" className=" flex items-center ">
                             <span className="p-[19px] bg-[#F9FCFE] rounded-l-[11px]">
                                 <svg width="16" height="12" viewBox="0 0 16 12" fill="none" xmlns="http://www.w3.org/2000/svg">
                                     <path d="M0 12V9.90001C0 9.47501 0.106182 9.08426 0.318545 8.72776C0.530909 8.37126 0.812606 8.09951 1.16364 7.91251C1.91515 7.52501 2.67879 7.23426 3.45455 7.04026C4.2303 6.84626 5.01818 6.74951 5.81818 6.75001C6.61818 6.75001 7.40606 6.84701 8.18182 7.04101C8.95758 7.23501 9.72121 7.52551 10.4727 7.91251C10.8242 8.10001 11.1062 8.37201 11.3185 8.72851C11.5309 9.08501 11.6368 9.47551 11.6364 9.90001V12H0ZM13.0909 12V9.75C13.0909 9.20001 12.9423 8.67176 12.6451 8.16526C12.3479 7.65876 11.9268 7.22451 11.3818 6.86251C12 6.93751 12.5818 7.06576 13.1273 7.24726C13.6727 7.42876 14.1818 7.65051 14.6545 7.91251C15.0909 8.16251 15.4242 8.44051 15.6545 8.74651C15.8848 9.05251 16 9.387 16 9.75V12H13.0909ZM5.81818 6.00001C5.01818 6.00001 4.33333 5.70626 3.76364 5.11876C3.19394 4.53126 2.90909 3.82501 2.90909 3.00001C2.90909 2.17502 3.19394 1.46877 3.76364 0.881268C4.33333 0.293769 5.01818 1.92305e-05 5.81818 1.92305e-05C6.61818 1.92305e-05 7.30303 0.293769 7.87273 0.881268C8.44242 1.46877 8.72727 2.17502 8.72727 3.00001C8.72727 3.82501 8.44242 4.53126 7.87273 5.11876C7.30303 5.70626 6.61818 6.00001 5.81818 6.00001ZM13.0909 3.00001C13.0909 3.82501 12.8061 4.53126 12.2364 5.11876C11.6667 5.70626 10.9818 6.00001 10.1818 6.00001C10.0485 6.00001 9.87879 5.98426 9.67273 5.95276C9.46667 5.92126 9.29697 5.88701 9.16364 5.85001C9.49091 5.45001 9.74255 5.00626 9.91855 4.51876C10.0945 4.03126 10.1823 3.52501 10.1818 3.00001C10.1818 2.47502 10.0941 1.96877 9.91855 1.48127C9.74303 0.993768 9.49139 0.550018 9.16364 0.150019C9.33333 0.087519 9.50303 0.0467693 9.67273 0.0277693C9.84242 0.00876935 10.0121 -0.000480769 10.1818 1.92305e-05C10.9818 1.92305e-05 11.6667 0.293769 12.2364 0.881268C12.8061 1.46877 13.0909 2.17502 13.0909 3.00001Z" fill="#04427A"/>
@@ -103,7 +122,7 @@ export default function GroupInfo({setShowBody,setGroupUsers,groupUsers}:GroupIn
                         </label>
                     )
                     }
-                <label htmlFor="typeGroup" className="flex items-center w-full rounded-[11px]  gap-[20px] groupInfo flex-col">
+                <label htmlFor="typeGroup" className="flex items-center w-full rounded-[11px]  gap-[20px] flex-col">
                     {
                         showError === 'badTypeGroup' && (
                         <p className="text-[15px] font-[500] font-[Poppins] text-[#FF0000]">
@@ -111,19 +130,19 @@ export default function GroupInfo({setShowBody,setGroupUsers,groupUsers}:GroupIn
                         </p>
                         )
                     }
-                    <p className="w-full relative text-center py-[10px] px-[20px] bg-[#F9FCFE] cursor-pointer text-[15px] font-[500] font-[Poppins] text-[#9f9d9d]" onClick={() => setShowTypeGroup(!showTypeGroup)}>
+                    <p className="w-full relative text-center py-[10px] px-[20px] bg-[#F9FCFE] cursor-pointer text-[15px] font-[500] font-[Poppins] text-[#afb8bf]" onClick={() => setShowTypeGroup(!showTypeGroup)}>
                         <>
                             {groupType}
                         </>
                         {showTypeGroup && (<div className="flex flex-col gap-[10px] absolute top-[0px] left-[0px] w-full bg-[#F9FCFE] rounded-[11px] py-[10px] px-[20px]">
-                            <span className="hover:text-[#00498A] cursor-pointer" onClick={() => setGroupType('public')}>
-                                public
+                            <span className="hover:text-[#00498A] cursor-pointer" onClick={() => setGroupType('Public')}>
+                                Public
                             </span>
-                            <span className="hover:text-[#00498A] cursor-pointer" onClick={() => setGroupType('private')}>
-                                private
+                            <span className="hover:text-[#00498A] cursor-pointer" onClick={() => setGroupType('Private')}>
+                                Private
                             </span>
-                            <span className="hover:text-[#00498A] cursor-pointer" onClick={() => setGroupType('protected')}>
-                                protected
+                            <span className="hover:text-[#00498A] cursor-pointer" onClick={() => setGroupType('Protected')}>
+                                Protected
                             </span>
                         </div>)}
                     </p>
