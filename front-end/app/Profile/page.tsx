@@ -2,10 +2,48 @@
 import { useContext, useState } from 'react';
 import { contextdata } from '@/app/contextApi';
 import axiosInstance from '@/utils/axiosInstance';
+import React from 'react';
+import ImageGrid from '../../components/Dashboard/Profile/images';
 
+// const images = [
+//     [
+//         { src: 'airwa.svg', alt: 'Airwa Image', overlaySrc: 'airairair.svg' },
+//         { src: 'horrorwh.svg', alt: 'Horrorwh Image', overlaySrc: 'jan.svg' },
+//     ],
+//     [
+//         { src: 'kingwk.svg', alt: 'Kingwk Image', overlaySrc: 'sarokh.svg' },
+//         { src: 'gwg.svg', alt: 'GWG Image', overlaySrc: 'targethh.svg' },
+//         { src: 'bwb.svg', alt: 'BWB Image', className: 'lg:block hidden', overlaySrc: 'hand.svg' },
+//     ],
+//     [
+//         { src: 'unbwb.svg', alt: 'UNBWB Image', overlaySrc: 'cap.svg' },
+//         { src: 'ironwr.svg', alt: 'Ironwr Image', overlaySrc: 'sando9.svg' },
+//     ],
+//     [
+//         { src: 'bwb.svg', alt: 'Luck Image', className: 'pb-[30px] block lg:hidden',  overlaySrc: 'hand.svg'},
+//     ],
+// ];
+const images = [
+    [
+        { src: 'Air.svg', alt: 'Airwa Image' },
+        { src: 'hlock.svg', alt: 'Horrorwh Image'},
+    ],
+    [
+        { src: 'Grand copy.svg', alt: 'Kingwk Image'},
+        { src: 'Grand.svg', alt: 'GWG Image'},
+        { src: 'Luck.svg', alt: 'BWB Image', className: 'lg:block hidden'},
+    ],
+    [
+        { src: 'Unb.svg', alt: 'UNBWB Image'},
+        { src: 'iron.svg', alt: 'Ironwr Image'},
+    ],
+    [
+        { src: 'Luck.svg', alt: 'Luck Image', className: 'pb-[30px] block lg:hidden'},
+    ],
+];
 
 export default function Page() {
-  
+    
     const {profiles, user, socket}:any = useContext(contextdata);
     const myProfile = profiles?.find((profile:any) => profile.userId === user.id);
     const name = `${myProfile?.firstName} ${myProfile?.lastName}`;
@@ -193,66 +231,66 @@ export default function Page() {
                     Daily Play Time
                     </div>
                     <div className="flex flex-col sm:flex-row pt-[24px] gap-[24px] sm:gap-[34px]  items-center mx-auto">
-                    <div className="flex gap-[20px] sm:gap-[34px]">
-                        <div className="flex flex-col items-center">
-                        <div className="h-[145px] rounded-[8px] bg-[#C0D4E9] w-[16px] flex flex-col-reverse">
-                            <div className="w-[16px] week-sh rounded-[8px] h-[19%]" />
+                        <div className="flex gap-[20px] sm:gap-[34px]">
+                            <div className="flex flex-col items-center">
+                            <div className="h-[145px] rounded-[8px] bg-[#C0D4E9] w-[16px] flex flex-col-reverse">
+                                <div className="w-[16px] week-sh rounded-[8px] h-[19%]" />
+                            </div>
+                            <div className="text-[#3F88D3] text-[14px] font-[600] pt-[8px]">
+                                M
+                            </div>
+                            </div>
+                            <div className="flex flex-col  items-center">
+                            <div className="h-[145px] rounded-[8px] bg-[#C0D4E9] w-[16px] flex flex-col-reverse">
+                                <div className="w-[16px] week-sh rounded-[8px] h-[50%]" />
+                            </div>
+                            <div className="text-[#3F88D3] text-[14px] font-[600] pt-[8px]">
+                                T
+                            </div>
+                            </div>
+                            <div className="flex flex-col  items-center">
+                            <div className="h-[145px] rounded-[8px] bg-[#C0D4E9] w-[16px] flex flex-col-reverse">
+                                <div className="w-[16px] week-sh rounded-[8px] h-[80%]" />
+                            </div>
+                            <div className="text-[#3F88D3] text-[14px] font-[600] pt-[8px]">
+                                W
+                            </div>
+                            </div>
+                            <div className="flex flex-col  items-center">
+                            <div className="h-[145px] rounded-[8px] bg-[#C0D4E9] w-[16px] flex flex-col-reverse">
+                                <div className="w-[16px] week-sh rounded-[8px] h-[80%]" />
+                            </div>
+                            <div className="text-[#3F88D3] text-[14px] font-[600] pt-[8px]">
+                                T
+                            </div>
+                            </div>
                         </div>
-                        <div className="text-[#3F88D3] text-[14px] font-[600] pt-[8px]">
-                            M
+                        <div className="flex gap-[34px] pb-[25px] sm:pb-0">
+                            <div className="flex flex-col  items-center">
+                            <div className="h-[145px] rounded-[8px] bg-[#C0D4E9] w-[16px] flex flex-col-reverse">
+                                <div className="w-[16px] week-sh rounded-[8px] h-[20%]" />
+                            </div>
+                            <div className="text-[#3F88D3] text-[14px] font-[600] pt-[8px]">
+                                F
+                            </div>
+                            </div>
+                            <div className="flex flex-col  items-center">
+                            <div className="h-[145px] rounded-[8px] bg-[#C0D4E9] w-[16px] flex flex-col-reverse">
+                                <div className="w-[16px] week-sh rounded-[8px] h-[30%]" />
+                            </div>
+                            <div className="text-[#3F88D3] text-[14px] font-[600] pt-[8px]">
+                                S
+                            </div>
+                            </div>
+                            <div className="flex flex-col  items-center">
+                            <div className="h-[145px] rounded-[8px] bg-[#C0D4E9] w-[16px] flex flex-col-reverse">
+                                <div className="w-[16px] week-sh rounded-[8px] h-[70%]" />
+                            </div>
+                            <div className="text-[#3F88D3] text-[14px] font-[600] pt-[8px]">
+                                S
+                            </div>
+                            </div>
                         </div>
-                        </div>
-                        <div className="flex flex-col  items-center">
-                        <div className="h-[145px] rounded-[8px] bg-[#C0D4E9] w-[16px] flex flex-col-reverse">
-                            <div className="w-[16px] week-sh rounded-[8px] h-[50%]" />
-                        </div>
-                        <div className="text-[#3F88D3] text-[14px] font-[600] pt-[8px]">
-                            T
-                        </div>
-                        </div>
-                        <div className="flex flex-col  items-center">
-                        <div className="h-[145px] rounded-[8px] bg-[#C0D4E9] w-[16px] flex flex-col-reverse">
-                            <div className="w-[16px] week-sh rounded-[8px] h-[80%]" />
-                        </div>
-                        <div className="text-[#3F88D3] text-[14px] font-[600] pt-[8px]">
-                            W
-                        </div>
-                        </div>
-                        <div className="flex flex-col  items-center">
-                        <div className="h-[145px] rounded-[8px] bg-[#C0D4E9] w-[16px] flex flex-col-reverse">
-                            <div className="w-[16px] week-sh rounded-[8px] h-[80%]" />
-                        </div>
-                        <div className="text-[#3F88D3] text-[14px] font-[600] pt-[8px]">
-                            T
-                        </div>
-                        </div>
-                    </div>
-                    <div className="flex gap-[34px] pb-[25px] sm:pb-0">
-                        <div className="flex flex-col  items-center">
-                        <div className="h-[145px] rounded-[8px] bg-[#C0D4E9] w-[16px] flex flex-col-reverse">
-                            <div className="w-[16px] week-sh rounded-[8px] h-[20%]" />
-                        </div>
-                        <div className="text-[#3F88D3] text-[14px] font-[600] pt-[8px]">
-                            F
-                        </div>
-                        </div>
-                        <div className="flex flex-col  items-center">
-                        <div className="h-[145px] rounded-[8px] bg-[#C0D4E9] w-[16px] flex flex-col-reverse">
-                            <div className="w-[16px] week-sh rounded-[8px] h-[30%]" />
-                        </div>
-                        <div className="text-[#3F88D3] text-[14px] font-[600] pt-[8px]">
-                            S
-                        </div>
-                        </div>
-                        <div className="flex flex-col  items-center">
-                        <div className="h-[145px] rounded-[8px] bg-[#C0D4E9] w-[16px] flex flex-col-reverse">
-                            <div className="w-[16px] week-sh rounded-[8px] h-[70%]" />
-                        </div>
-                        <div className="text-[#3F88D3] text-[14px] font-[600] pt-[8px]">
-                            S
-                        </div>
-                        </div>
-                    </div>
                     </div>
                 </div>
                 </div>
@@ -268,41 +306,7 @@ export default function Page() {
                     </span>
                 </div>
                 </div>
-                <div className="flex items-center  flex-col w-12/12 gap-[30px] lg:gap-0 pb-[30px]">
-                    <div className="flex items-center justify-center  gap-[30px] flex-col sm:flex-row">
-                        <div className="transform hover:scale-110 transition-transform duration-300">
-                        <img src="airwa.svg" alt="" className="" />
-                        <img src="Airplanetest.svg" alt="" className="absolute top-[60px] left-0" />
-                        </div>
-                        <div className="transform hover:scale-110 transition-transform duration-300">
-                        <img src="horrorwh.svg" alt="" className="" />
-                        </div>
-                    </div>
-                    <div className="flex items-center justify-center gap-[30px] flex-col sm:flex-row">
-                        <div className="transform hover:scale-110 transition-transform duration-300">
-                        <img src="kingwk.svg" alt="" className="" />
-                        </div>
-                        <div className="transform hover:scale-110 transition-transform duration-300">
-                        <img src="gwg.svg" alt="" className="" />
-                        </div>
-                        <div className="lg:block hidden transform hover:scale-110 transition-transform duration-300">
-                        <img src="bwb.svg" alt="" className="" />
-                        </div>
-                    </div>
-                    <div className="flex items-center justify-center gap-[30px] flex-col sm:flex-row">
-                        <div className="transform hover:scale-110 transition-transform duration-300">
-                            <img src="unbwb.svg" alt="" className="" />
-                        </div>
-                        <div className="transform hover:scale-110 transition-transform duration-300">
-                        <img src="ironwr.svg" alt="" className="" />
-                        </div>
-                    </div>
-                    <div>
-                        <div className="pb-[30px] block lg:hidden transform hover:scale-110 transition-transform duration-300">
-                        <img src="Luck.svg" alt="" className="" />
-                        </div>
-                    </div>
-                </div>
+                <ImageGrid images={images} />
             </div>
             </div>
         </div>

@@ -11,9 +11,12 @@ import { setLocalStorageItem, getLocalStorageItem, removeLocalStorageItem } from
 import jwt_decode from "jwt-decode";
 import { contextdata } from '@/app/contextApi';
 import axiosInstance from '@/utils/axiosInstance';
+import Image from "next/image"
+
 
 
 export default function Page() {
+  const router = useRouter();
   const [qrCodeSrc, setQrCodeSrc] = useState("2fa-qr-code 1.svg");
   const {profiles, user, socket}:any = useContext(contextdata);
   const myProfile = profiles?.find((profile:any) => profile.userId === user.id);
@@ -36,8 +39,6 @@ export default function Page() {
   function deleteAvatar() {
     axiosInstance.delete(`http://${process.env.NEXT_PUBLIC_APP_URL}:3000/api/delete/avatar/${user.id}`).then((res) => {
         console.log("Avatar deleted successfully");
-
-        socket.emit('refresh', { userId: user.id });
       })
       .catch((err) => {
         console.error("Error deleting avatar:", err);
@@ -64,8 +65,10 @@ export default function Page() {
     e.preventDefault();
     
     try {
-      const response = await axiosInstance.delete(`http://${process.env.NEXT_PUBLIC_APP_URL}:3000/api/auth/delete_user`);
-      console.log("response : ", response);
+      const response = await axiosInstance.delete(`http://${process.env.NEXT_PUBLIC_APP_URL}:3000/api/user/delete`);
+      removeLocalStorageItem("Token");
+      socket?.disconnect();
+      router.push('/login');
     } catch (e : any) {
       console.log("Error : ", e.response?.data || e.message);
       return;
@@ -271,6 +274,7 @@ export default function Page() {
                 type="submit"
                 className="w-[160px] h-[50px] rounded-[12px]  cursor-pointer text-[#fff] text-[13px] font-[600] b-save"
                 value="Close Account"
+                onClick={deleteUser}
               />
             </div>
           </div>
