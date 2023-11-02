@@ -1,7 +1,7 @@
 'use client';
 
 import { Canvas, useFrame } from "@react-three/fiber";
-import React, { useRef, useState, useEffect, useMemo } from "react";
+import React, { useRef, useState, useEffect, useMemo, useContext } from "react";
 import {
   ContactShadows,
   Sky,
@@ -31,60 +31,62 @@ import * as THREE from "three";
 import { EffectComposer, Bloom, Vignette } from '@react-three/postprocessing'
 import { RigidBody, vec3, useRapier ,RapierRigidBody , Physics, CuboidCollider } from "@react-three/rapier";
 import { Vector3 } from "three";
+// import * as jwt from "jsonwebtoken";
+// import jwt_decode from "jwt-decode";
 import "../globals.css";
 import  Model1  from "./model1";
 import  Model2  from "./model2";
 import  Model3  from "./model3";
-// import { useRapier } from '@dimforge/rapier3d-react';
-// import KeyboardControls, { boxRef } from "./keyboardcontrols";
-// import PlayerPaddle from "./keyboardcontrols";
+import socketmanager from "./socketmanager";
+import { contextdata } from "../contextApi";
+import { io } from "socket.io-client";
+// import { contextdata } from '@/app/contextApi';
 
+
+// const {profiles, user}:any = useContext(contextdata);
+// const myProfile = profiles?.find((profile:any) => profile.userId === user.id);
+// const name = `${myProfile?.firstName} ${myProfile?.lastName}`;
+// console.log(name);
 
 const Game = () => {
+	
+	
 
 	const Controls = {
 		left: "left",
 		right: "right",
 	}	
-
+	
 	const map = useMemo(() => [
-	{ name: Controls.left, keys: ['ArrowLeft']},
-	{ name: Controls.right, keys: ['ArrowRight']}
-  ], []);
+		{ name: Controls.left, keys: ['ArrowLeft'], player: 'player1' },
+		{ name: Controls.right, keys: ['ArrowRight'], playerd: 'player1' },
+		{ name: Controls.left, keys: ['ArrowLeft'], player: 'player2' },
+		{ name: Controls.right, keys: ['ArrowRight'], player: 'player2' },
+	  ], []);
+	
 
+	/// SOCKET MANAGER
 
-//   const naturemodel = useLoader(
-// 	GLTFLoader,
-// 	"/Game_Assets/models/naturescene/naturescene.glb"
-//   );
-//   const naturemodel = useGLTF("/Game_Assets/models/naturescene/naturescene.glb");
-//   const naturemodel = importmodel("/Game_Assets/models/naturescene/naturescene.glb");
-//   useEffect(() => {
-// 	const object = naturemodel.scene as THREE.Object3D;
-// 	object.traverse((child) => {
-// 	  if (child instanceof THREE.Mesh) {
-// 		child.castShadow = true;
-// 		child.receiveShadow = true;
-// 	  }
-// 	});
-//   }, [naturemodel]);
+	// socketmanager();
+	const {profiles, user} :any= useContext(contextdata);
+	const name = `${user?.profile.firstName} ${user?.profile.lastName}`;
+	const socket = io("http://localhost:3000/Game");
+	
+	useEffect(() => {
+		socket.on("connect", () => {console.log(name + " is Connected to server");});
+		socket.on("disconnect", () => {console.log(name + " is Disconnected from server");});
+  
+	  }, []);
+  
+	  useEffect(() => {
+		  socket.on("updatePosition", (position) => {
+		  // Broadcast the updated position to all connected clients
+		  socket.emit("playerPosition", position);
+		});
+	  }, [profiles]);
 
-//   const siderock = useLoader(
-// 	GLTFLoader,
-// 	"/Game_Assets/models/bigrock/bigrock.glb"
-//   );
-//   const siderock = useGLTF("/Game_Assets/models/bigrock/bigrock.glb");
-//   const siderock = importmodel("/Game_Assets/models/bigrock/bigrock.glb");
-//   useEffect(() => {
-// 	const object = siderock.scene as THREE.Object3D;
-// 	object.traverse((child) => {
-// 	  if (child instanceof THREE.Mesh) {
-// 		child.castShadow = true;
-// 		child.receiveShadow = true;
-// 	  }
-// 	});
-//   }, [siderock]);
-//   const siderock2 = siderock.scene.clone();
+	/// SOCKET MANAGER
+
 
 
   const controls = useControls({});
@@ -95,19 +97,8 @@ const Game = () => {
   const { floorcolor } = useControls("color", { floorcolor: "#1572ff" });
   const { paddlecolor } = useControls("color", { paddlecolor: "#abebff" });
   const { fogcolor } = useControls("color", { fogcolor: "#382f21" });
-//   const { p1_x } = useControls({
-// 	p1_x: { value: -5.8, step: 0.1, label: "p1_x" },
-//   });
-//   const { p1_z } = useControls({
-// 	p1_z: { value: -5.8, step: 0.1, label: "p1_z" },
-//   });
-//   const { p2_x } = useControls({
-// 	p2_x: { value: -5.8, step: 0.1, label: "p2_x" },
-//   });
-//   const { p2_z } = useControls({
-// 	p2_z: { value: -5.8, step: 0.1, label: "p2_z" },
-//   });
-  // const { Groundcolor } = useControls('color', {color: "#147114"})
+
+
 
 	// Keyboard Controls
 	let hasServed = false;
@@ -119,75 +110,71 @@ const Game = () => {
 	// const playerbodyRef = useRapier()
 
 	useEffect(() => {
+		if(!user) return;
 		let isMovingLeft = false;
 		let isMovingRight = false;
-
+	  
 		const handleKeyDown = (event: KeyboardEvent) => {
-			if (event.code === "ArrowLeft") {
-				isMovingLeft = true;
-			} else if (event.code === "ArrowRight") {
-				isMovingRight = true;
-			}
+		  if (event.code === "ArrowLeft") {
+			isMovingLeft = true;
+			socket.emit('paddle-move', { direction: 'left', moving: true, playerId: user?.id });
+		  } else if (event.code === "ArrowRight") {
+			isMovingRight = true;
+			socket.emit('paddle-move', { direction: 'right', moving: true , playerId: user?.id });
+		  }
 		};
-		
+	  
 		const handleKeyUp = (event: KeyboardEvent) => {
-			if (event.code === "ArrowLeft") {
-				isMovingLeft = false;
-			} else if (event.code === "ArrowRight") {
-				isMovingRight = false;
-			}
+		  if (event.code === "ArrowLeft") {
+			isMovingLeft = false;
+			socket.emit('paddle-move', { direction: 'left', moving: false, playerId: user?.id  });
+		  } else if (event.code === "ArrowRight") {
+			isMovingRight = false;
+			socket.emit('paddle-move', { direction: 'right', moving: false , playerId: user?.id });
+		  }
 		};
-		
+		// socket.on('paddle-move', (data) => {
+		// 	if (data.direction === 'left') {
+		// 	  isMovingLeft = data.moving;
+		// 	} else if (data.direction === 'right') {
+		// 	  isMovingRight = data.moving;
+		// 	}
+		// });
+	  
 		window.addEventListener("keydown", handleKeyDown);
 		window.addEventListener("keyup", handleKeyUp);
-		
-
-
-		
+	  
 		const updatePosition = () => {
-			// if (playerbodyRef.current && playerRef.current) {
-				// 	if (isMovingLeft) {
-					// 		playerRef.current.position.x = Math.max(playerRef.current.position.x - 0.2, -4.5);
-					// 		playerbodyRef.current.setTranslation(new Vector3(Math.max(playerRef.current.position.x - 0.2, -4.5), 0, 0), false)
-					// 	} else if (isMovingRight) {
-						// 		playerRef.current.position.x = Math.min(playerRef.current.position.x + 0.2, 4.5);
-						// 		playerbodyRef.current.setTranslation(new Vector3(Math.min(playerRef.current.position.x + 0.2, 4.5), 0, 0), false)
-						// 	}
-						// }
-						
-			if (playerbodyRef.current && playerRef.current) {
-				const linvel = playerbodyRef.current?.linvel();
-				if (isMovingLeft && linvel?.x < 3 && playerbodyRef.current.translation().x > -4.1) {
-					playerbodyRef.current.applyImpulse({ x: -8, y: 0, z: 0 }, true);
-				} else if (isMovingRight && linvel?.x > -3 && playerbodyRef.current.translation().x < 4) {
-					playerbodyRef.current.applyImpulse({ x: 8, y: 0, z: 0 }, true);
-				}
-				const currentPaddle1Position = playerbodyRef.current.translation().z;
-				// console.log(currentPaddle1Position)
-				if (currentPaddle1Position !== 0) {
-					playerbodyRef.current.setTranslation(
-						{x: playerbodyRef.current.translation().x,
-						 y: playerbodyRef.current.translation().y,
-						 z: 0 }, true)
-				}
-			  
-				// console.log(playerbodyRef.current.translation().x)
+		  if (playerbodyRef.current && playerRef.current) {
+			const linvel = playerbodyRef.current?.linvel();
+			if (isMovingLeft && linvel?.x < 3 && playerbodyRef.current.translation().x > -4.1) {
+			  playerbodyRef.current.applyImpulse({ x: -8, y: 0, z: 0 }, true);
+			} else if (isMovingRight && linvel?.x > -3 && playerbodyRef.current.translation().x < 4) {
+			  playerbodyRef.current.applyImpulse({ x: 8, y: 0, z: 0 }, true);
 			}
-			
-
-			
-			// playerbodyRef.current?.setTranslation({ x: -2, y: 0, z: 0 }, true)
-
-			requestAnimationFrame(updatePosition);
+			const currentPaddle1Position = playerbodyRef.current.translation().z;
+			// console.log(currentPaddle1Position)
+			if (currentPaddle1Position !== 0) {
+			  playerbodyRef.current.setTranslation(
+				{ x: playerbodyRef.current.translation().x, y: playerbodyRef.current.translation().y, z: 0 },
+				true
+			  );
+			}
+	  
+		  }
+	  
+	  
+		  requestAnimationFrame(updatePosition);
 		};
-
+	  
 		requestAnimationFrame(updatePosition);
-
+	  
 		return () => {
-		window.removeEventListener("keydown", handleKeyDown);
-		window.removeEventListener("keyup", handleKeyUp);
+		  window.removeEventListener("keydown", handleKeyDown);
+		  window.removeEventListener("keyup", handleKeyUp);
+		//   socket.off('paddle-move');
 		};
-	}, []);
+	  }, [user]);
 
 	// AI Controls
 
@@ -210,6 +197,15 @@ const Game = () => {
 				isMovingRight = false;
 			}
 		};
+
+		socket.on('paddle-move', (data) => {
+			if (data.playerId === user?.id) return;
+			if (data.direction === 'left') {
+				isMovingRight = data.moving;
+			} else if (data.direction === 'right') {
+				isMovingLeft = data.moving;
+			}
+		});
 		
 		window.addEventListener("keydown", handleKeyDown);
 		window.addEventListener("keyup", handleKeyUp);
@@ -255,11 +251,39 @@ const Game = () => {
 
 		requestAnimationFrame(updatePosition);
 
+	
 		return () => {
 		window.removeEventListener("keydown", handleKeyDown);
 		window.removeEventListener("keyup", handleKeyUp);
+		socket.off('paddle-move');
 		};
 	}, []);
+
+	// SOCKET BALL CONTROL
+	// useEffect(() => {
+	// 	socket.on("ballPosition", (position) => {
+			
+	// 	});
+	// }, []);
+
+
+
+	// const [player2Position, setPlayer2Position] = useState(0);
+
+	// useEffect(() => {
+	// socket.on("playerPosition", (position) => {
+	// 	setPlayer2Position(position);
+	// });
+	// }, []);
+
+	// useEffect(() => {
+	// if (playerbodyRef.current && playerRef.current) {
+	// 	playerbodyRef.current.setTranslation(
+	// 	{ x: playerbodyRef.current.translation().x, y: playerbodyRef.current.translation().y, z: player2Position },
+	// 	true
+	// 	);
+	// }
+	// }, [player2Position]);
 
 	// BALL SERVE
 
@@ -308,7 +332,7 @@ const Game = () => {
 						setCount2(previousCount => previousCount + 1);
 					}
 					
-					console.log('p1_count= ' + p1_count + ' p2_count= ' + p2_count);
+					// console.log('p1_count= ' + p1_count + ' p2_count= ' + p2_count);
 					
 					ballbodyRef.current.setTranslation({ x: 0, y: 0.35, z: 0 }, false);
 					ballbodyRef.current.setLinvel({ x: 0, y: 0, z: 0 }, false);
@@ -317,11 +341,18 @@ const Game = () => {
 					// ballbodyRef.angularVelocity.set(0, 0, 0);
 					hasServed = false;
 				}
+				socket.emit('ballPosition', {x: ballbodyRef.current?.translation().x, y: ballbodyRef.current?.translation().y, z: ballbodyRef.current?.translation().z});
 			}
 			requestAnimationFrame(serveball);
 		};
 		requestAnimationFrame(serveball);
-
+		
+		socket.on('ballPosition', (data) => {
+			if (ballbodyRef.current) {
+				ballbodyRef.current.setTranslation(data, true);
+			}
+			console.log(ballbodyRef.current?.translation());
+		});
 
 		// const CountSystem = () => {
 		// 	if (ballbodyRef.current && ballRef.current) {
@@ -350,11 +381,11 @@ const Game = () => {
 				return () => {
 					window.removeEventListener('keydown', ServeDown);
 					window.removeEventListener('keyup', ServeUp);
+					socket.off('ballPosition');
 				};
 				
 				
 		}, []);
-				
 		
 		interface ScoreboardProps {
 			p1_count: number;
@@ -365,16 +396,92 @@ const Game = () => {
 	const Scoreboard = ({ p1_count, p2_count }: ScoreboardProps) => {
 		return (
 			<>
-				<Text receiveShadow color="White" anchorX="center" anchorY="middle" position={[-3.3, 0.05, -4.8]} scale={[6, 6, 6]} rotation={[Math.PI / 2, Math.PI , Math.PI]}>
-				{p1_count}
-				</Text>
-				<Text receiveShadow color="White" anchorX="center" anchorY="middle" position={[3.4, 0.05, 5.5]} scale={[6, 6, 6]} rotation={[Math.PI / 2, Math.PI , Math.PI]}>
-				{p2_count}
-				</Text>
+				<group>
+					<Text receiveShadow color="White" anchorX="center" anchorY="middle" position={[-3.3, 0.05, -4.8]} scale={[6, 6, 6]} rotation={[Math.PI / 2, Math.PI , Math.PI]}>
+					{p1_count}
+					</Text>
+					<Text receiveShadow color="White" anchorX="center" anchorY="middle" position={[3.4, 0.05, 5.5]} scale={[6, 6, 6]} rotation={[Math.PI / 2, Math.PI , Math.PI]}>
+					{p2_count}
+					</Text>
+				</group>
 			</>
 		);
 	  };
 	  
+
+	  	// SOCKET UPDATE POSITION {BALL}
+		//   const [ballPosition, setBallPosition] = useState({ x: 0, y: 0, z: 0 });
+		  
+		//   useEffect(() => {
+		// 	  socket.on("ballPosition", (position) => {
+		// 		  setBallPosition(position);
+		// 		});
+		// 	}, []);
+			
+		// 	useEffect(() => {
+		// 		const interval = setInterval(() => {
+		// 			if (ballbodyRef.current) {
+		// 				const position = ballbodyRef.current.translation();
+		// 				socket.emit("ballPosition", position);
+		// 			}
+		// 		}, 100);
+		// 		return () => clearInterval(interval);
+		// 	}, [ballbodyRef]);
+			
+		// 	useEffect(() => {
+		// 		if (ballbodyRef.current) {
+		// 			ballbodyRef.current.setTranslation(ballPosition, true);
+		// 		}
+		// 	}, [ballPosition]);
+			
+		// 	const handleCollision = (e: any) => {
+		// 		const { body } = e.target;
+		// 		if (body.el.id === "ball") {
+		// 			const impulse = e.contact.getImpactVelocityAlongNormal() * body.mass;
+		// 			if (impulse > 1) {
+		// 				const position = ballbodyRef.current?.translation();
+		// 				if (position) {
+		// 					const { x, y, z } = position;
+		// 					const newBallPosition = { x, y, z: -z };
+		// 					socket.emit("ballPosition", newBallPosition);
+		// 		  setBallPosition(newBallPosition);
+		// 		}
+		// 	}
+		// 	}
+		// };
+
+		// // SOCKET UPDATE POSITION {PADDLE}
+		// const [paddlePosition, setPaddlePosition] = useState({ x: 0, y: 0, z: 0 });
+
+		// useEffect(() => {
+		// socket.on("paddlePosition", (position) => {
+		// 	setPaddlePosition(position);
+		// });
+		// }, []);
+
+		// useEffect(() => {
+		// const interval = setInterval(() => {
+		// 	if (playerbodyRef.current) {
+		// 	const position = playerbodyRef.current.translation();
+		// 	socket.emit("paddlePosition", position);
+		// 	}
+		// }, 100);
+		// return () => clearInterval(interval);
+		// }, [playerbodyRef]);
+
+		// useEffect(() => {
+		// if (playerbodyRef.current) {
+		// 	playerbodyRef.current.setTranslation(paddlePosition, true)
+		// }
+		// }, [paddlePosition]);
+
+		// const paddle1Translation = { x: playerbodyRef.current?.translation().x };
+		// socket.emit('updatePaddle1Translation', paddle1Translation);
+
+
+
+
+
 
   return (
 	<>

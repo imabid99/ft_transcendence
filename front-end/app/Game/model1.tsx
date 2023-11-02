@@ -18,12 +18,12 @@ const Model1 = () => {
   return (
     <>
         <primitive
-        object={naturemodel.scene}
-        castShadow
-        receiveShadow
-        position={[0, 3, 0]}
-        scale={[50, 50, 50]}
-        />;
+          object={naturemodel.scene}
+          castShadow
+          receiveShadow
+          position={[0, 3, 0]}
+          scale={[50, 50, 50]}
+        />
     </>
   );
 }
