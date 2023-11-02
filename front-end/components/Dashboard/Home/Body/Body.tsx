@@ -1,6 +1,9 @@
 import RightSide from "../RightSide/RightSide"
 import Friend from "../Friend/Friend"
+import MatchHistory from "../MatchHistory/MatchHistory"
 import { type } from "os"
+import { Swiper, SwiperSlide } from 'swiper/react';
+import 'swiper/css';
 
 type Props = {
     leaderRef: any,
@@ -12,341 +15,94 @@ export default function Body({ leaderRef, handelShaw }: Props) {
         // relative         lg:max-3xl:justify-center lg:max-2xl:justify-center lg:max-xl:justify-center
         // lg:max-2xl:flex-col lg:max-2xl:gap-[50px] lg:max-2xl:items-start
         // '>
-        <div className="flex flex-col 3xl:flex-row items-center w-[100%] gap-[50px] h-screen">
-            <div className="flex items-center flex-col 3xl:flex-row gap-[40px] w-[100%] bg-black justify-around">
-                <div className="flex flex-col  sh-d bg-red-500 min-w-[371px]  w-[100%] 2xl:w-[1224px] ">
+        <div className="flex flex-col 3xl:flex-row items-center w-[100%]  h-screen">
+            <div className="flex items-center flex-col 3xl:flex-row gap-[40px] 3xl:gap-[150px] w-[100%]  justify-center">
+                <div className="flex flex-col  min-w-[371px]  w-[100%] 2xl:w-[1224px] rounded-[66px] bg-">
 
-                    <div className="heroD w-[100%] max-w-[1224px] h-[400px] rounded-[66px] flex justify-between bg-blue-800">
-                      <div className="flex flex-col xl:pl-[98px]   justify-evenly w-full items-center xl:items-start">
+                    <div className="heroD w-[100%] max-w-[1224px] h-[400px] rounded-[66px] flex justify-between ">
+                        <div className="flex flex-col xl:pl-[98px]   justify-evenly w-full items-center xl:items-start">
                         <div className="">
-                          <div className="font-[700] text-[30px] sm:text-[50px] text-white text-center xl:text-left">
+                            <div className="font-[700] text-[30px] sm:text-[50px] text-white text-center xl:text-left">
                             Ping <span className="w-28 heroT">PONG</span>
-                          </div>
-                          <div className="font-[700] text-white text-[30px] sm:text-[50px] text-center xl:text-left">
+                        </div>
+                        <div className="font-[700] text-white text-[30px] sm:text-[50px] text-center xl:text-left">
                             Let The Fun Begin.
-                          </div>
+                        </div>
                         </div>
                         <div>
-                          <button className="heroB w-[197px] h-[50px] sm:w-[203px] sm:h-[56px] rounded-[8px] text-white font-[500] text-[20px]">
+                        <button className="heroB w-[197px] h-[50px] sm:w-[203px] sm:h-[56px] rounded-[8px] text-white font-[500] text-[20px]">
                             PLAY NOW
-                          </button>
+                        </button>
                         </div>
-                      </div>
-                      <div className="pr-[98px] xl:block hidden">
+                    </div>
+                    <div className="pr-[98px] xl:block hidden">
                         <img
-                          src="Frame 127.svg"
-                          alt=""
-                          className="mt-[-123px] ml-[60px] max-w-[400px]"
+                            src="Frame 127.svg"
+                            alt=""
+                            className="mt-[-123px] ml-[60px] max-w-[400px]"
                         />
-                      </div>
+                        </div>
                     </div>
-                    <div className="friedsS w-[100%] max-w-[1224px] h-[400px] rounded-[66px]  bg-white flex flex-col mt-[40px]">
-                      <div className="flex gap-[3px] w-[100%] pl-[30px] pt-[40px]">
+                    <div className="friedsS w-[100%] max-w-[1224px] h-[400px] rounded-[66px]  bg-white flex flex-col mt-[40px] z-10">
+                        <div className="flex gap-[3px] w-[100%] pl-[30px] pt-[40px]">
                         <div>
-                          <img src="iconly-bold-game.svg" alt="" />
+                            <img src="iconly-bold-game.svg" alt="" />
                         </div>
                         <div>
-                          <p className="text-[#02539D] text-[14px] font-[700]">Friends</p>
+                            <p className="text-[#02539D] text-[14px] font-[700]">Friends</p>
                         </div>
-                      </div>
-                      <div className="pl-[30px] pt-[34px] flex  w-[100%] overflow-x-auto  h-[100%]">
-                        <div className="flex gap-[30px]">
-                          <div className="w-[242px] h-[250px] rounded-[34px] bg-white teamS overflow-hidden ">
-                            <div className="w-[242px] h-[92px]">
-                              <img
-                                src="rectangle-161.svg"
-                                alt=""
-                                className="object-cover object-top w-full h-full"
-                              />
-                            </div>
-                            <div className="relative">
-                              <div>
-                                <img
-                                  src="ellipse-180.svg"
-                                  alt=""
-                                  className="absolute -top-[38px] right-[83px]"
-                                />
-                              </div>
-                              <div>
-                                <img
-                                  src="pellipse-179.svg"
-                                  alt=""
-                                  className="absolute -top-[47px] right-[75px]"
-                                />
-                              </div>
-                            </div>
-                            <div className="pt-[55px]  text-center">
-                              <div className="text-[#033B6C] text-[12px] font-[600]">
-                                Hanane rixona
-                              </div>
-                              <div className="text-[#064A85] text-[9px] font-[600]">hrxona</div>
-                            </div>
-                            <div className="flex justify-center gap-[8px] pt-[12px]">
-                              <button className="w-[90px] h-[34px] rounded-[8px] bg-[#50A6D3] flex items-center justify-center gap-[5px] messageButt">
-                                <img src="send.svg" alt="" />
-                                <p className="text-[#fff] text-[10px] font-[400]">Message</p>
-                              </button>
-                              <button className="w-[90px] h-[34px] rounded-[8px] bg-[#62AAE7] flex items-center justify-center gap-[5px] playButt">
-                                <img src="pong-icon.svg" alt="" />
-                                <p className="text-[#fff] text-[10px] font-[400]">Play With</p>
-                              </button>
-                            </div>
-                          </div>
-                          <div className="w-[242px] h-[250px] rounded-[34px] bg-white teamS overflow-hidden ">
-                            <div className="w-[242px] h-[92px]">
-                              <img
-                                src="rectangle-161.svg"
-                                alt=""
-                                className="object-cover object-top w-full h-full"
-                              />
-                            </div>
-                            <div className="relative">
-                              <div>
-                                <img
-                                  src="ellipse-180.svg"
-                                  alt=""
-                                  className="absolute -top-[38px] right-[83px]"
-                                />
-                              </div>
-                              <div>
-                                <img
-                                  src="pellipse-179.svg"
-                                  alt=""
-                                  className="absolute -top-[47px] right-[75px]"
-                                />
-                              </div>
-                            </div>
-                            <div className="pt-[55px]  text-center">
-                              <div className="text-[#033B6C] text-[12px] font-[600]">
-                                Hanane rixona
-                              </div>
-                              <div className="text-[#064A85] text-[9px] font-[600]">hrxona</div>
-                            </div>
-                            <div className="flex justify-center gap-[8px] pt-[12px]">
-                              <button className="w-[90px] h-[34px] rounded-[8px] bg-[#50A6D3] flex items-center justify-center gap-[5px] messageButt">
-                                <img src="send.svg" alt="" />
-                                <p className="text-[#fff] text-[10px] font-[400]">Message</p>
-                              </button>
-                              <button className="w-[90px] h-[34px] rounded-[8px] bg-[#62AAE7] flex items-center justify-center gap-[5px] playButt">
-                                <img src="pong-icon.svg" alt="" />
-                                <p className="text-[#fff] text-[10px] font-[400]">Play With</p>
-                              </button>
-                            </div>
-                          </div>
-                          <div className="w-[242px] h-[250px] rounded-[34px] bg-white teamS overflow-hidden ">
-                            <div className="w-[242px] h-[92px]">
-                              <img
-                                src="rectangle-161.svg"
-                                alt=""
-                                className="object-cover object-top w-full h-full"
-                              />
-                            </div>
-                            <div className="relative ">
-                              <div>
-                                <img
-                                  src="ellipse-180.svg"
-                                  alt=""
-                                  className="absolute -top-[38px] right-[83px]"
-                                />
-                              </div>
-                              <div>
-                                <img
-                                  src="pellipse-179.svg"
-                                  alt=""
-                                  className="absolute -top-[47px] right-[75px]"
-                                />
-                              </div>
-                            </div>
-                            <div className="pt-[55px]  text-center">
-                              <div className="text-[#033B6C] text-[12px] font-[600]">
-                                Hanane rixona
-                              </div>
-                              <div className="text-[#064A85] text-[9px] font-[600]">hrxona</div>
-                            </div>
-                            <div className="flex justify-center gap-[8px] pt-[12px]">
-                              <button className="w-[90px] h-[34px] rounded-[8px] bg-[#50A6D3] flex items-center justify-center gap-[5px] messageButt">
-                                <img src="send.svg" alt="" />
-                                <p className="text-[#fff] text-[10px] font-[400]">Message</p>
-                              </button>
-                              <button className="w-[90px] h-[34px] rounded-[8px] bg-[#62AAE7] flex items-center justify-center gap-[5px] playButt">
-                                <img src="pong-icon.svg" alt="" />
-                                <p className="text-[#fff] text-[10px] font-[400]">Play With</p>
-                              </button>
-                            </div>
-                          </div>
-                          <div className="w-[242px] h-[250px] rounded-[34px] bg-white teamS overflow-hidden ">
-                            <div className="w-[242px] h-[92px]">
-                              <img
-                                src="rectangle-161.svg"
-                                alt=""
-                                className="object-cover object-top w-full h-full"
-                              />
-                            </div>
-                            <div className="relative bg-red-700">
-                              <div>
-                                <img
-                                  src="ellipse-180.svg"
-                                  alt=""
-                                  className="absolute -top-[38px] right-[83px]"
-                                />
-                              </div>
-                              <div>
-                                <img
-                                  src="pellipse-179.svg"
-                                  alt=""
-                                  className="absolute -top-[47px] right-[75px]"
-                                />
-                              </div>
-                            </div>
-                            <div className="pt-[55px]  text-center">
-                              <div className="text-[#033B6C] text-[12px] font-[600]">
-                                Hanane rixona
-                              </div>
-                              <div className="text-[#064A85] text-[9px] font-[600]">hrxona</div>
-                            </div>
-                            <div className="flex justify-center gap-[8px] pt-[12px]">
-                              <button className="w-[90px] h-[34px] rounded-[8px] bg-[#50A6D3] flex items-center justify-center gap-[5px] messageButt">
-                                <img src="send.svg" alt="" />
-                                <p className="text-[#fff] text-[10px] font-[400]">Message</p>
-                              </button>
-                              <button className="w-[90px] h-[34px] rounded-[8px] bg-[#62AAE7] flex items-center justify-center gap-[5px] playButt">
-                                <img src="pong-icon.svg" alt="" />
-                                <p className="text-[#fff] text-[10px] font-[400]">Play With</p>
-                              </button>
-                            </div>
-                          </div>
-                          <div className="w-[242px] h-[250px] rounded-[34px] bg-white teamS overflow-hidden ">
-                            <div className="w-[242px] h-[92px]">
-                              <img
-                                src="rectangle-161.svg"
-                                alt=""
-                                className="object-cover object-top w-full h-full"
-                              />
-                            </div>
-                            <div className="relative bg-red-700">
-                              <div>
-                                <img
-                                  src="ellipse-180.svg"
-                                  alt=""
-                                  className="absolute -top-[38px] right-[83px]"
-                                />
-                              </div>
-                              <div>
-                                <img
-                                  src="pellipse-179.svg"
-                                  alt=""
-                                  className="absolute -top-[47px] right-[75px]"
-                                />
-                              </div>
-                            </div>
-                            <div className="pt-[55px]  text-center">
-                              <div className="text-[#033B6C] text-[12px] font-[600]">
-                                Hanane rixona
-                              </div>
-                              <div className="text-[#064A85] text-[9px] font-[600]">hrxona</div>
-                            </div>
-                            <div className="flex justify-center gap-[8px] pt-[12px]">
-                              <button className="w-[90px] h-[34px] rounded-[8px] bg-[#50A6D3] flex items-center justify-center gap-[5px] messageButt">
-                                <img src="send.svg" alt="" />
-                                <p className="text-[#fff] text-[10px] font-[400]">Message</p>
-                              </button>
-                              <button className="w-[90px] h-[34px] rounded-[8px] bg-[#62AAE7] flex items-center justify-center gap-[5px] playButt">
-                                <img src="pong-icon.svg" alt="" />
-                                <p className="text-[#fff] text-[10px] font-[400]">Play With</p>
-                              </button>
-                            </div>
-                          </div>
-                          <div className="w-[242px] h-[250px] rounded-[34px] bg-white teamS overflow-hidden ">
-                            <div className="w-[242px] h-[92px]">
-                              <img
-                                src="rectangle-161.svg"
-                                alt=""
-                                className="object-cover object-top w-full h-full"
-                              />
-                            </div>
-                            <div className="relative bg-red-700">
-                              <div>
-                                <img
-                                  src="ellipse-180.svg"
-                                  alt=""
-                                  className="absolute -top-[38px] right-[83px]"
-                                />
-                              </div>
-                              <div>
-                                <img
-                                  src="pellipse-179.svg"
-                                  alt=""
-                                  className="absolute -top-[47px] right-[75px]"
-                                />
-                              </div>
-                            </div>
-                            <div className="pt-[55px]  text-center">
-                              <div className="text-[#033B6C] text-[12px] font-[600]">
-                                Hanane rixona
-                              </div>
-                              <div className="text-[#064A85] text-[9px] font-[600]">hrxona</div>
-                            </div>
-                            <div className="flex justify-center gap-[8px] pt-[12px]">
-                              <button className="w-[90px] h-[34px] rounded-[8px] bg-[#50A6D3] flex items-center justify-center gap-[5px] messageButt">
-                                <img src="send.svg" alt="" />
-                                <p className="text-[#fff] text-[10px] font-[400]">Message</p>
-                              </button>
-                              <button className="w-[90px] h-[34px] rounded-[8px] bg-[#62AAE7] flex items-center justify-center gap-[5px] playButt">
-                                <img src="pong-icon.svg" alt="" />
-                                <p className="text-[#fff] text-[10px] font-[400]">Play With</p>
-                              </button>
-                            </div>
-                          </div>
-                          <div className="w-[242px] h-[250px] rounded-[34px] bg-white teamS overflow-hidden ">
-                            <div className="w-[242px] h-[92px]">
-                              <img
-                                src="rectangle-161.svg"
-                                alt=""
-                                className="object-cover object-top w-full h-full"
-                              />
-                            </div>
-                            <div className="relative bg-red-700">
-                              <div>
-                                <img
-                                  src="ellipse-180.svg"
-                                  alt=""
-                                  className="absolute -top-[38px] right-[83px]"
-                                />
-                              </div>
-                              <div>
-                                <img
-                                  src="pellipse-179.svg"
-                                  alt=""
-                                  className="absolute -top-[47px] right-[75px]"
-                                />
-                              </div>
-                            </div>
-                            <div className="pt-[55px]  text-center">
-                              <div className="text-[#033B6C] text-[12px] font-[600]">
-                                Hanane rixona
-                              </div>
-                              <div className="text-[#064A85] text-[9px] font-[600]">hrxona</div>
-                            </div>
-                            <div className="flex justify-center gap-[8px] pt-[12px]">
-                              <button className="w-[90px] h-[34px] rounded-[8px] bg-[#50A6D3] flex items-center justify-center gap-[5px] messageButt">
-                                <img src="send.svg" alt="" />
-                                <p className="text-[#fff] text-[10px] font-[400]">Message</p>
-                              </button>
-                              <button className="w-[90px] h-[34px] rounded-[8px] bg-[#62AAE7] flex items-center justify-center gap-[5px] playButt">
-                                <img src="pong-icon.svg" alt="" />
-                                <p className="text-[#fff] text-[10px] font-[400]">Play With</p>
-                              </button>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                    {/*<div class="w-[100%] h-[100px] bg-black"></div> */}
                     </div>
-
-                    
+                    {/* <div className="pl-[30px] pt-[34px] flex  w-[100%]  h-[100%] rounded-[66px] "> */}
+                        {/* <div className="flex gap-[30px] "> */}
+                        <Swiper
+                            spaceBetween={90}
+                            slidesPerView={4}
+                            className="w-full h-full cursor-grab pl-[30px]"
+                            >
+                                <SwiperSlide>
+                                    <Friend cover="rectangle-161.svg" avatar="46e4e1beddaa3825f3d815f7f7ef8134.jpeg" name="Achraf sabbar" username="asabbar"    />
+                                </SwiperSlide>
+                                <SwiperSlide>
+                                    <Friend cover="rectangle-161.svg" avatar="46e4e1beddaa3825f3d815f7f7ef8134.jpeg" name="Achraf sabbar" username="asabbar"    />
+                                </SwiperSlide>
+                                <SwiperSlide>
+                                    <Friend cover="rectangle-161.svg" avatar="46e4e1beddaa3825f3d815f7f7ef8134.jpeg" name="Achraf sabbar" username="asabbar"    />
+                                </SwiperSlide>
+                                <SwiperSlide>
+                                    <Friend cover="rectangle-161.svg" avatar="46e4e1beddaa3825f3d815f7f7ef8134.jpeg" name="Achraf sabbar" username="asabbar"    />
+                                </SwiperSlide>
+                                <SwiperSlide>
+                                    <Friend cover="rectangle-161.svg" avatar="46e4e1beddaa3825f3d815f7f7ef8134.jpeg" name="Achraf sabbar" username="asabbar"    />
+                                </SwiperSlide>
+                                <SwiperSlide>
+                                    <Friend cover="rectangle-161.svg" avatar="46e4e1beddaa3825f3d815f7f7ef8134.jpeg" name="Achraf sabbar" username="asabbar"    />
+                                </SwiperSlide>
+                                <SwiperSlide>
+                                    <Friend cover="rectangle-161.svg" avatar="46e4e1beddaa3825f3d815f7f7ef8134.jpeg" name="Achraf sabbar" username="asabbar"    />
+                                </SwiperSlide>
+                                <SwiperSlide>
+                                    <Friend cover="rectangle-161.svg" avatar="46e4e1beddaa3825f3d815f7f7ef8134.jpeg" name="Achraf sabbar" username="asabbar"    />
+                                </SwiperSlide>
+                                <SwiperSlide>
+                                    <Friend cover="rectangle-161.svg" avatar="46e4e1beddaa3825f3d815f7f7ef8134.jpeg" name="Achraf sabbar" username="asabbar"    />
+                                </SwiperSlide>
+                            {/* <Friend cover="rectangle-161.svg" avatar="ellipse-180.svg" name="Achraf sabbar" username="asabbar"  />
+                            <Friend cover="46e4e1beddaa3825f3d815f7f7ef8134.jpeg" avatar="ellipse-180.svg" name="Achraf sabbar" username="asabbar"  />
+                            <Friend cover="rectangle-161.svg" avatar="ellipse-180.svg" name="Achraf sabbar" username="asabbar"  />
+                            <Friend cover="rectangle-161.svg" avatar="ellipse-180.svg" name="Achraf sabbar" username="asabbar"  />
+                            <Friend cover="rectangle-161.svg" avatar="ellipse-180.svg" name="Achraf sabbar" username="asabbar"  />
+                            <Friend cover="rectangle-161.svg" avatar="ellipse-180.svg" name="Achraf sabbar" username="asabbar"  />
+                            <Friend cover="rectangle-161.svg" avatar="ellipse-180.svg" name="Achraf sabbar" username="asabbar"  />
+                            <Friend cover="rectangle-161.svg" avatar="ellipse-180.svg" name="Achraf sabbar" username="asabbar"  />
+                            <Friend cover="rectangle-161.svg" avatar="ellipse-180.svg" name="Achraf sabbar" username="asabbar"  />
+                            <Friend cover="rectangle-161.svg" avatar="ellipse-180.svg" name="Achraf sabbar" username="asabbar"  /> */}
+                        </Swiper>
+                        {/* </div>
+                    </div> */}
+                    </div>  
                 </div>
                 <div className='header__left flex flex-col gap-[52px]
-             lg:max-2xl:gap-[50px] lg:max-2xl:justify-start lg:max-2xl:items-start bg-red-500 min-w-[371px] w-full 3xl:w-fit max-w-[1224px]
+            lg:max-2xl:gap-[50px] lg:max-2xl:justify-start lg:max-2xl:items-start  min-w-[371px] w-full 3xl:w-fit max-w-[1224px]
             '>
                 <RightSide>
                     <div className=" flex  items-center justify-between pt-[35px] px-[30px]">
@@ -405,39 +161,38 @@ export default function Body({ leaderRef, handelShaw }: Props) {
                         </div>
                     </div>
                 </RightSide>
-                <RightSide>
-                    <div className=" flex  items-center justify-between pt-[35px] px-[30px]">
-                        <span className="flex items-center gap-[10px] pb-[10px] w-full">
-                            <svg width="19" height="14" viewBox="0 0 19 14" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                <path d="M9.08272 9.22217C11.929 9.22217 14.3594 9.69814 14.3594 11.6028C14.3594 13.5067 11.9446 14 9.08272 14C6.23639 14 3.80603 13.524 3.80603 11.6201C3.80603 9.71548 6.2208 9.22217 9.08272 9.22217ZM13.6336 8.07527C14.7218 8.05399 15.8917 8.2116 16.324 8.3235C17.2398 8.51341 17.8422 8.90112 18.0918 9.46457C18.3027 9.92714 18.3027 10.4638 18.0918 10.9256C17.71 11.7995 16.4792 12.08 16.0009 12.1525C15.9021 12.1683 15.8226 12.0777 15.833 11.9729C16.0774 9.55125 14.1335 8.40309 13.6307 8.1391C13.6091 8.12728 13.6047 8.10915 13.6069 8.09812C13.6084 8.09024 13.6173 8.07763 13.6336 8.07527ZM4.61692 8.07558C4.63326 8.07795 4.64143 8.09056 4.64291 8.09765C4.64514 8.10947 4.64069 8.12681 4.61989 8.13941C4.11629 8.4034 2.17244 9.55156 2.41681 11.9724C2.42721 12.078 2.34848 12.1678 2.24969 12.1529C1.77134 12.0804 0.540556 11.7998 0.158769 10.9259C-0.0529229 10.4633 -0.0529229 9.92746 0.158769 9.46488C0.408342 8.90144 1.00999 8.51373 1.92584 8.32303C2.35887 8.21191 3.52801 8.05431 4.61692 8.07558ZM9.08272 0C11.0206 0 12.5745 1.64698 12.5745 3.70375C12.5745 5.75972 11.0206 7.40828 9.08272 7.40828C7.14481 7.40828 5.59092 5.75972 5.59092 3.70375C5.59092 1.64698 7.14481 0 9.08272 0ZM13.823 0.617659C15.6948 0.617659 17.1648 2.48608 16.6642 4.56727C16.3262 5.96839 15.1029 6.89905 13.7399 6.86123C13.6032 6.85729 13.4687 6.84389 13.3388 6.82025C13.2444 6.80291 13.1969 6.69022 13.2504 6.60669C13.7703 5.79502 14.0667 4.81865 14.0667 3.77057C14.0667 2.67678 13.7428 1.65707 13.1805 0.820971C13.1627 0.794966 13.1493 0.754776 13.1672 0.724831C13.182 0.700402 13.2095 0.687793 13.2355 0.681489C13.4249 0.640512 13.6195 0.617659 13.823 0.617659ZM4.4264 0.61758C4.62992 0.61758 4.82452 0.640433 5.01468 0.68141C5.03993 0.687715 5.06815 0.701111 5.08301 0.724752C5.10009 0.754697 5.08747 0.794887 5.06964 0.820892C4.50736 1.65699 4.18351 2.6767 4.18351 3.77049C4.18351 4.81857 4.47988 5.79494 4.99982 6.60661C5.0533 6.69015 5.00576 6.80283 4.91143 6.82017C4.7807 6.8446 4.647 6.85721 4.51033 6.86115C3.14733 6.89897 1.92398 5.96831 1.58602 4.56719C1.08464 2.486 2.5546 0.61758 4.4264 0.61758Z" fill="#04549D"/>
-                            </svg> 
-                            <p className="text-[14px] font-[700] text-[#02539D]">Friends</p>
-                        </span>
+                {/* <RightSide> */}
+                <div className=" min-w-[371px] h-[390px] bg-white rounded-[42px] overflow-hidden">
+                        <div className="flex gap-[5px] w-[100%] pl-[30px] pt-[40px]">
+                        <div>
+                            <img src="iconly-bold-game.svg" alt="" />
+                        </div>
+                        <div>
+                            <p className="text-[#02539D] text-[14px] font-[700]">MATCH HISTORY</p>
+                        </div>
+                        </div>
+                        <div className="flex items-center justify-center pt-[16px] flex-col gap-[16px] bg-black">
+                                <MatchHistory
+                                    winnerAvatar="46e4e1beddaa3825f3d815f7f7ef8134.jpeg" winnerName="Ahmed Kamal" winnerScore="20" loserAvatar="jlemdrayaf.png" loserName="Mustapha jlem" loserScore="20"
+                                />
+                                <MatchHistory
+                                    winnerAvatar="46e4e1beddaa3825f3d815f7f7ef8134.jpeg" winnerName="Ahmed Kamal" winnerScore="20" loserAvatar="jlemdrayaf.png" loserName="Mustapha jlem" loserScore="20"
+                                />
+                                <MatchHistory
+                                    winnerAvatar="46e4e1beddaa3825f3d815f7f7ef8134.jpeg" winnerName="Ahmed Kamal" winnerScore="20" loserAvatar="jlemdrayaf.png" loserName="Mustapha jlem" loserScore="20"
+                                />
+                                <MatchHistory
+                                    winnerAvatar="46e4e1beddaa3825f3d815f7f7ef8134.jpeg" winnerName="Ahmed Kamal" winnerScore="20" loserAvatar="jlemdrayaf.png" loserName="Mustapha jlem" loserScore="20"
+                                />
+                                <MatchHistory
+                                    winnerAvatar="46e4e1beddaa3825f3d815f7f7ef8134.jpeg" winnerName="Ahmed Kamal" winnerScore="20" loserAvatar="jlemdrayaf.png" loserName="Mustapha jlem" loserScore="20"
+                                />
+                                <MatchHistory
+                                    winnerAvatar="46e4e1beddaa3825f3d815f7f7ef8134.jpeg" winnerName="Ahmed Kamal" winnerScore="20" loserAvatar="jlemdrayaf.png" loserName="Mustapha jlem" loserScore="20"
+                                />
+                        </div>
                     </div>
-                    <div className="flex flex-col  gap-[10px]   overflow-y-scroll max-h-[calc(100%-67px)] items-center py-[5px] no-scrollbar overflow-hidden">
-                        <Friend  name="Achraf sabbar" username="asabbar" avatar="/userProfile.jpg" />
-                        <Friend  name="Achraf sabbar" username="asabbar" avatar="/userProfile.jpg" />
-                        <Friend  name="Achraf sabbar" username="asabbar" avatar="/userProfile.jpg" />
-                        <Friend  name="Achraf sabbar" username="asabbar" avatar="/userProfile.jpg" />
-                        <Friend  name="Achraf sabbar" username="asabbar" avatar="/userProfile.jpg" />
-                        <Friend  name="Achraf sabbar" username="asabbar" avatar="/userProfile.jpg" />
-                        <Friend  name="Achraf sabbar" username="asabbar" avatar="/userProfile.jpg" />
-                        <Friend  name="Achraf sabbar" username="asabbar" avatar="/userProfile.jpg" />
-                        <Friend  name="Achraf sabbar" username="asabbar" avatar="/userProfile.jpg" />
-                        <Friend  name="Achraf sabbar" username="asabbar" avatar="/userProfile.jpg" />
-                        <Friend  name="Achraf sabbar" username="asabbar" avatar="/userProfile.jpg" />
-                        <Friend  name="Achraf sabbar" username="asabbar" avatar="/userProfile.jpg" />
-                        <Friend  name="Achraf sabbar" username="asabbar" avatar="/userProfile.jpg" />
-                        <Friend  name="Achraf sabbar" username="asabbar" avatar="/userProfile.jpg" />
-                        <Friend  name="Achraf sabbar" username="asabbar" avatar="/userProfile.jpg" />
-                        <Friend  name="Achraf sabbar" username="asabbar" avatar="/userProfile.jpg" />
-                        <Friend  name="Achraf sabbar" username="asabbar" avatar="/userProfile.jpg" />
-                        <Friend  name="Achraf sabbar" username="asabbar" avatar="/userProfile.jpg" />
-                        <Friend  name="Achraf sabbar" username="asabbar" avatar="/userProfile.jpg" />
-                        <Friend  name="Achraf sabbar" username="asabbar" avatar="/userProfile.jpg" />
-                        <Friend  name="Achraf sabbar" username="asabbar" avatar="/userProfile.jpg" />
-                    </div>
-                </RightSide>
+                {/* </RightSide> */}
             </div>
         </div>
 

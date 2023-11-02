@@ -407,7 +407,6 @@ input {
 
 .heroD {
   background: linear-gradient(90deg, #00539D 0%, #46AEF7 99.98%, #30C7EC 99.99%);
-  box-shadow: 0px 0px 0px 0px rgba(35, 83, 152, 0.07), 0px 33px 72px 0px rgba(35, 83, 152, 0.07), 0px 130px 130px 0px rgba(35, 83, 152, 0.06), 0px 294px 176px 0px rgba(35, 83, 152, 0.03), 0px 522px 209px 0px rgba(35, 83, 152, 0.01), 0px 815px 228px 0px rgba(35, 83, 152, 0.00);
 }
 
 .heroB {
@@ -445,4 +444,9 @@ input {
 
 .helloH itemmm {
   scroll-snap-align: start;
+}
+
+.MatchH
+{
+  box-shadow: 0px 9px 19px 0px rgba(0, 0, 0, 0.01), 0px 34px 34px 0px rgba(0, 0, 0, 0.01), 0px 77px 46px 0px rgba(0, 0, 0, 0.01), 0px 137px 55px 0px rgba(0, 0, 0, 0.00), 0px 214px 60px 0px rgba(0, 0, 0, 0.00);
 }
