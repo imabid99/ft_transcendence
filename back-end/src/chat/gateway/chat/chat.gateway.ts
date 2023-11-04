@@ -11,6 +11,9 @@ import * as jwt from "jsonwebtoken";
 import jwt_decode from "jwt-decode";
 import { PrismaService } from "../../../prisma/prisma.service";
 import { UserService } from "../../../user/user.service";
+import { customStorage } from 'src/upload/multer-config';
+import { UseInterceptors } from '@nestjs/common';
+import { FileInterceptor } from '@nestjs/platform-express';
 
 
 @WebSocketGateway({
@@ -34,11 +37,13 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
       const decoded: any = jwt_decode(token);
       try
       {
-        await this.prisma.profile.findUnique({
+        const profile = await this.prisma.profile.findUnique({
           where: {
             userId: decoded.userId,
           },
         });
+        if(!profile)
+          return;
         client.join(decoded.username);
         const myChannels = await this.prisma.channels.findMany({
           where: {
@@ -102,7 +107,7 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
   }
 
   @SubscribeMessage("privet-message")
-  async handlePrivetMessage(_client: any, payload: any): Promise<void> {
+  async handlePrivetMessage(_client: Socket, payload: any): Promise<void> {
     const receiver = await this.prisma.user.findUnique({
       where: {
         username: payload.room,
@@ -143,7 +148,7 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
   }
   
   @SubscribeMessage("block-user")
-  async handleBlockUser(client: any, payload: any): Promise<void> {
+  async handleBlockUser(client: Socket, payload: any): Promise<void> {
     const token = client.handshake.headers.authorization?.split(" ")[1];
 
     try {
@@ -162,7 +167,7 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
     }
   }
   @SubscribeMessage("unblock-user")
-  async handleUnblockUser(client: any, payload: any): Promise<void> {
+  async handleUnblockUser(client: Socket, payload: any): Promise<void> {
     const token = client.handshake.headers.authorization?.split(" ")[1];
     try {
       jwt.verify(token, process.env.JWT_SECRET);
@@ -190,7 +195,12 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
   }
 
   @SubscribeMessage("create-group")
-  async handleCreateGroup(client: any, payload: any): Promise<void> {
+  async handleCreateGroup(client: Socket, payload: any): Promise<void> {
+    console.log("file : ", payload.file);
+    // customStorage._handleFile(payload.file, null, (err, file) => {
+    //   console.log("err : ", err);
+    //   console.log("file : ", file);
+    // });
     const token = client.handshake.headers.authorization?.split(" ")[1];
     try {
       jwt.verify(token, process.env.JWT_SECRET);
@@ -214,7 +224,6 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
         this.server.to(user.username).emit("errorNotif", {message: `you already have a group with this name`, type: false});
         return;
       }
-
       payload.groupUsers.push(user.id);
       await this.prisma.channels.create({
         data: {
@@ -251,6 +260,8 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
         
       }
       );
+
+
       this.server.emit("refresh");
       this.server.to(user.username).emit("errorNotif", {message: `group created`, type: true});
     }
@@ -259,10 +270,10 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
   
   
   @SubscribeMessage("refresh-event")
-  async handleRefresh(client: any, payload: any): Promise<void> {
+  async handleRefresh(client: Socket, payload: any): Promise<void> {
   }
   @SubscribeMessage("message-to-group")
-  async handleMessageToGroup(client: any, payload: any): Promise<void>
+  async handleMessageToGroup(client: Socket, payload: any): Promise<void>
   {
     const token = client.handshake.headers.authorization?.split(" ")[1];
     if (token) {
@@ -347,7 +358,7 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
   }
 
   @SubscribeMessage("leaveGroup")
-  async handleExitGroup(client: any, payload: any): Promise<void> {
+  async handleExitGroup(client: Socket, payload: any): Promise<void> {
   const jwt = client.handshake.headers.authorization?.split(" ")[1];
   if(jwt)
   {
@@ -530,7 +541,7 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
   }
 
   @SubscribeMessage("joinGroup")
-  async handleJoinGroup(client: any, payload: any): Promise<void> {
+  async handleJoinGroup(client: Socket, payload: any): Promise<void> {
     const jwt = client.handshake.headers.authorization?.split(" ")[1];
     if(jwt)
     {
@@ -597,7 +608,7 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
   }
 
   @SubscribeMessage("joinProtectedGroup")
-  async handleJoinProtectedGroup(client: any, payload: any): Promise<void> {
+  async handleJoinProtectedGroup(client: Socket, payload: any): Promise<void> {
     const jwt = client.handshake.headers.authorization?.split(" ")[1];
     if(jwt)
     {
@@ -669,7 +680,7 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
   }
 
   @SubscribeMessage("KickUser")
-  async handleKickUser(client: any, payload: any): Promise<void> {
+  async handleKickUser(client: Socket, payload: any): Promise<void> {
     const token = client.handshake.headers.authorization?.split(" ")[1];
     if(token)
     {
@@ -795,7 +806,7 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
   }
 
   @SubscribeMessage("SetAdmin")
-  async handleSetAdmin(client: any, payload: any): Promise<void> {
+  async handleSetAdmin(client: Socket, payload: any): Promise<void> {
     const token = client.handshake.headers.authorization?.split(" ")[1];
     if(token)
     {
@@ -848,7 +859,7 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
   }
 
   @SubscribeMessage("BanUser")
-  async handleBanUser(client: any, payload: any): Promise<void> {
+  async handleBanUser(client: Socket, payload: any): Promise<void> {
     const token = client.handshake.headers.authorization?.split(" ")[1];
     if(token)
     {
@@ -969,7 +980,7 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
   }
 
   @SubscribeMessage("UnBanUser")
-  async handleUnBanUser(client: any, payload: any): Promise<void> {
+  async handleUnBanUser(client: Socket, payload: any): Promise<void> {
     const token = client.handshake.headers.authorization?.split(" ")[1];
     if(token)
     {
@@ -1025,7 +1036,7 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
   }
 
   @SubscribeMessage("MuteUser")
-  async handleMuteUser(client: any, payload: any): Promise<void> {
+  async handleMuteUser(client: Socket, payload: any): Promise<void> {
     const token = client.handshake.headers.authorization?.split(" ")[1];
     if(token)
     {
@@ -1098,7 +1109,7 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
   }
 
   @SubscribeMessage("UnMuteUser")
-  async handleUnMuteUser(client: any, payload: any): Promise<void> {
+  async handleUnMuteUser(client: Socket, payload: any): Promise<void> {
     const token = client.handshake.headers.authorization?.split(" ")[1];
     if(token)
     {
@@ -1170,7 +1181,7 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
   }
 
   @SubscribeMessage("removeGroupPass")
-  async handleRemoveGroupPass(client: any, payload: any): Promise<void> {
+  async handleRemoveGroupPass(client: Socket, payload: any): Promise<void> {
     const token = client.handshake.headers.authorization?.split(" ")[1];
     if(token)
     {
@@ -1216,7 +1227,7 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
   }
 
   @SubscribeMessage("setGroupPass")
-  async handleSetGroupPass(client: any, payload: any): Promise<void> {
+  async handleSetGroupPass(client: Socket, payload: any): Promise<void> {
     const token = client.handshake.headers.authorization?.split(" ")[1];
     if(token)
     {
