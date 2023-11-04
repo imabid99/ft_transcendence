@@ -16,13 +16,10 @@ export default function SelectUsers({user,setGroupUsers,groupUsers}: SelectUsers
 
     const handleClick = (e:any) =>
     {
-
-        setTimeout(() => {
-            if(e.target.checked)
-                setGroupUsers([...groupUsers,user.userId])
-            else
-                setGroupUsers(groupUsers.filter((id:string) => id !== user.userId))
-        }, 100);
+        if(e.target.checked)
+            setGroupUsers([...groupUsers,user.userId])
+        else
+            setGroupUsers(groupUsers.filter((id:string) => id !== user.userId))
     }
     return (
         <>

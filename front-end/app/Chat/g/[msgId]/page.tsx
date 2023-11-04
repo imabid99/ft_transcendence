@@ -64,7 +64,7 @@ export default function Page() {
         try {
           const res = await axiosInstance.get(`http://${process.env.NEXT_PUBLIC_APP_URL}:3000/api/chat/channel/${msgId}`);
           setGroup(res.data);
-          setMessages(res.data.Messages);
+          setMessages(res.data.channel.Messages);
           setMember(true);
         } catch (err) {
           setMember(false);
@@ -82,7 +82,7 @@ export default function Page() {
 
   const handleSubmit = (e: { preventDefault: () => void; }) => {
 		e.preventDefault();
-		if (!inputRef.current?.value || !group.name) return;
+		if (!inputRef.current?.value || !group.channel.name) return;
     const content = inputRef.current?.value.trim();
     if(content === '') return;
 		const payload = {
@@ -94,6 +94,7 @@ export default function Page() {
         groupId: msgId,
 			},
 		}
+    console.log("message-to-group : ", payload);
 		socket.emit("message-to-group", payload);
 		inputRef.current.value = '';
 	}
@@ -130,7 +131,6 @@ export default function Page() {
   messages?.sort((a, b) => {
     return new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime()
   })
-  
   return (
       <div className='message w-[calc(100%-450px)] min-h-full flex flex-col min-w-[490px] lg:max-xl:w-[calc(100%-350px)] lsm:max-lg:min-w-full '>
         {show && <div className='message__header__bg w-full h-full absolute top-0 left-0 z-[1]' onClick={() => setShow(false)}></div>}
@@ -142,21 +142,21 @@ export default function Page() {
               </svg>
             </Link>
             <div className='message__header__left flex items-center cursor-pointer pr-[30px] z-[1]' onClick={()=>handleshowInfo()}>
-              <Avatar url="/userProfile.jpg" status={false} />
+              <Avatar url={`http://${process.env.NEXT_PUBLIC_APP_URL}:3000/${group?.channel.avatar}`} status={false} />
               <div className='message__header__left__info ml-2'>
-                <div className='message__header__left__info__name text-[#034B8A] font-[600] font-[Poppins] text-[25px] truncate max-w-[250px] lsm:max-lg:max-w-[150px]'>{`${group?.name}`}</div>
-                <div className='message__header__left__info__status text-[#C0C1C5] text-[16px] font-[Poppins]'>{group?.Members.length} members</div>
+                <div className='message__header__left__info__name text-[#034B8A] font-[600] font-[Poppins] text-[25px] truncate max-w-[250px] lsm:max-lg:max-w-[150px]'>{`${group?.channel.name}`}</div>
+                <div className='message__header__left__info__status text-[#C0C1C5] text-[16px] font-[Poppins]'>{group?.channel.Members.length} members</div>
               </div>
             </div>
           </div>
         </div>
         <div className='message__body flex-1 flex flex-col max-h-[calc(100%-200px)] overflow-y-scroll no-scrollbar'>
           <div className='chat__start w-full flex flex-col items-center justify-start mt-[32px] gap-[16px] self-start'>
-              <img src="/userProfile.jpg" alt=""  className='w-[150px] h-[150px] rounded-full outline outline-[6px] outline-[#FFF]
+              <img src={`http://${process.env.NEXT_PUBLIC_APP_URL}:3000/${group?.channel.avatar}`} alt=""  className='w-[150px] h-[150px] rounded-full outline outline-[6px] outline-[#FFF]
               message-avatar-shadow object-cover
               '/>
               <span className='text-center max-w-[80%]'>
-                <p className='max-w-[300px] truncate text-[30px] text-[#4278A7] font-[600] font-[Poppins]'>{`${group?.name}`}</p>
+                <p className='max-w-[300px] truncate text-[30px] text-[#4278A7] font-[600] font-[Poppins]'>{`${group?.channel.name}`}</p>
               </span>
           </div>
           <div className='flex flex-col px-[45px] gap-[16px] self-start w-full py-[5px]'>

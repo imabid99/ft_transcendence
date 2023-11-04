@@ -86,7 +86,7 @@ model channels {
   Admins          User[]    @relation("Admins")
   Muts            User[]    @relation("MutedUsers")
   Band            User[]    @relation("BannedUsers")
-  avatar          String?
+  avatar          String    @default("uploads/groupAvatar.jpg")
   accessIsActived Boolean   @default(false)
   Messages        Message[]
 }

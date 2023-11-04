@@ -8,14 +8,16 @@ type selectUsersProps = {
     setGroupUsers: any,
     groupUsers: any,
 }
+
 export default function SelectUsersBody({setShowBody,setGroupUsers,groupUsers}:selectUsersProps)
 {
     const {
         profiles,
         user,
     } :any = useContext(contextdata);
+    console.log("SelectUsersBody", profiles);
     return (
-        <div>
+        <div className="h-[calc(100%-100px)]">
             <div className=" flex gap-2 items-center  py-[27px] px-[25px]">
                 <span onClick={() => {setShowBody(null);setGroupUsers([])}} className="cursor-pointer">
                     <svg width="30" height="30" viewBox="0 0 30 30" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -29,11 +31,11 @@ export default function SelectUsersBody({setShowBody,setGroupUsers,groupUsers}:s
             <div className='w-full px-[31px]'>
                 <input type="text"  className="w-full h-[50px]  border-b-[1px] border-[#E5E5E5] border-opacity-50 px-[20px] text-[15px] font-[300] font-[Poppins] text-[#BDBFC3] outline-none" placeholder="Search for friends..." />
             </div>
-            <form className="max-h-[calc(100%-270px)] min-h-[calc(100%-270px)] overflow-y-scroll no-scrollbar px-[25px] py-[25px]">
+            <form className="h-[calc(100%-137px)] overflow-y-scroll no-scrollbar px-[25px] py-[25px]">
                 {
                     user && profiles?.map((profile: any) => (
                         profile.userId !== user.id &&
-                        <SelectUsers key={user.id} groupUsers={groupUsers} setGroupUsers={setGroupUsers} user={{name: `${profile.firstName} ${profile.lastName}`, username: `${profile.username}`, url: `http://${process.env.NEXT_PUBLIC_APP_URL}:3000/${profile.avatar}`, userId : profile.userId}} />
+                        <SelectUsers key={profiles.id} groupUsers={groupUsers} setGroupUsers={setGroupUsers} user={{name: `${profile.firstName} ${profile.lastName}`, username: `${profile.username}`, url: `http://${process.env.NEXT_PUBLIC_APP_URL}:3000/${profile.avatar}`, userId : profile.userId}} />
                     ))
                 }
             </form>

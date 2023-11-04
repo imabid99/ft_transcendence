@@ -91,8 +91,8 @@ export default function Home() {
   return (
     <>
     {/* /*style={{ backgroundImage: 'url("first4.png")' }}    style={styling}*/}
-  <div className=" h-[100vh] w-[100%] flex justify-around items-center bgImg bg-no-repeat bg-cover bg-center" style={{ backgroundImage: 'url("backfilter.svg")' }}> 
-    <div className=" w-[100vw] h-full  bg-blue-200 bg-opacity-0 backdrop-blur-lg flex flex-row items-center justify-center md:w-11/12 md:h-[735px] md:rounded-[61px] xl:max-w-[1404px] xl:mx-auto">
+  <div className="min-h-[100vh] w-[100%] flex justify-around items-center bgImg bg-no-repeat bg-cover bg-center" style={{backgroundImage: 'url("backfilter.svg")'}}> 
+    <div className=" w-[100vw]   bg-blue-200 bg-opacity-0 backdrop-blur-lg flex flex-row items-center justify-center md:w-11/12 md:h-[735px] md:rounded-[61px] xl:max-w-[1404px] xl:mx-auto">
       <div className="w-[100%] flex flex-col items-center justify-center xl:w-[35%]">
         <div className="font-[600] text-[40px] text-white sm:text-[66px]">
           Welcome !
@@ -104,7 +104,7 @@ export default function Home() {
           <button className="flex justify-evenly items-center w-[170px] h-[52px] border-[0.1px] rounded-[11px] border-white cursor-pointer">
             <img src="goog.svg" alt="" className="w-[20.153px] h-[20.56px]" />
             <p className="text-white text-[10px] font-[400] cursor-pointer">
-              Log in with google
+              Log in with google 
             </p>
           </button>
           <button className="flex justify-evenly items-center w-[170px] h-[52px] border-[0.1px] rounded-[11px] border-white cursor-pointer">

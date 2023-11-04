@@ -10,6 +10,7 @@ import { JwtModule } from "@nestjs/jwt";
 import { JwtStrategy } from "./jwt-auth/jwt.strategy";
 import { FortyTwoStrategy } from "./42auth/intra.strategy";
 import { ChatModule } from "./chat/chat.module";
+import { GameModule } from "./Game/game.module";
 import { authController } from "./auth/auth.controller";
 import { GoogleStrategy } from "./google/google.starategy";
 import { MulterModule } from "@nestjs/platform-express";
@@ -27,6 +28,7 @@ import { FriendshipService } from "./friendship/friendship.service";
       signOptions: { expiresIn: "1d" },
     }),
     ChatModule,
+    GameModule,
     MulterModule.register({
       dest: "./uploads",
     }),

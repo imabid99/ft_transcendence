@@ -1,4 +1,5 @@
 'use client'
+import React from "react";
 import UsersOnline from "./UsersOline";
 import GroupsChannels from "./GroupsChannels";
 import UsersDm from "./UsersDm";
@@ -17,6 +18,7 @@ export default function  LeftSide() {
 	const [showBody, setShowBody] = useState<string | null>(null);
 	const [groupUsers, setGroupUsers] = useState<number[]>([]);
 	const [refresh, setRefresh] = useState<string>("");
+    const [showModal, setShowModal] = useState(false);
 
 	const {user,setUsers,setProfiles,setMessages ,socket,setMyChannels,setChannels, dashboardRef,setMediaDashbord} :any= useContext(contextdata);
 	useEffect(() => {
@@ -28,7 +30,7 @@ export default function  LeftSide() {
 
 	useEffect(() => {
 		if (!user) {
-		  return;
+			return;
 		}
 		async function getUsers() {
 			try
@@ -118,7 +120,11 @@ export default function  LeftSide() {
 	}, [refresh, user])
 	return (
 		<>	
-			<div className="chat__left w-[450px]  bg-[#FFF] border-r-[1px] relative overflow-hidden lg:max-xl:w-[350px] lsm:max-lg:w-full">
+			<div className="chat__left w-[450px]  bg-[#FFF] border-r-[1px] relative overflow-hidden lg:max-xl:w-[350px] lsm:max-lg:w-full"
+				onMouseLeave={() => {
+					setShowModal(false)
+				}}
+			>
 					<div className="chat__left__head flex justify-between items-center border-b-[1px]  border-[#E5E5E5] pl-[42px] pr-[25px] lsm:max-lg:px-[10px] h-[100px]">
 						<div className="flex items-center py-[35px] justify-between lsm:max-sm:gap-[20px] lsm:max-sm:px-[20px]">
 							<div className="hidden lsm:max-sm:block cursor-pointer" onClick={() => {
@@ -155,7 +161,7 @@ export default function  LeftSide() {
 									<GroupsChannels />
 									<UsersDm />
 								</div>
-								<NewModal setShowBody={setShowBody}/>
+								<NewModal setShowBody={setShowBody} showModal={showModal} setShowModal={setShowModal} />
 							</>
 						)
 					}

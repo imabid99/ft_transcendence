@@ -15,25 +15,25 @@ type ChannelInfoProps = {
 export default function ChannelInfo({infoRef, handleshowInfo, group, userId}: ChannelInfoProps) {
     const [showAccessPassword, setShowAccessPassword] = useState<boolean>(false);
     const [showPasswordModal, setShowPasswordModal] = useState<boolean>(false);
-    const mytype = group?.Owners.find((owner: any) => owner.id === userId) ? 3 : group?.Admins.find((admin: any) => admin.id === userId) ? 2 : 1;
+    const mytype = group?.channel.Owners.find((owner: any) => owner.id === userId) ? 3 : group?.channel.Admins.find((admin: any) => admin.id === userId) ? 2 : 1;
     const {socket}: any = useContext(contextdata);
     const router = useRouter();
     const [password, setPassword] = useState<string>("");
 
     const handleExit = () => {
-        socket.emit("leaveGroup", {groupId: group.id});
+        socket.emit("leaveGroup", {groupId: group?.channel.id});
         handleshowInfo();
         router.push("/Chat");
     }
     const handleRemove = () => {
-        socket?.emit("removeGroupPass", {groupId: group.id});
+        socket?.emit("removeGroupPass", {groupId: group?.channel.id});
         setShowAccessPassword(false);
     }
     
     const handleSetAccessPassword = (e: { preventDefault: () => void; }) => {
         e.preventDefault();
         if (!password) return;
-        socket?.emit("setGroupPass", {groupId: group.id, password: password});
+        socket?.emit("setGroupPass", {groupId: group?.channel.id, password: password});
         setShowAccessPassword(false);
         setShowPasswordModal(false);
     }
@@ -56,12 +56,12 @@ export default function ChannelInfo({infoRef, handleshowInfo, group, userId}: Ch
                 </div>
 
                 <div className="w-full flex flex-col gap-[5px] justify-center items-center relative">
-                    <img src="/groupAvatar.jpg" alt="" className="rounded-full w-[250px] h-[250px] object-cover"/>
+                    <img src={`http://${process.env.NEXT_PUBLIC_APP_URL}:3000/${group?.channel.avatar}`} alt="" className="rounded-full w-[250px] h-[250px] object-cover"/>
                     <p className="text-[#024077] text-[35px] font-[Poppins] font-[700]">
-                        {group.name}
+                        {group.channel.name}
                     </p>
                     <p className="text-[#064A85] text-[20px] font-[Poppins] font-[400]">
-                        {group.Members.length} members
+                        {group.channel.Members.length} members
                     </p>
                     {
                         showAccessPassword &&
@@ -130,14 +130,15 @@ export default function ChannelInfo({infoRef, handleshowInfo, group, userId}: Ch
                 </p>
                 <div className="w-full flex flex-col gap-[25px] overflow-y-scroll no-scrollbar min-h-[calc(300px)] h-[calc(100%-600px)]  max-h-[calc(100%-600px)] relative">
                     {
-                        group?.Members.map((member: any) => {
+                        group?.channel.Members.map((member: any) => {
                             if (member.id !== userId)  return null;
+                            const avatar = group.membersProfile.filter((profile: any) => profile.userId === member.id)[0]?.avatar;
                             return (
                                 <HandlRightClick mytype={1} type={3} id={member.id}  key={`${member.id}`}>
                                     <Link href={`/profile/${member.id}`}>
                                         <div className="w-full flex items-center gap-[10px] justify-between cursor-pointer">
                                             <span className="flex items-center gap-[10px]">
-                                                <img src={`http://${process.env.NEXT_PUBLIC_APP_URL}:3000/${member.avatar}`} alt="" className="rounded-full w-[60px] h-[60px] object-cover"/>
+                                                <img src={`http://${process.env.NEXT_PUBLIC_APP_URL}:3000/${avatar}`} alt="" className="rounded-full w-[60px] h-[60px] object-cover"/>
                                                 <span>
                                                     <p className="text-[#034B8A] text-[20px] font-[Poppins] font-[500] min-w-[200px]  max-w-[300px] truncate">
                                                         {member.username}
@@ -156,14 +157,15 @@ export default function ChannelInfo({infoRef, handleshowInfo, group, userId}: Ch
                         })
                     }
                     {
-                        group?.Owners.map((owner: any) => {
+                        group?.channel.Owners.map((owner: any) => {
                             if (owner.id === userId)  return null;
+                            const avatar = group.membersProfile.filter((profile: any) => profile.userId === owner.id)[0]?.avatar;
                             return (
                                 <HandlRightClick mytype={mytype} type={3} id={owner.id}  key={`${owner.id}`}>
                                     <Link href={`/profile/${owner.id}`}>
                                         <div className="w-full flex items-center gap-[10px] justify-between cursor-pointer">
                                             <span className="flex items-center gap-[10px]">
-                                                <img src="/groupAvatar.jpg" alt="" className="rounded-full w-[60px] h-[60px] object-cover"/>
+                                                <img src={`http://${process.env.NEXT_PUBLIC_APP_URL}:3000/${avatar}`}  alt="" className="rounded-full w-[60px] h-[60px] object-cover"/>
                                                 <span>
                                                     <p className="text-[#034B8A] text-[20px] font-[Poppins] font-[500] min-w-[200px]  max-w-[300px] truncate">
                                                         {owner.username}
@@ -192,17 +194,18 @@ export default function ChannelInfo({infoRef, handleshowInfo, group, userId}: Ch
                         })
                     }
                     {
-                        group?.Admins.map((admin: any) => {
+                        group?.channel.Admins.map((admin: any) => {
                             if (admin.id === userId)  return null;
-                            if(group.Muts?.find((mute: any) => mute.id === admin.id)) {
+                            if(group.channel.Muts?.find((mute: any) => mute.id === admin.id)) {
                                 return null;
                             }
+                            const avatar = group.membersProfile.filter((profile: any) => profile.userId === admin.id)[0]?.avatar;
                             return (
-                                <HandlRightClick mytype={mytype} type={2} id={admin.id} groupId={group.id}  key={`${admin.id}`}>
+                                <HandlRightClick mytype={mytype} type={2} id={admin.id} groupId={group.channel.id}  key={`${admin.id}`}>
                                     <Link href={`/profile/${admin.id}`}>
                                         <div className="w-full flex items-center gap-[10px] justify-between cursor-pointer">
                                             <span className="flex items-center gap-[10px]">
-                                                <img src="/groupAvatar.jpg" alt="" className="rounded-full w-[60px] h-[60px] object-cover"/>
+                                                <img src={`http://${process.env.NEXT_PUBLIC_APP_URL}:3000/${avatar}`}  alt="" className="rounded-full w-[60px] h-[60px] object-cover"/>
                                                 <span>
                                                     <p className="text-[#034B8A] text-[20px] font-[Poppins] font-[500] min-w-[200px]  max-w-[300px] truncate">
                                                         {admin.username}
@@ -231,17 +234,18 @@ export default function ChannelInfo({infoRef, handleshowInfo, group, userId}: Ch
                         })
                     }
                     {
-                        group?.Members.map((member: any) => {
+                        group?.channel.Members.map((member: any) => {
                             if (member.id === userId)  return null;
-                            if (group.Owners.find((owner: any) => owner.id === member.id) || group.Admins.find((admin: any) => admin.id === member.id) || group.Muts?.find((mute: any) => mute.id === member.id)) {
+                            if (group.channel.Owners.find((owner: any) => owner.id === member.id) || group.channel.Admins.find((admin: any) => admin.id === member.id) || group.channel.Muts?.find((mute: any) => mute.id === member.id)) {
                                 return null;
                             }
+                            const avatar = group.membersProfile.filter((profile: any) => profile.userId === member.id)[0]?.avatar;
                             return(
-                                <HandlRightClick mytype={mytype} type={1} id={member.id} groupId={group.id}  key={`${member.id}`}>
+                                <HandlRightClick mytype={mytype} type={1} id={member.id} groupId={group.channel.id}  key={`${member.id}`}>
                                     <Link href={`/profile/${member.id}`} >
                                         <div className="w-full flex items-center gap-[10px] justify-between cursor-pointer">
                                             <span className="flex items-center gap-[10px]">
-                                                <img src="/groupAvatar.jpg" alt="" className="rounded-full w-[60px] h-[60px] object-cover"/>
+                                                <img src={`http://${process.env.NEXT_PUBLIC_APP_URL}:3000/${avatar}`} alt="" className="rounded-full w-[60px] h-[60px] object-cover"/>
                                                 <span>
                                                     <p className="text-[#034B8A] text-[20px] font-[Poppins] font-[500] min-w-[200px]  max-w-[300px] truncate">
                                                         {member.username}
@@ -270,15 +274,16 @@ export default function ChannelInfo({infoRef, handleshowInfo, group, userId}: Ch
                         })
                     }
                     {
-                        group?.Muts?.map((mute: any) => {
+                        group?.channel.Muts?.map((mute: any) => {
                             if (mute.id === userId)  return null;
+                            const avatar = group.membersProfile.filter((profile: any) => profile.userId === mute.id)[0]?.avatar;
                             return(
-                                <HandlRightClick mytype={userId == mute.id ? 1 : mytype} type={1} id={mute.id} groupId={group.id}  key={`${mute.id}`} isMute={true}>
+                                <HandlRightClick mytype={userId == mute.id ? 1 : mytype} type={1} id={mute.id} groupId={group.channel.id}  key={`${mute.id}`} isMute={true}>
                                     <div className='flex  items-center justify-between opacity-60 w-full'>
                                         <Link href={`/profile/${mute.id}`} >
                                             <div className="w-full flex items-center gap-[10px] justify-between cursor-pointer">
                                                 <span className="flex items-center gap-[10px]">
-                                                    <img src="/groupAvatar.jpg" alt="" className="rounded-full w-[60px] h-[60px] object-cover"/>
+                                                    <img src={`http://${process.env.NEXT_PUBLIC_APP_URL}:3000/${avatar}`} alt="" className="rounded-full w-[60px] h-[60px] object-cover"/>
                                                     <span>
                                                         <p className="text-[#034B8A] text-[20px] font-[Poppins] font-[500] min-w-[200px]  max-w-[300px] truncate">
                                                             {mute.username}
@@ -310,15 +315,16 @@ export default function ChannelInfo({infoRef, handleshowInfo, group, userId}: Ch
                         })
                     }
                     {
-                        group?.Band?.map((ban: any) => {
+                        group?.channel.Band?.map((ban: any) => {
                             if (ban.id === userId)  return null;
+                            const avatar = group.membersProfile.filter((profile: any) => profile.userId === ban.id)[0]?.avatar;
                             return(
-                                <HandlRightClick mytype={userId == ban.id ? 1 : mytype} type={1} id={ban.id} groupId={group.id}  key={`${ban.id}`} isBan={true}>
+                                <HandlRightClick mytype={userId == ban.id ? 1 : mytype} type={1} id={ban.id} groupId={group.channel.id}  key={`${ban.id}`} isBan={true}>
                                     <div className='flex  items-center justify-between opacity-60 w-full'>
                                         <Link href={`/profile/${ban.id}`} >
                                             <div className="w-full flex items-center gap-[10px] justify-between cursor-pointer">
                                                 <span className="flex items-center gap-[10px]">
-                                                    <img src="/groupAvatar.jpg" alt="" className="rounded-full w-[60px] h-[60px] object-cover"/>
+                                                    <img src={`http://${process.env.NEXT_PUBLIC_APP_URL}:3000/${avatar}`} alt="" className="rounded-full w-[60px] h-[60px] object-cover"/>
                                                     <span>
                                                         <p className="text-[#034B8A] text-[20px] font-[Poppins] font-[500] min-w-[200px]  max-w-[300px] truncate">
                                                             {ban.username}

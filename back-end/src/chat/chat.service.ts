@@ -1,9 +1,14 @@
 import { Injectable, UseGuards , NotFoundException } from '@nestjs/common';
 import { PrismaService } from "../prisma/prisma.service";
+import { UserService } from 'src/user/user.service';
 
 @Injectable()
 export class ChatService {
-    constructor(private prisma: PrismaService) {}
+    constructor(
+      private prisma: PrismaService,
+      private userService: UserService,
+      
+      ) {}
 
     async getChannel(myId: string, channelId: string): Promise<any> {
         const channel = await this.prisma.channels.findUnique({
@@ -43,8 +48,18 @@ export class ChatService {
           delete channel.Band;
           delete channel.Muts;
         }
-        return channel;
-      }
+
+        const membersProfile = await this.getMembersProfile(channel.Members);
+        return {channel, membersProfile};
+    }
+    async getMembersProfile(members: any): Promise<any> {
+      let membersProfile: any[] = [];
+      await Promise.all(members.map(async (member) => {
+        const profile = await this.userService.getProfile(member.id);
+        membersProfile.push(profile);
+      }));
+      return membersProfile;
+    }
 
     async getMessages(id: string): Promise<any> {
         const messages = await this.prisma.message.findMany({
@@ -140,5 +155,16 @@ export class ChatService {
           });
         }
         return false;
+    }
+    async getMyBlocked(id: string): Promise<any> {
+        const blocked = await this.prisma.Blocked.findMany({
+          where: {
+            userId: id,
+          },
+        });
+        const ret = blocked.map((block) => {
+          return block.blockedId === id ? block.userId : block.blockedId;
+        });
+        return ret;
     }
 }
