@@ -7,7 +7,7 @@ type props  = {
 
 const Friend = ({ cover, avatar, name, username }:props) => {
     return (
-    <div className="w-[242px] h-[250px] rounded-[34px] bg-white teamS overflow-x-hidden ">
+    <div className="w-[242px] h-[250px] rounded-[34px] bg-white teamS overflow-x-hidden">
         <div className="w-[242px] h-[92px]">
         <img
             src={cover}

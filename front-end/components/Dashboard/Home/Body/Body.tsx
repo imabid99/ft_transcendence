@@ -55,9 +55,9 @@ export default function Body({ leaderRef, handelShaw }: Props) {
                     {/* <div className="pl-[30px] pt-[34px] flex  w-[100%]  h-[100%] rounded-[66px] "> */}
                         {/* <div className="flex gap-[30px] "> */}
                         <Swiper
-                            spaceBetween={90}
+                            spaceBetween={0}
                             slidesPerView={4}
-                            className="w-full h-full cursor-grab pl-[30px]"
+                            className="w-full h-full cursor-grab !pl-[30px]"
                             >
                                 <SwiperSlide>
                                     <Friend cover="rectangle-161.svg" avatar="46e4e1beddaa3825f3d815f7f7ef8134.jpeg" name="Achraf sabbar" username="asabbar"    />
@@ -104,7 +104,9 @@ export default function Body({ leaderRef, handelShaw }: Props) {
                 <div className='header__left flex flex-col gap-[52px]
             lg:max-2xl:gap-[50px] lg:max-2xl:justify-start lg:max-2xl:items-start  min-w-[371px] w-full 3xl:w-fit max-w-[1224px]
             '>
-                <RightSide>
+                {/* <RightSide> */}
+                <div className="leaderboard w-full 3xl:w-[371px] h-[396px] bg-[#fff] ">
+
                     <div className=" flex  items-center justify-between pt-[35px] px-[30px]">
                         <span className="flex items-center gap-[10px]">
                             <svg width="14" height="12" viewBox="0 0 14 12" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -160,10 +162,54 @@ export default function Body({ leaderRef, handelShaw }: Props) {
                             <div className="min-w-[90px] h-[124px] rounded-t-[20px] bg-[#4cc0edb8] shadow-6xl" />
                         </div>
                     </div>
-                </RightSide>
-                {/* <RightSide> */}
-                <div className=" min-w-[371px] h-[390px] bg-white rounded-[42px] overflow-hidden">
-                        <div className="flex gap-[5px] w-[100%] pl-[30px] pt-[40px]">
+                </div>
+                {/* </RightSide> */}
+                <RightSide>
+                {/* <div className=" min-w-[371px] h-[390px] bg-white rounded-[42px] overflow-hidden"> */}
+                <div className=" flex  items-center justify-between pt-[35px] px-[30px]">
+                        <span className="flex items-center gap-[10px] pb-[10px] w-full">
+                            <svg width="19" height="14" viewBox="0 0 19 14" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M9.08272 9.22217C11.929 9.22217 14.3594 9.69814 14.3594 11.6028C14.3594 13.5067 11.9446 14 9.08272 14C6.23639 14 3.80603 13.524 3.80603 11.6201C3.80603 9.71548 6.2208 9.22217 9.08272 9.22217ZM13.6336 8.07527C14.7218 8.05399 15.8917 8.2116 16.324 8.3235C17.2398 8.51341 17.8422 8.90112 18.0918 9.46457C18.3027 9.92714 18.3027 10.4638 18.0918 10.9256C17.71 11.7995 16.4792 12.08 16.0009 12.1525C15.9021 12.1683 15.8226 12.0777 15.833 11.9729C16.0774 9.55125 14.1335 8.40309 13.6307 8.1391C13.6091 8.12728 13.6047 8.10915 13.6069 8.09812C13.6084 8.09024 13.6173 8.07763 13.6336 8.07527ZM4.61692 8.07558C4.63326 8.07795 4.64143 8.09056 4.64291 8.09765C4.64514 8.10947 4.64069 8.12681 4.61989 8.13941C4.11629 8.4034 2.17244 9.55156 2.41681 11.9724C2.42721 12.078 2.34848 12.1678 2.24969 12.1529C1.77134 12.0804 0.540556 11.7998 0.158769 10.9259C-0.0529229 10.4633 -0.0529229 9.92746 0.158769 9.46488C0.408342 8.90144 1.00999 8.51373 1.92584 8.32303C2.35887 8.21191 3.52801 8.05431 4.61692 8.07558ZM9.08272 0C11.0206 0 12.5745 1.64698 12.5745 3.70375C12.5745 5.75972 11.0206 7.40828 9.08272 7.40828C7.14481 7.40828 5.59092 5.75972 5.59092 3.70375C5.59092 1.64698 7.14481 0 9.08272 0ZM13.823 0.617659C15.6948 0.617659 17.1648 2.48608 16.6642 4.56727C16.3262 5.96839 15.1029 6.89905 13.7399 6.86123C13.6032 6.85729 13.4687 6.84389 13.3388 6.82025C13.2444 6.80291 13.1969 6.69022 13.2504 6.60669C13.7703 5.79502 14.0667 4.81865 14.0667 3.77057C14.0667 2.67678 13.7428 1.65707 13.1805 0.820971C13.1627 0.794966 13.1493 0.754776 13.1672 0.724831C13.182 0.700402 13.2095 0.687793 13.2355 0.681489C13.4249 0.640512 13.6195 0.617659 13.823 0.617659ZM4.4264 0.61758C4.62992 0.61758 4.82452 0.640433 5.01468 0.68141C5.03993 0.687715 5.06815 0.701111 5.08301 0.724752C5.10009 0.754697 5.08747 0.794887 5.06964 0.820892C4.50736 1.65699 4.18351 2.6767 4.18351 3.77049C4.18351 4.81857 4.47988 5.79494 4.99982 6.60661C5.0533 6.69015 5.00576 6.80283 4.91143 6.82017C4.7807 6.8446 4.647 6.85721 4.51033 6.86115C3.14733 6.89897 1.92398 5.96831 1.58602 4.56719C1.08464 2.486 2.5546 0.61758 4.4264 0.61758Z" fill="#04549D"/>
+                            </svg> 
+                            <p className="text-[14px] font-[700] text-[#02539D]">MATCH HISTORY</p>
+                        </span>
+                    </div>
+                    <div className="flex flex-col  gap-[10px]   overflow-y-scroll max-h-[calc(100%-67px)] items-center py-[5px] no-scrollbar overflow-hidden rounded-b-[40px]">
+                            <MatchHistory
+                                    winnerAvatar="mittoushaha.png" winnerName="Ismail Mittous" winnerScore="20" loserAvatar="jlemhaha.png" loserName="Mustapha jlem" loserScore="20"
+                                />
+                                <MatchHistory
+                                    winnerAvatar="mittoushaha.png" winnerName="Ismail Mittous" winnerScore="20" loserAvatar="jlemhaha.png" loserName="Mustapha jlem" loserScore="20"
+                                />
+                                <MatchHistory
+                                    winnerAvatar="mittoushaha.png" winnerName="Ismail Mittous" winnerScore="20" loserAvatar="jlemhaha.png" loserName="Mustapha jlem" loserScore="20"
+                                />
+                                <MatchHistory
+                                    winnerAvatar="mittoushaha.png" winnerName="Ismail Mittous" winnerScore="20" loserAvatar="jlemhaha.png" loserName="Mustapha jlem" loserScore="20"
+                                />
+                                <MatchHistory
+                                    winnerAvatar="mittoushaha.png" winnerName="Ismail Mittous" winnerScore="20" loserAvatar="jlemhaha.png" loserName="Mustapha jlem" loserScore="20"
+                                />
+                                <MatchHistory
+                                    winnerAvatar="mittoushaha.png" winnerName="Ismail Mittous" winnerScore="20" loserAvatar="jlemhaha.png" loserName="Mustapha jlem" loserScore="20"
+                                />
+                                <MatchHistory
+                                    winnerAvatar="mittoushaha.png" winnerName="Ismail Mittous" winnerScore="20" loserAvatar="jlemhaha.png" loserName="Mustapha jlem" loserScore="20"
+                                />
+                                <MatchHistory
+                                    winnerAvatar="mittoushaha.png" winnerName="Ismail Mittous" winnerScore="20" loserAvatar="jlemhaha.png" loserName="Mustapha jlem" loserScore="20"
+                                />
+                                <MatchHistory
+                                    winnerAvatar="mittoushaha.png" winnerName="Ismail Mittous" winnerScore="20" loserAvatar="jlemhaha.png" loserName="Mustapha jlem" loserScore="20"
+                                />
+                                <MatchHistory
+                                    winnerAvatar="mittoushaha.png" winnerName="Ismail Mittous" winnerScore="20" loserAvatar="jlemhaha.png" loserName="Mustapha jlem" loserScore="20"
+                                />
+                                <MatchHistory
+                                    winnerAvatar="mittoushaha.png" winnerName="Ismail Mittous" winnerScore="20" loserAvatar="jlemhaha.png" loserName="Mustapha jlem" loserScore="20"
+                                />
+                    </div>
+                        {/* <div className="flex gap-[5px] w-[100%] pl-[30px] pt-[40px]">
                         <div>
                             <img src="iconly-bold-game.svg" alt="" />
                         </div>
@@ -171,7 +217,7 @@ export default function Body({ leaderRef, handelShaw }: Props) {
                             <p className="text-[#02539D] text-[14px] font-[700]">MATCH HISTORY</p>
                         </div>
                         </div>
-                        <div className="flex items-center justify-center pt-[16px] flex-col gap-[16px] bg-black">
+                        <div className="flex items-center justify-center pt-[16px] flex-col gap-[16px] overflow-y-scroll h-[335px]">
                                 <MatchHistory
                                     winnerAvatar="46e4e1beddaa3825f3d815f7f7ef8134.jpeg" winnerName="Ahmed Kamal" winnerScore="20" loserAvatar="jlemdrayaf.png" loserName="Mustapha jlem" loserScore="20"
                                 />
@@ -190,9 +236,9 @@ export default function Body({ leaderRef, handelShaw }: Props) {
                                 <MatchHistory
                                     winnerAvatar="46e4e1beddaa3825f3d815f7f7ef8134.jpeg" winnerName="Ahmed Kamal" winnerScore="20" loserAvatar="jlemdrayaf.png" loserName="Mustapha jlem" loserScore="20"
                                 />
-                        </div>
-                    </div>
-                {/* </RightSide> */}
+                        </div> */}
+                    {/* </div> */}
+                </RightSide>
             </div>
         </div>
 
