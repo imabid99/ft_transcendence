@@ -119,6 +119,17 @@ export class UserService {
   async deleteUser(id: string): Promise<any> {
     const uniqueSuffix = Date.now().toString();
     try {
+      const user = await this.prisma.user.findUnique({
+        where: {
+          id,
+        },
+        include: {
+          profile: true,
+        },
+      });
+      if (!user) {
+        throw new NotFoundException("User not found");
+      }
       const salt = await bcrypt.genSalt();
       const hash = await bcrypt.hash(uuidv4(), salt);
       await this.prisma.user.update({
@@ -130,6 +141,11 @@ export class UserService {
           password: hash,
         },
       });
+      const oldAvatar : string =  user.profile.avatar;
+      if (!oldAvatar.startsWith("uploads/default")) {
+        const fs = require("fs");
+        fs.unlinkSync(oldAvatar);
+      }
       await this.prisma.profile.update({
         where: {
           userId: id,
