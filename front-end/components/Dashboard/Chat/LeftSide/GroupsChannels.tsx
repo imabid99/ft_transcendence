@@ -27,7 +27,6 @@ export default function GroupsChannels() {
       );
     }
   });
-  console.log(myChannels);
   return (
       <div className="chat__left__bottom__groups flex flex-col  justify-center items-center">
         <span className="flex items-center justify-start gap-[10px] w-full mb-[20px]">

@@ -35,7 +35,7 @@ export default function Page() {
       try {
         const res = await axiosInstance.get(`http://${process.env.NEXT_PUBLIC_APP_URL}:3000/api/chat/channel/${msgId}`);
         setGroup(res.data);
-        setMessages(res.data.Messages);
+        setMessages(res.data.channel.Messages);
         setMember(true);
       } catch (err) {
         setMember(false);
@@ -57,27 +57,16 @@ export default function Page() {
         content: payload.content,
         createdAt: payload.createdAt,
       };
-      setMessages((messages:any) => [...messages, newMessage]);
-    });
-    socket.on('refresh', () => {
-      async function getgroup() {
-        try {
-          const res = await axiosInstance.get(`http://${process.env.NEXT_PUBLIC_APP_URL}:3000/api/chat/channel/${msgId}`);
-          setGroup(res.data);
-          setMessages(res.data.channel.Messages);
-          setMember(true);
-        } catch (err) {
-          setMember(false);
-          console.log(err);
-        }
-      }
-      getgroup();
+      if(messages?.length === 0)
+        setMessages([newMessage])
+      else
+        setMessages((messages:any) => [...messages, newMessage]);
+      console.log(messages)
     });
     
     return () => {
       socket.off('message-to-group');
     }
-    
   }, [socket]);
 
   const handleSubmit = (e: { preventDefault: () => void; }) => {
@@ -94,7 +83,6 @@ export default function Page() {
         groupId: msgId,
 			},
 		}
-    console.log("message-to-group : ", payload);
 		socket.emit("message-to-group", payload);
 		inputRef.current.value = '';
 	}
@@ -163,7 +151,7 @@ export default function Page() {
           {
             user && messages?.map((message:Message, index) => {
               return (
-                message.fromName !== user.username ? (<LeftMessagesGroup key={`i+${index}`} message={message} />) : (<RightMessages key={`i+${index}`} message={message} avatar={user.profile.avatar} />)
+                message.fromName !== user.username ? (<LeftMessagesGroup key={`LeftMessagesGroup${index}`} message={message} />) : (<RightMessages key={`RightMessages${index}`} message={message} avatar={user.profile.avatar} />)
               )
             })
           }

@@ -58,7 +58,6 @@ export default function Page() {
             setProfile(null);
         }
         }, [])
-        // console.log(profile);
     const avatarUrl = `http://${process.env.NEXT_PUBLIC_APP_URL}:3000/${profile?.avatar}`;
     const coverUrl = `http://${process.env.NEXT_PUBLIC_APP_URL}:3000/${profile?.cover}`;
     return (
