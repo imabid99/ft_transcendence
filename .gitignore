@@ -1,3 +1,4 @@
 migrations
 node_modules
 dist
+back-end/uploads/all/*
