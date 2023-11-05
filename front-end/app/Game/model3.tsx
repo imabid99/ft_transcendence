@@ -19,7 +19,7 @@ const Model3 = () => {
 
 
     return (
-        <RigidBody restitution={1.05} friction={0} type="fixed" colliders="hull">
+        // <RigidBody restitution={1.05} friction={0} type="fixed" colliders="hull">
             <primitive
                 object={siderock2.scene}
                 castShadow
@@ -28,7 +28,7 @@ const Model3 = () => {
                 scale={[11, 5 , 16.7]}
                 rotation-y={Math.PI}
                 />
-        </RigidBody>
+        // </RigidBody>
       );
 }
     
