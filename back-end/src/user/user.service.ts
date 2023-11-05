@@ -8,6 +8,7 @@ import { PrismaService } from "../prisma/prisma.service";
 import { chPass } from "../dtos/pass.dto";
 import * as bcrypt from "bcrypt";
 import * as jwt from "jsonwebtoken";
+import { v4 as uuidv4 } from "uuid";
 
 @Injectable()
 export class UserService {
@@ -44,7 +45,7 @@ export class UserService {
   }
 
   async changePass(pass: chPass, id: string) {
-    const user = await this.prisma.user.findUnique({ where: { id: id } });
+    const user = await this.prisma.user.findUnique({ where: { id } });
     const valid = await bcrypt.compare(pass.password, user.password);
     try {
       if (valid) {
@@ -115,29 +116,36 @@ export class UserService {
     }
   }
 
-  async validateJwtToken(token: string) {
-    try {
-      const decoded = jwt.verify(token, process.env.JWT_SECRET);
-      return decoded;
-    } catch (error) {
-      throw new BadRequestException("Invalid token");
-    }
-  }
-
   async deleteUser(id: string): Promise<any> {
     const uniqueSuffix = Date.now().toString();
     try {
+      const salt = await bcrypt.genSalt();
+      const hash = await bcrypt.hash(uuidv4(), salt);
       await this.prisma.user.update({
         where: {
           id: id,
         },
         data: {
           deleted: true,
+          password: hash,
+        },
+      });
+      await this.prisma.profile.update({
+        where: {
+          userId: id,
+        },
+        data: {
           username: {
             set: `username_deleted_${uniqueSuffix}`,
           },
           email: {
             set: `email_deleted_${uniqueSuffix}`,
+          },
+          firstName: {
+            set: "Deleted",
+          },
+          lastName: {
+            set: "User",
           },
         },
       });

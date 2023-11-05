@@ -7,6 +7,7 @@ export class UploadService {
 
   async uploadAvatar(path: string, userId: string): Promise<any> {
     try {
+      const user = await this.prisma.user.findUnique({ where: { id: userId } });
       await this.prisma.profile.update({
         where: {
           userId,
