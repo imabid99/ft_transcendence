@@ -1,6 +1,13 @@
+<<<<<<< HEAD
 
 node_modules
 .dist
 dist
 .DS_Store
 .next
+=======
+migrations
+node_modules
+dist
+back-end/uploads/all/*
+>>>>>>> 4a7e1ec8b5a7aa3cb20a0b90710c05b7ad9afbc1

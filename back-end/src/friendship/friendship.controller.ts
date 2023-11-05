@@ -46,4 +46,11 @@ import {
     async showFriendships(@Req() req): Promise<any> {
       return this.friendshipService.getFriends(req.user.id);
     }
+
+    @Get("show/requests")
+    @UseGuards(AuthGuard("jwt"))
+    async showRequests(@Req() req): Promise<any> {
+      return this.friendshipService.getRequests(req.user.id);
+    }
+
   }

@@ -28,7 +28,7 @@ import { FriendshipService } from "./friendship/friendship.service";
     }),
     ChatModule,
     MulterModule.register({
-      dest: "./uploads",
+      dest: "./uploads/all",
     }),
   ],
   controllers: [AppController, userController, authController, uploadController, friendshipController],

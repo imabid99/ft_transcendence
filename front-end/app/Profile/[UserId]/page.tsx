@@ -30,7 +30,19 @@ export default function Page() {
     const [profile, setProfile] = useState<any>(null);
     const name = `${profile?.firstName} ${profile?.lastName}`;
 
+
+    const sendRequest = async () => {
+        try{
+            const res = await axiosInstance.post(`http://${process.env.NEXT_PUBLIC_APP_URL}:3000/api/friendship/request/${UserId}`);
+            console.log(res.data);
+        }
+        catch(err){
+            console.log(err);
+        }
+    }
+
     useEffect(() => {
+
 
         const getProfile = async () => {
             try{
@@ -102,7 +114,7 @@ export default function Page() {
                         <img src="/Vector.svg" alt="" />
                         <p className="text-[#fff] text-[8px] font-[500]">Message</p>
                     </button>
-                    <button className="w-[30px] h-[29px] rounded-[9px] bg-[#5085AB] flex items-center justify-center gap-[5px]">
+                    <button onClick={sendRequest} className="w-[30px] h-[29px] rounded-[9px] bg-[#5085AB] flex items-center justify-center gap-[5px]">
                         <img src="/Vector(1).svg" alt="" />
                     </button>
                     <button
