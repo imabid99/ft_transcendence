@@ -4,25 +4,8 @@ import { contextdata } from '@/app/contextApi';
 import axiosInstance from '@/utils/axiosInstance';
 import React from 'react';
 import ImageGrid from '../../components/Dashboard/Profile/images';
+import Header from '@/components/Dashboard/Home/Header/Header';
 
-// const images = [
-//     [
-//         { src: 'airwa.svg', alt: 'Airwa Image', overlaySrc: 'airairair.svg' },
-//         { src: 'horrorwh.svg', alt: 'Horrorwh Image', overlaySrc: 'jan.svg' },
-//     ],
-//     [
-//         { src: 'kingwk.svg', alt: 'Kingwk Image', overlaySrc: 'sarokh.svg' },
-//         { src: 'gwg.svg', alt: 'GWG Image', overlaySrc: 'targethh.svg' },
-//         { src: 'bwb.svg', alt: 'BWB Image', className: 'lg:block hidden', overlaySrc: 'hand.svg' },
-//     ],
-//     [
-//         { src: 'unbwb.svg', alt: 'UNBWB Image', overlaySrc: 'cap.svg' },
-//         { src: 'ironwr.svg', alt: 'Ironwr Image', overlaySrc: 'sando9.svg' },
-//     ],
-//     [
-//         { src: 'bwb.svg', alt: 'Luck Image', className: 'pb-[30px] block lg:hidden',  overlaySrc: 'hand.svg'},
-//     ],
-// ];
 const images = [
     [
         { src: 'Air.svg', alt: 'Airwa Image' },
@@ -84,7 +67,11 @@ export default function Page() {
     const avatarUrl = `http://${process.env.NEXT_PUBLIC_APP_URL}:3000/${myProfile?.avatar}`;
     const coverUrl = `http://${process.env.NEXT_PUBLIC_APP_URL}:3000/${myProfile?.cover}`;
     return (
-        <div className="flex items-center flex-col 3xl:flex-row gap-[40px] w-[100%] 3xl:justify-center">
+        <div className='flex items-center flex-col   w-[100%] justify-start 3xl:gap-[200px] 3xl:px-[60px] bg-blue-300 '>
+        {/* <div className='bg-black px-[60px] '>
+        </div> */}
+            <Header/>
+        <div className="flex items-center flex-col 3xl:flex-row gap-[40px] w-[100%] 3xl:justify-center bg-black">
             <div className=" flex max-w-[922px] w-11/12 xl:h-[823px] rounded-[42px] sh-d bg-white">
             <div className="mx-auto w-11/12 mt-[34px]">
                 <div className="relative w-12/12 h-[185px] rounded-[25px] overflow-hidden">
@@ -309,6 +296,7 @@ export default function Page() {
                 <ImageGrid images={images} />
             </div>
             </div>
+        </div>
         </div>
       )
     }

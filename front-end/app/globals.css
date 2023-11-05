@@ -334,8 +334,20 @@ input {
   background-position: right center;
 }
 
-
-
+.b-home {
+  transition: 0.5s;
+  background-size: 200% auto;
+}
+.b-home:hover {
+  opacity: 1;
+  transform: scale(1.03);
+  background-position: right center;
+}
+.b-home {
+  background-image: linear-gradient(to right, #3887D0 0%, #3887D0 51%, #6F86D6 100%);
+   /* background: linear-gradient(90deg, #48C6EF 0%, #6F86D6 100%); */
+  box-shadow: 0.24287px 5.96381px 3.35313px 0px rgba(3, 103, 166, 0.10), 0.52897px 12.98923px 9.425px 0px rgba(3, 103, 166, 0.18), 1.08974px 26.75907px 25.28437px 0px rgba(3, 103, 166, 0.23), 1.99382px 48.95942px 58px 0px rgba(3, 103, 166, 0.26);
+}
 .b-save {
   transition: 0.5s;
   background-size: 200% auto;
@@ -449,4 +461,52 @@ input {
 .MatchH
 {
   box-shadow: 0px 9px 19px 0px rgba(0, 0, 0, 0.01), 0px 34px 34px 0px rgba(0, 0, 0, 0.01), 0px 77px 46px 0px rgba(0, 0, 0, 0.01), 0px 137px 55px 0px rgba(0, 0, 0, 0.00), 0px 214px 60px 0px rgba(0, 0, 0, 0.00);
+}
+
+.h-text {
+  background: linear-gradient(90deg, #6191ba 0%, #FFF 260.04%);
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.t-imad {
+  background: linear-gradient(135deg, #ABDCFF 0%, #0396FF 100%);
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+.t-zak {
+  background: linear-gradient(135deg, #F05F57 0%, #360940 100%);
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+.t-achraf {
+  background: linear-gradient(135deg, #92FFC0 0%, #002661 100%);
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+.t-saad {
+  background: linear-gradient(135deg, #FFF6B7 0%, #F6416C 100%);
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.t-team {
+  text-shadow: 0px 0px 0px rgba(255, 255, 255, 0.13), 0px 5px 11px rgba(0, 42, 81, 0.13), 0px 19px 19px rgba(0, 42, 81, 0.11), 0px 44px 26px rgba(0, 42, 81, 0.07), 0px 77px 31px rgba(0, 42, 81, 0.02), 0px 121px 34px rgba(0, 42, 81, 0.00); 
+  background: linear-gradient(90deg, #3059C7 0%, #30C7EC 161.79%, #46AEF7 344.24%);
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent; 
+}
+
+.t-pong {
+  background: linear-gradient(90deg, #16D9E3 0%, #30C7EC 47%, #46AEF7 100%);
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  filter: blur(0px);
 }

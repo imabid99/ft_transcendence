@@ -21,6 +21,7 @@ export default function Page() {
   const {profiles, user, socket}:any = useContext(contextdata);
   const myProfile = profiles?.find((profile:any) => profile.userId === user.id);
   const name = `${myProfile?.firstName} ${myProfile?.lastName}`;
+  const [showConfi, setShowConfi] = useState(false);
   
   function handleFileInputChange(e:any) 
   {
@@ -81,6 +82,10 @@ export default function Page() {
   }, []);
   return (
     <div className="flex flex-col 3xl:flex-row items-center w-[100%] gap-[50px] h-screen">
+      {
+        showConfi && <div className=" w-full h-full fixed top-0 left-0 z-[8]  inset-0 bg-black bg-opacity-5 backdrop-blur-[1.5px]"/>
+        
+      }
       <div className="flex flex-col w-[100%] items-center 3xl:items-end gap-[50px]">
         <div className="3xl:max-w-[922px] max-w-[1200px] w-11/12  xl:h-[448px] rounded-[42px] p-inf bg-white">
           <div className="text-[20px] text-center sm:text-left sm:text-[25px] font-[600] text-[#043B6A] pt-[20px] sm:pl-[40px] ">
@@ -261,6 +266,32 @@ export default function Page() {
                 />
             </div>
         </div>
+        {
+          showConfi && (
+            <div className="w-[497px]  h-[301px] bg-[#fff] absolute top-[38%] left-[41%] rounded-[25px] z-10">
+              <div className="flex flex-col items-center justify-center h-full gap-[37px]">
+                <div className="flex items-start ">
+                  <img src="Group 246.svg" alt="" />
+                  <div className="pl-[24px]">
+                    <p className="text-[#F53649] text-[24px] font-[600]">Are You Sure?</p>
+                    <p className="text-[#6C6C6C] text-[16px] font-[500] w-[249px]">
+                      If you proceed, you will lose all your personal data, Are you sure you
+                      want to delete your account?
+                    </p>
+                  </div>
+                </div>
+                <div className="flex gap-[37px]">
+                  <button className="w-[171px] h-[50px] border-[1px] rounded-[7px] border-[#6C6C6C] text-[#6C6C6C] font-[500] text-[16px] hover:bg-gray-100" onClick={()=>setShowConfi(false)}>
+                    Cancel
+                  </button>
+                  <button className="w-[171px] h-[50px]  rounded-[7px]  text-[#fff] font-[500] bg-[#F53649] text-[16px] hover:bg-[#f53649b3]" onClick={deleteUser}>
+                    Delete Account
+                  </button>
+                </div>
+              </div>
+            </div>
+          )
+        }
         <div className=" bg-white rounded-[20px] p-inf flex  flex-col  3xl:max-w-[922px] max-w-[1200px] w-11/12 xl:h-[169px] items-center sm:items-start">
           <div className="text-[20px] text-center sm:text-left sm:text-[25px] font-[600] text-[#043B6A] pt-[20px] sm:pl-[40px] pb-[28px]">
             Close Account
@@ -274,7 +305,7 @@ export default function Page() {
                 type="submit"
                 className="w-[160px] h-[50px] rounded-[12px]  cursor-pointer text-[#fff] text-[13px] font-[600] b-save"
                 value="Close Account"
-                onClick={deleteUser}
+                onClick={()=>{setShowConfi(true)}}
               />
             </div>
           </div>

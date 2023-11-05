@@ -24,7 +24,7 @@ export default function RootLayout({
           <meta name="description" content={metadata.description} />
           <link rel="icon" href="/favicon.ico" />
         </Head>
-          <div className='h-[100vh] w-[100vw] flex '>
+          <div className=' w-[100vw] flex '>
           <ContextProvider>
             {children}
           </ContextProvider>

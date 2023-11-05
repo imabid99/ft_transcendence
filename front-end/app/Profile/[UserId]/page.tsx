@@ -7,20 +7,20 @@ import ImageGrid from '../../../components/Dashboard/Profile/images';
 
 const images = [
     [
-        { src: '/airwa.svg', alt: '/Airwa Image', overlaySrc: '/airairair.svg' },
-        { src: '/horrorwh.svg', alt: '/Horrorwh Image', overlaySrc: '/jan.svg' },
+        { src: '/Air.svg', alt: 'Airwa Image' },
+        { src: '/hlock.svg', alt: 'Horrorwh Image'},
     ],
     [
-        { src: '/kingwk.svg', alt: '/Kingwk Image', overlaySrc: '/sarokh.svg' },
-        { src: '/gwg.svg', alt: '/GWG Image', overlaySrc: '/targethh.svg' },
-        { src: '/bwb.svg', alt: '/BWB Image', className: 'lg:block hidden', overlaySrc: '/hand.svg' },
+        { src: '/Grand copy.svg', alt: 'Kingwk Image'},
+        { src: '/Grand.svg', alt: 'GWG Image'},
+        { src: '/Luck.svg', alt: 'BWB Image', className: 'lg:block hidden'},
     ],
     [
-        { src: '/unbwb.svg', alt: '/UNBWB Image', overlaySrc: '/cap.svg' },
-        { src: '/ironwr.svg', alt: '/Ironwr Image', overlaySrc: '/sando9.svg' },
+        { src: '/Unb.svg', alt: 'UNBWB Image'},
+        { src: '/iron.svg', alt: 'Ironwr Image'},
     ],
     [
-        { src: '/bwb.svg', alt: '/Luck Image', className: 'pb-[30px] block lg:hidden',  overlaySrc: '/hand.svg'},
+        { src: '/Luck.svg', alt: 'Luck Image', className: 'pb-[30px] block lg:hidden'},
     ],
 ];
 
