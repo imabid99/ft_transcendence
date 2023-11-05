@@ -196,11 +196,7 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
 
   @SubscribeMessage("create-group")
   async handleCreateGroup(client: Socket, payload: any): Promise<void> {
-    console.log("file : ", payload.file);
-    // customStorage._handleFile(payload.file, null, (err, file) => {
-    //   console.log("err : ", err);
-    //   console.log("file : ", file);
-    // });
+
     const token = client.handshake.headers.authorization?.split(" ")[1];
     try {
       jwt.verify(token, process.env.JWT_SECRET);
@@ -225,7 +221,7 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
         return;
       }
       payload.groupUsers.push(user.id);
-      await this.prisma.channels.create({
+      const newChannel = await this.prisma.channels.create({
         data: {
           type: payload.groupType,
           name: payload.groupName,
@@ -260,8 +256,7 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
         
       }
       );
-
-
+      newChannel && this.server.to(decoded.username).emit("update-groupAvatar", {groupId: channel.id});
       this.server.emit("refresh");
       this.server.to(user.username).emit("errorNotif", {message: `group created`, type: true});
     }

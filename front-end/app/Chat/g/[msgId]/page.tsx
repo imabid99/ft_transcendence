@@ -64,7 +64,7 @@ export default function Page() {
         try {
           const res = await axiosInstance.get(`http://${process.env.NEXT_PUBLIC_APP_URL}:3000/api/chat/channel/${msgId}`);
           setGroup(res.data);
-          setMessages(res.data.channel.Messages);
+          setMessages(res.data.channel.Messages ? res.data.channel.Messages : null);
           setMember(true);
         } catch (err) {
           setMember(false);

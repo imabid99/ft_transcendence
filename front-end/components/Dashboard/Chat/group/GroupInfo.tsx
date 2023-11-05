@@ -3,6 +3,8 @@ import { useEffect, useState } from "react";
 import { useRouter } from 'next/navigation'
 import { useContext } from "react";
 import { contextdata } from "@/app/contextApi";
+import axiosInstance from "@/utils/axiosInstance";
+
 type GroupInfoProps =
 {
     setShowBody : any,
@@ -18,7 +20,7 @@ export default function GroupInfo({setShowBody,setGroupUsers,groupUsers}:GroupIn
     const [groupType, setGroupType] = useState('Group Type');
     const [showError, setShowError] = useState<string|null>(null);
     const [protectedPassword, setProtectedPassword] = useState('');
-    const [avatar, setAvatar] = useState(null);
+    const [avatar, setAvatar] = useState<FormData | null>(null);
     const [avatarUrl, setAvatarUrl] = useState("/groupAvatar.jpg");
     const [showUploadImage, setShowUploadImage] = useState(false);
     const router = useRouter();
@@ -40,9 +42,7 @@ export default function GroupInfo({setShowBody,setGroupUsers,groupUsers}:GroupIn
         }
 
 		setShowAnimationLoading(true);
-		setTimeout(() => {
 			setShowBody(null);
-			setShowAnimationLoading(false)
 			setGroupType('Group Type');
 			setShowError(null);
 			setGroupName('');
@@ -53,14 +53,29 @@ export default function GroupInfo({setShowBody,setGroupUsers,groupUsers}:GroupIn
                 groupUsers: groupUsers,
                 protectedPassword: protectedPassword,
                 username: user?.username,
-                file: avatar,
             }
             socket.io.opts.query = {
                 'file' : avatar,
             }
             socket.emit('create-group', payload);
-			router.push(`/Chat`)
-		}, 1000);
+            socket.on('update-groupAvatar', async (data: any) => {
+                try{
+                    if(!avatar){
+                        setShowAnimationLoading(false)
+                        router.push(`/Chat`)
+                        return;
+                    }
+                    console.log("update-groupAvatar : ", avatar);
+                    await axiosInstance.post(`http://${process.env.NEXT_PUBLIC_APP_URL}:3000/api/upload/channelAvatar/${data.groupId}`,avatar)
+                    console.log("update-groupAvatar");
+                    setShowAnimationLoading(false)
+                    router.push(`/Chat`)
+                }
+                catch(err){
+                    console.log("update-groupAvatar : ",err);
+                }
+            })
+
 	}
     const handleUploadImage = (e: any) => {
         const file = e.target.files?.[0];
@@ -73,7 +88,7 @@ export default function GroupInfo({setShowBody,setGroupUsers,groupUsers}:GroupIn
             alert("File is too large. Please upload a file smaller than 5 MB.");
             return;
         }
-        setAvatar(file);
+        setAvatar(formData);
         setAvatarUrl(URL.createObjectURL(file));
     }
     return (

@@ -60,6 +60,7 @@ export class UploadService {
   }
   async uploadChannelAvatar(path: string, channelId: string): Promise<any> {
     try {
+      console.log("------------------");
       await this.prisma.channel.update({
         where: {
           id: channelId,
