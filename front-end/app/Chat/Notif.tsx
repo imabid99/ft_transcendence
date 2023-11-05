@@ -17,7 +17,6 @@ export default function Notif({ message, type }: NotifProps) {
     const close = setTimeout(() => {
         handleClose();
     }, 5000);
-    console.log("Notif.tsx: NotifProps: message: ", type);
     return (
         <>
             <div ref={toastRef} id="toast-danger" className=" flex items-center w-full max-w-xs p-4 mb-4 text-gray-500 bg-white rounded-lg shadow dark:text-gray-400 dark:bg-gray-800" role="alert">

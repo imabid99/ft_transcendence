@@ -1,3 +1,4 @@
+import { Profile } from './../../../../node_modules/.prisma/client/index.d';
 import {
   SubscribeMessage,
   WebSocketGateway,
@@ -85,7 +86,7 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
             userId: decoded.userId,
           },
         });
-        if ((this.server?.adapter as any)?.rooms?.get(decoded.username)?.size >= 1){
+        if ((this.server?.adapter as any)?.rooms?.get(decoded.username)?.size >= 1 || !Profile){
           return;
         }
         await this.prisma.profile.update({
@@ -192,6 +193,9 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
       this.server.emit("refresh");
     }
   }
+  getSocketById(socketId: string): Socket | null {
+    return (this.server?.sockets.sockets as any).get(socketId) || null;
+  }
 
   @SubscribeMessage("create-group")
   async handleCreateGroup(client: Socket, payload: any): Promise<void> {
@@ -244,17 +248,17 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
           Members: true,
         },
       });
+      // getSocketById()
       channel.Members.map((member) => {
-        const userSocket = this.server.sockets.adapter?.rooms?.get(member.username);
-        if(userSocket)
-        {
-          userSocket.forEach((socketId) => { 
-            this.server.sockets.sockets.get(socketId).join(channel.id);
-          });
-        }
-        
-      }
-      );
+        const userSocket = (this.server?.adapter as any)?.rooms?.get(decoded.username);
+          console.log("userSocket : ", (this.server?.sockets as any).client);
+          if (userSocket) {
+            userSocket.forEach((socketId) => {
+              console.log("this.getSocketById(socketId) : ", this.getSocketById(socketId));
+              this.getSocketById(socketId)?.join(channel.id);
+            });
+          }
+      });
       newChannel && this.server.to(decoded.username).emit("update-groupAvatar", {groupId: channel.id});
       this.server.emit("refresh");
       this.server.to(user.username).emit("errorNotif", {message: `group created`, type: true});

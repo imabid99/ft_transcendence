@@ -115,7 +115,7 @@ export default function Search({setShowBody}: Props) {
                                                 </span>
                                             </div>
                                         </div>
-                                        <div className="flex items-center justify-center px-[30px] py-[10px] bg-[#366996] rounded-[10px] text-[#fff] text-[14px] font-[500] font-[Poppins] cursor-pointer self-end" onClick={() => channel.type=== "protected" ? setIsProtected(channel.id): handelClickChannel(channel.id,channel.type)}>
+                                        <div className="flex items-center justify-center px-[30px] py-[10px] bg-[#366996] rounded-[10px] text-[#fff] text-[14px] font-[500] font-[Poppins] cursor-pointer self-end" onClick={() => channel.type=== "Protected" ? setIsProtected(channel.id): handelClickChannel(channel.id,channel.type)}>
                                             Join
                                         </div>
                                     </div>
