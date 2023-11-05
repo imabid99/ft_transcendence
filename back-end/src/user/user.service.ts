@@ -148,7 +148,7 @@ export class UserService {
             set: "User",
           },
           avatar: {
-            set: "uploads/default/nouser.avif.png",
+            set: "uploads/default/nouser.avif",
           },
         },
       });
