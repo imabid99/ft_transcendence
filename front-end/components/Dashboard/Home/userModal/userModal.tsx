@@ -5,15 +5,16 @@ type ModalRef = {
     modalRef: any,
     name: string,
     username: string,
-    avatar: string
+    avatar: string,
+    cover: string
 }
 
 
-export default function UserModal ({modalRef, name, username, avatar}: ModalRef) {
+export default function UserModal ({modalRef, name, username, avatar, cover}: ModalRef) {
     return (
         <div className='modal-user absolute w-[270px] h-[292px]  bg-[#FFF] bottom-[0px] left-[75px] z-[55] rounded-[37px] translate-y-[300px] -translate-x-[85px] overflow-hidden  flex-col items-end justify-center hidden'
             ref={modalRef}>
-            <img src="/modalbg.jpg" alt="" className="w-[500px] rounded-[37px] absolute top-[0px] left-[0px] z-[2] object-cover" />
+            <img src={`http://${process.env.NEXT_PUBLIC_APP_URL}:3000/${cover}`} alt="" className="w-[500px] rounded-[37px] absolute top-[0px] left-[0px] z-[2] object-cover" />
             <div className='z-[2] w-full h-full flex flex-col items-center  gap-[20px] relative'>
                 <span className='absolute z-[1] w-[350px] top-[50px] -left-[50px]'>
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 320">

@@ -1,4 +1,3 @@
-import { Profile } from './../../../../node_modules/.prisma/client/index.d';
 import {
   SubscribeMessage,
   WebSocketGateway,

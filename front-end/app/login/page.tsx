@@ -62,7 +62,7 @@ export default function Home() {
     }, 1000);
   }
   return (
-    <div className="h-[100vh] w-[100%] bg-gradient-to-r from-cyan-500 to-blue-500 flex justify-around items-center bg-no-repeat bg-cover bg-center" style={{ backgroundImage: 'url("first4.png")' }}>
+    <div className="min-h-[100vh] w-[100%] bg-gradient-to-r from-cyan-500 to-blue-500 flex justify-around items-center bg-no-repeat bg-cover bg-center" style={{ backgroundImage: 'url("first4.png")' }}>
       <div className="h-[100vh] w-[100vw] bg-white flex flex-row items-center justify-center md:w-11/12 md:h-[735px] md:rounded-[61px] xl:max-w-[1404px] xl:mx-auto">
         <div className="flex flex-col items-center justify-center">
           <p className="font-[600] text-[40px] text-[#064A85] sm:text-[66px]">
