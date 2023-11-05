@@ -1,5 +1,4 @@
-./front-end/node_modules
-./back-end/node_modules
+migrations
 node_modules
-./Game/node_modules
 dist
+back-end/uploads/all/*
