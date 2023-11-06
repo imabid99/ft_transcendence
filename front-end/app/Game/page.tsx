@@ -41,7 +41,7 @@ import socketmanager from "./socketmanager";
 import { contextdata } from "../contextApi";
 import { io } from "socket.io-client";
 import { Physics, usePlane, useBox, useSphere, Debug} from '@react-three/cannon'
-import { Mina } from "next/font/google";
+// import { Mina } from "next/font/google";
 
 // import { contextdata } from '@/app/contextApi';
 
@@ -92,21 +92,20 @@ const Game = () => {
   const { sunPosition } = useControls("sky", {
 	sunPosition: [-0.07, -0.03, -0.75],
   });
-  const { planecolor } = useControls("color", { planecolor: "#51b151" });
-  const { floorcolor } = useControls("color", { floorcolor: "#1572ff" });
-  const { paddlecolor } = useControls("color", { paddlecolor: "#abebff" });
-  const { fogcolor } = useControls("color", { fogcolor: "#382f21" });
+	const { planecolor } = useControls("color", { planecolor: "#51b151" });
+	const { floorcolor } = useControls("color", { floorcolor: "#1572ff" });
+	const { paddlecolor } = useControls("color", { paddlecolor: "#abebff" });
+	const { fogcolor } = useControls("color", { fogcolor: "#382f21" });
 		  
-  function Plane(props: any) {
+	function Plane(props: any) {
+		const [ref, api] = usePlane(() => ({type: "Static", material: { friction: 0 }, args: [20, 20],  rotation: [-Math.PI / 2, 0, 0],...props}), useRef<THREE.Mesh>(null))
 
-	const [ref, api] = usePlane(() => ({type: "Static", material: { friction: 0 }, args: [20, 20],  rotation: [-Math.PI / 2, 0, 0],...props}), useRef<THREE.Mesh>(null))
-
-	return (
-			<mesh ref={ref} rotation-x={-Math.PI * 0.5} position-y={0.02} receiveShadow>
-				<planeGeometry args={[20, 20]} />
-				<meshStandardMaterial color={floorcolor} />
-			</mesh>
-		);
+		return (
+				<mesh ref={ref} rotation-x={-Math.PI * 0.5} position-y={0.02} receiveShadow>
+					<planeGeometry args={[20, 20]} />
+					<meshStandardMaterial color={floorcolor} />
+				</mesh>
+			);
 	}
 
 	function Player1Paddle(props: any) {
@@ -152,10 +151,8 @@ const Game = () => {
 					const smoothingFactor = 0.5; 
 					paddleposX = paddleposX + (targetPosX - paddleposX) * smoothingFactor;
 					api.position.set(paddleposX, 0.5, 9);
-					// ref.current.position.set(paddleposX, 0.5, 9);
 				}
 			
-				// console.log("position x: ", ref.current?.position.x);
 			requestAnimationFrame(updatePosition);
 		  };
 		  requestAnimationFrame(updatePosition);
@@ -227,9 +224,6 @@ const Game = () => {
 			window.addEventListener("keydown", handleKeyDown);
 			window.addEventListener("keyup", handleKeyUp);
 			
-	
-	
-			
 			const updatePosition = () => {
 				if (ref.current) {
 					if (isMovingLeft) {
@@ -240,12 +234,7 @@ const Game = () => {
 						const smoothingFactor = 0.5; 
 						paddleposX = paddleposX + (targetPosX - paddleposX) * smoothingFactor;
 						api.position.set(paddleposX, 0.5, -9);
-						// ref.current.position.set(paddleposX, 0.5, 9);
 					}
-				
-	
-				
-				// playerbodyRef.current?.setTranslation({ x: -2, y: 0, z: 0 }, true)
 	
 				requestAnimationFrame(updatePosition);
 			};
@@ -282,8 +271,12 @@ const Game = () => {
 	let hasServed = false;
 
 	function GameBall(props: any) {
-		const [ref, api] = useSphere(() => ({ mass: 1, material: { restitution: 1, friction: 0 },args: [0.35, 42, 16], position: [0, 0.35, 0], ...props }), useRef<THREE.Mesh>(null))
-		
+		const [ref, api] = useSphere(() => ({ mass: 1, material: { restitution: 1, friction: 0 },args: [0.32, 42, 16], position: [0, 0.35, 0], ...props }), useRef<THREE.Mesh>(null))
+
+
+		const position = useRef(new THREE.Vector3(0, 0, 0));
+
+
 		useEffect(() => {
 			let isServing = false;
 			
@@ -298,48 +291,44 @@ const Game = () => {
 					isServing = false;
 				}
 			};
+			const test = () => {
+			 api.position.subscribe((v) => {
+					return (position.current = new THREE.Vector3(v[0], v[1], v[2]));
+				  })
+				}	
+				test();
+				console.log("position ball: ", position.current.z);
 
-			
 			window.addEventListener('keydown', ServeDown);
 			window.addEventListener('keyup', ServeUp);
+
 			
 			const serveball = () => {
-				if(ref.current)
-				{	
-					if(isServing && !hasServed)
+				if(isServing && !hasServed)
+				{
+					api.applyImpulse([10, 0, 10], [0, 0, 0]);
+					hasServed = true;
+				}
+
+					if(position.current.z < -10 || position.current.z > 10)
 					{
-						api.applyImpulse([10, 0, 10], [0, 0, 0]);
-						hasServed = true;
-					}
-					// console.log(ballRef.current.position.z);
-					if(ref.current.position.z || ref.current.position.z > 10)
-					{
-						if (ref.current.position.z > 10) {
+						if (position.current.z > 10) {
 							setCount(previousCount => previousCount + 1);
 						}
-						if (ref.current.position.z < -10) {
+						if (position.current.z < -10) {
 							setCount2(previousCount => previousCount + 1);
 						}
-						
-
-						
-						// api.position.set(0, 0.35, 0);
-						// ballbodyRef.current.setTranslation({ x: 0, y: 0.35, z: 0 }, false);
-						// ballbodyRef.current.setLinvel({ x: 0, y: 0, z: 0 }, false);
-						// ballbodyRef.current.setAngvel({ x: 0, y: 0, z: 0 }, false);
-
 						hasServed = false;
 					}
-					// socket.emit('ballPosition', {x: ref.current.position.x, y: ref.current.position.y, z: ref.current.position.z});
-				}
+				socket.emit('ballPosition', {x: position.current.x, y: position.current.y, z: position.current.z});
 				requestAnimationFrame(serveball);
 			};
+
 			requestAnimationFrame(serveball);
 			
 			socket.on('ballPosition', (data) => {
-				if (ref.current) {
-					ref.current.position.set(data.x, data.y, data.z);
-				}
+				console.log("ana hna");
+					api.position.set(data.x, data.y, data.z);
 			});
 	
 					
@@ -352,14 +341,7 @@ const Game = () => {
 					
 			}, []);
 
-			// useEffect(() => {
-			// 	api.position.subscribe((position) => {
-			// 	  ref.current?.position.copy(new THREE.Vector3().fromArray(position));
-			// 	});
-			// 	console.log("position ball: ", ref.current?.position);
-			// 	return () => {
-			// 	};
-			//   }, [api.position, ref]);
+
 
 		return (
 			<mesh position={[0, 0.35, 0]} ref={ref} castShadow receiveShadow>
@@ -373,7 +355,7 @@ const Game = () => {
 
 		const [ref, api] = useBox(() => ({ type: "Static",mass: 1,
 			args: [10, 3, 20],
-			position: [-12, 0.3, 0],
+			position: [-11.35, 0.3, 0],
 			material: { restitution: 1, friction: 0 }, ...props }), useRef<THREE.Mesh>(null))
 	
 		return (
@@ -389,7 +371,7 @@ const Game = () => {
 
 		const [ref, api] = useBox(() => ({ type: "Static",mass: 1,
 			args: [10, 3, 20],
-			position: [12, 0.3, 0],
+			position: [11.35, 0.3, 0],
 			material: { restitution: 1, friction: 0 }, ...props }), useRef<THREE.Mesh>(null))
 	
 		return (
