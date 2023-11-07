@@ -15,6 +15,7 @@ type Message = {
   fromName :    string,
   content :     string,
   createdAt:    string,
+  Avatar?:      string,
 }
 
 
@@ -56,7 +57,9 @@ export default function Page() {
         fromName: payload.fromName,
         content: payload.content,
         createdAt: payload.createdAt,
+        Avatar: payload.Avatar,
       };
+      console.log("newMessage: ", newMessage)
       if(messages?.length === 0)
         setMessages([newMessage])
       else
@@ -81,6 +84,7 @@ export default function Page() {
 				content: content,
 				createdAt: new Date().toISOString(),
         groupId: msgId,
+        Avatar: user.profile.avatar,
 			},
 		}
 		socket.emit("message-to-group", payload);

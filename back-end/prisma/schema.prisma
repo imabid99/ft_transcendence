@@ -102,6 +102,7 @@ model Message {
   userId     String?
   channels   channels? @relation(fields: [channelsId], references: [id])
   channelsId String?
+  Avatar     String?
 }
 
 model BlockList {

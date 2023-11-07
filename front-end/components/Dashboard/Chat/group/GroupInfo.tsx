@@ -27,7 +27,6 @@ export default function GroupInfo({setShowBody,setGroupUsers,groupUsers}:GroupIn
     const {user, socket} :any = useContext(contextdata);
 
 	const createGroup = () => {
-        console.log("create-group");
 		if (GroupName === '') {
 			setShowError('badGroupName');
 			return;
@@ -54,9 +53,6 @@ export default function GroupInfo({setShowBody,setGroupUsers,groupUsers}:GroupIn
                 protectedPassword: protectedPassword,
                 username: user?.username,
             }
-            socket.io.opts.query = {
-                'file' : avatar,
-            }
             socket.emit('create-group', payload);
             socket.on('update-groupAvatar', async (data: any) => {
                 try{
@@ -65,9 +61,9 @@ export default function GroupInfo({setShowBody,setGroupUsers,groupUsers}:GroupIn
                         router.push(`/Chat`)
                         return;
                     }
-                    await axiosInstance.post(`http://${process.env.NEXT_PUBLIC_APP_URL}:3000/api/upload/channelAvatar/${data.groupId}`,avatar)
-                    setShowAnimationLoading(false)
-                    router.push(`/Chat`)
+                    const res = await axiosInstance.post(`http://${process.env.NEXT_PUBLIC_APP_URL}:3000/api/upload/channelAvatar/${data.groupId}`,avatar)
+                    res && setShowAnimationLoading(false)
+                    res && router.push(`/Chat`)
                 }
                 catch(err){
                     console.log("update-groupAvatar : ",err);
