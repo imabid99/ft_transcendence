@@ -23,6 +23,7 @@ const ContextProvider = ({ children }: { children: React.ReactNode; }) => {
   const dashboardRef = React.useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
+    if (!loged) return;
     const getUser = async () => {
       try
       {

@@ -1,4 +1,4 @@
-import { Profile } from './../../../../node_modules/.prisma/client/index.d';
+
 import {
   SubscribeMessage,
   WebSocketGateway,
@@ -31,6 +31,37 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
   @WebSocketServer()
   server: SocketIO.Server;
 
+  private socketMap: Map<string, Socket[]> = new Map<string, Socket[]>();
+
+  addUserSocket(userName: string, socket: Socket) {
+    if (this.socketMap.has(userName)) {
+      const sockets = this.socketMap.get(userName);
+      sockets.push(socket);
+      this.socketMap.set(userName, sockets);
+    } else {
+      this.socketMap.set(userName, [socket]);
+    }
+  }
+
+  removeUserSocket(userName: string, socket: Socket) {
+    if (this.socketMap.has(userName)) {
+      const sockets = this.socketMap.get(userName);
+      const index = sockets.indexOf(socket);
+      if (index !== -1) {
+        sockets.splice(index, 1);
+        if (sockets.length === 0) {
+          this.socketMap.delete(userName);
+        } else {
+          this.socketMap.set(userName, sockets);
+        }
+      }
+    }
+  }
+
+  getSocketsByUserName(userName: string): Socket[] {
+    return this.socketMap.get(userName) || [];
+  }
+
   async handleConnection(client: Socket) {
     const token = client.handshake.headers.authorization?.split(" ")[1];
     if (token) {
@@ -57,6 +88,7 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
         myChannels.map((channel) => {
           client.join(channel.id);
         });
+        this.addUserSocket(decoded.username, client);
         if ((this.server?.adapter as any)?.rooms?.get(decoded.username)?.size > 1){
           return;
         }
@@ -75,34 +107,33 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
       }
     }
   }
+
   async handleDisconnect(client: Socket) {
     const token = client.handshake.headers.authorization?.split(" ")[1];
-    if (token) {
-      const decoded: any = jwt_decode(token);
-      try
-      {
-        const Profile = await this.prisma.profile.findUnique({
-          where: {
-            userId: decoded.userId,
-          },
-        });
-        if ((this.server?.adapter as any)?.rooms?.get(decoded.username)?.size >= 1 || !Profile){
-          return;
-        }
-        await this.prisma.profile.update({
-          where: {
-            userId: decoded.userId,
-          },
-          data: {
-            status: "offline",
-          },
-        });
-  
-        this.server.emit("refresh");
+    const decoded: any = jwt_decode(token);
+    try
+    {
+      const Profile = await this.prisma.profile.findUnique({
+        where: {
+          userId: decoded.userId,
+        },
+      });
+      if ((this.server?.adapter as any)?.rooms?.get(decoded.username)?.size >= 1 || !Profile){
+        return;
       }
-      catch(err){
-        console.log("err : ", err.message);
-      }
+      await this.prisma.profile.update({
+        where: {
+          userId: decoded.userId,
+        },
+        data: {
+          status: "offline",
+        },
+      });
+      this.removeUserSocket(decoded.username, client);
+      this.server.emit("refresh");
+    }
+    catch(err){
+      console.log("err : ", err.message);
     }
   }
 
@@ -193,9 +224,6 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
       this.server.emit("refresh");
     }
   }
-  getSocketById(socketId: string): Socket | null {
-    return (this.server?.sockets.sockets as any).get(socketId) || null;
-  }
 
   @SubscribeMessage("create-group")
   async handleCreateGroup(client: Socket, payload: any): Promise<void> {
@@ -248,17 +276,14 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
           Members: true,
         },
       });
-      // getSocketById()
+      // console.log("channel : ", this.getSocketsByUserName(user.username).join(channel.id));
       channel.Members.map((member) => {
-        const userSocket = (this.server?.adapter as any)?.rooms?.get(decoded.username);
-          console.log("userSocket : ", (this.server?.sockets as any).client);
-          if (userSocket) {
-            userSocket.forEach((socketId) => {
-              console.log("this.getSocketById(socketId) : ", this.getSocketById(socketId));
-              this.getSocketById(socketId)?.join(channel.id);
-            });
-          }
-      });
+        const sockets = this.getSocketsByUserName(member.username);
+        sockets.map((socket) => {
+          socket.join(channel.id);
+        });
+      })
+
       newChannel && this.server.to(decoded.username).emit("update-groupAvatar", {groupId: channel.id});
       this.server.emit("refresh");
       this.server.to(user.username).emit("errorNotif", {message: `group created`, type: true});
@@ -342,11 +367,14 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
         this.server.to(user.username).emit("errorNotif", {message: `you are banned from this group`, type: false});
         return;
       }
+      console.log("payload : ", payload);
+      
       await this.prisma.message.create({
         data: {
           fromName: user.username,
           content: payload.message.content,
           channelsId: group.id,
+          Avatar: payload.Avatar,
         },
       });
 
