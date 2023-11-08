@@ -127,7 +127,7 @@ const Game = () => {
 			  socket.emit('paddle-move', { direction: 'right', moving: true, playerId: user?.id });
 			}
 		  };
-	  
+
 		  const handleKeyUp = (event: KeyboardEvent) => {
 			if (event.code === "ArrowLeft") {
 			  isMovingLeft = false;
@@ -269,6 +269,7 @@ const Game = () => {
 	const [p1_count, setCount] = useState(0);
 	const [p2_count, setCount2] = useState(0);
 	let hasServed = false;
+	
 
 	function GameBall(props: any) {
 		const [ref, api] = useSphere(() => ({ mass: 1, material: { restitution: 1, friction: 0 },args: [0.32, 42, 16], position: [0, 0.35, 0], ...props }), useRef<THREE.Mesh>(null))
@@ -297,39 +298,41 @@ const Game = () => {
 				  })
 				}	
 				test();
-				console.log("position ball: ", position.current.z);
-
-			window.addEventListener('keydown', ServeDown);
-			window.addEventListener('keyup', ServeUp);
-
-			
-			const serveball = () => {
-				if(isServing && !hasServed)
-				{
-					api.applyImpulse([10, 0, 10], [0, 0, 0]);
-					hasServed = true;
-				}
-
+				
+				window.addEventListener('keydown', ServeDown);
+				window.addEventListener('keyup', ServeUp);
+				
+				
+				const serveball = () => {
+					if(isServing && !hasServed)
+					{
+						api.applyImpulse([10, 0, 10], [0, 0, 0]);
+						hasServed = true;
+					}
+					// console.log("position ball: ", position.current.z);
 					if(position.current.z < -10 || position.current.z > 10)
 					{
 						if (position.current.z > 10) {
-							setCount(previousCount => previousCount + 1);
+							setCount(p1_count + 1);
+							// setCount(prevCount => prevCount + 1);
 						}
 						if (position.current.z < -10) {
-							setCount2(previousCount => previousCount + 1);
+							setCount2(p2_count + 1);
+							// setCount2(prevCount2 => prevCount2 + 1);
 						}
+						api.position.set(0, 0.35, 0);
 						hasServed = false;
 					}
-				socket.emit('ballPosition', {x: position.current.x, y: position.current.y, z: position.current.z});
+				// socket.emit('ballPosition', {x: position.current.x, y: position.current.y, z: position.current.z});
 				requestAnimationFrame(serveball);
 			};
 
 			requestAnimationFrame(serveball);
 			
-			socket.on('ballPosition', (data) => {
-				console.log("ana hna");
-					api.position.set(data.x, data.y, data.z);
-			});
+			// socket.on('ballPosition', (data) => {
+			// 	console.log("ana hna");
+			// 		api.position.set(data.x, data.y, data.z);
+			// });
 	
 					
 			return () => {

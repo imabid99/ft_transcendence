@@ -68,6 +68,7 @@ export class GameGateway implements OnGatewayConnection, OnGatewayDisconnect {
       if (this.waitingPlayers.length >= 2) {
         const player1 = this.waitingPlayers.shift();
         const player2 = this.waitingPlayers.shift();
+        
         if (player1.username !== player2.username) {
           console.log(`Match started between ${player1.client.id} and ${player2.client.id}`);
           const matchId = `match-${player1.client.id}-${player2.client.id}`
@@ -112,14 +113,14 @@ export class GameGateway implements OnGatewayConnection, OnGatewayDisconnect {
     }
   }
 
-  @SubscribeMessage('balllPosition')
-  handleBallPosition(client: Socket, payload: {x: number, y: number, z: number}) {
-    const match = this.matches.get(client.id);
-    // if (match) {
-      const {matchId, players} = match;
-      this.server.to(matchId).emit('ballPosition', payload);
-    // }
-  }
+  // @SubscribeMessage('balllPosition')
+  // handleBallPosition(client: Socket, payload: {x: number, y: number, z: number}) {
+  //   const match = this.matches.get(client.id);
+  //   // if (match) {
+  //     const {matchId, players} = match;
+  //     this.server.to(matchId).emit('ballPosition', payload);
+  //   // }
+  // }
 }
 
 
