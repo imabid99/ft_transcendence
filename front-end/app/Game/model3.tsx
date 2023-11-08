@@ -1,7 +1,6 @@
 import React, { useEffect } from 'react';
 import { useGLTF } from '@react-three/drei';
 import * as THREE from 'three';
-import { RigidBody } from "@react-three/rapier";
 
 const Model3 = () => {
 

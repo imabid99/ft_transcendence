@@ -3,53 +3,24 @@
 import { Canvas, useFrame } from "@react-three/fiber";
 import React, { useRef, useState, useEffect, useMemo, useContext } from "react";
 import {
-  ContactShadows,
   Sky,
   SoftShadows,
-  Html,
-  Stats,
-  TrackballControls,
-  useHelper,
   OrbitControls,
   RoundedBox,
-  MeshWobbleMaterial,
-  Stars,
   Sparkles,
-  Outlines,
-  Effects,
-  KeyboardControls,
-  useKeyboardControls,
-  Box,
   Text
 } from "@react-three/drei";
-// import { useGLTF, Environment } from "@react-three/drei";
-import { useLoader } from "@react-three/fiber";
-import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader";
 import { useControls } from "leva";
 import { Perf } from "r3f-perf";
 import * as THREE from "three";
-import { EffectComposer, Bloom, Vignette } from '@react-three/postprocessing'
-// import { RigidBody, vec3, useRapier ,RapierRigidBody , Physics, CuboidCollider } from "@react-three/rapier";
-import { Vector3 } from "three";
-// import * as jwt from "jsonwebtoken";
-// import jwt_decode from "jwt-decode";
 import "../globals.css";
 import  Model1  from "./model1";
 import  Model2  from "./model2";
 import  Model3  from "./model3";
-import socketmanager from "./socketmanager";
 import { contextdata } from "../contextApi";
 import { io } from "socket.io-client";
 import { Physics, usePlane, useBox, useSphere, Debug} from '@react-three/cannon'
-// import { Mina } from "next/font/google";
 
-// import { contextdata } from '@/app/contextApi';
-
-
-// const {profiles, user}:any = useContext(contextdata);
-// const myProfile = profiles?.find((profile:any) => profile.userId === user.id);
-// const name = `${myProfile?.firstName} ${myProfile?.lastName}`;
-// console.log(name);
 
 const Game = () => {
 
@@ -109,6 +80,7 @@ const Game = () => {
 	}
 
 	function Player1Paddle(props: any) {
+		console.log("P1START");
 		const [ref, api] = useBox(() => ({ mass: 0, type: "Static", material: { restitution: 1, friction: 0 },args: [3, 1, 0.3], position: [0, 0.5, 9], ...props }), useRef<THREE.Mesh>(null));
 	  
 		useEffect(() => {
@@ -117,6 +89,8 @@ const Game = () => {
 		  let isMovingRight = false;
 		  let paddleposX = 0;
 		  let targetPosX = paddleposX;
+		  let animationFrameId: number | null = null;
+		  let isUpdating = false;
 
 		  const handleKeyDown = (event: KeyboardEvent) => {
 			if (event.code === "ArrowLeft") {
@@ -126,6 +100,10 @@ const Game = () => {
 			  isMovingRight = true;
 			  socket.emit('paddle-move', { direction: 'right', moving: true, playerId: user?.id });
 			}
+			if (!isUpdating) {
+				isUpdating = true;
+				animationFrameId = requestAnimationFrame(updatePosition);
+			  }
 		  };
 
 		  const handleKeyUp = (event: KeyboardEvent) => {
@@ -136,6 +114,12 @@ const Game = () => {
 			  isMovingRight = false;
 			  socket.emit('paddle-move', { direction: 'right', moving: false, playerId: user?.id });
 			}
+
+			 if (!isMovingLeft && !isMovingRight && animationFrameId !== null) {
+        cancelAnimationFrame(animationFrameId);
+        animationFrameId = null;
+        isUpdating = false;
+      }
 		  };
 		  window.addEventListener("keydown", handleKeyDown);
 		  window.addEventListener("keyup", handleKeyUp);
@@ -152,10 +136,9 @@ const Game = () => {
 					paddleposX = paddleposX + (targetPosX - paddleposX) * smoothingFactor;
 					api.position.set(paddleposX, 0.5, 9);
 				}
-			
-			requestAnimationFrame(updatePosition);
+				animationFrameId = requestAnimationFrame(updatePosition);
+
 		  };
-		  requestAnimationFrame(updatePosition);
 
 
 	  
@@ -163,6 +146,9 @@ const Game = () => {
 			window.removeEventListener("keydown", handleKeyDown);
 			window.removeEventListener("keyup", handleKeyUp);
 			socket.off('paddle-move');
+			if (animationFrameId !== null) {
+				cancelAnimationFrame(animationFrameId);
+			  }
 		  };
 		}, [user]);
 	  
@@ -186,7 +172,7 @@ const Game = () => {
 	  
 
 	function Player2Paddle(props: any) {
-
+		console.log("P2START");
 		const [ref, api] = useBox(() => ({ mass: 0, type: "Static",material: { restitution: 1, friction: 0 }, args: [3, 1, 0.3], position: [0, 0.5, -9], ...props }), useRef<THREE.Mesh>(null))
 
 		useEffect(() => {
@@ -268,15 +254,16 @@ const Game = () => {
 
 	const [p1_count, setCount] = useState(0);
 	const [p2_count, setCount2] = useState(0);
+
 	let hasServed = false;
 	
 
 	function GameBall(props: any) {
+		console.log("BallSTART");
 		const [ref, api] = useSphere(() => ({ mass: 1, material: { restitution: 1, friction: 0 },args: [0.32, 42, 16], position: [0, 0.35, 0], ...props }), useRef<THREE.Mesh>(null))
 
 
 		const position = useRef(new THREE.Vector3(0, 0, 0));
-
 
 		useEffect(() => {
 			let isServing = false;
@@ -292,11 +279,11 @@ const Game = () => {
 					isServing = false;
 				}
 			};
-			const test = () => {
-			 api.position.subscribe((v) => {
-					return (position.current = new THREE.Vector3(v[0], v[1], v[2]));
-				  })
-				}	
+				const test = () => {
+				api.position.subscribe((v) => {
+						return (position.current = new THREE.Vector3(v[0], v[1], v[2]));
+					})
+					}	
 				test();
 				
 				window.addEventListener('keydown', ServeDown);
@@ -313,14 +300,15 @@ const Game = () => {
 					if(position.current.z < -10 || position.current.z > 10)
 					{
 						if (position.current.z > 10) {
-							setCount(p1_count + 1);
+							// setCount(p1_count + 1);
 							// setCount(prevCount => prevCount + 1);
 						}
 						if (position.current.z < -10) {
-							setCount2(p2_count + 1);
+							// setCount2(p2_count + 1);
 							// setCount2(prevCount2 => prevCount2 + 1);
 						}
 						api.position.set(0, 0.35, 0);
+						api.velocity.set(0, 0, 0);
 						hasServed = false;
 					}
 				// socket.emit('ballPosition', {x: position.current.x, y: position.current.y, z: position.current.z});

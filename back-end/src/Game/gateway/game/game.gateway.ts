@@ -113,14 +113,15 @@ export class GameGateway implements OnGatewayConnection, OnGatewayDisconnect {
     }
   }
 
-  // @SubscribeMessage('balllPosition')
-  // handleBallPosition(client: Socket, payload: {x: number, y: number, z: number}) {
-  //   const match = this.matches.get(client.id);
-  //   // if (match) {
-  //     const {matchId, players} = match;
-  //     this.server.to(matchId).emit('ballPosition', payload);
-  //   // }
-  // }
+  @SubscribeMessage('balllPosition')
+  handleBallPosition(client: Socket, payload: {x: number, y: number, z: number}) {
+    const match = this.matches.get(client.id);
+    // if (match) {
+      console.log("HEY BROTHER");
+      const {matchId, players} = match;
+      this.server.to(matchId).emit('ballPosition', payload);
+    // }
+  }
 }
 
 
