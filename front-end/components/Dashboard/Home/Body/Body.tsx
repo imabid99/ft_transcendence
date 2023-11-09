@@ -86,19 +86,7 @@ export default function Body({ leaderRef, handelShaw }: Props) {
                                 <SwiperSlide>
                                     <Friend cover="rectangle-161.svg" avatar="46e4e1beddaa3825f3d815f7f7ef8134.jpeg" name="Achraf sabbar" username="asabbar"    />
                                 </SwiperSlide>
-                            {/* <Friend cover="rectangle-161.svg" avatar="ellipse-180.svg" name="Achraf sabbar" username="asabbar"  />
-                            <Friend cover="46e4e1beddaa3825f3d815f7f7ef8134.jpeg" avatar="ellipse-180.svg" name="Achraf sabbar" username="asabbar"  />
-                            <Friend cover="rectangle-161.svg" avatar="ellipse-180.svg" name="Achraf sabbar" username="asabbar"  />
-                            <Friend cover="rectangle-161.svg" avatar="ellipse-180.svg" name="Achraf sabbar" username="asabbar"  />
-                            <Friend cover="rectangle-161.svg" avatar="ellipse-180.svg" name="Achraf sabbar" username="asabbar"  />
-                            <Friend cover="rectangle-161.svg" avatar="ellipse-180.svg" name="Achraf sabbar" username="asabbar"  />
-                            <Friend cover="rectangle-161.svg" avatar="ellipse-180.svg" name="Achraf sabbar" username="asabbar"  />
-                            <Friend cover="rectangle-161.svg" avatar="ellipse-180.svg" name="Achraf sabbar" username="asabbar"  />
-                            <Friend cover="rectangle-161.svg" avatar="ellipse-180.svg" name="Achraf sabbar" username="asabbar"  />
-                            <Friend cover="rectangle-161.svg" avatar="ellipse-180.svg" name="Achraf sabbar" username="asabbar"  /> */}
                         </Swiper>
-                        {/* </div>
-                    </div> */}
                     </div>  
                 </div>
                 <div className='header__left flex flex-col gap-[52px]

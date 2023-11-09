@@ -9,7 +9,6 @@ import {
   useRef,
 } from 'react';
 import { setLocalStorageItem, getLocalStorageItem, removeLocalStorageItem } from '@/utils/localStorage';
-import jwt_decode from "jwt-decode";
 export default function Home() {
 
   const router = useRouter();

@@ -3,8 +3,8 @@ import { useContext, useState } from 'react';
 import { contextdata } from '@/app/contextApi';
 import axiosInstance from '@/utils/axiosInstance';
 import React from 'react';
-import ImageGrid from '../../components/Dashboard/Profile/images';
-import Header from '@/components/Dashboard/Home/Header/Header';
+import ImageGrid from '../../components/Dashboard/Profile/Achievements/images';
+import Header from '@/components/Dashboard/Profile/Header/Header';
 
 const images = [
     [
@@ -25,25 +25,14 @@ const images = [
     ],
 ];
 
+
+
 export default function Page() {
     
     const {profiles, user, socket}:any = useContext(contextdata);
-    const myProfile = profiles?.find((profile:any) => profile.userId === user.id);
+    const myProfile = profiles?.find((profile:any) => profile?.userId === user.id);
     const name = `${myProfile?.firstName} ${myProfile?.lastName}`;
 
-    // function handleFileInputChange(e:any) 
-    // {
-    //   const file = e.target.files?.[0];
-    //   const formData = new FormData();
-    //   formData.append('file', file);
-    //   const maxFileSize = 1024 * 1024 * 5;
-    //   axiosInstance.post(`http://${process.env.NEXT_PUBLIC_APP_URL}:3000/api/upload/avatar`, formData).then((res) => {
-    //       console.log(res);
-    //       socket.emit('refresh', {userId: user.id});
-    //   }).catch((err) => {
-    //     console.log(err);
-    //   });
-    // }
     function handleFileInputChange(e: any, type: 'avatar' | 'cover') {
         const file = e.target.files?.[0];
         if (!file) {
@@ -67,13 +56,14 @@ export default function Page() {
     const avatarUrl = `http://${process.env.NEXT_PUBLIC_APP_URL}:3000/${myProfile?.avatar}`;
     const coverUrl = `http://${process.env.NEXT_PUBLIC_APP_URL}:3000/${myProfile?.cover}`;
     return (
-        <div className='flex items-center flex-col   w-[100%] justify-start 3xl:gap-[200px] 3xl:px-[60px] bg-blue-300 '>
+        <div className='flex items-center  flex-col  gap-[40px] w-[100%] justify-start 3xl:gap-[160px] 3xl:px-[30px]  '>
         {/* <div className='bg-black px-[60px] '>
         </div> */}
             <Header/>
-        <div className="flex items-center flex-col 3xl:flex-row gap-[40px] w-[100%] 3xl:justify-center bg-black">
+        <div className="flex items-center flex-col 3xl:flex-row gap-[40px] w-[100%] 3xl:justify-center ">
             <div className=" flex max-w-[922px] w-11/12 xl:h-[823px] rounded-[42px] sh-d bg-white">
-            <div className="mx-auto w-11/12 mt-[34px]">
+            <div className="mx-auto w-11/12 mt-[34px] 3xl:w-[915px] 3xl:px-[40px]">
+            {/* <div className="mx-auto w-[910px] mt-[34px]  px-[40px]"> */}
                 <div className="relative w-12/12 h-[185px] rounded-[25px] overflow-hidden">
                         <picture>
                         <img
@@ -160,7 +150,8 @@ export default function Page() {
                     </div>
                     <div className="w-10/12 sm:w-7/12 b">
                     <div className="flex-grow  h-[16px] rounded-[8px] bg-[#C0D4E9] w-12/12">
-                        <div className="h-full sh-level rounded-[8px] w-[50%]" />
+                        <div className="h-full sh-level rounded-[8px] w-[30%]" />
+                        {/* <div className={`h-full sh-level rounded-[8px] w-[${}]`} /> */}
                     </div>
                     </div>
                     <div className=" sm:pr-[40px]">

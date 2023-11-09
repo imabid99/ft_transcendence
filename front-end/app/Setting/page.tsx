@@ -8,11 +8,10 @@ import {
   useContext
 } from 'react';
 import { setLocalStorageItem, getLocalStorageItem, removeLocalStorageItem } from '@/utils/localStorage';
-import jwt_decode from "jwt-decode";
 import { contextdata } from '@/app/contextApi';
 import axiosInstance from '@/utils/axiosInstance';
 import Image from "next/image"
-
+import Header from '@/components/Dashboard/Setting/Header/Header';
 
 
 export default function Page() {
@@ -81,12 +80,15 @@ export default function Page() {
     qrcode({ preventDefault: () => {} });
   }, []);
   return (
-    <div className="flex flex-col 3xl:flex-row items-center w-[100%] gap-[50px] h-screen">
+    <div className='flex items-center  flex-col  gap-[40px] w-[100%] justify-start 3xl:gap-[160px] 3xl:px-[10px]  '>
+
+    <Header />
+    <div className="flex flex-col 3xl:flex-row items-center w-[100%] gap-[50px] ">
       {
-        showConfi && <div className=" w-full h-full fixed top-0 left-0 z-[8]  inset-0 bg-black bg-opacity-5 backdrop-blur-[1.5px]"/>
+        showConfi && <div className=" w-full h-full fixed top-0 left-0 z-[8]  inset-0  bg-opacity-5 backdrop-blur-[1.5px]"/>
         
       }
-      <div className="flex flex-col w-[100%] items-center 3xl:items-end gap-[50px]">
+      <div className="flex flex-col w-[100%] items-center 3xl:items-end gap-[50px] ">
         <div className="3xl:max-w-[922px] max-w-[1200px] w-11/12  xl:h-[448px] rounded-[42px] p-inf bg-white">
           <div className="text-[20px] text-center sm:text-left sm:text-[25px] font-[600] text-[#043B6A] pt-[20px] sm:pl-[40px] ">
             Personal Information
@@ -268,7 +270,7 @@ export default function Page() {
         </div>
         {
           showConfi && (
-            <div className="w-[497px]  h-[301px] bg-[#fff] absolute top-[38%] left-[41%] rounded-[25px] z-10">
+            <div className="w-[497px]  h-[301px] bg-[#fffefe] absolute top-[38%] left-[41%] rounded-[25px] z-10">
               <div className="flex flex-col items-center justify-center h-full gap-[37px]">
                 <div className="flex items-start ">
                   <img src="Group 246.svg" alt="" />
@@ -311,6 +313,7 @@ export default function Page() {
           </div>
         </div>
       </div>
+    </div>
     </div>
   )
 }
