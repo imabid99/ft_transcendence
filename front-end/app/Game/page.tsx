@@ -40,7 +40,6 @@ const Game = () => {
 
 	/// SOCKET MANAGER
 
-	// socketmanager();
 	const {profiles, user} :any= useContext(contextdata);
 	const name = `${user?.profile.firstName} ${user?.profile.lastName}`;
 	const socket = io("http://localhost:3000/Game");
@@ -54,7 +53,6 @@ const Game = () => {
   
 	  useEffect(() => {
 		  socket.on("updatePosition", (position) => {
-		  // Broadcast the updated position to all connected clients
 		  socket.emit("playerPosition", position);
 		});
 	}, [profiles]);
@@ -81,7 +79,7 @@ const Game = () => {
 
 	function Player1Paddle(props: any) {
 		console.log("P1START");
-		const [ref, api] = useBox(() => ({ mass: 0, type: "Static", material: { restitution: 1, friction: 0 },args: [3, 1, 0.3], position: [0, 0.5, 9], ...props }), useRef<THREE.Mesh>(null));
+		const [ref, api] = useBox(() => ({ mass: 0, type: "Static", material: { restitution: 1.03, friction: 0 },args: [3, 1, 0.3], position: [0, 0.5, 9], ...props }), useRef<THREE.Mesh>(null));
 	  
 		useEffect(() => {
 		  if (!user) return;
@@ -173,7 +171,7 @@ const Game = () => {
 
 	function Player2Paddle(props: any) {
 		console.log("P2START");
-		const [ref, api] = useBox(() => ({ mass: 0, type: "Static",material: { restitution: 1, friction: 0 }, args: [3, 1, 0.3], position: [0, 0.5, -9], ...props }), useRef<THREE.Mesh>(null))
+		const [ref, api] = useBox(() => ({ mass: 0, type: "Static",material: { restitution: 1.03, friction: 0 }, args: [3, 1, 0.3], position: [0, 0.5, -9], ...props }), useRef<THREE.Mesh>(null))
 
 		useEffect(() => {
 			let isMovingLeft = false;
@@ -296,7 +294,6 @@ const Game = () => {
 						api.applyImpulse([10, 0, 10], [0, 0, 0]);
 						hasServed = true;
 					}
-					// console.log("position ball: ", position.current.z);
 					if(position.current.z < -10 || position.current.z > 10)
 					{
 						if (position.current.z > 10) {
@@ -311,16 +308,16 @@ const Game = () => {
 						api.velocity.set(0, 0, 0);
 						hasServed = false;
 					}
-				// socket.emit('ballPosition', {x: position.current.x, y: position.current.y, z: position.current.z});
+				socket.emit('ballPosition', {x: -position.current.x, y: position.current.y, z: -position.current.z});
 				requestAnimationFrame(serveball);
 			};
 
 			requestAnimationFrame(serveball);
 			
-			// socket.on('ballPosition', (data) => {
-			// 	console.log("ana hna");
-			// 		api.position.set(data.x, data.y, data.z);
-			// });
+			socket.on('ballPosition', (data) => {
+				console.log("ana hna");
+					api.position.set(data.x, data.y, data.z);
+			});
 	
 					
 			return () => {

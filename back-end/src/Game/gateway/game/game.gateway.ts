@@ -54,7 +54,7 @@ export class GameGateway implements OnGatewayConnection, OnGatewayDisconnect {
   
 
   handleConnection(client: Socket) {
-    console.log("server listening on port 3000");
+    // console.log("server listening on port 3000");
     const token = client.handshake.headers.authorization?.split(" ")[1];
     if (token) {
       const decoded: any = jwt_decode(token);
@@ -74,10 +74,10 @@ export class GameGateway implements OnGatewayConnection, OnGatewayDisconnect {
           const matchId = `match-${player1.client.id}-${player2.client.id}`
           player1.client.join(matchId);
           player2.client.join(matchId);
-    
           // Store the match ID and the players in the matches map
           this.matches.set(player1.client.id, {matchId, players: [player1, player2]});
           this.matches.set(player2.client.id, {matchId, players: [player1, player2]});
+          // this.server.to(player1.client.id).emit('startGame');
         } else {
           this.waitingPlayers.unshift(player2);
         }
@@ -113,14 +113,13 @@ export class GameGateway implements OnGatewayConnection, OnGatewayDisconnect {
     }
   }
 
-  @SubscribeMessage('balllPosition')
+  @SubscribeMessage('ballPosition')
   handleBallPosition(client: Socket, payload: {x: number, y: number, z: number}) {
     const match = this.matches.get(client.id);
-    // if (match) {
-      console.log("HEY BROTHER");
-      const {matchId, players} = match;
-      this.server.to(matchId).emit('ballPosition', payload);
-    // }
+    if (match) {
+      const { matchId, players } = match;
+        this.server.to(matchId).emit('ballPosition', payload);
+    }
   }
 }
 
