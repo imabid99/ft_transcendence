@@ -20,6 +20,7 @@ import  Model3  from "./model3";
 import { contextdata } from "../contextApi";
 import { io } from "socket.io-client";
 import { Physics, usePlane, useBox, useSphere, Debug} from '@react-three/cannon'
+import { is } from "@react-three/fiber/dist/declarations/src/core/utils";
 
 
 const Game = () => {
@@ -42,7 +43,7 @@ const Game = () => {
 
 	const {profiles, user} :any= useContext(contextdata);
 	const name = `${user?.profile.firstName} ${user?.profile.lastName}`;
-	const socket = io("http://localhost:3000/Game");
+	const socket = io(`http://${process.env.NEXT_PUBLIC_APP_URL}:3000/Game`);
 	
 	useEffect(() => {
 		socket.on("connect", () => {console.log(name + " is Connected to server");});
@@ -179,7 +180,7 @@ const Game = () => {
 			let paddleposX = 0;
 			let targetPosX = paddleposX;
   
-	
+
 			const handleKeyDown = (event: KeyboardEvent) => {
 				if (event.code === "KeyA") {
 					isMovingLeft = true;
@@ -257,6 +258,7 @@ const Game = () => {
 	
 
 	function GameBall(props: any) {
+		let direction = 1;
 		console.log("BallSTART");
 		const [ref, api] = useSphere(() => ({ mass: 1, material: { restitution: 1, friction: 0 },args: [0.32, 42, 16], position: [0, 0.35, 0], ...props }), useRef<THREE.Mesh>(null))
 
@@ -269,64 +271,87 @@ const Game = () => {
 			const ServeDown = (event: KeyboardEvent) => {
 				if (event.code === 'Space') {
 					isServing = true;
+					socket.emit('ball-serve', {isServing: true, direction: -1})
 				}
 			};
 			
 			const ServeUp = (event: KeyboardEvent) => {
 				if (event.code === 'Space') {
 					isServing = false;
+					socket.emit('ball-serve', {isServing: false, direction: 1})
 				}
 			};
-				const test = () => {
-				api.position.subscribe((v) => {
-						return (position.current = new THREE.Vector3(v[0], v[1], v[2]));
-					})
-					}	
-				test();
+
+			const test = () => {
+			api.position.subscribe((v) => {
+					return (position.current = new THREE.Vector3(v[0], v[1], v[2]));
+				})
+				}	
+			test();
+			
+			window.addEventListener('keydown', ServeDown);
+			window.addEventListener('keyup', ServeUp);
+			
+			// socket.on('start-game', (data) => {
+			// 	if(!hasServed)
+			// 	{
+			// 		setTimeout(() => {
+			// 			api.applyImpulse([10 * data.direction , 0, 10 * data.direction], [0, 0, 0]);
+			// 			hasServed = true;
+			// 		}
+			// 		, 5000);
+			// 	}
+			// })
+			// if(isServing && !hasServed)
+			// {
+			// 	api.applyImpulse([10, 0, 10], [0, 0, 0]);
+			// 	hasServed = true;
+			// }
+			
+			const serveball = () => {
 				
-				window.addEventListener('keydown', ServeDown);
-				window.addEventListener('keyup', ServeUp);
-				
-				
-				const serveball = () => {
-					if(isServing && !hasServed)
-					{
-						api.applyImpulse([10, 0, 10], [0, 0, 0]);
-						hasServed = true;
+				if(isServing && !hasServed)
+				{
+					api.applyImpulse([10 * direction, 0, 10 * direction], [0, 0, 0]);
+					hasServed = true;
+				}
+				if(position.current.z < -10 || position.current.z > 10)
+				{
+					if (position.current.z > 10) {
+						// setCount(p1_count + 1);
+						// setCount(prevCount => prevCount + 1);
 					}
-					if(position.current.z < -10 || position.current.z > 10)
-					{
-						if (position.current.z > 10) {
-							// setCount(p1_count + 1);
-							// setCount(prevCount => prevCount + 1);
-						}
-						if (position.current.z < -10) {
-							// setCount2(p2_count + 1);
-							// setCount2(prevCount2 => prevCount2 + 1);
-						}
-						api.position.set(0, 0.35, 0);
-						api.velocity.set(0, 0, 0);
-						hasServed = false;
+					if (position.current.z < -10) {
+						// setCount2(p2_count + 1);
+						// setCount2(prevCount2 => prevCount2 + 1);
 					}
-				socket.emit('ballPosition', {x: -position.current.x, y: position.current.y, z: -position.current.z});
+					api.position.set(0, 0.35, 0);
+					api.velocity.set(0, 0, 0);
+					hasServed = false;
+				}
+				// socket.emit('ballPosition', {x: -position.current.x, y: position.current.y, z: -position.current.z});
 				requestAnimationFrame(serveball);
 			};
-
 			requestAnimationFrame(serveball);
 			
-			socket.on('ballPosition', (data) => {
+			// socket.on('ballPosition', (data) => {
+			// 	console.log("ana hna");
+			// 		api.position.set(data.x, data.y, data.z);
+			// });
+
+			socket.on('ball-serve', (data) => {
 				console.log("ana hna");
-					api.position.set(data.x, data.y, data.z);
+				isServing = data.isServing;
+				direction = data.direction;
 			});
 	
-					
 			return () => {
 				window.removeEventListener('keydown', ServeDown);
 				window.removeEventListener('keyup', ServeUp);
 				// socket.off('ballPosition');
+				socket.off('ball-serve');
 			};
-					
-					
+
 			}, []);
 
 
@@ -424,14 +449,14 @@ const Game = () => {
 			shadow-camera-far={60}
 		/>
 			<Physics>
-				{/* <Debug color="black" scale={1.1}> */}
+				<Debug color="black" scale={1.1}>
 					<Plane/>
 					<Player1Paddle/>
 					<Player2Paddle/>
 					<GameBall/>
 					<SideRock1/>
 					<SideRock2/>
-				{/* </Debug> */}
+				</Debug>
 			</Physics>
 			<mesh rotation-x={-Math.PI * 0.5} scale={[10, 10, 10]} position={[0, -0.1, 0]} receiveShadow>
 				{/* <planeGeometry args={[20, 20]} /> */}
