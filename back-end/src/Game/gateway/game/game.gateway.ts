@@ -122,6 +122,21 @@ export class GameGateway implements OnGatewayConnection, OnGatewayDisconnect {
     }
   }
 
+  @SubscribeMessage("paddle-pos")
+  handlePaddlePos(
+    client: Socket,
+    payload: { x: number, y: number, z: number; playerId?: string }
+  ) {
+    const match = this.matches.get(client.id);
+    if (match) {
+      const { matchId, players } = match;
+      // if (players[0].client.id === client.id) {
+      // gameStateManager.updateGame({ paddleMove: payload });
+      this.server.to(matchId).emit('paddle-pos', payload);
+      // }
+    }
+  }
+
   // @SubscribeMessage('ballPosition')
   // handleBallPosition(client: Socket, payload: {x: number, y: number, z: number}) {
   //   const match = this.matches.get(client.id);

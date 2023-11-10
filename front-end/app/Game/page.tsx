@@ -81,7 +81,7 @@ const Game = () => {
 	function Player1Paddle(props: any) {
 		console.log("P1START");
 		const [ref, api] = useBox(() => ({ mass: 0, type: "Static", material: { restitution: 1.03, friction: 0 },args: [3, 1, 0.3], position: [0, 0.5, 9], ...props }), useRef<THREE.Mesh>(null));
-	  
+
 		useEffect(() => {
 		  if (!user) return;
 		  let isMovingLeft = false;
@@ -94,10 +94,10 @@ const Game = () => {
 		  const handleKeyDown = (event: KeyboardEvent) => {
 			if (event.code === "ArrowLeft") {
 			  isMovingLeft = true;
-			  socket.emit('paddle-move', { direction: 'left', moving: true, playerId: user?.id });
+			//   socket.emit('paddle-move', { direction: 'left', moving: true, playerId: user?.id });
 			} else if (event.code === "ArrowRight") {
 			  isMovingRight = true;
-			  socket.emit('paddle-move', { direction: 'right', moving: true, playerId: user?.id });
+			//   socket.emit('paddle-move', { direction: 'right', moving: true, playerId: user?.id });
 			}
 			if (!isUpdating) {
 				isUpdating = true;
@@ -108,10 +108,10 @@ const Game = () => {
 		  const handleKeyUp = (event: KeyboardEvent) => {
 			if (event.code === "ArrowLeft") {
 			  isMovingLeft = false;
-			  socket.emit('paddle-move', { direction: 'left', moving: false, playerId: user?.id });
+			//   socket.emit('paddle-move', { direction: 'left', moving: false, playerId: user?.id });
 			} else if (event.code === "ArrowRight") {
 			  isMovingRight = false;
-			  socket.emit('paddle-move', { direction: 'right', moving: false, playerId: user?.id });
+			//   socket.emit('paddle-move', { direction: 'right', moving: false, playerId: user?.id });
 			}
 
 			 if (!isMovingLeft && !isMovingRight && animationFrameId !== null) {
@@ -131,12 +131,12 @@ const Game = () => {
 					} else if (isMovingRight) {
 						targetPosX = Math.min(targetPosX + 0.5, 5);
 					}
-					const smoothingFactor = 0.5; 
+					const smoothingFactor = 0.3; 
 					paddleposX = paddleposX + (targetPosX - paddleposX) * smoothingFactor;
 					api.position.set(paddleposX, 0.5, 9);
 				}
 				animationFrameId = requestAnimationFrame(updatePosition);
-
+				socket.emit('paddle-pos', { x: - paddleposX, y: 0.5, z: -9, playerId: user?.id});
 		  };
 
 
@@ -144,7 +144,8 @@ const Game = () => {
 		  return () => {
 			window.removeEventListener("keydown", handleKeyDown);
 			window.removeEventListener("keyup", handleKeyUp);
-			socket.off('paddle-move');
+			// socket.off('paddle-move');
+			socket.off('paddle-pos');
 			if (animationFrameId !== null) {
 				cancelAnimationFrame(animationFrameId);
 			  }
@@ -197,29 +198,34 @@ const Game = () => {
 				}
 			};
 	
-			socket.on('paddle-move', (data) => {
-				if (data.playerId === user?.id) return;
-				if (data.direction === 'left') {
-					isMovingRight = data.moving;
-				} else if (data.direction === 'right') {
-					isMovingLeft = data.moving;
-				}
-			});
+			// socket.on('paddle-move', (data) => {
+			// 	if (data.playerId === user?.id) return;
+			// 	if (data.direction === 'left') {
+			// 		isMovingRight = data.moving;
+			// 	} else if (data.direction === 'right') {
+			// 		isMovingLeft = data.moving;
+			// 	}
+			// });
+
 			
 			window.addEventListener("keydown", handleKeyDown);
 			window.addEventListener("keyup", handleKeyUp);
 			
 			const updatePosition = () => {
-				if (ref.current) {
-					if (isMovingLeft) {
-						targetPosX = Math.max(targetPosX - 0.5, -5);
-						} else if (isMovingRight) {
-							targetPosX = Math.min(targetPosX + 0.5, 5);
-						}
-						const smoothingFactor = 0.5; 
-						paddleposX = paddleposX + (targetPosX - paddleposX) * smoothingFactor;
-						api.position.set(paddleposX, 0.5, -9);
-					}
+				// if (ref.current) {
+				// 	// if (isMovingLeft) {
+				// 	// 	targetPosX = Math.max(targetPosX - 0.5, -5);
+				// 	// 	} else if (isMovingRight) {
+				// 	// 		targetPosX = Math.min(targetPosX + 0.5, 5);
+				// 	// 	}
+				// 	// 	const smoothingFactor = 0.5; 
+				// 	// 	paddleposX = paddleposX + (targetPosX - paddleposX) * smoothingFactor;
+				// 	// 	// api.position.set(paddleposX, 0.5, -9);
+				// 	}
+					socket.on('paddle-pos', (data) => {
+						if (data.playerId === user?.id) return;
+						api.position.set(data.x, data.y, data.z);
+					});
 	
 				requestAnimationFrame(updatePosition);
 			};
@@ -230,7 +236,8 @@ const Game = () => {
 			return () => {
 				window.removeEventListener("keydown", handleKeyDown);
 				window.removeEventListener("keyup", handleKeyUp);
-				socket.off('paddle-move');
+				// socket.off('paddle-move');
+				socket.off('paddle-pos');
 			};
 		}, []);
 
@@ -449,14 +456,14 @@ const Game = () => {
 			shadow-camera-far={60}
 		/>
 			<Physics>
-				<Debug color="black" scale={1.1}>
+				{/* <Debug color="black" scale={1.1}> */}
 					<Plane/>
 					<Player1Paddle/>
 					<Player2Paddle/>
 					<GameBall/>
 					<SideRock1/>
 					<SideRock2/>
-				</Debug>
+				{/* </Debug> */}
 			</Physics>
 			<mesh rotation-x={-Math.PI * 0.5} scale={[10, 10, 10]} position={[0, -0.1, 0]} receiveShadow>
 				{/* <planeGeometry args={[20, 20]} /> */}
