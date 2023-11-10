@@ -4,8 +4,8 @@ import { contextdata } from '@/app/contextApi';
 import axiosInstance from '@/utils/axiosInstance';
 import {useParams} from 'next/navigation';
 // import ImageGrid from '../../../../../components/Dashboard/Profile/Achievements/images';
-import ImageGrid from '../../../components/Dashboard/Profile/Achievements/images';
-import NotUser from '../NotUser';
+import ImageGrid from '../../../../components/Dashboard/Profile/Achievements/images';
+import NotUser from '../../NotUser';
 const images = [
     [
         { src: '/Air.svg', alt: 'Airwa Image' },
@@ -26,11 +26,12 @@ const images = [
 ];
 
 export default function Page() {
-  
+
     const {UserId} = useParams();
     const [profile, setProfile] = useState<any>(null);
     const name = `${profile?.firstName} ${profile?.lastName}`;
     const [isUser, setIsUser] = useState<boolean>(true);
+    const [loading, setLoading] = useState<boolean>(true);
 
     useEffect(() => {
 
@@ -38,6 +39,7 @@ export default function Page() {
             try{
                 const res = await axiosInstance.get(`http://${process.env.NEXT_PUBLIC_APP_URL}:3000/api/user/profile/${UserId}`);
                 setProfile(res.data);
+                setLoading(false);
             }
             catch(err){
                 console.log("user not found")
@@ -50,10 +52,14 @@ export default function Page() {
             setProfile(null);
         }
         }, [])
-        // if(!isUser)
-        // {   console.log("wsalti")
-        //     return <NotUser />
-        // }
+        if(!isUser)
+        {   console.log("wsalti")
+            return <NotUser />
+        }
+        if(loading)
+        {
+            return <div>loading...</div>
+        }
     const avatarUrl = `http://${process.env.NEXT_PUBLIC_APP_URL}:3000/${profile?.avatar}`;
     const coverUrl = `http://${process.env.NEXT_PUBLIC_APP_URL}:3000/${profile?.cover}`;
     return (

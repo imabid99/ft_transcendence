@@ -18,7 +18,7 @@ export default function Header({show, modalRef,handelShaw,notifRef,notifIconRef}
         Ref.current.classList.remove('notif')
     }
     const {profiles, user}:any = useContext(contextdata);
-    const myProfile = profiles?.find((profile:any) => profile.userId === user.id);
+    const myProfile = profiles?.find((profile:any) => profile?.userId === user?.id);
     const name = `${myProfile?.firstName} ${myProfile?.lastName}`;
     return (
         <div className="flex items-center h-[100px] w-full   gap-[430px]  justify-center 
