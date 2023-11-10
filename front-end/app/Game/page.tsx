@@ -24,6 +24,7 @@ import { io } from "socket.io-client";
 import { Physics, usePlane, useBox, useSphere, Debug} from '@react-three/cannon'
 import { is } from "@react-three/fiber/dist/declarations/src/core/utils";
 
+// map = snow, desert, forest; mode = friend, bot, random
 
 const Game = () => {
 
@@ -60,25 +61,26 @@ const Game = () => {
 		});
 	}, [profiles]);
 
-	const controls = useControls({});
-  const { sunPosition } = useControls("sky", {
-	sunPosition: [-0.07, -0.03, -0.75],
-  });
-	const { planecolor } = useControls("color", { planecolor: "#51b151" });
-	const { floorcolor } = useControls("color", { floorcolor: "#1572ff" });
-	const { paddlecolor } = useControls("color", { paddlecolor: "#abebff" });
-	const { fogcolor } = useControls("color", { fogcolor: "#382f21" });
-	const { fogfar } = useControls("color", { fogfar: 180 });
+	// GUI CONTROLS
+// 	const controls = useControls({});
+//   const { sunPosition } = useControls("sky", {
+// 	sunPosition: [-0.07, -0.03, -0.75],
+//   });
+	// const { planecolor } = useControls("color", { planecolor: "#51b151" });
+	// const { floorcolor } = useControls("color", { floorcolor: "#1572ff" });
+	// const { paddlecolor } = useControls("color", { paddlecolor: "#abebff" });
+	// const { fogcolor } = useControls("color", { fogcolor: "#382f21" });
+	// const { fogfar } = useControls("color", { fogfar: 180 });
 		  
 	function Plane(props: any) {
 		const [ref, api] = usePlane(() => ({type: "Static", material: { friction: 0 }, args: [20, 20],  rotation: [-Math.PI / 2, 0, 0],...props}), useRef<THREE.Mesh>(null))
 
 		return (
-				<mesh ref={ref} rotation-x={-Math.PI * 0.5} position-y={0.02} receiveShadow>
-					<planeGeometry args={[20, 20]} />
-					<meshStandardMaterial color={floorcolor} />
-				</mesh>
-			);
+			<mesh ref={ref} rotation-x={-Math.PI * 0.5} position-y={0.02} receiveShadow>
+				<planeGeometry args={[20, 20]} />
+				<meshStandardMaterial color={'#1572ff'} />
+			</mesh>
+		);
 	}
 
 	function Player1Paddle(props: any) {
@@ -167,7 +169,7 @@ const Game = () => {
 			castShadow
 			receiveShadow
 		  >
-			<meshPhongMaterial color={paddlecolor} />
+			<meshPhongMaterial color={"#abebff"} />
 		  </RoundedBox>
 		);
 	  }
@@ -256,7 +258,7 @@ const Game = () => {
 				castShadow
 				receiveShadow
 				>
-				<meshPhongMaterial color={paddlecolor}/>
+				<meshPhongMaterial color={"#abebff"}/>
 			</RoundedBox>
 			);
 	}
@@ -433,7 +435,7 @@ const Game = () => {
 		shadows
 		camera={{ fov: 75, near: 0.1, far: 300, position: [0, 10, 20] }}
 	  >
-		<Sparkles
+		{/*<Sparkles
 			count={2000}
 			speed={4}
 			opacity={1} 
@@ -441,9 +443,9 @@ const Game = () => {
 			size={Float32Array.from(Array.from({ length: 2000 }, () => Math.random() * (80 - 5) + 10))}
 			scale={250}
 			noise={1000}
-		/>
+		/>*/}
 
-		<Perf position="bottom-right" />
+		{/* <Perf position="bottom-right" /> */}
 		<ambientLight color={"#ffffff"} intensity={1} />
 		<directionalLight
 			position={[-0.04, 4.5, -4]}
@@ -489,14 +491,32 @@ const Game = () => {
 				<planeGeometry args={[20, 0.1]}/>
 				<meshStandardMaterial color={'#FFFFFF'}/>
 			</mesh>
-			{/* <Model3/> */}
+			{
+				/*
+					map == "forest" && <Forest/> 
+					map == "desert" && <Desert/>
+					map == "snow" && <Snow/>
+				*/
+			}
+
+
 			{/* <Forest/> */}
 			<Desert/>
 			{/* <Snow/> */}
 			<Scoreboard p1_count={p1_count} p2_count={p2_count} />
 
-		<Sky sunPosition={sunPosition} />
-		<OrbitControls />
+		<Sky sunPosition={[-0.07, -0.03, -0.75]} />
+		<OrbitControls  
+			minAzimuthAngle={-Math.PI / 2}
+			maxAzimuthAngle={Math.PI / 2}
+			minPolarAngle={Math.PI / 20}
+			maxPolarAngle={Math.PI - Math.PI / 2}
+			maxDistance={50}
+			minDistance={10}
+			maxZoom={50}
+			minZoom={10}
+			enablePan={false}
+		/>
 		<SoftShadows />
 		{/* <fog attach="fog" color={fogcolor} near={1} far={fogfar} /> */}
 	  </Canvas>

@@ -1,6 +1,9 @@
 import React, { useEffect } from 'react';
 import { useGLTF } from '@react-three/drei';
 import * as THREE from 'three';
+import {
+    Sparkles,
+} from "@react-three/drei";
 
 const Desert = () => {
   const desertmodel = useGLTF('/Game_Assets/models/desertscene/desertscene.glb');
@@ -22,13 +25,22 @@ const Desert = () => {
             <circleGeometry args={[16, 50]} />
             <meshStandardMaterial color={'#f2bf73'} />
 		</mesh>
+        <Sparkles
+          count={2000}
+          speed={4}
+          opacity={1} 
+          color={ '#f2bf73' }
+          size={Float32Array.from(Array.from({ length: 2000 }, () => Math.random() * (80 - 5) + 10))}
+          scale={250}
+          noise={1000}
+        />
         <fog attach="fog" color={"#382f21"} near={1} far={280} />
         <primitive
           object={desertmodel.scene}
           castShadow
           receiveShadow
-          position={[0, -0.8, 0]}
-          scale={[4, 4, 4]}
+          position={[0, -0.6, 0]}
+          scale={[3, 3, 3]}
         />
     </>
   );

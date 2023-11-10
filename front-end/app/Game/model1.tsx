@@ -1,6 +1,9 @@
 import React, { useEffect } from 'react';
 import { useGLTF } from '@react-three/drei';
 import * as THREE from 'three';
+import {
+  Sparkles,
+} from "@react-three/drei";
 
 const Forest = () => {
   const naturemodel = useGLTF('/Game_Assets/models/naturescene/naturescene.glb');
@@ -21,6 +24,15 @@ const Forest = () => {
           <circleGeometry args={[16, 50]} />
           <meshStandardMaterial color={"#51b151"} />
         </mesh>
+        <Sparkles
+          count={2000}
+          speed={4}
+          opacity={1} 
+          color={ 0x00ffff }
+          size={Float32Array.from(Array.from({ length: 2000 }, () => Math.random() * (80 - 5) + 10))}
+          scale={250}
+          noise={1000}
+        />
         <fog attach="fog" color={"#382f21"} near={1} far={180} />
         <primitive
           object={naturemodel.scene}

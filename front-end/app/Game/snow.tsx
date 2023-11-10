@@ -1,6 +1,9 @@
 import React, { useEffect } from 'react';
 import { useGLTF } from '@react-three/drei';
 import * as THREE from 'three';
+import {
+    Sparkles,
+} from "@react-three/drei";
 
 const Snow = () => {
   const snowmodel = useGLTF('/Game_Assets/models/snowscene/snowscene.glb');
@@ -23,6 +26,15 @@ const Snow = () => {
             <circleGeometry args={[16, 50]} />
             <meshStandardMaterial color={'#ffffff'} />
         </mesh>
+        <Sparkles
+          count={2000}
+          speed={4}
+          opacity={1} 
+          color={ '#ffffff' }
+          size={Float32Array.from(Array.from({ length: 2000 }, () => Math.random() * (80 - 5) + 10))}
+          scale={250}
+          noise={1000}
+        />
         <fog attach="fog" color={"#382f21"} near={1} far={280} />
         <primitive
           object={snowmodel.scene}
