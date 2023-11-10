@@ -2,7 +2,7 @@ import React, { useEffect } from 'react';
 import { useGLTF } from '@react-three/drei';
 import * as THREE from 'three';
 
-const Model1 = () => {
+const Forest = () => {
   const naturemodel = useGLTF('/Game_Assets/models/naturescene/naturescene.glb');
 
   useEffect(() => {
@@ -17,6 +17,11 @@ const Model1 = () => {
 
   return (
     <>
+        <mesh rotation-x={-Math.PI * 0.5} scale={[10, 10, 10]} position={[0, -0.1, 0]} receiveShadow>
+          <circleGeometry args={[16, 50]} />
+          <meshStandardMaterial color={"#51b151"} />
+        </mesh>
+        <fog attach="fog" color={"#382f21"} near={1} far={180} />
         <primitive
           object={naturemodel.scene}
           castShadow
@@ -28,4 +33,4 @@ const Model1 = () => {
   );
 }
 
-export default Model1;
+export default Forest;

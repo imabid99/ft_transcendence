@@ -14,9 +14,11 @@ import { useControls } from "leva";
 import { Perf } from "r3f-perf";
 import * as THREE from "three";
 import "../globals.css";
-import  Model1  from "./model1";
+import  Forest  from "./model1";
 import  Model2  from "./model2";
 import  Model3  from "./model3";
+import  Desert from "./desert"
+import  Snow from "./snow"
 import { contextdata } from "../contextApi";
 import { io } from "socket.io-client";
 import { Physics, usePlane, useBox, useSphere, Debug} from '@react-three/cannon'
@@ -66,6 +68,7 @@ const Game = () => {
 	const { floorcolor } = useControls("color", { floorcolor: "#1572ff" });
 	const { paddlecolor } = useControls("color", { paddlecolor: "#abebff" });
 	const { fogcolor } = useControls("color", { fogcolor: "#382f21" });
+	const { fogfar } = useControls("color", { fogfar: 180 });
 		  
 	function Plane(props: any) {
 		const [ref, api] = usePlane(() => ({type: "Static", material: { friction: 0 }, args: [20, 20],  rotation: [-Math.PI / 2, 0, 0],...props}), useRef<THREE.Mesh>(null))
@@ -211,26 +214,26 @@ const Game = () => {
 			window.addEventListener("keydown", handleKeyDown);
 			window.addEventListener("keyup", handleKeyUp);
 			
-			const updatePosition = () => {
-				// if (ref.current) {
-				// 	// if (isMovingLeft) {
-				// 	// 	targetPosX = Math.max(targetPosX - 0.5, -5);
-				// 	// 	} else if (isMovingRight) {
-				// 	// 		targetPosX = Math.min(targetPosX + 0.5, 5);
-				// 	// 	}
-				// 	// 	const smoothingFactor = 0.5; 
-				// 	// 	paddleposX = paddleposX + (targetPosX - paddleposX) * smoothingFactor;
-				// 	// 	// api.position.set(paddleposX, 0.5, -9);
-				// 	}
-					socket.on('paddle-pos', (data) => {
-						if (data.playerId === user?.id) return;
-						api.position.set(data.x, data.y, data.z);
-					});
-	
-				requestAnimationFrame(updatePosition);
-			};
-	
-			requestAnimationFrame(updatePosition);
+			// const updatePosition = () => {
+			// 	// if (ref.current) {
+			// 	// 	// if (isMovingLeft) {
+			// 	// 	// 	targetPosX = Math.max(targetPosX - 0.5, -5);
+			// 	// 	// 	} else if (isMovingRight) {
+			// 	// 	// 		targetPosX = Math.min(targetPosX + 0.5, 5);
+			// 	// 	// 	}
+			// 	// 	// 	const smoothingFactor = 0.5; 
+			// 	// 	// 	paddleposX = paddleposX + (targetPosX - paddleposX) * smoothingFactor;
+			// 	// 	// 	// api.position.set(paddleposX, 0.5, -9);
+			// 	// 	}
+				
+			// 	requestAnimationFrame(updatePosition);
+			// };
+			
+			// requestAnimationFrame(updatePosition);
+			socket.on('paddle-pos', (data) => {
+				if (data.playerId === user?.id) return;
+				api.position.set(data.x, data.y, data.z);
+			});
 	
 		
 			return () => {
@@ -465,11 +468,11 @@ const Game = () => {
 					<SideRock2/>
 				{/* </Debug> */}
 			</Physics>
-			<mesh rotation-x={-Math.PI * 0.5} scale={[10, 10, 10]} position={[0, -0.1, 0]} receiveShadow>
+			{/* <mesh rotation-x={-Math.PI * 0.5} scale={[10, 10, 10]} position={[0, -0.1, 0]} receiveShadow> */}
 				{/* <planeGeometry args={[20, 20]} /> */}
-				<circleGeometry args={[16, 50]} />
-				<meshStandardMaterial color={planecolor} />
-			</mesh>
+				{/* <circleGeometry args={[16, 50]} /> */}
+				{/* <meshStandardMaterial color={planecolor} /> */}
+			{/* </mesh> */}
 			<mesh receiveShadow rotation-x={- Math.PI * 0.5} position-y={0.02}>
 				<planeGeometry args={[20, 0.2]}/>
 				<meshStandardMaterial color={'#FFFFFF'}/>
@@ -487,14 +490,15 @@ const Game = () => {
 				<meshStandardMaterial color={'#FFFFFF'}/>
 			</mesh>
 			{/* <Model3/> */}
-			<Model1/>
+			{/* <Forest/> */}
+			<Desert/>
+			{/* <Snow/> */}
 			<Scoreboard p1_count={p1_count} p2_count={p2_count} />
 
 		<Sky sunPosition={sunPosition} />
 		<OrbitControls />
-		{/* </EffectComposer>  */}
 		<SoftShadows />
-		<fog attach="fog" color={fogcolor} near={1} far={180} />
+		{/* <fog attach="fog" color={fogcolor} near={1} far={fogfar} /> */}
 	  </Canvas>
 	</>
   );
