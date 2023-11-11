@@ -157,4 +157,13 @@ export class GameGateway implements OnGatewayConnection, OnGatewayDisconnect {
       client.broadcast.to(matchId).emit("ball-serve", payload);
     }
   }
+
+  @SubscribeMessage("increment-score")
+  handleIncrementScore(client: Socket, payload: { playerId: string }) {
+    const match = this.matches.get(client.id);
+    if (match) {
+      const { matchId, players } = match;
+      client.broadcast.to(matchId).emit("increment-score", payload);
+    }
+  }
 }

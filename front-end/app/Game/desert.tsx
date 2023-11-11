@@ -21,7 +21,6 @@ const Desert = () => {
   return (
     <>
         <mesh rotation-x={-Math.PI * 0.5} scale={[10, 10, 10]} position={[0, -0.1, 0]} receiveShadow>
-            {/* <planeGeometry args={[20, 20]} /> */}
             <circleGeometry args={[16, 50]} />
             <meshStandardMaterial color={'#f2bf73'} />
 		</mesh>

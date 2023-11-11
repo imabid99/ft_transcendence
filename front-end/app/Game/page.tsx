@@ -14,9 +14,9 @@ import { useControls } from "leva";
 import { Perf } from "r3f-perf";
 import * as THREE from "three";
 import "../globals.css";
-import  Forest  from "./model1";
 import  Model2  from "./model2";
 import  Model3  from "./model3";
+import  Forest  from "./forest";
 import  Desert from "./desert"
 import  Snow from "./snow"
 import { contextdata } from "../contextApi";
@@ -119,11 +119,11 @@ const Game = () => {
 			//   socket.emit('paddle-move', { direction: 'right', moving: false, playerId: user?.id });
 			}
 
-			 if (!isMovingLeft && !isMovingRight && animationFrameId !== null) {
-        cancelAnimationFrame(animationFrameId);
-        animationFrameId = null;
-        isUpdating = false;
-      }
+			if (!isMovingLeft && !isMovingRight && animationFrameId !== null) {
+				cancelAnimationFrame(animationFrameId);
+				animationFrameId = null;
+				isUpdating = false;
+			}
 		  };
 		  window.addEventListener("keydown", handleKeyDown);
 		  window.addEventListener("keyup", handleKeyUp);
@@ -138,10 +138,13 @@ const Game = () => {
 					}
 					const smoothingFactor = 0.3; 
 					paddleposX = paddleposX + (targetPosX - paddleposX) * smoothingFactor;
-					api.position.set(paddleposX, 0.5, 9);
-				}
+					socket.emit('paddle-pos', { x: - paddleposX, y: 0.5, z: -9, playerId: user?.id});
+					console.log("MY PADDLE", paddleposX);
+					setTimeout(() => {
+						api.position.set(paddleposX, 0.5, 9);
+					}, 5);
+			}
 				animationFrameId = requestAnimationFrame(updatePosition);
-				socket.emit('paddle-pos', { x: - paddleposX, y: 0.5, z: -9, playerId: user?.id});
 		  };
 
 
@@ -235,6 +238,7 @@ const Game = () => {
 			socket.on('paddle-pos', (data) => {
 				if (data.playerId === user?.id) return;
 				api.position.set(data.x, data.y, data.z);
+				console.log("other PADDLE", data.x);
 			});
 	
 		
@@ -262,9 +266,6 @@ const Game = () => {
 			</RoundedBox>
 			);
 	}
-
-	const [p1_count, setCount] = useState(0);
-	const [p2_count, setCount2] = useState(0);
 
 	let hasServed = false;
 	
@@ -332,10 +333,12 @@ const Game = () => {
 					if (position.current.z > 10) {
 						// setCount(p1_count + 1);
 						// setCount(prevCount => prevCount + 1);
+						socket.emit("increment-score", "player1");
 					}
 					if (position.current.z < -10) {
 						// setCount2(p2_count + 1);
 						// setCount2(prevCount2 => prevCount2 + 1);
+						socket.emit("increment-score", "player2");
 					}
 					api.position.set(0, 0.35, 0);
 					api.velocity.set(0, 0, 0);
@@ -408,12 +411,16 @@ const Game = () => {
 			);
 	}
 
-	interface ScoreboardProps {
-		p1_count: number;
-		p2_count: number;
-	}
 
-	const Scoreboard = ({ p1_count, p2_count }: ScoreboardProps) => {
+	const Scoreboard = () => {
+
+		const [p1_count, setCount] = useState(0);
+		const [p2_count, setCount2] = useState(0);
+
+		socket.on('UpdateScore', (data) => {
+			setCount(data.p1_count);
+			setCount2(data.p2_count);
+		});
 		return (
 			<>
 				<group>
@@ -501,9 +508,9 @@ const Game = () => {
 
 
 			{/* <Forest/> */}
-			<Desert/>
-			{/* <Snow/> */}
-			<Scoreboard p1_count={p1_count} p2_count={p2_count} />
+			{/* <Desert/> */}
+			<Snow/>
+			<Scoreboard />
 
 		<Sky sunPosition={[-0.07, -0.03, -0.75]} />
 		<OrbitControls  
