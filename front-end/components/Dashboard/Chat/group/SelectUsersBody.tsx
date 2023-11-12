@@ -15,7 +15,6 @@ export default function SelectUsersBody({setShowBody,setGroupUsers,groupUsers}:s
         profiles,
         user,
     } :any = useContext(contextdata);
-    console.log("SelectUsersBody", profiles);
     return (
         <div className="h-[calc(100%-100px)]">
             <div className=" flex gap-2 items-center  py-[27px] px-[25px]">

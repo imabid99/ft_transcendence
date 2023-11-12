@@ -56,7 +56,7 @@ export class uploadController {
     @UploadedFile() file: Express.Multer.File,
     @Param() params: any
   ): Promise<void> {
-    console.log(file.path);
+    console.log("-------> ", params.id, file.path);
     return this.uploadService.uploadChannelAvatar(file.path, params.id);
   }
 }

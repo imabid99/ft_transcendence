@@ -64,8 +64,8 @@ model Profile {
   status          String    @default("offline")
   lastMessage     String?
   lastMessageTime DateTime?
-  avatar          String    @default("uploads/first3.png")
-  cover           String    @default("uploads/first3.png")
+  avatar          String    @default("uploads/default/nouser.avif")
+  cover           String    @default("uploads/default/first3.png")
   gaemePlayed     Int       @default(0)
   win             Int       @default(0)
   lose            Int       @default(0)
@@ -86,7 +86,7 @@ model channels {
   Admins          User[]    @relation("Admins")
   Muts            User[]    @relation("MutedUsers")
   Band            User[]    @relation("BannedUsers")
-  avatar          String    @default("uploads/groupAvatar.jpg")
+  avatar          String    @default("uploads/default/groupAvatar.jpg")
   accessIsActived Boolean   @default(false)
   Messages        Message[]
 }
@@ -102,6 +102,7 @@ model Message {
   userId     String?
   channels   channels? @relation(fields: [channelsId], references: [id])
   channelsId String?
+  Avatar     String?
 }
 
 model BlockList {

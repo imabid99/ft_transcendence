@@ -67,13 +67,14 @@ export default function Body({ leaderRef, handelShaw }: Props) {
                             slidesPerView={4}
                             className="w-full h-full cursor-grab !pl-[30px] !pt-[34px]"
                             >
-                                <SwiperSlide>
                                 {profiles?.map((profile:any) => {
                                         if(profile?.userId !== user.id){
-                                            return (<Friend cover={profile?.cover} avatar={profile?.avatar} name={`${profile?.firstName} ${profile?.lastName}`} username={profile?.username} online={profile?.status} key={profile?.userId}  />)
+                                            return (
+                                                <SwiperSlide>
+                                            <Friend cover={profile?.cover} avatar={profile?.avatar} name={`${profile?.firstName} ${profile?.lastName}`} username={profile?.username} online={profile?.status} key={profile?.userId}  />
+                                            </SwiperSlide>)
                                         }
                                     })}
-                                </SwiperSlide>
                         </Swiper>
                     </div>  
                 </div>
