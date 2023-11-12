@@ -53,11 +53,11 @@ const Game = () => {
 		socket.on("disconnect", () => {console.log(name + " is Disconnected from server");
 		socket.disconnect();});
   
-	  }, []);
+		}, []);
   
-	  useEffect(() => {
-		  socket.on("updatePosition", (position) => {
-		  socket.emit("playerPosition", position);
+	  	useEffect(() => {
+			socket.on("updatePosition", (position) => {
+			socket.emit("playerPosition", position);
 		});
 	}, [profiles]);
 
@@ -85,7 +85,7 @@ const Game = () => {
 
 	function Player1Paddle(props: any) {
 		console.log("P1START");
-		const [ref, api] = useBox(() => ({ mass: 0, type: "Static", material: { restitution: 1.03, friction: 0 },args: [3, 1, 0.3], position: [0, 0.5, 9], ...props }), useRef<THREE.Mesh>(null));
+		const [ref, api] = useBox(() => ({ mass: 0, type: "Static", material: { restitution: 1.06, friction: 0 },args: [3, 1, 0.3], position: [0, 0.5, 9], ...props }), useRef<THREE.Mesh>(null));
 
 		useEffect(() => {
 		  if (!user) return;
@@ -99,10 +99,8 @@ const Game = () => {
 		  const handleKeyDown = (event: KeyboardEvent) => {
 			if (event.code === "ArrowLeft") {
 			  isMovingLeft = true;
-			//   socket.emit('paddle-move', { direction: 'left', moving: true, playerId: user?.id });
 			} else if (event.code === "ArrowRight") {
 			  isMovingRight = true;
-			//   socket.emit('paddle-move', { direction: 'right', moving: true, playerId: user?.id });
 			}
 			if (!isUpdating) {
 				isUpdating = true;
@@ -113,10 +111,8 @@ const Game = () => {
 		  const handleKeyUp = (event: KeyboardEvent) => {
 			if (event.code === "ArrowLeft") {
 			  isMovingLeft = false;
-			//   socket.emit('paddle-move', { direction: 'left', moving: false, playerId: user?.id });
 			} else if (event.code === "ArrowRight") {
 			  isMovingRight = false;
-			//   socket.emit('paddle-move', { direction: 'right', moving: false, playerId: user?.id });
 			}
 
 			if (!isMovingLeft && !isMovingRight && animationFrameId !== null) {
@@ -132,17 +128,16 @@ const Game = () => {
 		  const updatePosition = () => {
 			if (ref.current) {
 				if (isMovingLeft) {
-					targetPosX = Math.max(targetPosX - 0.5, -5);
+					targetPosX = Math.max(targetPosX - 0.6, -5);
 					} else if (isMovingRight) {
-						targetPosX = Math.min(targetPosX + 0.5, 5);
+						targetPosX = Math.min(targetPosX + 0.6, 5);
 					}
-					const smoothingFactor = 0.3; 
+					const smoothingFactor = 0.4; 
 					paddleposX = paddleposX + (targetPosX - paddleposX) * smoothingFactor;
 					socket.emit('paddle-pos', { x: - paddleposX, y: 0.5, z: -9, playerId: user?.id});
-					console.log("MY PADDLE", paddleposX);
-					setTimeout(() => {
+					// setTimeout(() => {
 						api.position.set(paddleposX, 0.5, 9);
-					}, 5);
+					// }, 5);
 			}
 				animationFrameId = requestAnimationFrame(updatePosition);
 		  };
@@ -152,7 +147,6 @@ const Game = () => {
 		  return () => {
 			window.removeEventListener("keydown", handleKeyDown);
 			window.removeEventListener("keyup", handleKeyUp);
-			// socket.off('paddle-move');
 			socket.off('paddle-pos');
 			if (animationFrameId !== null) {
 				cancelAnimationFrame(animationFrameId);
@@ -181,14 +175,13 @@ const Game = () => {
 
 	function Player2Paddle(props: any) {
 		console.log("P2START");
-		const [ref, api] = useBox(() => ({ mass: 0, type: "Static",material: { restitution: 1.03, friction: 0 }, args: [3, 1, 0.3], position: [0, 0.5, -9], ...props }), useRef<THREE.Mesh>(null))
+		const [ref, api] = useBox(() => ({ mass: 0, type: "Static",material: { restitution: 1.06, friction: 0 }, args: [3, 1, 0.3], position: [0, 0.5, -9], ...props }), useRef<THREE.Mesh>(null))
 
 		useEffect(() => {
 			let isMovingLeft = false;
 			let isMovingRight = false;
 			let paddleposX = 0;
 			let targetPosX = paddleposX;
-  
 
 			const handleKeyDown = (event: KeyboardEvent) => {
 				if (event.code === "KeyA") {
@@ -205,16 +198,6 @@ const Game = () => {
 					isMovingRight = false;
 				}
 			};
-	
-			// socket.on('paddle-move', (data) => {
-			// 	if (data.playerId === user?.id) return;
-			// 	if (data.direction === 'left') {
-			// 		isMovingRight = data.moving;
-			// 	} else if (data.direction === 'right') {
-			// 		isMovingLeft = data.moving;
-			// 	}
-			// });
-
 			
 			window.addEventListener("keydown", handleKeyDown);
 			window.addEventListener("keyup", handleKeyUp);
@@ -238,7 +221,6 @@ const Game = () => {
 			socket.on('paddle-pos', (data) => {
 				if (data.playerId === user?.id) return;
 				api.position.set(data.x, data.y, data.z);
-				console.log("other PADDLE", data.x);
 			});
 	
 		
@@ -269,14 +251,14 @@ const Game = () => {
 
 	let hasServed = false;
 	
+	const position = useRef(new THREE.Vector3(0, 0, 0));
 
 	function GameBall(props: any) {
 		let direction = 1;
-		console.log("BallSTART");
-		const [ref, api] = useSphere(() => ({ mass: 1, material: { restitution: 1, friction: 0 },args: [0.32, 42, 16], position: [0, 0.35, 0], ...props }), useRef<THREE.Mesh>(null))
+
+		const [ref, api] = useSphere(() => ({ mass: 1, material: { restitution: 1.06, friction: 0 },args: [0.32, 42, 16], position: [0, 0.35, 0], ...props }), useRef<THREE.Mesh>(null))
 
 
-		const position = useRef(new THREE.Vector3(0, 0, 0));
 
 		useEffect(() => {
 			let isServing = false;
@@ -305,57 +287,25 @@ const Game = () => {
 			window.addEventListener('keydown', ServeDown);
 			window.addEventListener('keyup', ServeUp);
 			
-			// socket.on('start-game', (data) => {
-			// 	if(!hasServed)
-			// 	{
-			// 		setTimeout(() => {
-			// 			api.applyImpulse([10 * data.direction , 0, 10 * data.direction], [0, 0, 0]);
-			// 			hasServed = true;
-			// 		}
-			// 		, 5000);
-			// 	}
-			// })
-			// if(isServing && !hasServed)
-			// {
-			// 	api.applyImpulse([10, 0, 10], [0, 0, 0]);
-			// 	hasServed = true;
-			// }
-			
 			const serveball = () => {
-				
+				// const value = Math.random() < 0.5 ? -10 : 10;
+				const value = -5;
 				if(isServing && !hasServed)
 				{
-					api.applyImpulse([10 * direction, 0, 10 * direction], [0, 0, 0]);
+					api.applyImpulse([value * direction, 0, -10 * direction], [0, 0, 0]);
 					hasServed = true;
 				}
 				if(position.current.z < -10 || position.current.z > 10)
 				{
-					if (position.current.z > 10) {
-						// setCount(p1_count + 1);
-						// setCount(prevCount => prevCount + 1);
-						socket.emit("increment-score", "player1");
-					}
-					if (position.current.z < -10) {
-						// setCount2(p2_count + 1);
-						// setCount2(prevCount2 => prevCount2 + 1);
-						socket.emit("increment-score", "player2");
-					}
 					api.position.set(0, 0.35, 0);
 					api.velocity.set(0, 0, 0);
 					hasServed = false;
 				}
-				// socket.emit('ballPosition', {x: -position.current.x, y: position.current.y, z: -position.current.z});
 				requestAnimationFrame(serveball);
 			};
 			requestAnimationFrame(serveball);
-			
-			// socket.on('ballPosition', (data) => {
-			// 	console.log("ana hna");
-			// 		api.position.set(data.x, data.y, data.z);
-			// });
 
 			socket.on('ball-serve', (data) => {
-				console.log("ana hna");
 				isServing = data.isServing;
 				direction = data.direction;
 			});
@@ -384,7 +334,7 @@ const Game = () => {
 		const [ref, api] = useBox(() => ({ type: "Static",mass: 1,
 			args: [10, 3, 20],
 			position: [-11.35, 0.3, 0],
-			material: { restitution: 1, friction: 0 }, ...props }), useRef<THREE.Mesh>(null))
+			material: { restitution: 1.06, friction: 0 }, ...props }), useRef<THREE.Mesh>(null))
 	
 		return (
 				<>
@@ -400,7 +350,7 @@ const Game = () => {
 		const [ref, api] = useBox(() => ({ type: "Static",mass: 1,
 			args: [10, 3, 20],
 			position: [11.35, 0.3, 0],
-			material: { restitution: 1, friction: 0 }, ...props }), useRef<THREE.Mesh>(null))
+			material: { restitution: 1.06, friction: 0 }, ...props }), useRef<THREE.Mesh>(null))
 	
 		return (
 				<>
@@ -413,27 +363,66 @@ const Game = () => {
 
 
 	const Scoreboard = () => {
+		const [p1_count, setP1Count] = useState(0);
+		const [p2_count, setP2Count] = useState(0);
+	  
+		let animationFrameId: number | null = null;
+		
+		useEffect(() => {
+		  const goalCheck = () => {
+			if (position.current.z > 10) {
+			  setP1Count((prevCount) => prevCount + 1);
+			  position.current.z = 0;
+			  
+			}
+	  
+			if (position.current.z < -10) {
+				setP2Count((prevCount) => prevCount + 1);
+				position.current.z = 0;
+			}
+			setTimeout(() => {
+				animationFrameId = requestAnimationFrame(goalCheck);
+			}, 20); 
+		  };
+	  
+		  goalCheck();
+	  
+		  return () => {
+			if (animationFrameId !== null) {
+			  cancelAnimationFrame(animationFrameId);
+			}
+		  };
+		}, []);
 
-		const [p1_count, setCount] = useState(0);
-		const [p2_count, setCount2] = useState(0);
-
-		socket.on('UpdateScore', (data) => {
-			setCount(data.p1_count);
-			setCount2(data.p2_count);
-		});
 		return (
-			<>
-				<group>
-					<Text receiveShadow color="White" anchorX="center" anchorY="middle" position={[-3.3, 0.05, -4.8]} scale={[6, 6, 6]} rotation={[Math.PI / 2, Math.PI , Math.PI]}>
-					{p1_count}
-					</Text>
-					<Text receiveShadow color="White" anchorX="center" anchorY="middle" position={[3.4, 0.05, 5.5]} scale={[6, 6, 6]} rotation={[Math.PI / 2, Math.PI , Math.PI]}>
-					{p2_count}
-					</Text>
-				</group>
-			</>
+		  <>
+			<group>
+			  <Text
+				receiveShadow
+				color="White"
+				anchorX="center"
+				anchorY="middle"
+				position={[-3.3, 0.05, -4.8]}
+				scale={[6, 6, 6]}
+				rotation={[Math.PI / 2, Math.PI, Math.PI]}
+			  >
+				{p1_count}
+			  </Text>
+			  <Text
+				receiveShadow
+				color="White"
+				anchorX="center"
+				anchorY="middle"
+				position={[3.4, 0.05, 5.5]}
+				scale={[6, 6, 6]}
+				rotation={[Math.PI / 2, Math.PI, Math.PI]}
+			  >
+				{p2_count}
+			  </Text>
+			</group>
+		  </>
 		);
-	  };
+	};
 
 
   return (
@@ -508,8 +497,8 @@ const Game = () => {
 
 
 			{/* <Forest/> */}
-			{/* <Desert/> */}
-			<Snow/>
+			<Desert/>
+			{/* <Snow/> */}
 			<Scoreboard />
 
 		<Sky sunPosition={[-0.07, -0.03, -0.75]} />
