@@ -1,3 +1,7 @@
+'use client';
+import { useContext, useState } from 'react';
+import { contextdata } from '@/app/contextApi';
+import axiosInstance from '@/utils/axiosInstance';
 import RightSide from "../RightSide/RightSide"
 import Friend from "../Friend/Friend"
 import MatchHistory from "../MatchHistory/MatchHistory"
@@ -10,11 +14,15 @@ type Props = {
     handelShaw : (ref:any) => void
 }
 export default function Body({ leaderRef, handelShaw }: Props) {
+    const {profiles, user, socket}:any = useContext(contextdata);
+    const myProfile = profiles?.find((profile:any) => profile?.userId === user.id);
+    // const name = `${myProfile?.firstName} ${myProfile?.lastName}`;
+    // const username = myProfile?.username;
+    // const avatar = myProfile?.avatar;
+    // const online = myProfile?.status;
+    // const cover = myProfile?.cover;
+
     return (
-        // <div className='flex items-center w-full justify-around gap-[52px]
-        // relative         lg:max-3xl:justify-center lg:max-2xl:justify-center lg:max-xl:justify-center
-        // lg:max-2xl:flex-col lg:max-2xl:gap-[50px] lg:max-2xl:items-start
-        // '>
         <div className="flex flex-col 3xl:flex-row items-center w-[100%]  h-screen">
             <div className="flex items-center flex-col 3xl:flex-row gap-[40px] 3xl:gap-[150px] w-[100%]  justify-center ">
                 <div className="flex flex-col  min-w-[371px]  w-[100%] 2xl:w-[1224px] rounded-[66px] bg-">
@@ -60,31 +68,11 @@ export default function Body({ leaderRef, handelShaw }: Props) {
                             className="w-full h-full cursor-grab !pl-[30px] !pt-[34px]"
                             >
                                 <SwiperSlide>
-                                    <Friend cover="rectangle-161.svg" avatar="46e4e1beddaa3825f3d815f7f7ef8134.jpeg" name="Achraf sabbar" username="asabbar"    />
-                                </SwiperSlide>
-                                <SwiperSlide>
-                                    <Friend cover="rectangle-161.svg" avatar="46e4e1beddaa3825f3d815f7f7ef8134.jpeg" name="Achraf sabbar" username="asabbar"    />
-                                </SwiperSlide>
-                                <SwiperSlide>
-                                    <Friend cover="rectangle-161.svg" avatar="46e4e1beddaa3825f3d815f7f7ef8134.jpeg" name="Achraf sabbar" username="asabbar"    />
-                                </SwiperSlide>
-                                <SwiperSlide>
-                                    <Friend cover="rectangle-161.svg" avatar="46e4e1beddaa3825f3d815f7f7ef8134.jpeg" name="Achraf sabbar" username="asabbar"    />
-                                </SwiperSlide>
-                                <SwiperSlide>
-                                    <Friend cover="rectangle-161.svg" avatar="46e4e1beddaa3825f3d815f7f7ef8134.jpeg" name="Achraf sabbar" username="asabbar"    />
-                                </SwiperSlide>
-                                <SwiperSlide>
-                                    <Friend cover="rectangle-161.svg" avatar="46e4e1beddaa3825f3d815f7f7ef8134.jpeg" name="Achraf sabbar" username="asabbar"    />
-                                </SwiperSlide>
-                                <SwiperSlide>
-                                    <Friend cover="rectangle-161.svg" avatar="46e4e1beddaa3825f3d815f7f7ef8134.jpeg" name="Achraf sabbar" username="asabbar"    />
-                                </SwiperSlide>
-                                <SwiperSlide>
-                                    <Friend cover="rectangle-161.svg" avatar="46e4e1beddaa3825f3d815f7f7ef8134.jpeg" name="Achraf sabbar" username="asabbar"    />
-                                </SwiperSlide>
-                                <SwiperSlide>
-                                    <Friend cover="rectangle-161.svg" avatar="46e4e1beddaa3825f3d815f7f7ef8134.jpeg" name="Achraf sabbar" username="asabbar"    />
+                                {profiles?.map((profile:any) => {
+                                        if(profile?.userId !== user.id){
+                                            return (<Friend cover={profile?.cover} avatar={profile?.avatar} name={`${profile?.firstName} ${profile?.lastName}`} username={profile?.username} online={profile?.status} key={profile?.userId}  />)
+                                        }
+                                    })}
                                 </SwiperSlide>
                         </Swiper>
                     </div>  

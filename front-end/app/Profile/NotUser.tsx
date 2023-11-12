@@ -1,4 +1,6 @@
 import Link from 'next/link'
+import Lottie from "lottie-react"
+import animationData from   "../../public/9it.json"
 
 export default function NotUser() {
     return (
@@ -9,6 +11,9 @@ export default function NotUser() {
                 alt=""
                 className="absolute h-screen w-screen object-cover -z-0"
                 />
+                <div className="h-[400px] w-[400px] absolute top-[900px] left-[800px]">
+                <Lottie animationData={animationData}/>
+                </div>
                 {/* <img src="7nafcl.png" alt="" /> */}
                 <div className="flex justify-center items-center flex-col gap-[62px]  z-50 md:pl-[100px]">
                     <p className="text-white text-[40px] font-[400] capitalize textSh text-center font-['Fredoka'] max-w-[400px]    absolute top-[350px]  ">

@@ -3,6 +3,7 @@ import { use, useContext, useEffect, useState } from 'react';
 import { contextdata } from '@/app/contextApi';
 import axiosInstance from '@/utils/axiosInstance';
 import {useParams} from 'next/navigation';
+import Loading from '@/app/loading';
 // import ImageGrid from '../../../../../components/Dashboard/Profile/Achievements/images';
 import ImageGrid from '../../../../components/Dashboard/Profile/Achievements/images';
 import NotUser from '../../NotUser';
@@ -53,12 +54,12 @@ export default function Page() {
         }
         }, [])
         if(!isUser)
-        {   console.log("wsalti")
+        {   
             return <NotUser />
         }
         if(loading)
         {
-            return <div>loading...</div>
+            return <Loading />
         }
     const avatarUrl = `http://${process.env.NEXT_PUBLIC_APP_URL}:3000/${profile?.avatar}`;
     const coverUrl = `http://${process.env.NEXT_PUBLIC_APP_URL}:3000/${profile?.cover}`;

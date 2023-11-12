@@ -16,6 +16,7 @@ import animationData from   "../../public/data.json"
 import animationData1 from   "../../public/animation_lolhrjr7.json"
 import animationData2 from   "../../public/aSinwFC8e3.json"
 import animationData3 from   "../../public/q2W6iihHuw.json"
+import animationData4 from   "../../public/landingpagean1.json"
 
 
 
@@ -533,7 +534,7 @@ export default function Page() {
             </div>
           </div>
         </div>
-        <div className="flex flex-col  items-center justify-between mt-[200px] xl:flex-row-reverse xl:h-[800px] ">
+        {/* <div className="flex flex-col  items-center justify-between mt-[200px] xl:flex-row-reverse xl:h-[800px] ">
           <div className="space-y-[20px] flex  flex-col items-center xl:items-end xl:mb-[300px] xl:pt-[200px]">
             <div className="flex justify-center md:justify-center">
               <p className="text-[40px] t-team font-[700] md:text-[80px] ">
@@ -551,35 +552,62 @@ export default function Page() {
             </div>
           </div>
           <div className=" h-[940px] w-[940px] mr-[200px] ">
-            {/* <img
-              src="Frame 122.svg"
-              alt=""
-              className="w-[600px]  z-1 relative animate-slide-in"
-            /> */}
             <Lottie animationData={animationData3}/>
           </div>
-        </div>
-        <div className="flex flex-col  items-center justify-between xl:flex-row xl:h-[800px]mt-[100px]">
-          <div className="space-y-[20px] flex  flex-col items-center xl:items-start xl:mb-[300px] xl:pt-[200px]">
+        </div> */}
+        {/* <div className="flex flex-col  items-center justify-between xl:flex-row xl:h-[800px]mt-[100px] bg-red-500 relative">
+          <div className="space-y-[20px] flex  flex-col items-center xl:items-start xl:mb-[300px] xl:pt-[200px] bg-blue-500">
             <div className="flex justify-center md:justify-center">
               <p className="text-[40px] t-team font-[700] md:text-[80px] ">
                 About
               </p>
             </div>
-            <div className="text-[16px] font-[500] text-center text-[#2B4384] md:text-[30px]  lg:text-left lg:max-w-[600px] ">
-              <p>
+            <div className="flex w-full bg-black ">
+              <p className='text-[16px] font-[500] text-center text-[#2B4384] md:text-[30px]  lg:text-left lg:max-w-[600px]'>
                 Our game website is a web based platform that allows users to play
                 the classic Pong game directly from their web browser. The website
                 typically provides a simple, user-friendly interface that makes it
                 easy to start and play the game.{" "}
               </p>
             </div>
+                <div className="  bg-black">
+                  <div className='absolute'>
+                <Lottie animationData={animationData2}/>
+                  </div>
+                <div className='absolute'>
+                <Lottie animationData={animationData4}/>
+                </div>
+
+                </div>
           </div>
-          <div className="">
-          <Lottie animationData={animationData2}/>
-            {/* <img src="Frame 123(1).svg" alt="" className="w-[600px]" /> */}
+        </div> */}
+        {/* <div className="">
+            <div className="flex justify-center md:justify-center">
+              <p className="text-[40px] t-team font-[700] md:text-[80px] ">
+                About
+              </p>
+            </div>
+          <div className=" flex  items-center justify-center">
+            <div className="flex w-[50%]  ">
+              <p className="text-[16px] font-[500] text-center text-[#2B4384] md:text-[30px]  lg:text-left lg:max-w-[600px]">
+                Our game website is a web based platform that allows users to play
+                the classic Pong game directly from their web browser. The website
+                typically provides a simple, user-friendly interface that makes it
+                easy to start and play the game.{" "}
+              </p>
+            </div>
+            <div className="w-[50%] relative">
+              <div className="flex justify-center">
+              <div className="absolute w-[1000px] h-[1000px]">
+                <Lottie animationData={animationData4}/>
+              </div>
+              <div className="">
+                <Lottie animationData={animationData2}/>
+              </div>
+              </div>
+            </div>
           </div>
-        </div>
+        </div> */}
       </div>
     </div>
     {/* <footer className="bg-[#CFE7FD] rounded-[4px]">

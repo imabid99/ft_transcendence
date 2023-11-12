@@ -19,7 +19,7 @@ const ImageGrid: React.FC<ImageGridProps> = ({ images }) => {
             {imageRow.map((img, imgIndex) => (
               <div key={imgIndex} className="transform hover:scale-110 transition-transform duration-300 relative">
                 <Image src={img.src} alt={img.alt} className={img.className} width={197}
-        height={220}/>
+              height={220}/>
               </div>
             ))}
           </div>

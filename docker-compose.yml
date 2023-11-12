@@ -23,7 +23,7 @@ services:
       - my-network
 
   backend:
-    image: node:16
+    image: node:1 6
     working_dir: /app
     command: bash -c "npm install && npm run build && npx prisma migrate dev --name update && npm run start:dev"
     volumes:
