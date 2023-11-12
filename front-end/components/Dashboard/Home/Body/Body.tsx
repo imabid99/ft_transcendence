@@ -71,7 +71,7 @@ export default function Body({ leaderRef, handelShaw }: Props) {
                                         if(profile?.userId !== user?.id){
                                             return (
                                             <SwiperSlide>
-                                            <Friend cover={profile?.cover} avatar={profile?.avatar} name={`${profile?.firstName} ${profile?.lastName}`} username={profile?.username} online={profile?.status} key={profile?.userId}  />
+                                            <Friend cover={profile?.cover} avatar={profile?.avatar} name={`${profile?.firstName} ${profile?.lastName}`} username={profile?.username} online={profile?.status} userId={profile?.userId} key={profile?.userId}  />
                                             </SwiperSlide>)
                                         }
                                     })}

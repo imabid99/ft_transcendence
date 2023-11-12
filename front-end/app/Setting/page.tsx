@@ -38,11 +38,11 @@ export default function Page() {
     
     try {
       const response = await axiosInstance.get(`http://${process.env.NEXT_PUBLIC_APP_URL}:3000/api/auth/2fa_qr`, {
-        responseType: 'blob' // specify that we expect a Blob
+        responseType: 'blob' 
       });
       const blob = new Blob([response.data], { type: 'image/png' }); 
       const objectURL = URL.createObjectURL(blob);
-      setQrCodeSrc(objectURL); // set the Data URL as the image source
+      setQrCodeSrc(objectURL); 
     } catch (e : any) {
       console.log("Error : ", e.response?.data || e.message); 
       return;
@@ -70,11 +70,10 @@ export default function Page() {
   }
   const avatarUrl = `http://${process.env.NEXT_PUBLIC_APP_URL}:3000/${myProfile?.avatar}`;
   function deleteAvatar() {
-    axiosInstance.delete(`http://${process.env.NEXT_PUBLIC_APP_URL}:3000/api/delete/avatar/${user.id}`).then((res) => {
-        console.log("Avatar deleted successfully");
+    axiosInstance.delete(`http://${process.env.NEXT_PUBLIC_APP_URL}:3000/api/upload/userAvatar`).then((res) => {
       })
       .catch((err) => {
-        console.error("Error deleting avatar:", err);
+        console.log(err);
       });
   }
 
@@ -132,7 +131,7 @@ export default function Page() {
                 className="hidden cursor-pointer"
                 onChange={handleFileInputChange}
               />
-              <button  className="bg-[#F9F9F9] text-[#02539D] text-[10px] font-[600] w-[132px] h-[41px] rounded-[12px] hover:bg-[#f0f0f0] b-reset">
+              <button onClick={deleteAvatar}  className="bg-[#F9F9F9] text-[#02539D] text-[10px] font-[600] w-[132px] h-[41px] rounded-[12px] hover:bg-[#f0f0f0] b-reset">
                 Delete
               </button>
             </div>
