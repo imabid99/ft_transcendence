@@ -47,7 +47,7 @@ export default function Home() {
     }
     
     return (
-        <div className="flex flex-col px-[62px] py-[60px] w-full bg-[#FAFDFF]  h-[100vh] overflow-y-scroll overflow-x-hidden gap-[52px] relative no-scrollbar ">
+        <div className="flex flex-col px-[10px] sm:px-[62px] py-[60px] w-full bg-[#FAFDFF]  h-[100vh] overflow-y-scroll overflow-x-hidden gap-[52px] relative no-scrollbar ">
             {!show && <div className='w-full h-full fixed top-0 left-0 z-[51]' onClick={() => handelClose(HeadermodalRef)}></div>}
             <Header  show={show} notifRef={notifRef} modalRef={HeadermodalRef} handelShaw={handelShaw} notifIconRef={notifIconRef}/>
 
@@ -77,3 +77,5 @@ export default function Home() {
         </div>
     )
 }
+
+// 1745
