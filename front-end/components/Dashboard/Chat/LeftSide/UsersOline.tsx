@@ -9,7 +9,7 @@ import 'swiper/css';
 export default function UsersOnline() {
 
     const {profiles, user} :any= useContext(contextdata);
-
+    profiles?.sort((a: any, b: any) => (a.userId > b.userId) ? -1 : 1)
     return (
       <div className="chat__left__bottom flex flex-col gap-[24px] px-[25px] py-[25px] w-full mt-[10px]">
         <div className="chat__left__bottom__online__users flex flex-col gap-[20px] w-full lg:max-xl:w-[300px]" >

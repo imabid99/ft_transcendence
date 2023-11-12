@@ -295,6 +295,7 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
   @SubscribeMessage("refresh-event")
   async handleRefresh(client: Socket, payload: any): Promise<void> {
   }
+
   @SubscribeMessage("message-to-group")
   async handleMessageToGroup(client: Socket, payload: any): Promise<void>
   {
@@ -374,7 +375,7 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
           fromName: user.username,
           content: payload.message.content,
           channelsId: group.id,
-          Avatar: payload.Avatar,
+          Avatar: payload.message.Avatar,
         },
       });
 
@@ -904,6 +905,7 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
           Owners: true,
           Admins: true,
           Muts: true,
+          Band: true,
         },
       });
       const verifyIsMemmber: boolean = group.Members.some((member) => {
@@ -924,7 +926,16 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
         this.server.to(user.username).emit("errorNotif", {message: `you are not allowed to ban this user`, type: false});
         return;
       }
-
+      const verifyBand: boolean = group.Band.some((ban) => {
+        return ban.id === payload.userId;
+      }
+      );
+      
+      if (verifyBand)
+      {
+        this.server.to(user.username).emit("errorNotif", {message: `this user is already banned`, type: false});
+        return;
+      }
       const verifyAdmin2: boolean = group.Admins.some((admin) => {
         return admin.id === payload.userId;
       });
@@ -1044,6 +1055,15 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
         this.server.to(user.username).emit("errorNotif", {message: `you are not allowed to unban this user`, type: false});
         return;
       }
+      const verifyBand: boolean = group.Band.some((ban) => {
+        return ban.id === payload.userId;
+      });
+      if (!verifyBand)
+      {
+        this.server.to(user.username).emit("errorNotif", {message: `this user is not banned`, type: false});
+        return;
+      }
+      
       await this.prisma.user.update({
         where: {
           id: payload.userId,
