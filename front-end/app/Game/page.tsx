@@ -375,7 +375,6 @@ const Game = () => {
 			  position.current.z = 0;
 			  
 			}
-	  
 			if (position.current.z < -10) {
 				setP2Count((prevCount) => prevCount + 1);
 				position.current.z = 0;
@@ -384,6 +383,7 @@ const Game = () => {
 				animationFrameId = requestAnimationFrame(goalCheck);
 			}, 20); 
 		  };
+
 	  
 		  goalCheck();
 	  
@@ -393,6 +393,26 @@ const Game = () => {
 			}
 		  };
 		}, []);
+
+		useEffect(() => {
+			if(p1_count === 7 || p2_count === 7)
+			{
+				if(p2_count === 7 )
+				{
+					console.log(user?.profile.firstName, " Wins!");
+					socket.emit('player-wins', {winner: user?.id})
+				}
+				else
+					console.log("opponent Wins!");
+				setP1Count(0);
+				setP2Count(0);
+			}
+			socket.on('player-wins', (data) => {
+				if(data.winner === user?.id)
+					console.log(data.winner, " Wins!");
+			});
+
+		}, [p1_count, p2_count]);
 
 		return (
 		  <>

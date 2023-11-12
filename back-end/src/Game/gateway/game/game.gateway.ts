@@ -50,16 +50,16 @@ export class GameGateway implements OnGatewayConnection, OnGatewayDisconnect {
     string,
     { matchId: string; players: { username: string; client: Socket }[] }
   > = new Map();
-  private score:any = [
-    {
-      player1: 0,
-      Id: ""
-    },
-    {
-      player2: 0,
-      Id: ""
+
+  private playerInMatch(playerId: string): boolean {
+    for (const match of this.matches.values()) {
+      if (match.players.some(player => player.client.id === playerId)) {
+        return true;
+      }
     }
-  ];
+    return false;
+  }
+
 
   handleConnection(client: Socket) {
     // console.log("server listening on port 3000");
@@ -114,7 +114,6 @@ export class GameGateway implements OnGatewayConnection, OnGatewayDisconnect {
         this.waitingPlayers.splice(index, 1);
       }
     }
-    this.score = {player1: 0, player2: 0};
     this.matches.delete(client.id);
   }
 
@@ -169,19 +168,24 @@ export class GameGateway implements OnGatewayConnection, OnGatewayDisconnect {
     }
   }
 
-  // @SubscribeMessage("UpdateScore")
-  // handleIncrementScore(client: Socket, payload: { player: string; playerid?: string}) {
-  //   console.log("UpdateScore");
-  //   const match = this.matches.get(client.id);
-  //   if (match) {
+  playerWins(matchId: string, winningPlayer: { username: string; client: Socket }) {
+    this.server.to(matchId).emit('player-wins', winningPlayer.username);
+  }
 
-  //     const { matchId, players } = match;
-  //     if(payload.player === 'player1') {
-  //       this.score.player1++;
-  //     } else {
-  //       this.score.player2++;
-  //     }
-  //     this.server.to(matchId).emit("UpdateScore", this.score);
-  //   }
-  // }
+  @SubscribeMessage("player-wins")
+  handleScoreUpdate(
+    client: Socket,
+    payload: { winner: string}
+  ) {
+    const match = this.matches.get(client.id);
+    if (match) {
+      const { matchId, players } = match;
+      if (match.players[0].client.id === payload.winner) {
+        this.playerWins(matchId, players[0])
+      } else if (match.players[1].client.id === payload.winner) {
+        this.playerWins(matchId, players[1]);
+      } 
+    }
+}
+
 }
