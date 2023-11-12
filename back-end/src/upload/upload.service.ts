@@ -108,7 +108,7 @@ export class UploadService {
           userId,
         },
         data: {
-          avatar: "uploads/default/avatar.png",
+          avatar: "uploads/default/nouser.avif",
         },
       }); 
     } catch (error) {

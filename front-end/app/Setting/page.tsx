@@ -70,11 +70,10 @@ export default function Page() {
   }
   const avatarUrl = `http://${process.env.NEXT_PUBLIC_APP_URL}:3000/${myProfile?.avatar}`;
   function deleteAvatar() {
-    axiosInstance.delete(`http://${process.env.NEXT_PUBLIC_APP_URL}:3000/api/delete/avatar/${user.id}`).then((res) => {
-        console.log("Avatar deleted successfully");
+    axiosInstance.delete(`http://${process.env.NEXT_PUBLIC_APP_URL}:3000/api/upload/userAvatar`).then((res) => {
       })
       .catch((err) => {
-        console.error("Error deleting avatar:", err);
+        console.log(err);
       });
   }
 
