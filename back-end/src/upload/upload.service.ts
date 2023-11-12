@@ -69,9 +69,7 @@ export class UploadService {
   }
   async uploadChannelAvatar(path: string, channelId: string): Promise<any> {
     try {
-      const all = await this.prisma.channel.findMany();
-      console.log(all);
-      const channel = await this.prisma.channel.findUnique({
+      const channel = await this.prisma.channels.findUnique({
         where: {
           id: channelId,
         },
@@ -79,7 +77,7 @@ export class UploadService {
       if (!channel) {
         throw new NotFoundException("Channel not found");
       }
-      await this.prisma.channel.update({
+      await this.prisma.channels.update({
         where: {
           id: channelId,
         },
