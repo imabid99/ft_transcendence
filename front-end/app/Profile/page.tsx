@@ -30,7 +30,7 @@ const images = [
 export default function Page() {
     
     const {profiles, user, socket}:any = useContext(contextdata);
-    const myProfile = profiles?.find((profile:any) => profile?.userId === user.id);
+    const myProfile = profiles?.find((profile:any) => profile?.userId === user?.id);
     const name = `${myProfile?.firstName} ${myProfile?.lastName}`;
 
     function handleFileInputChange(e: any, type: 'avatar' | 'cover') {
