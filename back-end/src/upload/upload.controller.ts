@@ -4,6 +4,7 @@ import {
   UseGuards,
   Req,
   Param,
+  Delete,
   Post,
   UploadedFile,
   UseInterceptors,
@@ -58,5 +59,11 @@ export class uploadController {
   ): Promise<void> {
     console.log("-------> ", params.id, file.path);
     return this.uploadService.uploadChannelAvatar(file.path, params.id);
+  }
+
+  @Delete("userAvatar")
+  @UseGuards(AuthGuard("jwt"))
+  async deleteAvatar(@Req() req): Promise<void> {
+    return this.uploadService.deleteAvatar(req.user.id);
   }
 }

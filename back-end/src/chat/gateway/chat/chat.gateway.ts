@@ -1035,6 +1035,7 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
           Members: true,
           Owners: true,
           Admins: true,
+          Band: true,
         },
       });
       const verifyIsMemmber: boolean = group.Members.some((member) => {
