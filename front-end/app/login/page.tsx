@@ -76,7 +76,7 @@ export default function Home() {
           </p>
           <div className="flex flex-col pt-[20px] gap-[16px] sm:flex-row">
             <button className="flex justify-evenly items-center w-[170px] h-[52px] border-[1px] rounded-[11px] border-[#DDDDDD]"
-            onClick={() => signIn('google', { callbackUrl: 'http://localhost:3000/api/auth/oauth2/google/callback' })}
+            onClick={() => router.push('http://localhost:3000/api/auth/oauth2/google/callback')}
             >
               <img src="goog.svg" alt="" className="w-[20.153px] h-[20.56px]" />
               <p className="text-[#000] text-[10px] font-[400]">Log in with google</p>
