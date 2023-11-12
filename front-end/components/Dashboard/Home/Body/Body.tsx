@@ -21,7 +21,7 @@ export default function Body({ leaderRef, handelShaw }: Props) {
     // const avatar = myProfile?.avatar;
     // const online = myProfile?.status;
     // const cover = myProfile?.cover;
-
+    console.log(profiles)
     return (
         <div className="flex flex-col 3xl:flex-row items-center w-[100%]  h-screen">
             <div className="flex items-center flex-col 3xl:flex-row gap-[40px] 3xl:gap-[150px] w-[100%]  justify-center ">
@@ -68,9 +68,9 @@ export default function Body({ leaderRef, handelShaw }: Props) {
                             className="w-full h-full cursor-grab !pl-[30px] !pt-[34px]"
                             >
                                 {profiles?.map((profile:any) => {
-                                        if(profile?.userId !== user.id){
+                                        if(profile?.userId !== user?.id){
                                             return (
-                                                <SwiperSlide>
+                                            <SwiperSlide>
                                             <Friend cover={profile?.cover} avatar={profile?.avatar} name={`${profile?.firstName} ${profile?.lastName}`} username={profile?.username} online={profile?.status} key={profile?.userId}  />
                                             </SwiperSlide>)
                                         }
