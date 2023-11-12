@@ -69,7 +69,16 @@ export class UploadService {
   }
   async uploadChannelAvatar(path: string, channelId: string): Promise<any> {
     try {
-      console.log("------------------");
+      const all = await this.prisma.channel.findMany();
+      console.log(all);
+      const channel = await this.prisma.channel.findUnique({
+        where: {
+          id: channelId,
+        },
+      });
+      if (!channel) {
+        throw new NotFoundException("Channel not found");
+      }
       await this.prisma.channel.update({
         where: {
           id: channelId,
@@ -78,6 +87,30 @@ export class UploadService {
           avatar: path,
         },
       });
+    } catch (error) {
+      throw error;
+    }
+  }
+  async deleteAvatar(userId: string): Promise<any> {
+    
+    try {
+      const user = await this.prisma.user.findUnique({ where: { id: userId } , include: { profile: true }});
+      if (!user) {
+        throw new NotFoundException("User not found");
+      }
+      const oldAvatar : string =  user.profile.avatar;
+      if (!oldAvatar.startsWith("uploads/default")) {
+        const fs = require("fs");
+        fs.unlinkSync(oldAvatar);
+      }
+      await this.prisma.profile.update({
+        where: {
+          userId,
+        },
+        data: {
+          avatar: "uploads/default/avatar.png",
+        },
+      }); 
     } catch (error) {
       throw error;
     }
