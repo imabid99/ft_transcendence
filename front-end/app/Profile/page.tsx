@@ -1,10 +1,13 @@
 'use client';
-import { useContext, useState } from 'react';
+import { useContext, useState, useEffect } from 'react';
 import { contextdata } from '@/app/contextApi';
 import axiosInstance from '@/utils/axiosInstance';
 import React from 'react';
 import ImageGrid from '../../components/Dashboard/Profile/Achievements/images';
 import Header from '@/components/Dashboard/Profile/Header/Header';
+import { useRouter } from 'next/navigation';
+import { checkLoged } from '@/utils/localStorage';
+import Loading from '../loading';
 
 const images = [
     [
@@ -32,7 +35,21 @@ export default function Page() {
     const {profiles, user, socket}:any = useContext(contextdata);
     const myProfile = profiles?.find((profile:any) => profile?.userId === user?.id);
     const name = `${myProfile?.firstName} ${myProfile?.lastName}`;
-
+    const router = useRouter();
+    const [isloading, setIsLoading] = useState(true);
+  
+    useEffect(() => {
+      const token = checkLoged();
+      if (!token) {
+          router.push("/login");
+          return;
+      }
+      setIsLoading(false);
+    }, []);
+  
+    if (isloading) {
+      return <Loading />;
+    }
     function handleFileInputChange(e: any, type: 'avatar' | 'cover') {
         const file = e.target.files?.[0];
         if (!file) {

@@ -7,21 +7,54 @@ import {
   useEffect,
   useContext
 } from 'react';
-import { setLocalStorageItem, getLocalStorageItem, removeLocalStorageItem } from '@/utils/localStorage';
+import { setLocalStorageItem, getLocalStorageItem, removeLocalStorageItem, checkLoged } from '@/utils/localStorage';
 import { contextdata } from '@/app/contextApi';
 import axiosInstance from '@/utils/axiosInstance';
 import Image from "next/image"
 import Header from '@/components/Dashboard/Setting/Header/Header';
+import Loading from '../loading';
 
 
 export default function Page() {
   const router = useRouter();
   const [qrCodeSrc, setQrCodeSrc] = useState("2fa-qr-code 1.svg");
   const {profiles, user, socket}:any = useContext(contextdata);
-  const myProfile = profiles?.find((profile:any) => profile.userId === user.id);
+  const myProfile = profiles?.find((profile:any) => profile?.userId === user?.id);
   const name = `${myProfile?.firstName} ${myProfile?.lastName}`;
   const [showConfi, setShowConfi] = useState(false);
-  
+  const [isloading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    const token = checkLoged();
+    if (!token) {
+        router.push("/login");
+        return;
+    }
+    setIsLoading(false);
+  }, []);
+
+  const qrcode = async (e : any) => {
+    e.preventDefault();
+    
+    try {
+      const response = await axiosInstance.get(`http://${process.env.NEXT_PUBLIC_APP_URL}:3000/api/auth/2fa_qr`, {
+        responseType: 'blob' // specify that we expect a Blob
+      });
+      const blob = new Blob([response.data], { type: 'image/png' }); 
+      const objectURL = URL.createObjectURL(blob);
+      setQrCodeSrc(objectURL); // set the Data URL as the image source
+    } catch (e : any) {
+      console.log("Error : ", e.response?.data || e.message); 
+      return;
+    }
+  }
+  useEffect(() => {
+    qrcode({ preventDefault: () => {} });
+  }, []);
+
+  if (isloading) {
+    return <Loading />;
+  }
   function handleFileInputChange(e:any) 
   {
     const file = e.target.files?.[0];
@@ -45,21 +78,6 @@ export default function Page() {
       });
   }
 
-  const qrcode = async (e : any) => {
-    e.preventDefault();
-    
-    try {
-      const response = await axiosInstance.get(`http://${process.env.NEXT_PUBLIC_APP_URL}:3000/api/auth/2fa_qr`, {
-        responseType: 'blob' // specify that we expect a Blob
-      });
-      const blob = new Blob([response.data], { type: 'image/png' }); 
-      const objectURL = URL.createObjectURL(blob);
-      setQrCodeSrc(objectURL); // set the Data URL as the image source
-    } catch (e : any) {
-      console.log("Error : ", e.response?.data || e.message); 
-      return;
-    }
-  }
 
   const deleteUser = async (e : any) => {
     e.preventDefault();
@@ -76,9 +94,7 @@ export default function Page() {
   }
 
 
-  useEffect(() => {
-    qrcode({ preventDefault: () => {} });
-  }, []);
+
   return (
     <div className='flex items-center  flex-col  gap-[40px] w-[100%] justify-start 3xl:gap-[160px] 3xl:px-[10px]  '>
 
