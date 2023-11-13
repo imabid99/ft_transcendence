@@ -30,7 +30,7 @@ export default function SelectUsersBody({setShowBody,setGroupUsers,groupUsers}:s
             <div className='w-full px-[31px]'>
                 <input type="text"  className="w-full h-[50px]  border-b-[1px] border-[#E5E5E5] border-opacity-50 px-[20px] text-[15px] font-[300] font-[Poppins] text-[#BDBFC3] outline-none" placeholder="Search for friends..." />
             </div>
-            <form className="h-[calc(100%-137px)] overflow-y-scroll no-scrollbar px-[25px] py-[25px]">
+            <form className="h-[calc(100%-137px)] overflow-y-scroll no-scrollbar px-[25px] py-[25px] flex flex-col gap-3">
                 {
                     user && profiles?.map((profile: any) => (
                         profile.userId !== user.id &&

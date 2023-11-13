@@ -1,4 +1,7 @@
+'use client';
 import Avatar from "../Avatar/Avatar"
+import React, { useState } from 'react'
+import { useRef } from "react"
 
 type SelectUsersProps = {
     user : {
@@ -14,18 +17,35 @@ type SelectUsersProps = {
 
 export default function SelectUsers({user,setGroupUsers,groupUsers}: SelectUsersProps) {
 
+    const checkRef = useRef(null);
+    const [isActivated, setIsActivated] = useState<Boolean>(false);
     const handleClick = (e:any) =>
     {
-        if(e.target.checked)
-            setGroupUsers([...groupUsers,user.userId])
+        console.log(groupUsers);
+        if(!isActivated)
+        {
+            checkRef.current?.classList?.add('bg-[#d9d9d9a1]');
+            if(groupUsers.length === 0)
+                setGroupUsers([user.userId]);
+            else
+                setGroupUsers([...groupUsers,user.userId]);
+        }
         else
-            setGroupUsers(groupUsers.filter((id:string) => id !== user.userId))
+        {
+            checkRef.current?.classList?.remove('bg-[#d9d9d9a1]');
+            setGroupUsers(groupUsers.filter((id:any) => id !== user.userId));
+        }
+        console.log(groupUsers);
+        setIsActivated(!isActivated);
     }
+    console.log(groupUsers);
     return (
         <>
-        <label htmlFor={user.username}  className='cursor-pointer flex items-center gap-[42px] py-[15px] hover:bg-[#D9D9D9] rounded-[10px] w-full pl-[10px]'
-        onClick={handleClick}>
-            <input type='checkbox' value={user.username} id={user.username} className='form-checkbox cursor-pointer h-[31px] w-[31px] text-gray-400 border-none rounded-[10px]' />
+        <label ref={
+            checkRef
+        } className='cursor-pointer flex items-center gap-[42px] py-[15px] hover:bg-[#d9d9d9] rounded-[10px] w-full pl-[10px]'
+            onClick={handleClick}
+        >
             <span className='flex items-center gap-[10px]'>
                 <Avatar url={user.url} status={false}  />
                 <span>

@@ -16,7 +16,7 @@ export default function ChannelInfo({infoRef, handleshowInfo, group, userId}: Ch
     const [showAccessPassword, setShowAccessPassword] = useState<boolean>(false);
     const [showPasswordModal, setShowPasswordModal] = useState<boolean>(false);
     const mytype = group?.channel.Owners.find((owner: any) => owner.id === userId) ? 3 : group?.channel.Admins.find((admin: any) => admin.id === userId) ? 2 : 1;
-    const {socket}: any = useContext(contextdata);
+    const {socket, profiles}: any = useContext(contextdata);
     const router = useRouter();
     const [password, setPassword] = useState<string>("");
 
@@ -317,7 +317,7 @@ export default function ChannelInfo({infoRef, handleshowInfo, group, userId}: Ch
                     {
                         group?.channel.Band?.map((ban: any) => {
                             if (ban.id === userId)  return null;
-                            const avatar = group.membersProfile.filter((profile: any) => profile.userId === ban.id)[0]?.avatar;
+                            const avatar = profiles?.filter((profile: any) => profile.userId === ban.id)[0]?.avatar;
                             return(
                                 <HandlRightClick mytype={userId == ban.id ? 1 : mytype} type={1} id={ban.id} groupId={group.channel.id}  key={`${ban.id}`} isBan={true}>
                                     <div className='flex  items-center justify-between opacity-60 w-full'>
