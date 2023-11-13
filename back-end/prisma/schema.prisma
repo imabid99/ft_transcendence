@@ -40,6 +40,20 @@ model User {
   sent      Friendship[] @relation("FriendshipSender")
   received  Friendship[] @relation("FriendshipReceiver")
   actions   Friendship[] @relation("FriendshipAction")
+  Notifications  Notification[] @relation("Notifications")
+}
+
+model Notification {
+  id            String       @id @default(uuid())
+  type          String
+  message       String
+  actionUserId  String?
+  actionUserAvatar String?
+  actionUserName String?
+  isRead        Boolean   @default(false)
+  createdAt     DateTime  @default(now())
+  userId        String
+  User          User      @relation(name: "Notifications", fields: [userId], references: [id])
 }
 
 model Friendship {

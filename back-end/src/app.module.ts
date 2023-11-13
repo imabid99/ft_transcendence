@@ -18,6 +18,7 @@ import { friendshipController } from "./friendship/friendship.controller";
 import { UploadService } from "./upload/upload.service";
 import { FriendshipService } from "./friendship/friendship.service";
 import { UploadModule } from "./upload/upload.module";
+import { NotificationModule } from "./notification/notification.module";
 
 @Module({
   imports: [
@@ -29,6 +30,7 @@ import { UploadModule } from "./upload/upload.module";
     }),
     ChatModule,
     UploadModule,
+    NotificationModule,
     MulterModule.register({
       dest: "./uploads/all",
     }),
