@@ -77,5 +77,3 @@ export default function Home() {
         </div>
     )
 }
-
-// 1745
