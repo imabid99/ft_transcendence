@@ -47,7 +47,7 @@ export default function Page() {
 
     useEffect(() => {
 
-
+        
         const getProfile = async () => {
             try{
                 const res = await axiosInstance.get(`http://${process.env.NEXT_PUBLIC_APP_URL}:3000/api/user/profile/${UserId}`);

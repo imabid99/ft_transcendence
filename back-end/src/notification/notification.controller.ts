@@ -16,5 +16,11 @@ import jwtDecode from "jwt-decode";
 
 @Controller('notification')
 export class NotificationController {
+  constructor(private notificationService: NotificationService) { }
 
+  @Get("all")
+  @UseGuards(AuthGuard("jwt"))
+  async getNotifications(@Req() req): Promise<any> {
+    return this.notificationService.getNotifications(req.user.id);
+  }
 }
