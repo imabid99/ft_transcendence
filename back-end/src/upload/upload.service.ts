@@ -83,4 +83,28 @@ export class UploadService {
       throw error;
     }
   }
+  async deleteAvatar(userId: string): Promise<any> {
+    
+    try {
+      const user = await this.prisma.user.findUnique({ where: { id: userId } , include: { profile: true }});
+      if (!user) {
+        throw new NotFoundException("User not found");
+      }
+      const oldAvatar : string =  user.profile.avatar;
+      if (!oldAvatar.startsWith("uploads/default")) {
+        const fs = require("fs");
+        fs.unlinkSync(oldAvatar);
+      }
+      await this.prisma.profile.update({
+        where: {
+          userId,
+        },
+        data: {
+          avatar: "uploads/default/nouser.avif",
+        },
+      }); 
+    } catch (error) {
+      throw error;
+    }
+  }
 }
