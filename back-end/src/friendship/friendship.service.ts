@@ -31,6 +31,17 @@ export class FriendshipService {
           actionUserId: senderId,
         },
       });
+      const sender = await this.prisma.profile.findUnique({ where: { userId: senderId } });
+      await this.prisma.notification.create({
+        data: {
+          userId: receiverId,
+          type: "FRIEND_REQUEST",
+          message: "You have a new friend request",
+          actionUserId: senderId,
+          actionUserName:  sender.firstName + " " + sender.lastName,
+          actionUserAvatar: sender.avatar,
+        },
+      });
       return { message: "Friendship request sent" };
     } catch (error) {
       throw error;

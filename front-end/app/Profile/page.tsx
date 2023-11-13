@@ -37,7 +37,17 @@ export default function Page() {
     const name = `${myProfile?.firstName} ${myProfile?.lastName}`;
     const router = useRouter();
     const [isloading, setIsLoading] = useState(true);
-  
+
+    const getNotificatons = async () => {
+        try{
+            const res = await axiosInstance.get(`http://${process.env.NEXT_PUBLIC_APP_URL}:3000/api/notification/all`);
+            console.log(res.data);
+        }
+        catch(err){
+            console.log(err);
+        }
+    }
+    getNotificatons();
     useEffect(() => {
       const token = checkLoged();
       if (!token) {
