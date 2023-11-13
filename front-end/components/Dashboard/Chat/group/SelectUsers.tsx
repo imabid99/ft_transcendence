@@ -17,7 +17,7 @@ type SelectUsersProps = {
 
 export default function SelectUsers({user,setGroupUsers,groupUsers}: SelectUsersProps) {
 
-    const checkRef = useRef(null);
+    const checkRef = useRef<HTMLLabelElement>(null);
     const [isActivated, setIsActivated] = useState<Boolean>(false);
     const handleClick = (e:any) =>
     {
