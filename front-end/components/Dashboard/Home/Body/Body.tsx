@@ -15,7 +15,7 @@ type Props = {
 }
 export default function Body({ leaderRef, handelShaw }: Props) {
     const {profiles, user, socket}:any = useContext(contextdata);
-    const myProfile = profiles?.find((profile:any) => profile?.userId === user?.id);
+    // const myProfile = profiles?.find((profile:any) => profile?.userId === user?.id);
     // const name = `${myProfile?.firstName} ${myProfile?.lastName}`;
     // const username = myProfile?.username;
     // const avatar = myProfile?.avatar;
