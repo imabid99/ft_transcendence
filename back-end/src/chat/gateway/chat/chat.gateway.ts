@@ -285,8 +285,8 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
       })
 
       newChannel && this.server.to(decoded.username).emit("update-groupAvatar", {groupId: channel.id});
-      this.server.emit("refresh");
       this.server.to(user.username).emit("errorNotif", {message: `group created`, type: true});
+      this.server.emit("refresh");
     }
   }
 
@@ -294,6 +294,9 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
   
   @SubscribeMessage("refresh-event")
   async handleRefresh(client: Socket, payload: any): Promise<void> {
+    setTimeout(() => {
+      this.server.emit("refresh");
+    }, 150);
   }
 
   @SubscribeMessage("message-to-group")
@@ -1035,6 +1038,7 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
           Members: true,
           Owners: true,
           Admins: true,
+          Band: true,
         },
       });
       const verifyIsMemmber: boolean = group.Members.some((member) => {
@@ -1063,7 +1067,7 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
         this.server.to(user.username).emit("errorNotif", {message: `this user is not banned`, type: false});
         return;
       }
-      
+
       await this.prisma.user.update({
         where: {
           id: payload.userId,

@@ -1,3 +1,4 @@
+import { channels } from './../../node_modules/.prisma/client/index.d';
 import { Injectable, NotFoundException } from "@nestjs/common";
 import { PrismaService } from "../prisma/prisma.service";
 
@@ -70,7 +71,7 @@ export class UploadService {
   async uploadChannelAvatar(path: string, channelId: string): Promise<any> {
     try {
       console.log("------------------");
-      await this.prisma.channel.update({
+      await this.prisma.channels.update({
         where: {
           id: channelId,
         },
