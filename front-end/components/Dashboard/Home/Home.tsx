@@ -2,12 +2,13 @@
 
 import Header from "./Header/Header"
 import Body from "./Body/Body"
-import { useState , useRef} from 'react'
+import { useState , useRef, use, useEffect} from 'react'
 import RightModal from "./Modal/Modal"
 import LeaderModal from "./LeaderModal/LeaderModal"
 import User from "./LeaderModal/User"
 import FriendNotifications from "../Notifications/Friend_notifications"
 import AchievementsNotifications from "../Notifications/Ach_not"
+import axiosInstance from "@/utils/axiosInstance"
 export default function Home() {
     const HeadermodalRef = useRef(null);
     const leaderRef = useRef(null);
@@ -15,6 +16,27 @@ export default function Home() {
     const notifIconRef = useRef(null);
     const [show, setShow] = useState(true);
     const [showModal, setShowModal] = useState(false);
+    const [allNotifications, setAllNotifications] = useState<any>([]);
+    useEffect(() => {
+        try{
+            const getNotificatons = async () => {
+                try{
+                    const res = await axiosInstance.get(`http://${process.env.NEXT_PUBLIC_APP_URL}:3000/api/notification/all`);
+                    // console.log(res.data);
+                    setAllNotifications(res.data);
+                }
+                catch(err){
+                    console.log(err);
+                }
+            }
+            getNotificatons();
+        }
+        catch(error)
+        {
+            console.log(error)
+        }
+    }
+    ,[])
     const handelShaw = (Ref: any) => {
         if (Ref.current.classList.contains('hidden'))
         {
@@ -46,7 +68,7 @@ export default function Home() {
             setShow(true)
         }
     }
-    
+    console.log("this is all ", allNotifications)
     return (
         <div className="flex flex-col px-[10px] sm:px-[62px] py-[60px] w-full bg-[#FAFDFF]  h-[100vh] overflow-y-scroll overflow-x-hidden gap-[52px] relative no-scrollbar ">
             {!show && <div className='w-full h-full fixed top-0 left-0 z-[51]' onClick={() => handelClose(HeadermodalRef)}></div>}
@@ -75,22 +97,32 @@ export default function Home() {
                     </span>
                 </div>
                 <div className=" flex flex-col gap-[16px] overflow-y-scroll scrollbar-hide max-h-[calc(100%-100px)]">
-                <FriendNotifications name="Saad Gmira" avatar="jlemdrayaf.png"/>
-                <FriendNotifications name="Saad Gmira" avatar="jlemdrayaf.png"/>
-                <FriendNotifications name="Saad Gmira" avatar="jlemdrayaf.png"/>
-                <AchievementsNotifications name="Saad Gmira" avatar="jlemdrayaf.png"/>
-                <AchievementsNotifications name="Saad Gmira" avatar="jlemdrayaf.png"/>
-                <AchievementsNotifications name="Saad Gmira" avatar="jlemdrayaf.png"/>
-                <AchievementsNotifications name="Saad Gmira" avatar="jlemdrayaf.png"/>
-                <AchievementsNotifications name="Saad Gmira" avatar="jlemdrayaf.png"/>
-                <AchievementsNotifications name="Saad Gmira" avatar="jlemdrayaf.png"/>
-                <AchievementsNotifications name="Saad Gmira" avatar="jlemdrayaf.png"/>
-                <AchievementsNotifications name="Saad Gmira" avatar="jlemdrayaf.png"/>
-                <AchievementsNotifications name="Saad Gmira" avatar="jlemdrayaf.png"/>
-                <AchievementsNotifications name="Saad Gmira" avatar="jlemdrayaf.png"/>
-                <AchievementsNotifications name="Saad Gmira" avatar="jlemdrayaf.png"/>
-                <AchievementsNotifications name="Saad Gmira" avatar="jlemdrayaf.png"/>
-                <AchievementsNotifications name="Saad Gmira" avatar="jlemdrayaf.png"/>
+                {/* <FriendNotifications name="Saad Gmira" avatar="jlemdrayaf.png"/>
+                    <FriendNotifications name="Saad Gmira" avatar="jlemdrayaf.png"/>
+                    <FriendNotifications name="Saad Gmira" avatar="jlemdrayaf.png"/>
+                    <AchievementsNotifications name="Saad Gmira" avatar="jlemdrayaf.png"/>
+                    <AchievementsNotifications name="Saad Gmira" avatar="jlemdrayaf.png"/>
+                    <AchievementsNotifications name="Saad Gmira" avatar="jlemdrayaf.png"/>
+                    <AchievementsNotifications name="Saad Gmira" avatar="jlemdrayaf.png"/>
+                    <AchievementsNotifications name="Saad Gmira" avatar="jlemdrayaf.png"/>
+                    <AchievementsNotifications name="Saad Gmira" avatar="jlemdrayaf.png"/>
+                    <AchievementsNotifications name="Saad Gmira" avatar="jlemdrayaf.png"/>
+                    <AchievementsNotifications name="Saad Gmira" avatar="jlemdrayaf.png"/>
+                    <AchievementsNotifications name="Saad Gmira" avatar="jlemdrayaf.png"/>
+                    <AchievementsNotifications name="Saad Gmira" avatar="jlemdrayaf.png"/>
+                    <AchievementsNotifications name="Saad Gmira" avatar="jlemdrayaf.png"/>
+                    <AchievementsNotifications name="Saad Gmira" avatar="jlemdrayaf.png"/>
+                    <AchievementsNotifications name="Saad Gmira" avatar="jlemdrayaf.png"/> */}
+                    {allNotifications.map((notif: any) => {
+                        if(notif.type === "FRIEND_REQUEST")
+                        {
+                            return <FriendNotifications name={notif.actionUserName} avatar={notif.actionUserAvatar} userId={notif.actionUserId}/>
+                        }
+                        // else if(notif.type === "achievement")
+                        // {
+                        //     return <AchievementsNotifications name={notif.sender.name} avatar={notif.sender.avatar}/>
+                        // }
+                    })}
                 </div>
             </RightModal>
         </div>

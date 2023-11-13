@@ -1,12 +1,22 @@
 import Link from "next/link";
 
+import axiosInstance from "@/utils/axiosInstance";
 type props  = {
     name: string,
     avatar: string,
+    userId: string
 }
 
-export default function FriendNotifications({name, avatar}: props) {
-    console.log(avatar)
+export default function FriendNotifications({name, avatar, userId}: props) {
+    async function AcceptFriend(){
+        try{
+            const res = await axiosInstance.patch(`http://${process.env.NEXT_PUBLIC_APP_URL}:3000/api/friendship/accept/${userId}`);
+            console.log(res);
+        }
+        catch(err){
+            console.log(err);
+        }
+    }
     return (
         <div className="flex justify-center">
         <div className="w-11/12 ">
@@ -32,7 +42,7 @@ export default function FriendNotifications({name, avatar}: props) {
                 </div>
             </div>
                 <div className="flex justify-between  gap-[17px]">
-                    <button className="w-[120px] sm:w-[82px] h-[29px] rounded-[8px] bg-[#2D7AD8] text-white text-[10px] font-[600] hover:bg-[#2d7ad8d4]">
+                    <button className="w-[120px] sm:w-[82px] h-[29px] rounded-[8px] bg-[#2D7AD8] text-white text-[10px] font-[600] hover:bg-[#2d7ad8d4]" onClick={AcceptFriend}>
                         Accept
                     </button>
                     <button className="w-[90px] sm:w-[72px] h-[29px] rounded-[8px] bg-[#E7E7E7] text-black text-[10px] font-[600] hover:bg-[#e7e7e7c7]">
