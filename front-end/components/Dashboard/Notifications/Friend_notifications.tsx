@@ -1,6 +1,7 @@
 import Link from "next/link";
 
 import axiosInstance from "@/utils/axiosInstance";
+import { useEffect } from "react";
 type props  = {
     name: string,
     avatar: string,
