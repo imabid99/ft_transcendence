@@ -50,32 +50,46 @@ export class FriendshipService {
 
   async acceptRequest(senderId: string, receiverId: string): Promise<void> {
     try {
-      await this.prisma.friendship.updateMany({
+      const friendship = await this.prisma.friendship.findFirst({
         where: {
           senderId,
           receiverId,
         },
+      });
+      console.log(friendship);
+      await this.prisma.friendship.update({
+        where: {
+            id: friendship.id,
+        },
         data: {
           status: FriendshipStatus.ACCEPTED,
-          actionUserId: senderId,
+          actionUserId: receiverId,
         },
       });
     } catch (error) {
       throw error;
     }
   }
-  // async refuseRequest(senderId: string, receiverId: string): Promise<void> {
-  //   try {
-  //     await this.prisma.friendship.delete({
-  //       where: {
-  //         senderId : senderId,
-  //         receiverId,
-  //       }
-  //     });
-  //   } catch (error) {
-  //     throw error;
-  //   }
-  // }
+
+  async refuseRequest(senderId: string, receiverId: string): Promise<void> {
+    try {
+      const friendship = await this.prisma.friendship.findFirst({
+        where: {
+          senderId,
+          receiverId,
+        },
+      });
+      await this.prisma.friendship.delete({
+        where: {
+          id: friendship.id,
+        }
+      });
+
+    } catch (error) {
+      throw error;
+    }
+  }
+
   async showFriendship(senderId: string, receiverId: string): Promise<void> {
     try {
       await this.prisma.friendship.findMany({
