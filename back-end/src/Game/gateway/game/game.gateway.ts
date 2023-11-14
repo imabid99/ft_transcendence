@@ -12,6 +12,10 @@ import { PrismaService } from "../../../prisma/prisma.service";
 import { UserService } from "../../../user/user.service";
 import { Server } from "socket.io";
 import { subscribe } from "diagnostics_channel";
+import { MatchType } from "@prisma/client";
+import { use } from "passport";
+import { Req, UseGuards } from "@nestjs/common";
+import { AuthGuard } from "@nestjs/passport";
 
 class GameStateManager {
   private gameData: any = {}; // Initialize with your game data structure
@@ -45,12 +49,13 @@ export class GameGateway implements OnGatewayConnection, OnGatewayDisconnect {
   @WebSocketServer()
   server: SocketIO.Server;
 
-  private waitingPlayers: { username: string; client: Socket }[] = [];
+  private waitingPlayers: { username: string; userId : string ;client: Socket }[] = [];
+  
   private matches: Map<
   string,
   { 
     matchId: string; 
-    players: { username: string; client: Socket; score?: number }[];
+    players: { username: string; userId : string ;client: Socket; score?: number }[];
   }
   > = new Map();
 
@@ -63,42 +68,53 @@ export class GameGateway implements OnGatewayConnection, OnGatewayDisconnect {
     return false;
   }
 
-
-  handleConnection(client: Socket) {
+  @UseGuards(AuthGuard("jwt"))
+  async handleConnection(client: Socket) {
     // console.log("server listening on port 3000");
     const token = client.handshake.headers.authorization?.split(" ")[1];
     if (token) {
       const decoded: any = jwt_decode(token);
+      const userId = decoded.userId;
       const username = decoded.username;
-      console.log(`Client ${username} connected`);
+      console.log(`Client ${decoded.username} connected`);
       const newObject = {
+        userId : userId,
         username: username,
         client: client,
       };
       this.waitingPlayers.push(newObject);
       if (this.waitingPlayers.length >= 2) {
-        const player1 = this.waitingPlayers.shift();
-        const player2 = this.waitingPlayers.shift();
+        const creator = this.waitingPlayers.shift();
+        const opponent = this.waitingPlayers.shift();
 
-        if (player1.username !== player2.username) {
+        if (creator.username !== opponent.username) {
           console.log(
-            `Match started between ${player1.client.id} and ${player2.client.id}`
+            `Match started between ${creator.client.id} and ${opponent.client.id}`
           );
-          const matchId = `match-${player1.client.id}-${player2.client.id}`;
-          player1.client.join(matchId);
-          player2.client.join(matchId);
+          const match = await this.prisma.match.create({
+            data: {
+              creatorId: creator.userId,
+              opponentId: opponent.userId,
+              type: MatchType.RANDOM,
+              creatorSocket: creator.client.id,
+              opponentSocket: opponent.client.id,
+            },
+          });
+          const matchId = match.id;
+          creator.client.join(matchId);
+          opponent.client.join(matchId);
           // Store the match ID and the players in the matches map
-          this.matches.set(player1.client.id, {
-            matchId,
-            players: [player1, player2],
-          });
-          this.matches.set(player2.client.id, {
-            matchId,
-            players: [player1, player2],
-          });
-          // this.server.to(player1.client.id).emit('startGame');
+          // this.matches.set(creator.client.id, {
+          //   matchId,
+          //   players: [creator, opponent],
+          // });
+          // this.matches.set(opponent.client.id, {
+          //   matchId,
+          //   players: [creator, opponent],
+          // });
+          // this.server.to(creator.client.id).emit('startGame');
         } else {
-          this.waitingPlayers.unshift(player2);
+          this.waitingPlayers.unshift(opponent);
         }
       }
     }
@@ -120,32 +136,40 @@ export class GameGateway implements OnGatewayConnection, OnGatewayDisconnect {
     this.matches.delete(client.id);
   }
 
-  @SubscribeMessage("paddle-move")
-  handlePaddleMove(
-    client: Socket,
-    payload: { direction: string; moving: boolean; playerId?: string }
-  ) {
-    const match = this.matches.get(client.id);
-    if (match) {
-      const { matchId, players } = match;
-      // if (players[0].client.id === client.id) {
-      gameStateManager.updateGame({ paddleMove: payload });
-      this.server.to(matchId).emit("paddle-move", payload);
-      // }
-    }
-  }
+  // @SubscribeMessage("paddle-move")
+  // handlePaddleMove(
+  //   client: Socket,
+  //   payload: { direction: string; moving: boolean; playerId?: string }
+  // ) {
+  //   const match = this.matches.get(client.id);
+  //   if (match) {
+  //     const { matchId, players } = match;
+  //     // if (players[0].client.id === client.id) {
+  //     gameStateManager.updateGame({ paddleMove: payload });
+  //     this.server.to(matchId).emit("paddle-move", payload);
+  //     // }
+  //   }
+  // }
 
   @SubscribeMessage("paddle-pos")
-  handlePaddlePos(
+  async handlePaddlePos(
     client: Socket,
     payload: { x: number, y: number, z: number; playerId?: string }
   ) {
-    const match = this.matches.get(client.id);
+    const match = await this.prisma.match.findFirst({
+      where: {
+        OR: [
+          { creatorSocket: client.id },
+          { opponentSocket: client.id },
+        ],
+      },
+    })
+    // const match = this.matches.get(client.id);
     if (match) {
-      const { matchId, players } = match;
+      // const { match.id , players } = match;
       // if (players[0].client.id === client.id) {
       // gameStateManager.updateGame({ paddleMove: payload });
-      this.server.to(matchId).emit('paddle-pos', payload);
+      this.server.to(match.id).emit('paddle-pos', payload);
       // }
     }
   }
@@ -160,43 +184,67 @@ export class GameGateway implements OnGatewayConnection, OnGatewayDisconnect {
   //   }
   // }
   @SubscribeMessage("ball-serve")
-  handleBallServe(
+  async handleBallServe(
     client: Socket,
     payload: { isServing: boolean; direction: number }
   ) {
-    const match = this.matches.get(client.id);
+    const match = await this.prisma.match.findFirst({
+      where: {
+        OR: [
+          { creatorSocket: client.id },
+          { opponentSocket: client.id },
+        ],
+      },
+    })
     if (match) {
-      const { matchId, players } = match;
-      client.broadcast.to(matchId).emit("ball-serve", payload);
+      // const { matchId, players } = match;
+      client.broadcast.to(match.id).emit("ball-serve", payload);
     }
   }
 
 
 
   @SubscribeMessage("player-wins")
-  handleScoreUpdate(
+  async handleScoreUpdate(
     client: Socket,
     payload: { winner: string, winnerscore: number, loserscore: number }
   ) {
     let winnerScore : number, loserScore: number, winner: string;
-    const match = this.matches.get(client.id);
-    console.log(match.players[0].client.id, match.players[1].client.id, payload.winner);
+    const match = await this.prisma.match.findFirst({
+      where: {
+        OR: [
+          { creatorSocket: client.id },
+          { opponentSocket: client.id },
+        ],
+      },
+    })
+    console.log(match.creatorId, match.opponentId, payload.winner);
+    let creatorScore : any = null;
+    let opponentScore : any = null;
     if (match) {
-      const { matchId } = match;
-      if (match.players[0].client.id === payload.winner) {
+      if (match.creatorId === payload.winner) {
         console.log('player 1 wins');
-        winner = match.players[0].client.id;
-        match.players[0].score = payload.winnerscore;
-        match.players[1].score = payload.loserscore; 
+        winner = match.creatorId;
+        creatorScore = payload.winnerscore;
+        opponentScore = payload.loserscore; 
       } else {
         console.log('player 2 wins');
-        winner = match.players[1].client.id;
-        match.players[1].score = payload.winnerscore;
-        match.players[0].score = payload.loserscore;
+        winner = match.opponentId;
+        opponentScore = payload.winnerscore;
+        creatorScore = payload.loserscore;
       }
       winnerScore = payload.winnerscore;
       loserScore = payload.loserscore;
-      this.server.to(matchId).emit('player-wins', { winner, winnerScore, loserScore });
+      await this.prisma.match.update({
+        where: {
+          id: match.id,
+        },
+        data: {
+          creatorScore: creatorScore,
+          opponentScore: opponentScore,
+        },
+      });
+      this.server.to(match.id).emit('player-wins', { winner, winnerScore, loserScore });
     }
   }
 }

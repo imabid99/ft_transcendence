@@ -17,6 +17,12 @@ enum FriendshipStatus {
   PENDING
 }
 
+enum MatchType {
+  FRIEND
+  RANDOM
+  AI
+}
+
 model User {
   id             String         @id @default(uuid())
   id42           String?
@@ -41,6 +47,9 @@ model User {
   received       Friendship[]   @relation("FriendshipReceiver")
   actions        Friendship[]   @relation("FriendshipAction")
   Notifications  Notification[] @relation("Notifications")
+
+  match_p1 match[] @relation("matches_created")
+  match_p2 match[] @relation("matches_invited")
 }
 
 model Notification {
@@ -66,6 +75,20 @@ model Friendship {
   sender       User             @relation("FriendshipSender", fields: [senderId], references: [id])
   receiver     User             @relation("FriendshipReceiver", fields: [receiverId], references: [id])
   actionUser   User             @relation("FriendshipAction", fields: [actionUserId], references: [id])
+}
+
+model match {
+  id             String   @id @default(uuid())
+  type           MatchType
+  createdAt      DateTime @default(now())
+  creatorId      String
+  creator        User     @relation("matches_created", fields: [creatorId], references: [id])
+  opponentId     String
+  opponent       User     @relation("matches_invited", fields: [opponentId], references: [id])
+  creatorScore   Int?
+  opponentScore  Int?
+  creatorSocket  String
+  opponentSocket String
 }
 
 model Profile {

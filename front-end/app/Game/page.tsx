@@ -55,11 +55,6 @@ const Game = () => {
 		
 	}, []);
 	
-	useEffect(() => {
-		socket.on("updatePosition", (position) => {
-			socket.emit("playerPosition", position);
-		});
-	}, [profiles]);
 
 	// GUI CONTROLS
 // 	const controls = useControls({});
