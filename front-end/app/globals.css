@@ -538,3 +538,59 @@ input {
   -ms-overflow-style: none;  
   scrollbar-width: none;  
 }
+
+
+
+.button-container {
+  position: relative;
+}
+
+.button-container button {
+  background-color: #5085AB; 
+  transition: background-color 0.3s ease; 
+}
+
+.button-container button:hover {
+  background-color: #E5ECF9; 
+}
+
+.button-container button:hover svg path {
+  fill: #5085AB; 
+}
+
+.button-container1 {
+  position: relative;
+}
+
+.button-container1 button {
+  background-color: #5085AB; 
+  transition: background-color 0.3s ease; 
+}
+
+.button-container1 button:hover {
+  background-color: #E5ECF9; 
+}
+
+.button-container1 button:hover svg path {
+  fill: #5085AB; 
+}
+
+.button-container2 {
+  position: relative;
+}
+
+.button-container2 button {
+  background-color: #5085AB; 
+  transition: background-color 0.3s ease; 
+}
+
+.button-container2 button:hover {
+  background-color: #E5ECF9; 
+}
+.button-container2 button:hover p{
+  color : #5085AB;
+}
+
+.button-container2 button:hover svg path {
+  fill: #5085AB; 
+}

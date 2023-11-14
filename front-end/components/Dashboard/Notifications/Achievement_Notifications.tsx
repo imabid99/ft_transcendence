@@ -6,7 +6,6 @@ type props  = {
 }
 
 export default function AchievementsNotifications({name, avatar}: props) {
-    console.log(avatar)
     return (
         <div className="flex justify-center">
         <div className="w-11/12 ">

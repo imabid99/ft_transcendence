@@ -10,30 +10,39 @@ type props  = {
 }
 
 const Friend = ({ cover, avatar, name, username, online,userId }:props) => {
-    console.log(cover)
     const avatarUrl = `http://${process.env.NEXT_PUBLIC_APP_URL}:3000/${avatar}`;
     const coverUrl = `http://${process.env.NEXT_PUBLIC_APP_URL}:3000/${cover}`;
     return (
-    <div className="w-[242px] h-[250px] rounded-[34px] bg-white teamS overflow-x-hidden">
+    <div className="w-[242px] h-[250px] rounded-[34px] bg-white teamS overflow-x-hidden relative">
+                        <span className='absolute z-[1] w-[350px] top-[76px]  overflow-hidden '>
+                        <svg width="242" height="64" viewBox="0 0 242 64" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M33 2.33827C19.8 -4.46173 -1.83333 15.8333 -10.5 21.4999L-14 61.3393L251.5 63.3393V54.3393C252.833 47.6726 261.1 36.3 251.5 21.5C241.9 6.7 217.5 -0.000549078 209.5 2.33827C199 5.40798 192.5 15.8393 165 15.8393C137.5 15.8393 130 6.33929 111.5 2.33827C93 -1.66275 89 15.8393 67.5 15.8393C46 15.8393 49.5 10.8383 33 2.33827Z" fill="white"/>
+                        </svg>
+                    {/* <div className="w-[950px] h-[600px] bg-black z-[1] mt-[-10px]">
+                    </div> */}
+                </span>
         <div className="w-[242px] h-[92px]">
         <img
             src={coverUrl}
             alt=""
-            className="object-cover w-full h-full"
+            className="object-cover w-full h-full filter blur-[0.8px]"
         />
         </div>
-        <div className="relative">
-        <div className="rounded-full w-[76px] h-[76px] absolute -top-[38px] right-[83px]">
-                <img src={avatarUrl} alt="" className="object-cover rounded-full w-full h-full"/>
+        <Link href={`/Profile/users/${userId}`}>
+        <div className="relative z-[10]">
+            <div className="rounded-full w-[76px] h-[76px] absolute -top-[38px] right-[83px] cursor-pointer">
+               
+                    <img src={avatarUrl} alt="" className="object-cover rounded-full w-full h-full"/>
+            </div>
+            <div>
+                <img
+                src={online === 'online' ? "pellipse-179.svg" : "not_online.svg"}
+                alt=""
+                className="absolute -top-[47px] right-[75px]"
+                />
+            </div>
         </div>
-        <div>
-            <img
-            src={online === 'online' ? "pellipse-179.svg" : "not_online.svg"}
-            alt=""
-            className="absolute -top-[47px] right-[75px]"
-            />
-        </div>
-    </div>
+        </Link>
     <div className="pt-[55px]  text-center">
         <div className="text-[#033B6C] text-[12px] font-[600]">
         {name}
