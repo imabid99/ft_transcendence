@@ -9,10 +9,9 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@react-three/cannon": "^6.6.0",
     "@react-three/drei": "^9.86.3",
     "@react-three/fiber": "^8.14.3",
-    "@react-three/postprocessing": "^2.15.1",
-    "@react-three/rapier": "^1.1.1",
     "@types/node": "20.3.1",
     "@types/react": "18.2.12",
     "@types/three": "^0.156.0",

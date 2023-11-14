@@ -1,7 +1,6 @@
 import React, { useEffect } from 'react';
 import { useGLTF } from '@react-three/drei';
 import * as THREE from 'three';
-import { RigidBody } from "@react-three/rapier";
 
 const Model3 = () => {
 
@@ -19,7 +18,7 @@ const Model3 = () => {
 
 
     return (
-        <RigidBody restitution={1.05} friction={0} type="fixed" colliders="hull">
+        // <RigidBody restitution={1.05} friction={0} type="fixed" colliders="hull">
             <primitive
                 object={siderock2.scene}
                 castShadow
@@ -28,7 +27,7 @@ const Model3 = () => {
                 scale={[11, 5 , 16.7]}
                 rotation-y={Math.PI}
                 />
-        </RigidBody>
+        // </RigidBody>
       );
 }
     
