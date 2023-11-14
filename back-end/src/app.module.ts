@@ -45,7 +45,6 @@ import { GameModule } from "./Game/game.module";
     JwtStrategy,
     GoogleStrategy,
     FortyTwoStrategy,
-    FriendshipService,
   ],
 })
 export class AppModule {}

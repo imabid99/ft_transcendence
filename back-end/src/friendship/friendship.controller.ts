@@ -28,7 +28,19 @@ import {
     @Patch("accept/:id")
     @UseGuards(AuthGuard("jwt"))
     async acceptRequest(@Req() req, @Param() params: any): Promise<void> {
-      return this.friendshipService.acceptRequest(req.user.id, params.id);
+      return this.friendshipService.acceptRequest(params.id, req.user.id);
+    }
+
+    @Delete("refuse/:id")
+    @UseGuards(AuthGuard("jwt"))
+    async refuseRequest(@Req() req, @Param() params: any): Promise<void> {
+      return this.friendshipService.refuseRequest(params.id, req.user.id);
+    }
+
+    @Get("show/:id")
+    @UseGuards(AuthGuard("jwt"))
+    async showFriendship(@Req() req, @Param() params: any): Promise<void> {
+      return this.friendshipService.showFriendship(req.user.id, params.id);
     }
     // @Delete("refuse/:id")
     // @UseGuards(AuthGuard("jwt"))

@@ -18,24 +18,24 @@ enum FriendshipStatus {
 }
 
 model User {
-  id             String      @id @default(uuid())
+  id             String         @id @default(uuid())
   id42           String?
   idGoogle       String?
-  email          String      @unique
-  username       String      @unique @default("")
+  email          String         @unique
+  username       String         @unique @default("")
   password       String
   twoFASecret    String
-  twoFAActive    Boolean     @default(false)
-  deleted        Boolean     @default(false)
+  twoFAActive    Boolean        @default(false)
+  deleted        Boolean        @default(false)
   profile        Profile?
   dmMessages     Message[]
   BlockList      BlockList[]
   channels       channels[]
-  channelsOwner  channels[]  @relation("Owners")
-  channelsAdmin  channels[]  @relation("Admins")
-  channelsMember channels[]  @relation("Members")
-  channelsMuts   channels[]  @relation("MutedUsers")
-  channelsBand   channels[]  @relation("BannedUsers")
+  channelsOwner  channels[]     @relation("Owners")
+  channelsAdmin  channels[]     @relation("Admins")
+  channelsMember channels[]     @relation("Members")
+  channelsMuts   channels[]     @relation("MutedUsers")
+  channelsBand   channels[]     @relation("BannedUsers")
   muted          Muted[]
   sent      Friendship[] @relation("FriendshipSender")
   received  Friendship[] @relation("FriendshipReceiver")
@@ -57,15 +57,15 @@ model Notification {
 }
 
 model Friendship {
-  id            Int               @id @default(autoincrement())
-  senderId      String
-  receiverId    String
-  status        FriendshipStatus
-  actionUserId  String
-  timestamp     DateTime         @default(now())
-  sender        User             @relation("FriendshipSender", fields: [senderId], references: [id])
-  receiver      User             @relation("FriendshipReceiver", fields: [receiverId], references: [id])
-  actionUser    User             @relation("FriendshipAction", fields: [actionUserId], references: [id])
+  id           String           @id @default(uuid())
+  senderId     String           @unique
+  receiverId   String           @unique
+  status       FriendshipStatus
+  actionUserId String
+  timestamp    DateTime         @default(now())
+  sender       User             @relation("FriendshipSender", fields: [senderId], references: [id])
+  receiver     User             @relation("FriendshipReceiver", fields: [receiverId], references: [id])
+  actionUser   User             @relation("FriendshipAction", fields: [actionUserId], references: [id])
 }
 
 model Profile {
