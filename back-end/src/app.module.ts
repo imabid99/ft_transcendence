@@ -13,12 +13,9 @@ import { ChatModule } from "./chat/chat.module";
 import { authController } from "./auth/auth.controller";
 import { GoogleStrategy } from "./google/google.starategy";
 import { MulterModule } from "@nestjs/platform-express";
-import { uploadController } from "./upload/upload.controller";
-import { friendshipController } from "./friendship/friendship.controller";
-import { UploadService } from "./upload/upload.service";
-import { FriendshipService } from "./friendship/friendship.service";
 import { UploadModule } from "./upload/upload.module";
 import { NotificationModule } from "./notification/notification.module";
+import { friendshipModule } from "./friendship/friendship.module";
 
 @Module({
   imports: [
@@ -31,11 +28,12 @@ import { NotificationModule } from "./notification/notification.module";
     ChatModule,
     UploadModule,
     NotificationModule,
+    friendshipModule,
     MulterModule.register({
       dest: "./uploads/all",
     }),
   ],
-  controllers: [AppController, userController, authController, friendshipController],
+  controllers: [AppController, userController, authController],
   providers: [
     AppService,
     AuthService,
@@ -43,7 +41,6 @@ import { NotificationModule } from "./notification/notification.module";
     JwtStrategy,
     GoogleStrategy,
     FortyTwoStrategy,
-    FriendshipService,
   ],
 })
 export class AppModule {}
