@@ -17,6 +17,7 @@ export default function Home() {
     const [show, setShow] = useState(true);
     const [showModal, setShowModal] = useState(false);
     const [allNotifications, setAllNotifications] = useState<any>([]);
+    const [Friends, setFriends] = useState<any>([]);
     useEffect(() => {
         try{
             const getNotificatons = async () => {
@@ -37,6 +38,25 @@ export default function Home() {
         }
     }
     ,[])
+
+    useEffect(() => {
+        try{
+            const getFriends = async () => {
+                try{
+                    const res = await axiosInstance.get(`http://${process.env.NEXT_PUBLIC_APP_URL}:3000/api/friendship/show`);
+                    setFriends(res.data);
+                }
+                catch(err){
+                    console.log(err);
+                }
+            }
+            getFriends();
+        }
+        catch(error)
+        {
+            console.log(error)
+        }
+    }, [])
     const handelShaw = (Ref: any) => {
         if (Ref.current.classList.contains('hidden'))
         {
@@ -117,13 +137,19 @@ export default function Home() {
                     {allNotifications.map((notif: any, index: number) => {
                         if(notif.type === "FRIEND_REQUEST")
                         {
-                            return <FriendNotifications name={notif.actionUserName} avatar={notif.actionUserAvatar} userId={notif.actionUserId} key={notif.id}/>
+                            return <FriendNotifications name={notif.actionUserName} avatar={notif.actionUserAvatar} userId={notif.actionUserId} notId={notif.id} key={notif.id}/>
                         }
                         // else if(notif.type === "achievement")
                         // {
                         //     return <AchievementsNotifications name={notif.sender.name} avatar={notif.sender.avatar}/>
                         // }
                     })}
+                    {/* {Friends.map((friend: any, index: number) => {
+                        if(friend.status === "pending")
+                        {
+                            return <FriendNotifications name={friend.name} avatar={friend.avatar} userId={friend.id} notId={friend.notId} key={friend.id}/>
+                        }
+                    } */}
                 </div>
             </RightModal>
         </div>

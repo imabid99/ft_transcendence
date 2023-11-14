@@ -23,11 +23,13 @@ export default function Body({ leaderRef, handelShaw }: Props) {
     // const avatar = myProfile?.avatar;
     // const online = myProfile?.status;
     // const cover = myProfile?.cover;
+
     useEffect(() => {
         try{
             const getFriends = async () => {
                 try{
-                    const res = await axiosInstance.get(`http://${process.env.NEXT_PUBLIC_APP_URL}:3000/api/Friends`);
+                    const res = await axiosInstance.get(`http://${process.env.NEXT_PUBLIC_APP_URL}:3000/api/friendship/show`);
+                    console.log(res.data);
                     setFriends(res.data);
                 }
                 catch(err){
@@ -40,9 +42,7 @@ export default function Body({ leaderRef, handelShaw }: Props) {
         {
             console.log(error)
         }
-    }
-    ,[])
-
+    }, [])
     return (
         <div className="flex flex-col 3xl:flex-row items-center w-[100%]  h-screen">
             <div className="flex items-center flex-col 3xl:flex-row gap-[40px] 3xl:gap-[150px] w-[100%]  justify-center ">
@@ -100,14 +100,20 @@ export default function Body({ leaderRef, handelShaw }: Props) {
                             }}
                             className="w-full h-full cursor-grab !pl-[30px] !pt-[34px]"
                             >
-                                {profiles?.map((profile:any) => {
+                                {/* {profiles?.map((profile:any) => {
                                         if(profile?.userId !== user?.id){
                                             return (
                                             <SwiperSlide>
                                             <Friend cover={profile?.cover} avatar={profile?.avatar} name={`${profile?.firstName} ${profile?.lastName}`} username={profile?.username} online={profile?.status} userId={profile?.userId} key={profile?.userId}  />
                                             </SwiperSlide>)
                                         }
-                                })}
+                                })} */}
+                                {Friends?.map((friend:any) => {
+                                        return (
+                                        <SwiperSlide>
+                                        <Friend cover={friend?.cover} avatar={friend?.avatar} name={`${friend?.firstName} ${friend?.lastName}`} username={friend?.username} online={friend?.status} userId={friend?.userId} key={friend?.userId}  />
+                                        </SwiperSlide>)
+                                })} 
                         </Swiper>
                     </div>  
                 </div>

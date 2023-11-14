@@ -48,15 +48,50 @@ export class FriendshipService {
     }
   }
 
-  async acceptRequest(senderId: string, receiverId: string): Promise<void> {
+  async acceptRequest(senderId: string, receiverId: string, notid : string): Promise<void> {
     try {
       await this.prisma.friendship.updateMany({
         where: {
           senderId,
           receiverId,
         },
+      });
+      await this.prisma.friendship.update({
+        where: {
+            id: friendship.id,
+        },
         data: {
           status: FriendshipStatus.ACCEPTED,
+          actionUserId: receiverId,
+        },
+      });
+      await this.prisma.notification.delete({
+        where: {
+          id: notid,
+          actionUserId: senderId,
+        },
+      });
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  async refuseRequest(senderId: string, receiverId: string, notid : string): Promise<void> {
+    try {
+      const friendship = await this.prisma.friendship.findFirst({
+        where: {
+          senderId,
+          receiverId,
+        },
+      });
+      await this.prisma.friendship.delete({
+        where: {
+          id: friendship.id,
+        }
+      });
+      await this.prisma.notification.delete({
+        where: {
+          id: notid,
           actionUserId: senderId,
         },
       });
@@ -109,15 +144,15 @@ export class FriendshipService {
 
     let friends = friendships.flatMap(friendship => {
       if (friendship.senderId === userId) {
-        return [{ id: friendship.receiver.id, profile: friendship.receiver.profile }];
+        return friendship.receiver.profile;
       } else {
-        return [{ id: friendship.sender.id, profile: friendship.sender.profile }];
+        return friendship.sender.profile;
       }
     });
 
     // Deduplicate the friends by their id
     friends = friends.filter((friend, index, self) =>
-      index === self.findIndex((t) => (t.id === friend.id)));
+      index === self.findIndex((t) => (t.userId === friend.userId)));
 
     return friends;
   }
