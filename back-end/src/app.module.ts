@@ -20,6 +20,7 @@ import { FriendshipService } from "./friendship/friendship.service";
 import { UploadModule } from "./upload/upload.module";
 import { NotificationModule } from "./notification/notification.module";
 import { GameModule } from "./Game/game.module";
+import { friendshipModule } from "./friendship/friendship.module";
 
 @Module({
   imports: [
@@ -33,6 +34,7 @@ import { GameModule } from "./Game/game.module";
     UploadModule,
     NotificationModule,
     GameModule,
+    friendshipModule,
     MulterModule.register({
       dest: "./uploads/all",
     }),
@@ -45,6 +47,7 @@ import { GameModule } from "./Game/game.module";
     JwtStrategy,
     GoogleStrategy,
     FortyTwoStrategy,
+    FriendshipService
   ],
 })
 export class AppModule {}

@@ -37,23 +37,23 @@ model User {
   channelsMuts   channels[]     @relation("MutedUsers")
   channelsBand   channels[]     @relation("BannedUsers")
   muted          Muted[]
-  sent      Friendship[] @relation("FriendshipSender")
-  received  Friendship[] @relation("FriendshipReceiver")
-  actions   Friendship[] @relation("FriendshipAction")
+  sent           Friendship[]   @relation("FriendshipSender")
+  received       Friendship[]   @relation("FriendshipReceiver")
+  actions        Friendship[]   @relation("FriendshipAction")
   Notifications  Notification[] @relation("Notifications")
 }
 
 model Notification {
-  id            String       @id @default(uuid())
-  type          String
-  message       String
-  actionUserId  String?
+  id               String   @id @default(uuid())
+  type             String
+  message          String
+  actionUserId     String   @unique
   actionUserAvatar String?
-  actionUserName String?
-  isRead        Boolean   @default(false)
-  createdAt     DateTime  @default(now())
-  userId        String
-  User          User      @relation(name: "Notifications", fields: [userId], references: [id])
+  actionUserName   String?
+  isRead           Boolean  @default(false)
+  createdAt        DateTime @default(now())
+  userId           String
+  User             User     @relation(name: "Notifications", fields: [userId], references: [id])
 }
 
 model Friendship {

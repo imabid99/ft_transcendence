@@ -50,7 +50,7 @@ export class FriendshipService {
 
   async acceptRequest(senderId: string, receiverId: string, notid : string): Promise<void> {
     try {
-      await this.prisma.friendship.updateMany({
+      const friendship = await this.prisma.friendship.findFirst({
         where: {
           senderId,
           receiverId,
@@ -99,18 +99,7 @@ export class FriendshipService {
       throw error;
     }
   }
-  // async refuseRequest(senderId: string, receiverId: string): Promise<void> {
-  //   try {
-  //     await this.prisma.friendship.delete({
-  //       where: {
-  //         senderId : senderId,
-  //         receiverId,
-  //       }
-  //     });
-  //   } catch (error) {
-  //     throw error;
-  //   }
-  // }
+
   async showFriendship(senderId: string, receiverId: string): Promise<void> {
     try {
       await this.prisma.friendship.findMany({
