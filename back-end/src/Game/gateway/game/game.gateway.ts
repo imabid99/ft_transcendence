@@ -47,8 +47,11 @@ export class GameGateway implements OnGatewayConnection, OnGatewayDisconnect {
 
   private waitingPlayers: { username: string; client: Socket }[] = [];
   private matches: Map<
-    string,
-    { matchId: string; players: { username: string; client: Socket }[] }
+  string,
+  { 
+    matchId: string; 
+    players: { username: string; client: Socket; score?: number }[];
+  }
   > = new Map();
 
   private playerInMatch(playerId: string): boolean {
@@ -168,24 +171,32 @@ export class GameGateway implements OnGatewayConnection, OnGatewayDisconnect {
     }
   }
 
-  playerWins(matchId: string, winningPlayer: { username: string; client: Socket }) {
-    this.server.to(matchId).emit('player-wins', winningPlayer.username);
-  }
+
 
   @SubscribeMessage("player-wins")
   handleScoreUpdate(
     client: Socket,
-    payload: { winner: string}
+    payload: { winner: string, winnerscore: number, loserscore: number }
   ) {
+    let winnerScore : number, loserScore: number, winner: string;
     const match = this.matches.get(client.id);
+    console.log(match.players[0].client.id, match.players[1].client.id, payload.winner);
     if (match) {
-      const { matchId, players } = match;
+      const { matchId } = match;
       if (match.players[0].client.id === payload.winner) {
-        this.playerWins(matchId, players[0])
-      } else if (match.players[1].client.id === payload.winner) {
-        this.playerWins(matchId, players[1]);
-      } 
+        console.log('player 1 wins');
+        winner = match.players[0].client.id;
+        match.players[0].score = payload.winnerscore;
+        match.players[1].score = payload.loserscore; 
+      } else {
+        console.log('player 2 wins');
+        winner = match.players[1].client.id;
+        match.players[1].score = payload.winnerscore;
+        match.players[0].score = payload.loserscore;
+      }
+      winnerScore = payload.winnerscore;
+      loserScore = payload.loserscore;
+      this.server.to(matchId).emit('player-wins', { winner, winnerScore, loserScore });
     }
-}
-
+  }
 }

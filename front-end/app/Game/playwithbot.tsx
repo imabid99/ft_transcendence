@@ -20,7 +20,6 @@ import  Forest  from "./forest";
 import  Desert from "./desert"
 import  Snow from "./snow"
 import { contextdata } from "../contextApi";
-import { io } from "socket.io-client";
 import { Physics, usePlane, useBox, useSphere, Debug} from '@react-three/cannon'
 import { is } from "@react-three/fiber/dist/declarations/src/core/utils";
 
@@ -42,24 +41,7 @@ const Game = () => {
 	  ], []);
 	
 
-	/// SOCKET MANAGER
 
-	const {profiles, user} :any= useContext(contextdata);
-	const name = `${user?.profile.firstName} ${user?.profile.lastName}`;
-	const socket = io(`http://${process.env.NEXT_PUBLIC_APP_URL}:3000/Game`);
-	
-	useEffect(() => {
-		socket.on("connect", () => {console.log(name + " is Connected to server");});
-		socket.on("disconnect", () => {console.log(name + " is Disconnected from server");
-		socket.disconnect();});
-		
-	}, []);
-	
-	useEffect(() => {
-		socket.on("updatePosition", (position) => {
-			socket.emit("playerPosition", position);
-		});
-	}, [profiles]);
 
 	// GUI CONTROLS
 // 	const controls = useControls({});
@@ -88,7 +70,6 @@ const Game = () => {
 		const [ref, api] = useBox(() => ({ mass: 0, type: "Static", material: { restitution: 1.06, friction: 0 },args: [3, 1, 0.3], position: [0, 0.5, 9], ...props }), useRef<THREE.Mesh>(null));
 
 		useEffect(() => {
-		  if (!user) return;
 		  let isMovingLeft = false;
 		  let isMovingRight = false;
 		  let paddleposX = 0;
@@ -134,7 +115,6 @@ const Game = () => {
 					}
 					const smoothingFactor = 0.4; 
 					paddleposX = paddleposX + (targetPosX - paddleposX) * smoothingFactor;
-					socket.emit('paddle-pos', { x: - paddleposX, y: 0.5, z: -9, playerId: socket.id});
 					// setTimeout(() => {
 						api.position.set(paddleposX, 0.5, 9);
 					// }, 5);
@@ -147,12 +127,11 @@ const Game = () => {
 		  return () => {
 			window.removeEventListener("keydown", handleKeyDown);
 			window.removeEventListener("keyup", handleKeyUp);
-			socket.off('paddle-pos');
 			if (animationFrameId !== null) {
 				cancelAnimationFrame(animationFrameId);
 			  }
 		  };
-		}, [user]);
+		}, []);
 	  
 		return (
 		  <RoundedBox
@@ -201,6 +180,7 @@ const Game = () => {
 			
 			window.addEventListener("keydown", handleKeyDown);
 			window.addEventListener("keyup", handleKeyUp);
+            api.position.set(position.current.x, 0.5, -9);
 			
 			// const updatePosition = () => {
 			// 	// if (ref.current) {
@@ -218,17 +198,11 @@ const Game = () => {
 			// };
 			
 			// requestAnimationFrame(updatePosition);
-			socket.on('paddle-pos', (data) => {
-				if (data.playerId === socket.id) return;
-				api.position.set(data.x, data.y, data.z);
-			});
 	
 		
 			return () => {
 				window.removeEventListener("keydown", handleKeyDown);
 				window.removeEventListener("keyup", handleKeyUp);
-				// socket.off('paddle-move');
-				socket.off('paddle-pos');
 			};
 		}, []);
 
@@ -266,14 +240,12 @@ const Game = () => {
 			const ServeDown = (event: KeyboardEvent) => {
 				if (event.code === 'Space') {
 					isServing = true;
-					socket.emit('ball-serve', {isServing: true, direction: -1})
 				}
 			};
 			
 			const ServeUp = (event: KeyboardEvent) => {
 				if (event.code === 'Space') {
 					isServing = false;
-					socket.emit('ball-serve', {isServing: false, direction: 1})
 				}
 			};
 
@@ -305,16 +277,11 @@ const Game = () => {
 			};
 			requestAnimationFrame(serveball);
 
-			socket.on('ball-serve', (data) => {
-				isServing = data.isServing;
-				direction = data.direction;
-			});
 	
 			return () => {
 				window.removeEventListener('keydown', ServeDown);
 				window.removeEventListener('keyup', ServeUp);
 				// socket.off('ballPosition');
-				socket.off('ball-serve');
 			};
 
 			}, []);
@@ -395,15 +362,8 @@ const Game = () => {
 		}, []);
 
 		useEffect(() => {
-			if(!user) return;
 			if(p1_count === 7 || p2_count === 7)
 			{
-				if(p2_count === 7 )
-				{
-				  console.log(socket.id, p1_count, p2_count);
-				  const payload = {winner: socket.id, winnerscore: p2_count, loserscore: p1_count};
-				  socket.emit('player-wins', payload)
-				}
 				// else
 				// {
 				//   console.log("Opponent Wins!", p1_count, p2_count);
@@ -414,13 +374,7 @@ const Game = () => {
 				setP2Count(0);
 			}
 
-		}, [p1_count, p2_count, user]);
-
-		useEffect(() => {
-			socket.on('player-wins', (data) => {
-				console.log("on ",data.winner, " Wins! with " + data.winnerScore + " - " + data.loserScore);
-			});
-		}, []);
+		}, [p1_count, p2_count]);
 
 		return (
 		  <>
