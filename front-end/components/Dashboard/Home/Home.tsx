@@ -7,7 +7,7 @@ import RightModal from "./Modal/Modal"
 import LeaderModal from "./LeaderModal/LeaderModal"
 import User from "./LeaderModal/User"
 import FriendNotifications from "../Notifications/Friend_notifications"
-import AchievementsNotifications from "../Notifications/Ach_not"
+import AchievementsNotifications from "../Notifications/Achievement_Notifications"
 import axiosInstance from "@/utils/axiosInstance"
 export default function Home() {
     const HeadermodalRef = useRef(null);
@@ -68,7 +68,7 @@ export default function Home() {
             setShow(true)
         }
     }
-    console.log("this is all ", allNotifications)
+    console.log(allNotifications);
     return (
         <div className="flex flex-col px-[10px] sm:px-[62px] py-[60px] w-full bg-[#FAFDFF]  h-[100vh] overflow-y-scroll overflow-x-hidden gap-[52px] relative no-scrollbar ">
             {!show && <div className='w-full h-full fixed top-0 left-0 z-[51]' onClick={() => handelClose(HeadermodalRef)}></div>}
@@ -113,10 +113,11 @@ export default function Home() {
                     <AchievementsNotifications name="Saad Gmira" avatar="jlemdrayaf.png"/>
                     <AchievementsNotifications name="Saad Gmira" avatar="jlemdrayaf.png"/>
                     <AchievementsNotifications name="Saad Gmira" avatar="jlemdrayaf.png"/> */}
-                    {allNotifications.map((notif: any) => {
+                    
+                    {allNotifications.map((notif: any, index: number) => {
                         if(notif.type === "FRIEND_REQUEST")
                         {
-                            return <FriendNotifications name={notif.actionUserName} avatar={notif.actionUserAvatar} userId={notif.actionUserId}/>
+                            return <FriendNotifications name={notif.actionUserName} avatar={notif.actionUserAvatar} userId={notif.actionUserId} key={notif.id}/>
                         }
                         // else if(notif.type === "achievement")
                         // {

@@ -285,19 +285,19 @@ export default function Page() {
         </div>
         {
           showConfi && (
-            <div className="w-[497px]  h-[301px] bg-[#fffefe] absolute top-[38%] left-[41%] rounded-[25px] z-10">
+            <div className="w-[350px] sm:w-[497px] xl:h-[301px] bg-[#fffefe] absolute top-[38%]  xl:left-[41%] rounded-[25px] z-10 py-[40px] xl:py-0 ">
               <div className="flex flex-col items-center justify-center h-full gap-[37px]">
-                <div className="flex items-start ">
-                  <img src="Group 246.svg" alt="" />
+                <div className="flex xl:items-start flex-col xl:flex-row items-center justify-center ">
+                  <img src="Group 246.svg" alt="" className='w-[94px] h-[94px]'  />
                   <div className="pl-[24px]">
-                    <p className="text-[#F53649] text-[24px] font-[600]">Are You Sure?</p>
-                    <p className="text-[#6C6C6C] text-[16px] font-[500] w-[249px]">
+                    <p className="text-[#F53649] text-[24px] font-[600] text-center xl:text-left">Are You Sure?</p>
+                    <p className="text-[#6C6C6C] text-[16px] font-[500] w-[249px] text-center xl:text-left">
                       If you proceed, you will lose all your personal data, Are you sure you
                       want to delete your account?
                     </p>
                   </div>
                 </div>
-                <div className="flex gap-[37px]">
+                <div className="flex xl:gap-[37px] gap-[16px] flex-col md:flex-row">
                   <button className="w-[171px] h-[50px] border-[1px] rounded-[7px] border-[#6C6C6C] text-[#6C6C6C] font-[500] text-[16px] hover:bg-gray-100" onClick={()=>setShowConfi(false)}>
                     Cancel
                   </button>

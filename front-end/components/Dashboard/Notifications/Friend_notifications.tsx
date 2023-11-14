@@ -17,6 +17,9 @@ export default function FriendNotifications({name, avatar, userId}: props) {
             console.log(err);
         }
     }
+    const avatarUrl = `http://${process.env.NEXT_PUBLIC_APP_URL}:3000/${avatar}`;
+    console.log(avatarUrl);
+    console.log("this is avatar", avatar);
     return (
         <div className="flex justify-center">
         <div className="w-11/12 ">
@@ -28,7 +31,7 @@ export default function FriendNotifications({name, avatar, userId}: props) {
                     <img src="Fridnot.svg" alt="" />
                     </div>
                     <img
-                    src={avatar}
+                    src={avatarUrl}
                     alt=""
                     className="w-full h-full object-cover rounded-full"
                     />

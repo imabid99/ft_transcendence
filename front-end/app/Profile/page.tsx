@@ -9,6 +9,25 @@ import { useRouter } from 'next/navigation';
 import { checkLoged } from '@/utils/localStorage';
 import Loading from '../loading';
 
+// const images = [
+//     [
+//         { src: 'Air.svg', alt: 'Airwa Image' },
+//         { src: 'hlock.svg', alt: 'Horrorwh Image'},
+//     ],
+//     [
+//         { src: 'Grand copy.svg', alt: 'Kingwk Image'},
+//         { src: 'Grand.svg', alt: 'GWG Image'},
+//         { src: 'Luck.svg', alt: 'BWB Image', className: 'lg:block hidden'},
+//     ],
+//     [
+//         { src: 'Unb.svg', alt: 'UNBWB Image'},
+//         { src: 'iron.svg', alt: 'Ironwr Image'},
+//     ],
+//     [
+//         { src: 'Luck.svg', alt: 'Luck Image', className: 'pb-[30px] block lg:hidden'},
+//     ],
+// ];
+
 const images = [
     [
         { src: 'Air.svg', alt: 'Airwa Image' },
@@ -27,7 +46,6 @@ const images = [
         { src: 'Luck.svg', alt: 'Luck Image', className: 'pb-[30px] block lg:hidden'},
     ],
 ];
-
 
 
 export default function Page() {
