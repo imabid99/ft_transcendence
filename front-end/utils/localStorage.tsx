@@ -4,12 +4,21 @@ export const setLocalStorageItem = (key: string, value: string): void => {
     }
   };
   
-  export const getLocalStorageItem = (key: string): string | null => {
+export const getLocalStorageItem = (key: string): string | null => {
       const value = localStorage.getItem(key);
       return value ;
 
   };
   
-  export const removeLocalStorageItem = (key: string): void => {
+export const removeLocalStorageItem = (key: string): void => {
       localStorage.removeItem(key);
+}
+
+export const checkLoged = (): boolean => {
+    if (typeof window !== 'undefined') {
+      if (getLocalStorageItem('Token')) {
+        return true;
+      }
+    }
+    return false;
 }

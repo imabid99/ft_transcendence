@@ -2,6 +2,7 @@
 import {useRouter} from 'next/navigation';
 import axios from 'axios';
 import Link from 'next/link';
+
 import {
   useState,
   useEffect,
@@ -9,7 +10,7 @@ import {
 } from 'react';
 import { setLocalStorageItem, getLocalStorageItem, removeLocalStorageItem } from '@/utils/localStorage';
 import { contextdata } from '@/app/contextApi';
-import { imageOptimizer } from 'next/dist/server/image-optimizer';
+import { signIn } from 'next-auth/react';
 
 export default function Home() {
 
@@ -53,7 +54,7 @@ export default function Home() {
       setLocalStorageItem("Token", response.data);
     } catch (e:any) 
     {
-      console.log("Error : ", e.response.data);
+      console.log("Login : ", e.response.data);
       setLogInAnimation(false);
       return;
     }
@@ -62,6 +63,7 @@ export default function Home() {
       router.push('/');
     }, 1000);
   }
+
   return (
     <div className="min-h-[100vh] w-[100%] bg-gradient-to-r from-cyan-500 to-blue-500 flex justify-around items-center bg-no-repeat bg-cover bg-center" style={{ backgroundImage: 'url("first4.png")' }}>
       <div className="h-[100vh] w-[100vw] bg-white flex flex-row items-center justify-center md:w-11/12 md:h-[735px] md:rounded-[61px] xl:max-w-[1404px] xl:mx-auto">
@@ -73,7 +75,9 @@ export default function Home() {
             Let The Fun Begin.
           </p>
           <div className="flex flex-col pt-[20px] gap-[16px] sm:flex-row">
-            <button className="flex justify-evenly items-center w-[170px] h-[52px] border-[1px] rounded-[11px] border-[#DDDDDD]">
+            <button className="flex justify-evenly items-center w-[170px] h-[52px] border-[1px] rounded-[11px] border-[#DDDDDD]"
+            onClick={() => router.push('http://localhost:3000/api/auth/oauth2/google/callback')}
+            >
               <img src="goog.svg" alt="" className="w-[20.153px] h-[20.56px]" />
               <p className="text-[#000] text-[10px] font-[400]">Log in with google</p>
             </button>

@@ -7,6 +7,7 @@ type LeftMessagesProps = {
       },
       avatar: String,
 }
+
 export default function RightMessages({message, avatar}: LeftMessagesProps) {
     return (
         <div className="flex  gap-[16px] items-end flex-row-reverse "> 

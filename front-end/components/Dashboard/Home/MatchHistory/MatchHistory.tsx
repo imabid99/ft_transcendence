@@ -13,8 +13,8 @@ const MatchHistory = ({ winnerAvatar, winnerName, winnerScore, loserAvatar, lose
         <div className="flex items-center w-[100%] justify-around">
             <div className="flex items-center gap-[8px]">
                 <div className="flex items-center justify-center flex-col">
-                    <p className="text-[#03335C] text-[8px] font-[600] md:text-[16px] 3xl:text-[8px] ">{winnerName}</p>
-                    <p className="text-[#00539D] text-[12px] font-[700] md:text-[16px] 3xl:text-[12px] md:font-[500] 3xl:font-[700]">{winnerScore}</p>
+                    <p className="text-[#03335C] text-[8px] font-[600] lg:text-[16px] 3xl:text-[8px] ">{winnerName}</p>
+                    <p className="text-[#00539D] text-[12px] font-[700] lg:text-[16px] 3xl:text-[12px] md:font-[500] 3xl:font-[700]">{winnerScore}</p>
                 </div>
                 <div className="py-4 md:pl-[20px] 3xl:pl-0">
                     <div className="rounded-full w-[46px] h-[46px] border-2 border-[#B1ECCA] lg:h-[60px] lg:w-[60px] 3xl:w-[46px] 3xl:h-[46px]">
@@ -32,8 +32,8 @@ const MatchHistory = ({ winnerAvatar, winnerName, winnerScore, loserAvatar, lose
                     </div>
                 </div>
                 <div className="flex items-center justify-center flex-col">
-                    <p className="text-[#03335C] text-[8px] font-[600] md:text-[16px] 3xl:text-[8px]">{loserName}</p>
-                    <p className="text-[#00539D] text-[12px] font-[700] md:text-[16px] 3xl:text-[12px] md:font-[500] 3xl:font-[700]">{loserScore}</p>
+                    <p className="text-[#03335C] text-[8px] font-[600] lg:text-[16px] 3xl:text-[8px]">{loserName}</p>
+                    <p className="text-[#00539D] text-[12px] font-[700] lg:text-[16px] 3xl:text-[12px] md:font-[500] 3xl:font-[700]">{loserScore}</p>
                 </div>
                 </div>
         </div>

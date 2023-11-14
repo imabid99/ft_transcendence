@@ -16,11 +16,11 @@ import SearchChat from "./SearchChat";
 export default function  LeftSide() {
 
 	const [showBody, setShowBody] = useState<string | null>(null);
+	const {user,setUsers,setProfiles,setMessages ,socket,setMyChannels,setChannels, dashboardRef,setMediaDashbord} :any= useContext(contextdata);
 	const [groupUsers, setGroupUsers] = useState<number[]>([]);
 	const [refresh, setRefresh] = useState<string>("");
     const [showModal, setShowModal] = useState(false);
 
-	const {user,setUsers,setProfiles,setMessages ,socket,setMyChannels,setChannels, dashboardRef,setMediaDashbord} :any= useContext(contextdata);
 	useEffect(() => {
 		if (!socket)  return;
 		socket.on("refresh", () => {

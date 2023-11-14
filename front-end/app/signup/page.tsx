@@ -9,6 +9,7 @@ import {
   useRef,
 } from 'react';
 import { setLocalStorageItem, getLocalStorageItem, removeLocalStorageItem } from '@/utils/localStorage';
+
 export default function Home() {
 
   const router = useRouter();

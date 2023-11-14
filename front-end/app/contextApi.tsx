@@ -4,8 +4,8 @@ import { createContext , useState , useEffect, useRef } from 'react';
 import { getLocalStorageItem , removeLocalStorageItem } from '@/utils/localStorage';
 import { useRouter } from 'next/navigation';
 import axiosInstance from '@/utils/axiosInstance';
-import io from 'socket.io-client';
-let newSocket: any = null;
+import io, { Socket } from 'socket.io-client';
+let newSocket: Socket | null = null;
 export const contextdata = createContext({});
 
 const ContextProvider = ({ children }: { children: React.ReactNode; }) => {
@@ -24,6 +24,10 @@ const ContextProvider = ({ children }: { children: React.ReactNode; }) => {
 
   useEffect(() => {
     const getUser = async () => {
+      if (!getLocalStorageItem("Token")) {
+        router.push("/login");
+        return;
+      }
       try
       {
         const resp = await axiosInstance.get(`http://${process.env.NEXT_PUBLIC_APP_URL}:3000/api/user/userinfo`);
@@ -60,7 +64,7 @@ const ContextProvider = ({ children }: { children: React.ReactNode; }) => {
     if (newSocket) {
       setSocket(newSocket);
     }
-    return () => newSocket.disconnect();
+    return () => {if(newSocket){ newSocket.disconnect()}}
   }, [user]);
 
   useEffect(() => {

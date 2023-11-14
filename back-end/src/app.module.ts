@@ -10,7 +10,6 @@ import { JwtModule } from "@nestjs/jwt";
 import { JwtStrategy } from "./jwt-auth/jwt.strategy";
 import { FortyTwoStrategy } from "./42auth/intra.strategy";
 import { ChatModule } from "./chat/chat.module";
-import { GameModule } from "./Game/game.module";
 import { authController } from "./auth/auth.controller";
 import { GoogleStrategy } from "./google/google.starategy";
 import { MulterModule } from "@nestjs/platform-express";
@@ -18,6 +17,9 @@ import { uploadController } from "./upload/upload.controller";
 import { friendshipController } from "./friendship/friendship.controller";
 import { UploadService } from "./upload/upload.service";
 import { FriendshipService } from "./friendship/friendship.service";
+import { UploadModule } from "./upload/upload.module";
+import { NotificationModule } from "./notification/notification.module";
+import { GameModule } from "./Game/game.module";
 
 @Module({
   imports: [
@@ -28,17 +30,18 @@ import { FriendshipService } from "./friendship/friendship.service";
       signOptions: { expiresIn: "1d" },
     }),
     ChatModule,
+    UploadModule,
+    NotificationModule,
     GameModule,
     MulterModule.register({
-      dest: "./uploads",
+      dest: "./uploads/all",
     }),
   ],
-  controllers: [AppController, userController, authController, uploadController, friendshipController],
+  controllers: [AppController, userController, authController, friendshipController],
   providers: [
     AppService,
     AuthService,
     UserService,
-    UploadService,
     JwtStrategy,
     GoogleStrategy,
     FortyTwoStrategy,

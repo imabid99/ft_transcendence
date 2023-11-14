@@ -9,6 +9,7 @@ import {useRouter} from "next/navigation";
 import { useContext } from "react";
 import { contextdata } from "@/app/contextApi";
 import Notif from "./Notif";
+import Loading from "../loading";
 
 
 export default function ChatLayout({ children }: { children: React.ReactNode }) {
@@ -39,7 +40,7 @@ export default function ChatLayout({ children }: { children: React.ReactNode }) 
   });
 
   if (isloading) {
-    return <div>Loading...</div>;
+    return <Loading />;
   }
   return (
     <div className="relative">

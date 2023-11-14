@@ -3,11 +3,11 @@ import Head from "next/head";
 import Dashboard from '@/components/Dashboard/Dashboard/Dashboard'
 import Header from "../../components/Dashboard/Home/Header/Header"
 export const metadata = {
-  title: "Inbox",
+  title: "Profile",
   description: "ft_transcendence",
 };
 
-export default function ChatLayout({
+export default function RootLayout({
   children,
 }: {
   children: React.ReactNode;
