@@ -3,12 +3,11 @@ import { useContext, useState, useEffect } from 'react';
 import { contextdata } from '@/app/contextApi';
 import axiosInstance from '@/utils/axiosInstance';
 import React from 'react';
-import ImageGrid from '../../components/Dashboard/Profile/Achievements/images';
 import Header from '@/components/Dashboard/Profile/Header/Header';
 import { useRouter } from 'next/navigation';
 import { checkLoged } from '@/utils/localStorage';
 import Loading from '../loading';
-
+import ImageComponent from '../../components/Dashboard/Profile/Achievements/images';
 // const images = [
 //     [
 //         { src: 'Air.svg', alt: 'Airwa Image' },
@@ -329,7 +328,7 @@ export default function Page() {
                     </span>
                 </div>
                 </div>
-                <ImageGrid images={images} />
+                <ImageComponent images={images} />
             </div>
             </div>
         </div>

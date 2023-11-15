@@ -8,6 +8,10 @@ import MatchHistory from "../MatchHistory/MatchHistory"
 import { type } from "os"
 import { Swiper, SwiperSlide } from 'swiper/react';
 import 'swiper/css';
+import Lottie from "lottie-react"
+import animationData from   "../../../../public/anGhost.json"
+import animationData1 from   "../../../../public/Ghost1.json"
+import animationData2 from   "../../../../public/ghost2.json"
 
 type Props = {
     leaderRef: any,
@@ -81,7 +85,7 @@ export default function Body({ leaderRef, handelShaw }: Props) {
                             <p className="text-[#02539D] text-[14px] font-[700]">FRIENDS</p>
                         </div>
                     </div>
-                        <Swiper
+                        {/* <Swiper
                             spaceBetween={0}
                             slidesPerView={2}
                             breakpoints={{
@@ -99,7 +103,7 @@ export default function Body({ leaderRef, handelShaw }: Props) {
                                 },
                             }}
                             className="w-full h-full cursor-grab !pl-[30px] !pt-[34px]"
-                            >
+                            > */}
                                 {/* {profiles?.map((profile:any) => {
                                         if(profile?.userId !== user?.id){
                                             return (
@@ -108,13 +112,75 @@ export default function Body({ leaderRef, handelShaw }: Props) {
                                             </SwiperSlide>)
                                         }
                                 })} */}
-                                {Friends?.map((friend:any) => {
+                                {/* {Friends?.map((friend:any) => {
                                         return (
                                         <SwiperSlide>
                                         <Friend cover={friend?.cover} avatar={friend?.avatar} name={`${friend?.firstName} ${friend?.lastName}`} username={friend?.username} online={friend?.status} userId={friend?.userId} key={friend?.userId}  />
                                         </SwiperSlide>)
-                                })} 
-                        </Swiper>
+                                })}  */}
+                                {/* {
+                                  Friends && Friends.length > 0 ? (
+                                    Friends.map((friend: any) => (
+                                      <SwiperSlide>
+                                        <Friend
+                                          cover={friend?.cover}
+                                          avatar={friend?.avatar}
+                                          name={`${friend?.firstName} ${friend?.lastName}`}
+                                          username={friend?.username}
+                                          online={friend?.status}
+                                          userId={friend?.userId}
+                                          key={friend?.userId}
+                                        />
+                                      </SwiperSlide>
+                                    ))
+                                  ) : (
+                                    <p>No friends found.</p>
+                                  )
+                                }
+                        </Swiper> */}
+                    {
+                        Friends && Friends.length > 0 ? (
+                            <Swiper
+                                spaceBetween={0}
+                                slidesPerView={2}
+                                breakpoints={{
+                                0: {
+                                    slidesPerView: 1,
+                                },
+                                768: {
+                                    slidesPerView: 2,
+                                },
+                                1100: {
+                                    slidesPerView: 3,
+                                },
+                                1350: {
+                                    slidesPerView: 4,
+                                },
+                                }}
+                                className="w-full h-full cursor-grab !pl-[30px] !pt-[34px]"
+                            >
+                                {Friends.map((friend: any) => (
+                                <SwiperSlide>
+                                    <Friend
+                                    cover={friend?.cover}
+                                    avatar={friend?.avatar}
+                                    name={`${friend?.firstName} ${friend?.lastName}`}
+                                    username={friend?.username}
+                                    online={friend?.status}
+                                    userId={friend?.userId}
+                                    key={friend?.userId}
+                                    />
+                                </SwiperSlide>
+                                ))}
+                            </Swiper>
+                            ) : (
+                            <div className='w-full  h-full flex  justify-center'>
+                            <div className=" w-[300px]  ">
+                                <Lottie animationData={animationData2}/>
+                             </div>
+                            </div>
+                        )
+                    }
                     </div>  
                 </div>
                 <div className='header__left flex flex-col gap-[52px]
@@ -191,7 +257,7 @@ export default function Body({ leaderRef, handelShaw }: Props) {
                         </span>
                     </div>
                     <div className="flex flex-col  gap-[10px]   overflow-y-scroll max-h-[calc(100%-67px)] items-center py-[5px] no-scrollbar overflow-hidden rounded-b-[40px] ">
-                            <MatchHistory
+                            {/* <MatchHistory
                                     winnerAvatar="mittoushaha.png" winnerName="Ismail Mittous" winnerScore="20" loserAvatar="jlemhaha.png" loserName="Mustapha jlem" loserScore="20"
                                 />
                                 <MatchHistory
@@ -223,7 +289,12 @@ export default function Body({ leaderRef, handelShaw }: Props) {
                                 />
                                 <MatchHistory
                                     winnerAvatar="mittoushaha.png" winnerName="Ismail Mittous" winnerScore="20" loserAvatar="jlemhaha.png" loserName="Mustapha jlem" loserScore="20"
-                                />
+                                /> */}
+                            <div className='w-full  h-full flex  justify-center items-center'>
+                            <div className=" w-[300px]  ">
+                                <Lottie animationData={animationData2}/>
+                             </div>
+                            </div>
                     </div>
                 </RightSide>
             </div>
