@@ -32,7 +32,7 @@ export class FriendshipService {
         },
       });
       const sender = await this.prisma.profile.findUnique({ where: { userId: senderId } });
-      await this.prisma.notification.create({
+      const notification = await this.prisma.notification.create({
         data: {
           userId: receiverId,
           type: "FRIEND_REQUEST",
@@ -42,7 +42,7 @@ export class FriendshipService {
           actionUserAvatar: sender.avatar,
         },
       });
-      return { message: "Friendship request sent" };
+      return notification;
     } catch (error) {
       throw error;
     }
