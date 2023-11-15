@@ -16,6 +16,7 @@ import { MatchType } from "@prisma/client";
 import { use } from "passport";
 import { Req, UseGuards } from "@nestjs/common";
 import { AuthGuard } from "@nestjs/passport";
+import { GameService } from "src/Game/game.service";
 
 class GameStateManager {
   private gameData: any = {}; // Initialize with your game data structure
@@ -44,7 +45,8 @@ const gameStateManager = new GameStateManager();
 export class GameGateway implements OnGatewayConnection, OnGatewayDisconnect {
   constructor(
     private prisma: PrismaService,
-    private userService: UserService
+    private userService: UserService,
+    private gameService: GameService
   ) {}
   @WebSocketServer()
   server: SocketIO.Server;
@@ -91,28 +93,9 @@ export class GameGateway implements OnGatewayConnection, OnGatewayDisconnect {
           console.log(
             `Match started between ${creator.client.id} and ${opponent.client.id}`
           );
-          const match = await this.prisma.match.create({
-            data: {
-              creatorId: creator.userId,
-              opponentId: opponent.userId,
-              type: MatchType.RANDOM,
-              creatorSocket: creator.client.id,
-              opponentSocket: opponent.client.id,
-            },
-          });
-          const matchId = match.id;
+          const matchId = await this.gameService.createMatch(creator, opponent, MatchType.RANDOM);
           creator.client.join(matchId);
           opponent.client.join(matchId);
-          // Store the match ID and the players in the matches map
-          // this.matches.set(creator.client.id, {
-          //   matchId,
-          //   players: [creator, opponent],
-          // });
-          // this.matches.set(opponent.client.id, {
-          //   matchId,
-          //   players: [creator, opponent],
-          // });
-          // this.server.to(creator.client.id).emit('startGame');
         } else {
           this.waitingPlayers.unshift(opponent);
         }
@@ -156,21 +139,9 @@ export class GameGateway implements OnGatewayConnection, OnGatewayDisconnect {
     client: Socket,
     payload: { x: number, y: number, z: number; playerId?: string }
   ) {
-    const match = await this.prisma.match.findFirst({
-      where: {
-        OR: [
-          { creatorSocket: client.id },
-          { opponentSocket: client.id },
-        ],
-      },
-    })
-    // const match = this.matches.get(client.id);
+    const match = await this.gameService.getMatch(client.id);
     if (match) {
-      // const { match.id , players } = match;
-      // if (players[0].client.id === client.id) {
-      // gameStateManager.updateGame({ paddleMove: payload });
       this.server.to(match.id).emit('paddle-pos', payload);
-      // }
     }
   }
 
@@ -188,21 +159,11 @@ export class GameGateway implements OnGatewayConnection, OnGatewayDisconnect {
     client: Socket,
     payload: { isServing: boolean; direction: number }
   ) {
-    const match = await this.prisma.match.findFirst({
-      where: {
-        OR: [
-          { creatorSocket: client.id },
-          { opponentSocket: client.id },
-        ],
-      },
-    })
+    const match = await this.gameService.getMatch(client.id);
     if (match) {
-      // const { matchId, players } = match;
       client.broadcast.to(match.id).emit("ball-serve", payload);
     }
   }
-
-
 
   @SubscribeMessage("player-wins")
   async handleScoreUpdate(
@@ -210,14 +171,7 @@ export class GameGateway implements OnGatewayConnection, OnGatewayDisconnect {
     payload: { winner: string, winnerscore: number, loserscore: number }
   ) {
     let winnerScore : number, loserScore: number, winner: string;
-    const match = await this.prisma.match.findFirst({
-      where: {
-        OR: [
-          { creatorSocket: client.id },
-          { opponentSocket: client.id },
-        ],
-      },
-    })
+    const match = await this.gameService.getMatch(client.id);
     console.log(match.creatorId, match.opponentId, payload.winner);
     let creatorScore : any = null;
     let opponentScore : any = null;
@@ -235,15 +189,7 @@ export class GameGateway implements OnGatewayConnection, OnGatewayDisconnect {
       }
       winnerScore = payload.winnerscore;
       loserScore = payload.loserscore;
-      await this.prisma.match.update({
-        where: {
-          id: match.id,
-        },
-        data: {
-          creatorScore: creatorScore,
-          opponentScore: opponentScore,
-        },
-      });
+      await this.gameService.submitScore(match.id, creatorScore, opponentScore);
       this.server.to(match.id).emit('player-wins', { winner, winnerScore, loserScore });
     }
   }
