@@ -4,9 +4,11 @@ import { UserService } from "../user/user.service";
 import { NotificationController } from "./notification.controller";
 import { NotificationService } from "./notification.service";
 import { friendshipModule } from "src/friendship/friendship.module";
+import { FriendshipService } from "src/friendship/friendship.service";
 
 @Module({
-  providers: [NotificationGateway, UserService, NotificationService],
+  imports: [],
+  providers: [NotificationGateway, UserService, NotificationService, FriendshipService ],
   controllers: [NotificationController],
 })
 export class NotificationModule { }

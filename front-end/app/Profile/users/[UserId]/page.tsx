@@ -33,16 +33,18 @@ export default function Page() {
     const name = `${profile?.firstName} ${profile?.lastName}`;
     const [isUser, setIsUser] = useState<boolean>(true);
     const [loading, setLoading] = useState<boolean>(true);
+    const {notifSocket}:any = useContext(contextdata);
 
 
     const sendRequest = async () => {
-        try{
-            const res = await axiosInstance.post(`http://${process.env.NEXT_PUBLIC_APP_URL}:3000/api/friendship/request/${UserId}`);
-            console.log(res.data);
-        }
-        catch(err){
-            console.log(err);
-        }
+        // try{
+        //     const res = await axiosInstance.post(`http://${process.env.NEXT_PUBLIC_APP_URL}:3000/api/friendship/request/${UserId}`);
+        //     console.log(res.data);
+        // }
+        // catch(err){
+        //     console.log(err);
+        // }
+        notifSocket?.emit("friendRequest", {receiverId: UserId});
     }
 
     useEffect(() => {
