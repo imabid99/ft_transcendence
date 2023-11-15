@@ -28,33 +28,30 @@
 
 // const Game = () => {
 
-
 // 	const Controls = {
 // 		left: "left",
 // 		right: "right",
-// 	}	
-	
+// 	}
+
 // 	const map = useMemo(() => [
 // 		{ name: Controls.left, keys: ['ArrowLeft'], player: 'player1' },
 // 		{ name: Controls.right, keys: ['ArrowRight'], playerd: 'player1' },
 // 		{ name: Controls.left, keys: ['ArrowLeft'], player: 'player2' },
 // 		{ name: Controls.right, keys: ['ArrowRight'], player: 'player2' },
 // 	  ], []);
-	
 
 // 	/// SOCKET MANAGER
 
 // 	const {profiles, user} :any= useContext(contextdata);
 // 	const name = `${user?.profile.firstName} ${user?.profile.lastName}`;
 // 	const socket = io(`http://${process.env.NEXT_PUBLIC_APP_URL}:3000/Game`);
-	
+
 // 	useEffect(() => {
 // 		socket.on("connect", () => {console.log(name + " is Connected to server");});
 // 		socket.on("disconnect", () => {console.log(name + " is Disconnected from server");
 // 		socket.disconnect();});
-		
+
 // 	}, []);
-	
 
 // 	// GUI CONTROLS
 // // 	const controls = useControls({});
@@ -66,7 +63,7 @@
 // 	// const { paddlecolor } = useControls("color", { paddlecolor: "#abebff" });
 // 	// const { fogcolor } = useControls("color", { fogcolor: "#382f21" });
 // 	// const { fogfar } = useControls("color", { fogfar: 180 });
-		  
+
 // 	function Plane(props: any) {
 // 		const [ref, api] = usePlane(() => ({type: "Static", material: { friction: 0 }, args: [20, 20],  rotation: [-Math.PI / 2, 0, 0],...props}), useRef<THREE.Mesh>(null))
 
@@ -119,7 +116,6 @@
 // 		  window.addEventListener("keydown", handleKeyDown);
 // 		  window.addEventListener("keyup", handleKeyUp);
 
-		  
 // 		  const updatePosition = () => {
 // 			if (ref.current) {
 // 				if (isMovingLeft) {
@@ -127,7 +123,7 @@
 // 					} else if (isMovingRight) {
 // 						targetPosX = Math.min(targetPosX + 0.6, 5);
 // 					}
-// 					const smoothingFactor = 0.4; 
+// 					const smoothingFactor = 0.4;
 // 					paddleposX = paddleposX + (targetPosX - paddleposX) * smoothingFactor;
 // 					socket.emit('paddle-pos', { x: - paddleposX, y: 0.5, z: -9, playerId: socket.id});
 // 					// setTimeout(() => {
@@ -137,8 +133,6 @@
 // 				animationFrameId = requestAnimationFrame(updatePosition);
 // 		  };
 
-
-	  
 // 		  return () => {
 // 			window.removeEventListener("keydown", handleKeyDown);
 // 			window.removeEventListener("keyup", handleKeyUp);
@@ -148,7 +142,7 @@
 // 			  }
 // 		  };
 // 		}, [user]);
-	  
+
 // 		return (
 // 		  <RoundedBox
 // 			ref={ref}
@@ -165,8 +159,6 @@
 // 		  </RoundedBox>
 // 		);
 // 	  }
-	  
-	  
 
 // 	function Player2Paddle(props: any) {
 // 		// console.log("P2START");
@@ -185,7 +177,7 @@
 // 					isMovingRight = true;
 // 				}
 // 			};
-			
+
 // 			const handleKeyUp = (event: KeyboardEvent) => {
 // 				if (event.code === "KeyA") {
 // 					isMovingLeft = false;
@@ -193,10 +185,10 @@
 // 					isMovingRight = false;
 // 				}
 // 			};
-			
+
 // 			window.addEventListener("keydown", handleKeyDown);
 // 			window.addEventListener("keyup", handleKeyUp);
-			
+
 // 			// const updatePosition = () => {
 // 			// 	// if (ref.current) {
 // 			// 	// 	// if (isMovingLeft) {
@@ -204,21 +196,20 @@
 // 			// 	// 	// 	} else if (isMovingRight) {
 // 			// 	// 	// 		targetPosX = Math.min(targetPosX + 0.5, 5);
 // 			// 	// 	// 	}
-// 			// 	// 	// 	const smoothingFactor = 0.5; 
+// 			// 	// 	// 	const smoothingFactor = 0.5;
 // 			// 	// 	// 	paddleposX = paddleposX + (targetPosX - paddleposX) * smoothingFactor;
 // 			// 	// 	// 	// api.position.set(paddleposX, 0.5, -9);
 // 			// 	// 	}
-				
+
 // 			// 	requestAnimationFrame(updatePosition);
 // 			// };
-			
+
 // 			// requestAnimationFrame(updatePosition);
 // 			socket.on('paddle-pos', (data) => {
 // 				if (data.playerId === socket.id) return;
 // 				api.position.set(data.x, data.y, data.z);
 // 			});
-	
-		
+
 // 			return () => {
 // 				window.removeEventListener("keydown", handleKeyDown);
 // 				window.removeEventListener("keyup", handleKeyUp);
@@ -232,9 +223,9 @@
 // 				ref={ref}
 // 				args={[3, 1, 0.3]}
 // 				position={[0, 0.5, -9]}
-// 				radius={0.15} 
+// 				radius={0.15}
 // 				smoothness={4}
-// 				bevelSegments={4} 
+// 				bevelSegments={4}
 // 				creaseAngle={0.4}
 // 				castShadow
 // 				receiveShadow
@@ -245,7 +236,7 @@
 // 	}
 
 // 	let hasServed = false;
-	
+
 // 	const position = useRef(new THREE.Vector3(0, 0, 0));
 
 // 	function GameBall(props: any) {
@@ -253,18 +244,16 @@
 
 // 		const [ref, api] = useSphere(() => ({ mass: 1, material: { restitution: 1.06, friction: 0 },args: [0.32, 42, 16], position: [0, 0.35, 0], ...props }), useRef<THREE.Mesh>(null))
 
-
-
 // 		useEffect(() => {
 // 			let isServing = false;
-			
+
 // 			const ServeDown = (event: KeyboardEvent) => {
 // 				if (event.code === 'Space') {
 // 					isServing = true;
 // 					socket.emit('ball-serve', {isServing: true, direction: -1})
 // 				}
 // 			};
-			
+
 // 			const ServeUp = (event: KeyboardEvent) => {
 // 				if (event.code === 'Space') {
 // 					isServing = false;
@@ -276,12 +265,12 @@
 // 			api.position.subscribe((v) => {
 // 					return (position.current = new THREE.Vector3(v[0], v[1], v[2]));
 // 				})
-// 				}	
+// 				}
 // 			test();
-			
+
 // 			window.addEventListener('keydown', ServeDown);
 // 			window.addEventListener('keyup', ServeUp);
-			
+
 // 			const serveball = () => {
 // 				// const value = Math.random() < 0.5 ? -10 : 10;
 // 				const value = -5;
@@ -304,7 +293,7 @@
 // 				isServing = data.isServing;
 // 				direction = data.direction;
 // 			});
-	
+
 // 			return () => {
 // 				window.removeEventListener('keydown', ServeDown);
 // 				window.removeEventListener('keyup', ServeUp);
@@ -313,8 +302,6 @@
 // 			};
 
 // 			}, []);
-
-
 
 // 		return (
 // 			<mesh position={[0, 0.35, 0]} ref={ref} castShadow receiveShadow>
@@ -330,10 +317,10 @@
 // 			args: [10, 3, 20],
 // 			position: [-11.35, 0.3, 0],
 // 			material: { restitution: 1.06, friction: 0 }, ...props }), useRef<THREE.Mesh>(null))
-	
+
 // 		return (
 // 				<>
-// 					<Model2/> 
+// 					<Model2/>
 // 					<mesh ref={ref}>
 // 					</mesh>
 // 				</>
@@ -346,29 +333,28 @@
 // 			args: [10, 3, 20],
 // 			position: [11.35, 0.3, 0],
 // 			material: { restitution: 1.06, friction: 0 }, ...props }), useRef<THREE.Mesh>(null))
-	
+
 // 		return (
 // 				<>
-// 					<Model3/> 
+// 					<Model3/>
 // 					<mesh ref={ref}>
 // 					</mesh>
 // 				</>
 // 			);
 // 	}
 
-
 // 	const Scoreboard = () => {
 // 		const [p1_count, setP1Count] = useState<number>(0);
 // 		const [p2_count, setP2Count] = useState<number>(0);
-	  
+
 // 		let animationFrameId: number | null = null;
-		
+
 // 		useEffect(() => {
 // 		  const goalCheck = () => {
 // 			if (position.current.z > 10) {
 // 			  setP1Count((prevCount) => prevCount + 1);
 // 			  position.current.z = 0;
-			  
+
 // 			}
 // 			if (position.current.z < -10) {
 // 				setP2Count((prevCount) => prevCount + 1);
@@ -376,12 +362,11 @@
 // 			}
 // 			setTimeout(() => {
 // 				animationFrameId = requestAnimationFrame(goalCheck);
-// 			}, 20); 
+// 			}, 20);
 // 		  };
 
-	  
 // 		  goalCheck();
-	  
+
 // 		  return () => {
 // 			if (animationFrameId !== null) {
 // 			  cancelAnimationFrame(animationFrameId);
@@ -459,7 +444,6 @@
 // 	//   }
 // 	// };
 
-
 //   return (
 // 	<>
 
@@ -470,7 +454,7 @@
 // 		{/*<Sparkles
 // 			count={2000}
 // 			speed={4}
-// 			opacity={1} 
+// 			opacity={1}
 // 			color={ 0x00ffff }
 // 			size={Float32Array.from(Array.from({ length: 2000 }, () => Math.random() * (80 - 5) + 10))}
 // 			scale={250}
@@ -525,13 +509,12 @@
 // 			</mesh>
 // 			{
 // 				/*
-// 					map == "forest" && <Forest/> 
+// 					map == "forest" && <Forest/>
 // 					map == "desert" && <Desert/>
 // 					map == "snow" && <Snow/>
 // 				*/
 // 			}
 
-			
 // 				{/* {currentMap === 'Desert' && <Desert />}
 // 				{currentMap === 'Forest' && <Forest />}
 // 				{currentMap === 'Snow' && <Snow />} */}
@@ -541,7 +524,7 @@
 // 			<Scoreboard />
 
 // 		<Sky sunPosition={[-0.07, -0.03, -0.75]} />
-// 		<OrbitControls  
+// 		<OrbitControls
 // 			minAzimuthAngle={-Math.PI / 2}
 // 			maxAzimuthAngle={Math.PI / 2}
 // 			minPolarAngle={Math.PI / 20}
@@ -562,25 +545,7 @@
 
 // export default Game;
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-'use client';
+"use client";
 
 import { Canvas, useFrame } from "@react-three/fiber";
 import React, { useRef, useState, useEffect, useMemo, useContext } from "react";
@@ -590,471 +555,527 @@ import {
   OrbitControls,
   RoundedBox,
   Sparkles,
-  Text
+  Text,
 } from "@react-three/drei";
 import { useControls } from "leva";
 import { Perf } from "r3f-perf";
 import * as THREE from "three";
 import "../globals.css";
-import  Model2  from "./model2";
-import  Model3  from "./model3";
-import  Forest  from "./forest";
-import  Desert from "./desert"
-import  Snow from "./snow"
+import Model2 from "./model2";
+import Model3 from "./model3";
+import Forest from "./forest";
+import Desert from "./desert";
+import Snow from "./snow";
 import { contextdata } from "../contextApi";
-import { Physics, usePlane, useBox, useSphere, Debug} from '@react-three/cannon'
+import {
+  Physics,
+  usePlane,
+  useBox,
+  useSphere,
+  Debug,
+} from "@react-three/cannon";
 import { is } from "@react-three/fiber/dist/declarations/src/core/utils";
+import { useMediaQuery } from "react-responsive";
 
 // map = snow, desert, forest; mode = friend, bot, random
 
 const Game = () => {
+  const isMobileDevice = useMediaQuery({
+    query: "(max-device-width: 1224px)",
+  });
 
+  const Controls = {
+    left: "left",
+    right: "right",
+  };
 
-	const Controls = {
-		left: "left",
-		right: "right",
-	}	
-	
-	const map = useMemo(() => [
-		{ name: Controls.left, keys: ['ArrowLeft'], player: 'player1' },
-		{ name: Controls.right, keys: ['ArrowRight'], playerd: 'player1' },
-		{ name: Controls.left, keys: ['ArrowLeft'], player: 'player2' },
-		{ name: Controls.right, keys: ['ArrowRight'], player: 'player2' },
-	  ], []);
-	
+  const map = useMemo(
+    () => [
+      { name: Controls.left, keys: ["ArrowLeft"], player: "player1" },
+      { name: Controls.right, keys: ["ArrowRight"], playerd: "player1" },
+      { name: Controls.left, keys: ["ArrowLeft"], player: "player2" },
+      { name: Controls.right, keys: ["ArrowRight"], player: "player2" },
+    ],
+    []
+  );
 
+  // GUI CONTROLS
+  // 	const controls = useControls({});
+  //   const { sunPosition } = useControls("sky", {
+  // 	sunPosition: [-0.07, -0.03, -0.75],
+  //   });
+  // const { planecolor } = useControls("color", { planecolor: "#51b151" });
+  // const { floorcolor } = useControls("color", { floorcolor: "#1572ff" });
+  // const { paddlecolor } = useControls("color", { paddlecolor: "#abebff" });
+  // const { fogcolor } = useControls("color", { fogcolor: "#382f21" });
+  // const { fogfar } = useControls("color", { fogfar: 180 });
 
+  function Plane(props: any) {
+    const [ref, api] = usePlane(
+      () => ({
+        type: "Static",
+        material: { friction: 0 },
+        args: [20, 20],
+        rotation: [-Math.PI / 2, 0, 0],
+        ...props,
+      }),
+      useRef<THREE.Mesh>(null)
+    );
 
-	// GUI CONTROLS
-// 	const controls = useControls({});
-//   const { sunPosition } = useControls("sky", {
-// 	sunPosition: [-0.07, -0.03, -0.75],
-//   });
-	// const { planecolor } = useControls("color", { planecolor: "#51b151" });
-	// const { floorcolor } = useControls("color", { floorcolor: "#1572ff" });
-	// const { paddlecolor } = useControls("color", { paddlecolor: "#abebff" });
-	// const { fogcolor } = useControls("color", { fogcolor: "#382f21" });
-	// const { fogfar } = useControls("color", { fogfar: 180 });
-		  
-	function Plane(props: any) {
-		const [ref, api] = usePlane(() => ({type: "Static", material: { friction: 0 }, args: [20, 20],  rotation: [-Math.PI / 2, 0, 0],...props}), useRef<THREE.Mesh>(null))
+    return (
+      <mesh
+        ref={ref}
+        rotation-x={-Math.PI * 0.5}
+        position-y={0.02}
+        receiveShadow
+      >
+        <planeGeometry args={[20, 20]} />
+        <meshStandardMaterial color={"#1572ff"} />
+      </mesh>
+    );
+  }
 
-		return (
-			<mesh ref={ref} rotation-x={-Math.PI * 0.5} position-y={0.02} receiveShadow>
-				<planeGeometry args={[20, 20]} />
-				<meshStandardMaterial color={'#1572ff'} />
-			</mesh>
-		);
-	}
+  function Player1Paddle(props: any) {
+    // console.log("P1START");
+    const [ref, api] = useBox(
+      () => ({
+        mass: 0,
+        type: "Static",
+        material: { restitution: 1.06, friction: 0 },
+        args: [3, 1, 0.3],
+        position: [0, 0.5, 9],
+        ...props,
+      }),
+      useRef<THREE.Mesh>(null)
+    );
 
-	function Player1Paddle(props: any) {
-		// console.log("P1START");
-		const [ref, api] = useBox(() => ({ mass: 0, type: "Static", material: { restitution: 1.06, friction: 0 },args: [3, 1, 0.3], position: [0, 0.5, 9], ...props }), useRef<THREE.Mesh>(null));
+    useEffect(() => {
+      let isMovingLeft = false;
+      let isMovingRight = false;
+      let paddleposX = 0;
+      let targetPosX = paddleposX;
+      let animationFrameId: number | null = null;
+      let isUpdating = false;
 
-		useEffect(() => {
-		  let isMovingLeft = false;
-		  let isMovingRight = false;
-		  let paddleposX = 0;
-		  let targetPosX = paddleposX;
-		  let animationFrameId: number | null = null;
-		  let isUpdating = false;
+      const handleKeyDown = (event: KeyboardEvent) => {
+        if (event.code === "ArrowLeft") {
+          isMovingLeft = true;
+        } else if (event.code === "ArrowRight") {
+          isMovingRight = true;
+        }
+        if (!isUpdating) {
+          isUpdating = true;
+          animationFrameId = requestAnimationFrame(updatePosition);
+        }
+      };
 
-		  const handleKeyDown = (event: KeyboardEvent) => {
-			if (event.code === "ArrowLeft") {
-			  isMovingLeft = true;
-			} else if (event.code === "ArrowRight") {
-			  isMovingRight = true;
-			}
-			if (!isUpdating) {
-				isUpdating = true;
-				animationFrameId = requestAnimationFrame(updatePosition);
-			  }
-		  };
+      const handleKeyUp = (event: KeyboardEvent) => {
+        if (event.code === "ArrowLeft") {
+          isMovingLeft = false;
+        } else if (event.code === "ArrowRight") {
+          isMovingRight = false;
+        }
 
-		  const handleKeyUp = (event: KeyboardEvent) => {
-			if (event.code === "ArrowLeft") {
-			  isMovingLeft = false;
-			} else if (event.code === "ArrowRight") {
-			  isMovingRight = false;
-			}
+        if (!isMovingLeft && !isMovingRight && animationFrameId !== null) {
+          cancelAnimationFrame(animationFrameId);
+          animationFrameId = null;
+          isUpdating = false;
+        }
+      };
+      window.addEventListener("keydown", handleKeyDown);
+      window.addEventListener("keyup", handleKeyUp);
 
-			if (!isMovingLeft && !isMovingRight && animationFrameId !== null) {
-				cancelAnimationFrame(animationFrameId);
-				animationFrameId = null;
-				isUpdating = false;
-			}
-		  };
-		  window.addEventListener("keydown", handleKeyDown);
-		  window.addEventListener("keyup", handleKeyUp);
+      const updatePosition = () => {
+        if (ref.current) {
+          if (isMovingLeft) {
+            targetPosX = Math.max(targetPosX - 0.6, -5);
+          } else if (isMovingRight) {
+            targetPosX = Math.min(targetPosX + 0.6, 5);
+          }
+          const smoothingFactor = 0.4;
+          paddleposX = paddleposX + (targetPosX - paddleposX) * smoothingFactor;
+          // setTimeout(() => {
+          api.position.set(paddleposX, 0.5, 9);
+          // }, 5);
+        }
+        animationFrameId = requestAnimationFrame(updatePosition);
+      };
 
-		  
-		  const updatePosition = () => {
-			if (ref.current) {
-				if (isMovingLeft) {
-					targetPosX = Math.max(targetPosX - 0.6, -5);
-					} else if (isMovingRight) {
-						targetPosX = Math.min(targetPosX + 0.6, 5);
-					}
-					const smoothingFactor = 0.4; 
-					paddleposX = paddleposX + (targetPosX - paddleposX) * smoothingFactor;
-					// setTimeout(() => {
-						api.position.set(paddleposX, 0.5, 9);
-					// }, 5);
-			}
-				animationFrameId = requestAnimationFrame(updatePosition);
-		  };
+      return () => {
+        window.removeEventListener("keydown", handleKeyDown);
+        window.removeEventListener("keyup", handleKeyUp);
+        if (animationFrameId !== null) {
+          cancelAnimationFrame(animationFrameId);
+        }
+      };
+    }, []);
 
+    return (
+      <RoundedBox
+        ref={ref}
+        args={[3, 1, 0.3]}
+        position={[0, 0.5, 9]}
+        radius={0.15}
+        smoothness={4}
+        bevelSegments={4}
+        creaseAngle={0.4}
+        castShadow
+        receiveShadow
+      >
+        <meshPhongMaterial color={"#abebff"} />
+      </RoundedBox>
+    );
+  }
 
-	  
-		  return () => {
-			window.removeEventListener("keydown", handleKeyDown);
-			window.removeEventListener("keyup", handleKeyUp);
-			if (animationFrameId !== null) {
-				cancelAnimationFrame(animationFrameId);
-			  }
-		  };
-		}, []);
-	  
-		return (
-		  <RoundedBox
-			ref={ref}
-			args={[3, 1, 0.3]}
-			position={[0, 0.5, 9]}
-			radius={0.15}
-			smoothness={4}
-			bevelSegments={4}
-			creaseAngle={0.4}
-			castShadow
-			receiveShadow
-		  >
-			<meshPhongMaterial color={"#abebff"} />
-		  </RoundedBox>
-		);
-	  }
-	  
-	  
+  function Player2Paddle(props: any) {
+    // console.log("P2START");
+    const [ref, api] = useBox(
+      () => ({
+        mass: 0,
+        type: "Static",
+        material: { restitution: 1.06, friction: 0 },
+        args: [3, 1, 0.3],
+        position: [0, 0.5, -9],
+        ...props,
+      }),
+      useRef<THREE.Mesh>(null)
+    );
 
-	function Player2Paddle(props: any) {
-		// console.log("P2START");
-		const [ref, api] = useBox(() => ({ mass: 0, type: "Static",material: { restitution: 1.06, friction: 0 }, args: [3, 1, 0.3], position: [0, 0.5, -9], ...props }), useRef<THREE.Mesh>(null))
+    useEffect(() => {
+      let isMovingLeft = false;
+      let isMovingRight = false;
+      let paddleposX = 0;
+      let targetPosX = paddleposX;
 
-		useEffect(() => {
-			let isMovingLeft = false;
-			let isMovingRight = false;
-			let paddleposX = 0;
-			let targetPosX = paddleposX;
+      const handleKeyDown = (event: KeyboardEvent) => {
+        if (event.code === "KeyA") {
+          isMovingLeft = true;
+        } else if (event.code === "KeyD") {
+          isMovingRight = true;
+        }
+      };
 
-			const handleKeyDown = (event: KeyboardEvent) => {
-				if (event.code === "KeyA") {
-					isMovingLeft = true;
-				} else if (event.code === "KeyD") {
-					isMovingRight = true;
-				}
-			};
-			
-			const handleKeyUp = (event: KeyboardEvent) => {
-				if (event.code === "KeyA") {
-					isMovingLeft = false;
-				} else if (event.code === "KeyD") {
-					isMovingRight = false;
-				}
-			};
-			
-			window.addEventListener("keydown", handleKeyDown);
-			window.addEventListener("keyup", handleKeyUp);
-            // api.position.set(position.current.x, 0.5, -9);
-			
-			// const updatePosition = () => {
-			// 	// if (ref.current) {
-			// 	// 	// if (isMovingLeft) {
-			// 	// 	// 	targetPosX = Math.max(targetPosX - 0.5, -5);
-			// 	// 	// 	} else if (isMovingRight) {
-			// 	// 	// 		targetPosX = Math.min(targetPosX + 0.5, 5);
-			// 	// 	// 	}
-			// 	// 	// 	const smoothingFactor = 0.5; 
-			// 	// 	// 	paddleposX = paddleposX + (targetPosX - paddleposX) * smoothingFactor;
-			// 	// 	// 	// api.position.set(paddleposX, 0.5, -9);
-			// 	// 	}
-				
-			// 	requestAnimationFrame(updatePosition);
-			// };
-			
-			// requestAnimationFrame(updatePosition);
-	
-		
-			return () => {
-				window.removeEventListener("keydown", handleKeyDown);
-				window.removeEventListener("keyup", handleKeyUp);
-			};
-		}, []);
+      const handleKeyUp = (event: KeyboardEvent) => {
+        if (event.code === "KeyA") {
+          isMovingLeft = false;
+        } else if (event.code === "KeyD") {
+          isMovingRight = false;
+        }
+      };
 
-		const reactionTime = 0.02;
-		let lastUpdateTime = Date.now();
-		let targetPosX = position.current.x; // Initialize target position
-		let paddlePosX = position.current.x; // Initialize paddle position
-		
-		useFrame(() => {
-			const currentTime = Date.now();
-			const deltaTime = (currentTime - lastUpdateTime) / 1000; // Convert to seconds
-			if(hasServed)
-			{
-				if (deltaTime >= reactionTime) {
-					const randomOffset = Math.random() * 1 - 0.5; 
-				targetPosX = position.current.x + randomOffset;
-		
-				const diff = targetPosX - paddlePosX;
-				if (Math.abs(diff) < 0.01) {
-					paddlePosX = targetPosX;
-				} else {
-					const smoothingFactor = 0.1;
-					paddlePosX += diff * smoothingFactor;
-				}
-				if(paddlePosX < 5 && paddlePosX > -5)
-				api.position.set(paddlePosX, 0.5, -9);
-				lastUpdateTime = currentTime;
-				}
-			}
-		});
-		return (
-			<RoundedBox
-				ref={ref}
-				args={[3, 1, 0.3]}
-				position={[0, 0.5, -9]}
-				radius={0.15} 
-				smoothness={4}
-				bevelSegments={4} 
-				creaseAngle={0.4}
-				castShadow
-				receiveShadow
-				>
-				<meshPhongMaterial color={"#abebff"}/>
-			</RoundedBox>
-			);
-	}
+      window.addEventListener("keydown", handleKeyDown);
+      window.addEventListener("keyup", handleKeyUp);
+      // api.position.set(position.current.x, 0.5, -9);
 
-	let hasServed = false;
-	
-	const position = useRef(new THREE.Vector3(0, 0, 0));
+      // const updatePosition = () => {
+      // 	// if (ref.current) {
+      // 	// 	// if (isMovingLeft) {
+      // 	// 	// 	targetPosX = Math.max(targetPosX - 0.5, -5);
+      // 	// 	// 	} else if (isMovingRight) {
+      // 	// 	// 		targetPosX = Math.min(targetPosX + 0.5, 5);
+      // 	// 	// 	}
+      // 	// 	// 	const smoothingFactor = 0.5;
+      // 	// 	// 	paddleposX = paddleposX + (targetPosX - paddleposX) * smoothingFactor;
+      // 	// 	// 	// api.position.set(paddleposX, 0.5, -9);
+      // 	// 	}
 
-	function GameBall(props: any) {
-		let direction = 1;
+      // 	requestAnimationFrame(updatePosition);
+      // };
 
-		const [ref, api] = useSphere(() => ({ mass: 1, material: { restitution: 1.06, friction: 0 },args: [0.32, 42, 16], position: [0, 0.35, 0], ...props }), useRef<THREE.Mesh>(null))
+      // requestAnimationFrame(updatePosition);
 
-		const speed = useRef(new THREE.Vector3(0, 0, 0));
+      return () => {
+        window.removeEventListener("keydown", handleKeyDown);
+        window.removeEventListener("keyup", handleKeyUp);
+      };
+    }, []);
 
+    const reactionTime = 0.01;
+    let lastUpdateTime = Date.now();
+    let targetPosX = position.current.x;
+    let paddlePosX = position.current.x;
 
-		useEffect(() => {
-			let isServing = false;
-			
-			const ServeDown = (event: KeyboardEvent) => {
-				if (event.code === 'Space') {
-					isServing = true;
-				}
-			};
-			
-			const ServeUp = (event: KeyboardEvent) => {
-				if (event.code === 'Space') {
-					isServing = false;
-				}
-			};
+    useFrame(() => {
+      const currentTime = Date.now();
+      const deltaTime = (currentTime - lastUpdateTime) / 1000;
+      if (hasServed) {
+        if (deltaTime >= reactionTime) {
+          const randomOffset = Math.random() * 1 - 0.5;
+          targetPosX = position.current.x + randomOffset;
 
-			const subpos = () => {
-			api.position.subscribe((v) => {
-					return (position.current = new THREE.Vector3(v[0], v[1], v[2]));
-				})
-				}	
-			subpos();
+          const diff = targetPosX - paddlePosX;
+          if (Math.abs(diff) < 0.01) {
+            paddlePosX = targetPosX;
+          } else {
+            const smoothingFactor = 0.1;
+            paddlePosX += diff * smoothingFactor;
+          }
+          if (paddlePosX < 5 && paddlePosX > -5)
+            api.position.set(paddlePosX, 0.5, -9);
+          lastUpdateTime = currentTime;
+        }
+      }
+    });
+    return (
+      <RoundedBox
+        ref={ref}
+        args={[3, 1, 0.3]}
+        position={[0, 0.5, -9]}
+        radius={0.15}
+        smoothness={4}
+        bevelSegments={4}
+        creaseAngle={0.4}
+        castShadow
+        receiveShadow
+      >
+        <meshPhongMaterial color={"#abebff"} />
+      </RoundedBox>
+    );
+  }
 
-			const subspeed = () => {
-				api.velocity.subscribe((v) => {
-						return (speed.current = new THREE.Vector3(v[0], v[1], v[2]));
-					})
-					}	
-			subspeed();
-			
-			window.addEventListener('keydown', ServeDown);
-			window.addEventListener('keyup', ServeUp);
-			let khrjat = false;
-			const serveball = () => {
-				// const value = Math.random() < 0.5 ? -10 : 10;
-				const value = -5;
-				if(isServing && !hasServed)
-				{
-					api.applyImpulse([value * direction, 0, -10 * direction], [0, 0, 0]);
-					hasServed = true;
-				}
-				if(position.current.z < -10 || position.current.z > 10)
-				{
-					api.position.set(0, 0.35, 0);
-					api.velocity.set(0, 0, 0);
-					hasServed = false;
-					khrjat = true;
-				}
-				if(speed.current.x < -10)
-					api.velocity.set(-10, speed.current.y, speed.current.z);
-				if(speed.current.x > 10)
-					api.velocity.set(10, speed.current.y, speed.current.z);
-				if(speed.current.z > 25)
-					api.velocity.set(speed.current.x, speed.current.y, 24);
-				if(speed.current.z < -25)
-					api.velocity.set(speed.current.x, speed.current.y, -24);
-				if (!khrjat)
-					console.log(speed.current);
-				requestAnimationFrame(serveball);
-			};
-			requestAnimationFrame(serveball);
+  let hasServed = false;
 
-	
-			return () => {
-				window.removeEventListener('keydown', ServeDown);
-				window.removeEventListener('keyup', ServeUp);
-				// socket.off('ballPosition');
-			};
+  const position = useRef(new THREE.Vector3(0, 0, 0));
 
-			}, []);
+  function GameBall(props: any) {
+    let direction = 1;
 
+    const [ref, api] = useSphere(
+      () => ({
+        mass: 1,
+        material: { restitution: 1.06, friction: 0 },
+        args: [0.32, 42, 16],
+        position: [0, 0.35, 0],
+        ...props,
+      }),
+      useRef<THREE.Mesh>(null)
+    );
 
+    const speed = useRef(new THREE.Vector3(0, 0, 0));
 
-		return (
-			<mesh position={[0, 0.35, 0]} ref={ref} castShadow receiveShadow>
-				<sphereGeometry args={[0.35, 42, 16]}/>
-				<meshStandardMaterial color={"white"}/>
-			</mesh>
-		);
-	}
+    useEffect(() => {
+      let isServing = false;
 
-	function SideRock1(props: any) {
+      const ServeDown = (event: KeyboardEvent) => {
+        if (event.code === "Space") {
+          isServing = true;
+        }
+      };
 
-		const [ref, api] = useBox(() => ({ type: "Static",mass: 1,
-			args: [10, 3, 20],
-			position: [-11.35, 0.3, 0],
-			material: { restitution: 1.06, friction: 0 }, ...props }), useRef<THREE.Mesh>(null))
-	
-		return (
-				<>
-					<Model2/> 
-					<mesh ref={ref}>
-					</mesh>
-				</>
-			);
-	}
+      const ServeUp = (event: KeyboardEvent) => {
+        if (event.code === "Space") {
+          isServing = false;
+        }
+      };
 
-	function SideRock2(props: any) {
+      const subpos = () => {
+        api.position.subscribe((v) => {
+          return (position.current = new THREE.Vector3(v[0], v[1], v[2]));
+        });
+      };
+      subpos();
 
-		const [ref, api] = useBox(() => ({ type: "Static",mass: 1,
-			args: [10, 3, 20],
-			position: [11.35, 0.3, 0],
-			material: { restitution: 1.06, friction: 0 }, ...props }), useRef<THREE.Mesh>(null))
-	
-		return (
-				<>
-					<Model3/> 
-					<mesh ref={ref}>
-					</mesh>
-				</>
-			);
-	}
+      const subspeed = () => {
+        api.velocity.subscribe((v) => {
+          return (speed.current = new THREE.Vector3(v[0], v[1], v[2]));
+        });
+      };
+      subspeed();
 
+      window.addEventListener("keydown", ServeDown);
+      window.addEventListener("keyup", ServeUp);
+      // let khrjat = false;
+      const serveball = () => {
+        // const value = Math.random() < 0.5 ? -10 : 10;
+        const value = -5;
+        if (isServing && !hasServed) {
+          api.applyImpulse([value * direction, 0, -10 * direction], [0, 0, 0]);
+          hasServed = true;
+        }
+        if (position.current.z < -10 || position.current.z > 10) {
+          api.position.set(0, 0.35, 0);
+          api.velocity.set(0, 0, 0);
+          hasServed = false;
+          // khrjat = true;
+        }
+        if (speed.current.x < -10)
+          api.velocity.set(-10, speed.current.y, speed.current.z);
+        if (speed.current.x > 10)
+          api.velocity.set(10, speed.current.y, speed.current.z);
+        if (speed.current.z > 25)
+          api.velocity.set(speed.current.x, speed.current.y, 24);
+        if (speed.current.z < -25)
+          api.velocity.set(speed.current.x, speed.current.y, -24);
+        // if (!khrjat)
+        // 	console.log(speed.current);
+        requestAnimationFrame(serveball);
+      };
+      requestAnimationFrame(serveball);
 
-	const Scoreboard = () => {
-		const [p1_count, setP1Count] = useState<number>(0);
-		const [p2_count, setP2Count] = useState<number>(0);
-	  
-		let animationFrameId: number | null = null;
-		
-		useEffect(() => {
-		  const goalCheck = () => {
-			if (position.current.z > 10) {
-			  setP1Count((prevCount) => prevCount + 1);
-			  position.current.z = 0;
-			  
-			}
-			if (position.current.z < -10) {
-				setP2Count((prevCount) => prevCount + 1);
-				position.current.z = 0;
-			}
-			setTimeout(() => {
-				animationFrameId = requestAnimationFrame(goalCheck);
-			}, 20); 
-		  };
+      return () => {
+        window.removeEventListener("keydown", ServeDown);
+        window.removeEventListener("keyup", ServeUp);
+        // socket.off('ballPosition');
+      };
+    }, []);
 
-	  
-		  goalCheck();
-	  
-		  return () => {
-			if (animationFrameId !== null) {
-			  cancelAnimationFrame(animationFrameId);
-			}
-		  };
-		}, []);
+    return (
+      <mesh position={[0, 0.35, 0]} ref={ref} castShadow receiveShadow>
+        <sphereGeometry args={[0.35, 42, 16]} />
+        <meshStandardMaterial color={"white"} />
+      </mesh>
+    );
+  }
 
-		useEffect(() => {
-			if(p1_count === 7 || p2_count === 7)
-			{
-				// else
-				// {
-				//   console.log("Opponent Wins!", p1_count, p2_count);
-				//   const payload = {winner: "Opponent", winnerscore: p1_count, loserscore: p2_count};
-				//   socket.emit('player-wins', payload)
-				// }
-				setP1Count(0);
-				setP2Count(0);
-			}
+  function SideRock1(props: any) {
+    const [ref, api] = useBox(
+      () => ({
+        type: "Static",
+        mass: 1,
+        args: [10, 3, 20],
+        position: [-11.35, 0.3, 0],
+        material: { restitution: 1.06, friction: 0 },
+        ...props,
+      }),
+      useRef<THREE.Mesh>(null)
+    );
 
-		}, [p1_count, p2_count]);
+    return (
+      <>
+        <Model2 />
+        <mesh ref={ref}></mesh>
+      </>
+    );
+  }
 
-		return (
-		  <>
-			<group>
-			  <Text
-				receiveShadow
-				color="White"
-				anchorX="center"
-				anchorY="middle"
-				position={[-3.3, 0.05, -4.8]}
-				scale={[6, 6, 6]}
-				rotation={[Math.PI / 2, Math.PI, Math.PI]}
-			  >
-				{p1_count}
-			  </Text>
-			  <Text
-				receiveShadow
-				color="White"
-				anchorX="center"
-				anchorY="middle"
-				position={[3.4, 0.05, 5.5]}
-				scale={[6, 6, 6]}
-				rotation={[Math.PI / 2, Math.PI, Math.PI]}
-			  >
-				{p2_count}
-			  </Text>
-			</group>
-		  </>
-		);
-	};
+  function SideRock2(props: any) {
+    const [ref, api] = useBox(
+      () => ({
+        type: "Static",
+        mass: 1,
+        args: [10, 3, 20],
+        position: [11.35, 0.3, 0],
+        material: { restitution: 1.06, friction: 0 },
+        ...props,
+      }),
+      useRef<THREE.Mesh>(null)
+    );
 
-	// const [currentMap, setCurrentMap] = useState('Desert');
+    return (
+      <>
+        <Model3 />
+        <mesh ref={ref}></mesh>
+      </>
+    );
+  }
 
-	// const switchMap = () => {
-	//   if (currentMap === 'Desert') {
-	// 	setCurrentMap('Forest');
-	//   } else if (currentMap === 'Forest') {
-	// 	setCurrentMap('Snow');
-	//   } else {
-	// 	setCurrentMap('Desert');
-	//   }
-	// };
+  const Scoreboard = () => {
+    const [p1_count, setP1Count] = useState<number>(0);
+    const [p2_count, setP2Count] = useState<number>(0);
 
+    let animationFrameId: number | null = null;
+
+    useEffect(() => {
+      const goalCheck = () => {
+        if (position.current.z > 10) {
+          setP1Count((prevCount) => prevCount + 1);
+          position.current.z = 0;
+        }
+        if (position.current.z < -10) {
+          setP2Count((prevCount) => prevCount + 1);
+          position.current.z = 0;
+        }
+        setTimeout(() => {
+          animationFrameId = requestAnimationFrame(goalCheck);
+        }, 20);
+      };
+
+      goalCheck();
+
+      return () => {
+        if (animationFrameId !== null) {
+          cancelAnimationFrame(animationFrameId);
+        }
+      };
+    }, []);
+
+    useEffect(() => {
+      if (p1_count === 7 || p2_count === 7) {
+        // else
+        // {
+        //   console.log("Opponent Wins!", p1_count, p2_count);
+        //   const payload = {winner: "Opponent", winnerscore: p1_count, loserscore: p2_count};
+        //   socket.emit('player-wins', payload)
+        // }
+        setP1Count(0);
+        setP2Count(0);
+      }
+    }, [p1_count, p2_count]);
+
+    return (
+      <>
+        <group>
+          <Text
+            receiveShadow
+            color="White"
+            anchorX="center"
+            anchorY="middle"
+            position={[-3.3, 0.05, -4.8]}
+            scale={[6, 6, 6]}
+            rotation={[Math.PI / 2, Math.PI, Math.PI]}
+          >
+            {p1_count}
+          </Text>
+          <Text
+            receiveShadow
+            color="White"
+            anchorX="center"
+            anchorY="middle"
+            position={[3.4, 0.05, 5.5]}
+            scale={[6, 6, 6]}
+            rotation={[Math.PI / 2, Math.PI, Math.PI]}
+          >
+            {p2_count}
+          </Text>
+        </group>
+      </>
+    );
+  };
+
+  // const [currentMap, setCurrentMap] = useState('Desert');
+
+  // const switchMap = () => {
+  //   if (currentMap === 'Desert') {
+  // 	setCurrentMap('Forest');
+  //   } else if (currentMap === 'Forest') {
+  // 	setCurrentMap('Snow');
+  //   } else {
+  // 	setCurrentMap('Desert');
+  //   }
+  // };
 
   return (
-	<>
-
-	  <Canvas
-		shadows
-		camera={{ fov: 75, near: 0.1, far: 300, position: [0, 10, 20] }}
-	  >
-		{/*<Sparkles
+    <div className="w-full relative">
+      {isMobileDevice && (
+        /* <button onTouchStart={() => setIsMovingLeft(true)} onTouchEnd={() => setIsMovingLeft(false)} className="fixed left-0 bottom-0 m-3">Move Left</button>
+        		<button onTouchStart={() => setIsMovingRight(true)} onTouchEnd={() => setIsMovingRight(false)} className="fixed right-0 bottom-0 m-3">Move Right</button> */
+        <div className="flex justify-between w-full absolute bottom-6 z-[10] ">
+          <button className="bg-transparent border border-grey-500 hover:bg-blue-700 text-white font-bold py-5 px-5 rounded-full w-[140px] h-[140px] backdrop-blur-3xl opacity-50 text-6xl ml-3">
+            L
+          </button>
+          <button className="bg-transparent border border-grey-500 hover:bg-blue-700 text-white font-bold py-5 px-5 rounded-lg w-[70px] h-[50px] backdrop-blur-3xl opacity-50 flex items-center justify-center">
+            Serve
+          </button>
+          <button className="bg-transparent border border-grey-500 hover:bg-blue-700 text-white font-bold py-5 px-5 rounded-full w-[140px] h-[140px] backdrop-blur-3xl opacity-50 text-6xl mr-3">
+		  	R
+          </button>
+        </div>
+      )}
+      <Canvas
+        shadows
+        camera={{ fov: 75, near: 0.1, far: 300, position: [0, 10, 20] }}
+      >
+        {/*<Sparkles
 			count={2000}
 			speed={4}
 			opacity={1} 
@@ -1064,86 +1085,98 @@ const Game = () => {
 			noise={1000}
 		/>*/}
 
-		{/* <Perf position="bottom-right" /> */}
-		<ambientLight color={"#ffffff"} intensity={1} />
-		<directionalLight
-			position={[-0.04, 4.5, -4]}
-			color={"#ffffff"}
-			intensity={1}
-			castShadow
-			shadow-mapSize={[1024, 1024]}
-			shadow-camera-left={-120}
-			shadow-camera-right={120}
-			shadow-camera-top={120}
-			shadow-camera-bottom={-120}
-			shadow-camera-near={-50}
-			shadow-camera-far={60}
-		/>
-			<Physics>
-				{/* <Debug color="black" scale={1.1}> */}
-					<Plane/>
-					<Player1Paddle/>
-					<Player2Paddle/>
-					<GameBall/>
-					<SideRock1/>
-					<SideRock2/>
-				{/* </Debug> */}
-			</Physics>
-			{/* <mesh rotation-x={-Math.PI * 0.5} scale={[10, 10, 10]} position={[0, -0.1, 0]} receiveShadow> */}
-				{/* <planeGeometry args={[20, 20]} /> */}
-				{/* <circleGeometry args={[16, 50]} /> */}
-				{/* <meshStandardMaterial color={planecolor} /> */}
-			{/* </mesh> */}
-			<mesh receiveShadow rotation-x={- Math.PI * 0.5} position-y={0.02}>
-				<planeGeometry args={[20, 0.2]}/>
-				<meshStandardMaterial color={'#FFFFFF'}/>
-			</mesh>
-			<mesh receiveShadow rotation-x={-Math.PI * 0.5} rotation-z={-Math.PI * 0.5} position-y={0.02}>
-				<planeGeometry args={[20, 0.03]}/>
-				<meshStandardMaterial color={'#FFFFFF'}/>
-			</mesh>
-			<mesh receiveShadow rotation-x={-Math.PI * 0.5} position-y={0.02} position-z={9.95}>
-				<planeGeometry args={[20, 0.1]}/>
-				<meshStandardMaterial color={'#FFFFFF'}/>
-			</mesh>
-			<mesh receiveShadow rotation-x={-Math.PI * 0.5} position-y={0.02} position-z={-9.95}>
-				<planeGeometry args={[20, 0.1]}/>
-				<meshStandardMaterial color={'#FFFFFF'}/>
-			</mesh>
-			{
-				/*
+        {/* <Perf position="bottom-right" /> */}
+        <ambientLight color={"#ffffff"} intensity={1} />
+        <directionalLight
+          position={[-0.04, 4.5, -4]}
+          color={"#ffffff"}
+          intensity={1}
+          castShadow
+          shadow-mapSize={[1024, 1024]}
+          shadow-camera-left={-120}
+          shadow-camera-right={120}
+          shadow-camera-top={120}
+          shadow-camera-bottom={-120}
+          shadow-camera-near={-50}
+          shadow-camera-far={60}
+        />
+        <Physics>
+          {/* <Debug color="black" scale={1.1}> */}
+          <Plane />
+          <Player1Paddle />
+          <Player2Paddle />
+          <GameBall />
+          <SideRock1 />
+          <SideRock2 />
+          {/* </Debug> */}
+        </Physics>
+        {/* <mesh rotation-x={-Math.PI * 0.5} scale={[10, 10, 10]} position={[0, -0.1, 0]} receiveShadow> */}
+        {/* <planeGeometry args={[20, 20]} /> */}
+        {/* <circleGeometry args={[16, 50]} /> */}
+        {/* <meshStandardMaterial color={planecolor} /> */}
+        {/* </mesh> */}
+        <mesh receiveShadow rotation-x={-Math.PI * 0.5} position-y={0.02}>
+          <planeGeometry args={[20, 0.2]} />
+          <meshStandardMaterial color={"#FFFFFF"} />
+        </mesh>
+        <mesh
+          receiveShadow
+          rotation-x={-Math.PI * 0.5}
+          rotation-z={-Math.PI * 0.5}
+          position-y={0.02}
+        >
+          <planeGeometry args={[20, 0.03]} />
+          <meshStandardMaterial color={"#FFFFFF"} />
+        </mesh>
+        <mesh
+          receiveShadow
+          rotation-x={-Math.PI * 0.5}
+          position-y={0.02}
+          position-z={9.95}
+        >
+          <planeGeometry args={[20, 0.1]} />
+          <meshStandardMaterial color={"#FFFFFF"} />
+        </mesh>
+        <mesh
+          receiveShadow
+          rotation-x={-Math.PI * 0.5}
+          position-y={0.02}
+          position-z={-9.95}
+        >
+          <planeGeometry args={[20, 0.1]} />
+          <meshStandardMaterial color={"#FFFFFF"} />
+        </mesh>
+        {/*
 					map == "forest" && <Forest/> 
 					map == "desert" && <Desert/>
 					map == "snow" && <Snow/>
-				*/
-			}
+				*/}
 
-			
-				{/* {currentMap === 'Desert' && <Desert />}
+        {/* {currentMap === 'Desert' && <Desert />}
 				{currentMap === 'Forest' && <Forest />}
 				{currentMap === 'Snow' && <Snow />} */}
-			{/* <Forest/> */}
-			<Desert/>
-			{/* <Snow/> */}
-			<Scoreboard />
+        {/* <Forest/> */}
+        <Desert />
+        {/* <Snow/> */}
+        <Scoreboard />
 
-		<Sky sunPosition={[-0.07, -0.03, -0.75]} />
-		<OrbitControls  
-			minAzimuthAngle={-Math.PI / 2}
-			maxAzimuthAngle={Math.PI / 2}
-			minPolarAngle={Math.PI / 20}
-			maxPolarAngle={Math.PI - Math.PI / 2}
-			maxDistance={50}
-			minDistance={10}
-			maxZoom={50}
-			minZoom={10}
-			enablePan={false}
-		/>
-		<SoftShadows />
-		{/* <fog attach="fog" color={fogcolor} near={1} far={fogfar} /> */}
-	  </Canvas>
-	  {/* <button onClick={switchMap}>Switch Map</button> */}
-	</>
+        <Sky sunPosition={[-0.07, -0.03, -0.75]} />
+        <OrbitControls
+          minAzimuthAngle={-Math.PI / 2}
+          maxAzimuthAngle={Math.PI / 2}
+          minPolarAngle={Math.PI / 20}
+          maxPolarAngle={Math.PI - Math.PI / 2}
+          maxDistance={50}
+          minDistance={10}
+          maxZoom={50}
+          minZoom={10}
+          enablePan={false}
+        />
+        <SoftShadows />
+        {/* <fog attach="fog" color={fogcolor} near={1} far={fogfar} /> */}
+      </Canvas>
+      {/* <button onClick={switchMap}>Switch Map</button> */}
+    </div>
   );
 };
 
