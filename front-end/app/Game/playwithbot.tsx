@@ -1,3 +1,4 @@
+
 'use client';
 
 import { Canvas, useFrame } from "@react-three/fiber";
@@ -180,7 +181,7 @@ const Game = () => {
 			
 			window.addEventListener("keydown", handleKeyDown);
 			window.addEventListener("keyup", handleKeyUp);
-            api.position.set(position.current.x, 0.5, -9);
+            // api.position.set(position.current.x, 0.5, -9);
 			
 			// const updatePosition = () => {
 			// 	// if (ref.current) {
@@ -206,6 +207,33 @@ const Game = () => {
 			};
 		}, []);
 
+		const reactionTime = 0.02;
+		let lastUpdateTime = Date.now();
+		let targetPosX = position.current.x; // Initialize target position
+		let paddlePosX = position.current.x; // Initialize paddle position
+		
+		useFrame(() => {
+			const currentTime = Date.now();
+			const deltaTime = (currentTime - lastUpdateTime) / 1000; // Convert to seconds
+			if(hasServed)
+			{
+				if (deltaTime >= reactionTime) {
+					const randomOffset = Math.random() * 1 - 0.5; 
+				targetPosX = position.current.x + randomOffset;
+		
+				const diff = targetPosX - paddlePosX;
+				if (Math.abs(diff) < 0.01) {
+					paddlePosX = targetPosX;
+				} else {
+					const smoothingFactor = 0.1;
+					paddlePosX += diff * smoothingFactor;
+				}
+				if(paddlePosX < 5 && paddlePosX > -5)
+				api.position.set(paddlePosX, 0.5, -9);
+				lastUpdateTime = currentTime;
+				}
+			}
+		});
 		return (
 			<RoundedBox
 				ref={ref}
@@ -232,6 +260,7 @@ const Game = () => {
 
 		const [ref, api] = useSphere(() => ({ mass: 1, material: { restitution: 1.06, friction: 0 },args: [0.32, 42, 16], position: [0, 0.35, 0], ...props }), useRef<THREE.Mesh>(null))
 
+		const speed = useRef(new THREE.Vector3(0, 0, 0));
 
 
 		useEffect(() => {
@@ -249,16 +278,23 @@ const Game = () => {
 				}
 			};
 
-			const test = () => {
+			const subpos = () => {
 			api.position.subscribe((v) => {
 					return (position.current = new THREE.Vector3(v[0], v[1], v[2]));
 				})
 				}	
-			test();
+			subpos();
+
+			const subspeed = () => {
+				api.velocity.subscribe((v) => {
+						return (speed.current = new THREE.Vector3(v[0], v[1], v[2]));
+					})
+					}	
+			subspeed();
 			
 			window.addEventListener('keydown', ServeDown);
 			window.addEventListener('keyup', ServeUp);
-			
+			let khrjat = false;
 			const serveball = () => {
 				// const value = Math.random() < 0.5 ? -10 : 10;
 				const value = -5;
@@ -272,7 +308,18 @@ const Game = () => {
 					api.position.set(0, 0.35, 0);
 					api.velocity.set(0, 0, 0);
 					hasServed = false;
+					khrjat = true;
 				}
+				if(speed.current.x < -10)
+					api.velocity.set(-10, speed.current.y, speed.current.z);
+				if(speed.current.x > 10)
+					api.velocity.set(10, speed.current.y, speed.current.z);
+				if(speed.current.z > 25)
+					api.velocity.set(speed.current.x, speed.current.y, 24);
+				if(speed.current.z < -25)
+					api.velocity.set(speed.current.x, speed.current.y, -24);
+				if (!khrjat)
+					console.log(speed.current);
 				requestAnimationFrame(serveball);
 			};
 			requestAnimationFrame(serveball);
