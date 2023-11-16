@@ -321,7 +321,7 @@ const Game = () => {
   
       const handleTouchEnd = (event: TouchEvent) => {
         isServingmobile = false;
-        socket.emit('ball-serve', {isServing: false, isServingmobile:false, direction: -1})
+        socket.emit('ball-serve', {isServing: false, isServingmobile:false, direction: 1})
       };
 
       const subpos = () => {
