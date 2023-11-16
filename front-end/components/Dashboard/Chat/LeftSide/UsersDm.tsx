@@ -63,7 +63,7 @@ export default function UsersDm() {
                     lastMessageTime={getLastMessage(messages, ur.userId)?.createdAt.toString().split('T')[1].split('.')[0].slice(0,5)}
                     notification={15}
                     active={ur.status === "online" ? true : false}
-                    link={`me/${ur?.userId}`}
+                    link={`/Chat/me/${ur?.userId}`}
                     key={`key : ${ur.userId}`}
                   />)
                 )

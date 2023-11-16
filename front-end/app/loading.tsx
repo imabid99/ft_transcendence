@@ -6,7 +6,7 @@ export default function Loading() {
     return (
       <div className="flex justify-center items-center w-full h-full absolute top-9">
         <div className=" w-[500px] h-[500px]">
-        <Lottie animationData={animationData1} />
+          <Lottie animationData={animationData1} />
         </div>
       </div>
     )   
