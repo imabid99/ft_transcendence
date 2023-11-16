@@ -20,8 +20,11 @@ export class FriendshipService {
           ],
         },
       });
-      if (existingRelationship) {
+      if (existingRelationship && existingRelationship.status === FriendshipStatus.ACCEPTED) {
         throw new ConflictException("You're already friends with this user");
+      }
+      else if (existingRelationship && existingRelationship.status === FriendshipStatus.PENDING) {
+        throw new ConflictException("You've already sent a friend request to this user");
       }
       await this.prisma.friendship.create({
         data: {
