@@ -71,7 +71,7 @@ export default function GroupsChannels() {
                 lastMessageTime={getLastMessageGroup(channel.Messages)?.createdAt.toString().split('T')[1].split('.')[0].slice(0,5)}
                 notification={0}
                 active={false}
-                link={`g/${channel.id}`}
+                link={`/Chat/g/${channel.id}`}
                 key={`key : ${channel.id}`}
                 />)
             })

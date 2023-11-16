@@ -75,13 +75,13 @@ export default function SearchChat() {
 							users?.map((user: any) => {
 								return(
 									<Channel
-										avatar="/userProfile.jpg"
+										avatar={`http://${process.env.NEXT_PUBLIC_APP_URL}:3000/${user.avatar}`}
 										channel={`${user.firstName} ${user.lastName}`}
 										lastMessage={''}
 										lastMessageTime={''}
 										notification={0}
 										active={false}
-										link={`me/${user.userId}`}
+										link={`/Chat/me/${user.userId}`}
 										key={user.userId}
 									/>
 								)
