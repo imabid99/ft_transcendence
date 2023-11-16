@@ -12,6 +12,7 @@ import Lottie from "lottie-react"
 import animationData from   "../../../../public/anGhost.json"
 import animationData1 from   "../../../../public/Ghost1.json"
 import animationData2 from   "../../../../public/ghost2.json"
+import { Toaster, toast } from 'sonner'
 
 type Props = {
     leaderRef: any,
@@ -63,7 +64,8 @@ export default function Body({ leaderRef, handelShaw }: Props) {
                         </div>
                         </div>
                         <div>
-                        <button className="bg-[#6F86D6] w-[197px] h-[50px] sm:w-[203px] sm:h-[56px] rounded-[8px] text-white font-[500] text-[20px] b-home">
+                        <Toaster position="top-right" richColors />
+                        <button className="bg-[#6F86D6] w-[197px] h-[50px] sm:w-[203px] sm:h-[56px] rounded-[8px] text-white font-[500] text-[20px] b-home" onClick={() => toast.success('Event has been created')}>
                             PLAY NOW
                         </button>
                         </div>
