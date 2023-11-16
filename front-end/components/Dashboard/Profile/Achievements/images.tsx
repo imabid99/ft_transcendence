@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import Image from 'next/image';
 import Loading from '@/app/loading';
-
+import { Blurhash } from 'react-blurhash';
 type ImageType = {
   src: string;
   alt: string;
@@ -14,19 +14,23 @@ type ImageComponentProps = {
 
 function ImageComponent({ images }: ImageComponentProps) {
   const [loading, setLoading] = useState(true);
+  const [showImages, setShowImages] = useState(false);
+  // const handleImageLoad = () => {
+  //   setLoading(false);
+  // };
+  // const timer = setTimeout(() => {
+  //   setShowImages(true);
+  // }, 2000);
 
-  const handleImageLoad = () => {
-    setLoading(false);
-  };
-
+  // clearTimeout(timer);
   return (
     <div className="flex items-center flex-col w-12/12 gap-[30px] lg:gap-0 pb-[30px]">
-      {loading && <Loading />}
+      {/* {loading && <Loading />} */}
       {images.map((imageRow, rowIndex) => (
         <div key={rowIndex} className="flex items-center justify-center gap-[30px] flex-col sm:flex-row">
           {imageRow.map((img, imgIndex) => (
             <div key={imgIndex} className="transform hover:scale-110 transition-transform duration-300 relative">
-              <Image src={img.src} alt={img.alt} className={img.className} width={197} height={220} onLoad={handleImageLoad} loading="lazy"/>
+              <Image src={img.src} alt={img.alt} className={img.className} width={197} height={220} loading="lazy"/>
             </div>
           ))}
         </div>

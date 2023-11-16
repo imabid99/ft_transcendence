@@ -9,7 +9,7 @@ import Link from "next/link";
 //     userId: string
 // }
 
-const Friend = () => {
+const Modes = () => {
 
     return (
     <>
@@ -18,11 +18,13 @@ const Friend = () => {
                 src="Europa Official Game Reveal Trailer.mp4"
                 autoPlay={true}
                 muted={true}
-                loop={true}
+                loop={true}  
                 className="h-full object-cover w-full"
+                controls={false}
+                disablePictureInPicture={false}
             />
         </div>
-        <div className="w-[1370px] xl:h-[830px] rounded-[100px] backdrop-blur-[20px] backSh flex gap-[72px] flex-col">
+        <div className="w-[1370px] xl:h-[830px] rounded-[100px] backdrop-blur-[20px] backSh flex gap-[72px] flex-col justify-center items-center absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2">
             <div className="w-full flex justify-center pt-[24px]">
                 <img src="king.svg" alt="" />
             </div>
@@ -79,4 +81,4 @@ const Friend = () => {
 );
 };
 
-export default Friend;
+export default Modes;
