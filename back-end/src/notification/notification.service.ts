@@ -5,9 +5,7 @@ import { UserService } from 'src/user/user.service';
 @Injectable()
 export class NotificationService {
     constructor(
-      private prisma: PrismaService,
-      private userService: UserService,
-      
+      private prisma: PrismaService,      
       ) {}
 
     async getNotifications(userId: string): Promise<any> {

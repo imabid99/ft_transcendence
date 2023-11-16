@@ -8,7 +8,7 @@ import { FriendshipService } from "src/friendship/friendship.service";
 
 @Module({
   imports: [],
-  providers: [NotificationGateway, UserService, NotificationService, FriendshipService ],
+  providers: [NotificationGateway, NotificationService ],
   controllers: [NotificationController],
 })
 export class NotificationModule { }

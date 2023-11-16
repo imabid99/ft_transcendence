@@ -328,7 +328,7 @@ export default function Page() {
                     </span>
                 </div>
                 </div>
-                <ImageComponent images={images} />
+                {/* <ImageComponent images={images} /> */}
             </div>
             </div>
         </div>

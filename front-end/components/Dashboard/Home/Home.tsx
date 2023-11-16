@@ -19,14 +19,17 @@ export default function Home() {
     const [showModal, setShowModal] = useState(false);
     const [allNotifications, setAllNotifications] = useState<any>([]);
     const [Friends, setFriends] = useState<any>([]);
-    const [reload, setReload] = useState<boolean>(false);
+    const [reload, setReload] = useState<string>("");
     const {notifSocket}:any = useContext(contextdata);
     
     useEffect(() => {
         if(!notifSocket)
             return;
+        console.log("reload");
         notifSocket.on("reload", () => {
-            setReload(!reload);
+            // setReload(!reload);
+            setReload(new Date().getTime().toString());
+
         })
     }
     ,[notifSocket])

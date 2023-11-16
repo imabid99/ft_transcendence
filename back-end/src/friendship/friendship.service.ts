@@ -1,11 +1,12 @@
 import { BadRequestException, ConflictException, Injectable } from "@nestjs/common";
 import { PrismaService } from "../prisma/prisma.service";
 import { FriendshipStatus } from "@prisma/client";
+import { NotificationGateway } from "src/notification/gateway/notification.gateway";
 
 
 @Injectable()
 export class FriendshipService {
-  constructor(private prisma: PrismaService) { }
+  constructor(private prisma: PrismaService, private notificationGateway : NotificationGateway) { }
 
   async makeRequest(senderId: string, receiverId: string): Promise<any> {
     try {
@@ -26,6 +27,7 @@ export class FriendshipService {
       else if (existingRelationship && existingRelationship.status === FriendshipStatus.PENDING) {
         throw new ConflictException("You've already sent a friend request to this user");
       }
+      console.log("request is ", senderId, receiverId);
       await this.prisma.friendship.create({
         data: {
           senderId,
@@ -45,6 +47,7 @@ export class FriendshipService {
           actionUserAvatar: sender.avatar,
         },
       });
+      this.notificationGateway.friendRequest(senderId, receiverId);
       return notification;
     } catch (error) {
       throw error;
@@ -70,10 +73,9 @@ export class FriendshipService {
       });
       await this.prisma.notification.delete({
         where: {
-          id: notid,
-          actionUserId: senderId,
-        },
+          id: notid,        },
       });
+      this.notificationGateway.acceptFriendRequest(senderId, receiverId);
     } catch (error) {
       throw error;
     }
@@ -87,17 +89,22 @@ export class FriendshipService {
           receiverId,
         },
       });
+      if (!friendship)
+        throw new BadRequestException("You have no friend request from this user");
+      else if (friendship.status === FriendshipStatus.ACCEPTED)
+        throw new ConflictException("You're already friends with this user");
       await this.prisma.friendship.delete({
         where: {
           id: friendship.id,
         }
       });
+      console.log("notid is ", notid);
       await this.prisma.notification.delete({
         where: {
           id: notid,
-          actionUserId: senderId,
         },
       });
+      this.notificationGateway.refuseFriendRequest(senderId, receiverId);
     } catch (error) {
       throw error;
     }
