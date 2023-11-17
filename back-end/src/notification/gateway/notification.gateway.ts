@@ -24,9 +24,6 @@ import { FriendshipService } from "../../friendship/friendship.service";
 export class NotificationGateway implements OnGatewayConnection, OnGatewayDisconnect {
   constructor(
     private prisma: PrismaService,
-    private userService: UserService,
-    private notificationService: NotificationService,
-    private friendshipService: FriendshipService,
   ) { }
   @WebSocketServer()
   server: SocketIO.Server;
@@ -60,12 +57,7 @@ export class NotificationGateway implements OnGatewayConnection, OnGatewayDiscon
     }
   }
 
-  sendfriendRequestNotification(senderId: string, receiverId: string) {
-    
-  }
-
   sendNotification(id: string, data: any) {
-    console.log("hereeee : ", id);
     this.socketMap.get(id).forEach(socket => {
       socket.emit('notification', {
         type: data.type,
@@ -74,15 +66,21 @@ export class NotificationGateway implements OnGatewayConnection, OnGatewayDiscon
       socket.emit("reload");
     });
   }
-  @SubscribeMessage("friendRequest")
-  // @UseGuards(AuthGuard("jwt"))
-  async handleFriendRequest(client: Socket, data: any) {
-    console.log("friend request : ", data);
-    const token = client.handshake.headers.authorization?.split(" ")[1];
 
-    const user: any = jwt_decode(token);
-    const notification = await this.friendshipService.makeRequest(user.userId, data.receiverId);
-    this.sendNotification(data.receiverId, notification);
-    client.emit("notification", {type : "success", message : "Request sent"});
+  friendRequest(senderId : string , receiverId : string) {
+    this.sendNotification(receiverId, {type : "FRIEND_REQUEST", message : "You have a new friend request"});
+    this.sendNotification(senderId, {type : "success", message : "Request sent"});
+  }
+
+  acceptFriendRequest(senderId : string , receiverId : string) {
+    this.sendNotification(receiverId, {type : "success", message : "Friend request accepted"});
+    this.sendNotification(senderId, {type : "success", message : "Friend request accepted"});
+  }
+  refuseFriendRequest(senderId : string , receiverId : string) {
+    this.sendNotification(receiverId, {type : "success", message : "Friend request refused"});
+  }
+
+  apiError(senderId : string , receiverId : string) {
+    this.sendNotification(receiverId, {type : "success", message : "An error occured"});
   }
 }

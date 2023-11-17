@@ -110,6 +110,7 @@ export class UserService {
           userId: id,
         },
       });
+       
       return profile;
     } catch (error) {
       throw new InternalServerErrorException("Internal server error");

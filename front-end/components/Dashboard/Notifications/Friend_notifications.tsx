@@ -10,6 +10,7 @@ type props  = {
 }
 
 export default function FriendNotifications({name, avatar, userId, notId}: props) {
+    console.log("this is name", notId);
     async function AcceptFriend(){
         try{
             const res = await axiosInstance.patch(`http://${process.env.NEXT_PUBLIC_APP_URL}:3000/api/friendship/accept/${userId}` ,  {notId: notId});

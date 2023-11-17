@@ -37,9 +37,15 @@ export default function Page() {
     const  [isClicked, setIsClicked] = useState<boolean>(false);
 
 
-    const sendRequest = () => {
-        notifSocket?.emit("friendRequest", { receiverId: UserId });
-    };
+    const sendRequest = async () => {
+        try{
+            const res = await axiosInstance.post(`http://${process.env.NEXT_PUBLIC_APP_URL}:3000/api/friendship/request/${UserId}`);
+            console.log(res.data);
+        }
+        catch(err){
+            console.log(err);
+        }
+    }
     const  handleClick = () => {
         setIsClicked(true);
         sendRequest();
@@ -298,7 +304,7 @@ export default function Page() {
                     </span>
                 </div>
                 </div>
-                <ImageGrid images={images} />
+                {/* <ImageGrid images={images} /> */}
             </div>
             </div>
         </div>
