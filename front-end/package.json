@@ -30,6 +30,7 @@
     "react-blurhash": "^0.3.0",
     "react-hot-toast": "^2.4.1",
     "react-loading-skeleton": "^3.3.1",
+    "react-responsive": "^9.0.2",
     "socket.io": "^4.7.2",
     "socket.io-client": "^4.7.2",
     "sonner": "^1.2.0",

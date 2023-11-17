@@ -157,7 +157,7 @@ export class GameGateway implements OnGatewayConnection, OnGatewayDisconnect {
   @SubscribeMessage("ball-serve")
   async handleBallServe(
     client: Socket,
-    payload: { isServing: boolean; direction: number }
+    payload: { isServing: boolean; isServingmobile: boolean; direction: number }
   ) {
     const match = await this.gameService.getMatch(client.id);
     if (match) {
