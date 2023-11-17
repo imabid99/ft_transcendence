@@ -12,7 +12,7 @@ import { v4 as uuidv4 } from "uuid";
 
 @Injectable()
 export class UserService {
-  constructor(private prisma: PrismaService) {}
+  constructor(private prisma: PrismaService) { }
 
   checkMute(
     arg0: number,
@@ -110,7 +110,7 @@ export class UserService {
           userId: id,
         },
       });
-       
+
       return profile;
     } catch (error) {
       throw new InternalServerErrorException("Internal server error");
@@ -142,7 +142,7 @@ export class UserService {
           password: hash,
         },
       });
-      const oldAvatar : string =  user.profile.avatar;
+      const oldAvatar: string = user.profile.avatar;
       if (!oldAvatar.startsWith("uploads/default")) {
         const fs = require("fs");
         fs.unlinkSync(oldAvatar);
@@ -171,7 +171,7 @@ export class UserService {
       });
       return;
     } catch (error) {
-      throw error;
+      return error;
     }
   }
 

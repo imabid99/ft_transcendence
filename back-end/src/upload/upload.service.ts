@@ -4,15 +4,15 @@ import { PrismaService } from "../prisma/prisma.service";
 
 @Injectable()
 export class UploadService {
-  constructor(private prisma: PrismaService) {}
+  constructor(private prisma: PrismaService) { }
 
   async uploadAvatar(path: string, userId: string): Promise<any> {
     try {
-      const user = await this.prisma.user.findUnique({ where: { id: userId } , include: { profile: true }});
+      const user = await this.prisma.user.findUnique({ where: { id: userId }, include: { profile: true } });
       if (!user) {
         throw new NotFoundException("User not found");
       }
-      const oldAvatar : string =  user.profile.avatar;
+      const oldAvatar: string = user.profile.avatar;
       if (!oldAvatar.startsWith("uploads/default")) {
         const fs = require("fs");
         fs.unlinkSync(oldAvatar);
@@ -26,7 +26,7 @@ export class UploadService {
         },
       });
     } catch (error) {
-      throw error;
+      return error;
     }
   }
 
@@ -39,7 +39,7 @@ export class UploadService {
       });
       return profile.avatar;
     } catch (error) {
-      throw error;
+      return error;
     }
   }
   async uploadCover(path: string, userId: string): Promise<any> {
@@ -53,7 +53,7 @@ export class UploadService {
         },
       });
     } catch (error) {
-      throw error;
+      return error;
     }
   }
   async getCover(userId: string): Promise<any> {
@@ -65,7 +65,7 @@ export class UploadService {
       });
       return profile.cover;
     } catch (error) {
-      throw error;
+      return error;
     }
   }
   async uploadChannelAvatar(path: string, channelId: string): Promise<any> {
@@ -87,17 +87,17 @@ export class UploadService {
         },
       });
     } catch (error) {
-      throw error;
+      return error;
     }
   }
   async deleteAvatar(userId: string): Promise<any> {
-    
+
     try {
-      const user = await this.prisma.user.findUnique({ where: { id: userId } , include: { profile: true }});
+      const user = await this.prisma.user.findUnique({ where: { id: userId }, include: { profile: true } });
       if (!user) {
         throw new NotFoundException("User not found");
       }
-      const oldAvatar : string =  user.profile.avatar;
+      const oldAvatar: string = user.profile.avatar;
       if (!oldAvatar.startsWith("uploads/default")) {
         const fs = require("fs");
         fs.unlinkSync(oldAvatar);
@@ -109,9 +109,9 @@ export class UploadService {
         data: {
           avatar: "uploads/default/nouser.avif",
         },
-      }); 
+      });
     } catch (error) {
-      throw error;
+      return error;
     }
   }
 }
