@@ -61,8 +61,8 @@ export default function Reload({children,}: {children: React.ReactNode}) {
 					const resp = await axiosInstance.get(`http://${process.env.NEXT_PUBLIC_APP_URL}:3000/api/user/profiles`);
 					if (resp.data === null) {
 						return;
-				}
-				setProfiles(resp.data);
+					}
+					setProfiles(resp.data);
 				}
 				catch (error)
 				{
@@ -145,8 +145,6 @@ export default function Reload({children,}: {children: React.ReactNode}) {
 		getMyChannels();
 		getMyFriends();
 	}, [refresh, user])
-
-
 
     
     return (
