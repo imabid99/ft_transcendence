@@ -210,7 +210,7 @@ const ContextProvider = ({ children }: { children: React.ReactNode; }) => {
 
   useEffect(() => {
     if (!notifSocket) return;
-    console.log("notifSocket : ", notifSocket);
+    console.log("heeere notifSocket");
     notifSocket.on('notification', (payload:any) => {
       console.log("payload : ", payload);
       setMyNotif((prev:any) => [...prev, payload]);

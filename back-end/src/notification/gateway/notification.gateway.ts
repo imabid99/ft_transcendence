@@ -66,24 +66,26 @@ export class NotificationGateway implements OnGatewayConnection, OnGatewayDiscon
       socket.emit("reload");
     });
   }
-
+  
   sendNotification_v2(id: string, data: any) {
     this.socketMap.get(id).forEach(socket => {
+      this.sendRefresh();
       socket.emit('notification', {
         type: data.type,
         message: data.message,
       });
-      this.sendRefresh();
     });
     
   }
 
   sendRefresh() {
-    this.socketMap.forEach((sockets) => {
-      sockets.forEach(socket => {
-        socket.emit("refresh");
+    setTimeout(() => {
+      this.socketMap.forEach((sockets) => {
+        sockets.forEach(socket => {
+          socket.emit("refresh");
+        });
       });
-    });
+    }, 500);
   }
 
   friendRequest(senderId : string , receiverId : string) {
