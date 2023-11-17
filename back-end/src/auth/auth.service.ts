@@ -19,9 +19,9 @@ export class AuthService {
   constructor(
     private prisma: PrismaService,
     private userService: UserService
-  ) {}
+  ) { }
 
-  async login(userData: UserDataLogin) {
+  async login(userData: UserDataLogin): Promise<any> {
     try {
       let user: any;
       if (userData.email) {
@@ -44,7 +44,7 @@ export class AuthService {
         throw new NotFoundException("User not found");
       }
     } catch (error) {
-      throw error;
+      return error;
     }
   }
 
@@ -72,7 +72,7 @@ export class AuthService {
           username: userData.username,
           email: userData.email,
           password: hash,
-          twoFASecret: this.generate2FASecret(),
+          twoFASecret: this.generate2FASecret(userData.username),
           profile: {
             create: {
               firstName: userData.firstName,
@@ -84,14 +84,14 @@ export class AuthService {
         },
       });
     } catch (error) {
-      throw error;
+      return error;
     }
   }
   async generateQR(data: string): Promise<Buffer> {
     return QRCode.toBuffer(data);
   }
 
-  generate2FASecret(): string {
+  generate2FASecret(ussername : string): string {
     const secret = speakeasy.generateSecret({
       length: 20,
       name: `ft_transendance:${uuidv4()}`,
@@ -114,7 +114,7 @@ export class AuthService {
       });
       return this.generateQR(url);
     } catch (error) {
-      throw error;
+      return error;
     }
   }
   async verify2FA(id: string, token: string): Promise<any> {
@@ -137,7 +137,7 @@ export class AuthService {
         throw new BadRequestException("Invalid token");
       }
     } catch (error) {
-      throw error;
+      return error;
     }
   }
   async enable2FA(id: string, token: string): Promise<any> {
@@ -168,7 +168,7 @@ export class AuthService {
         throw new BadRequestException("Invalid token");
       }
     } catch (error) {
-      throw error;
+      return error;
     }
   }
   async disable2FA(id: string, token: string): Promise<any> {
@@ -199,7 +199,7 @@ export class AuthService {
         throw new BadRequestException("Invalid token");
       }
     } catch (error) {
-      throw error;
+      return error;
     }
   }
 
@@ -214,7 +214,7 @@ export class AuthService {
             username: user.username,
             email: user.email,
             id42: user.fortyTwoId,
-            twoFASecret: this.generate2FASecret(),
+            twoFASecret: this.generate2FASecret(user.username),
             password: "42",
             profile: {
               create: {
@@ -244,7 +244,7 @@ export class AuthService {
             username: "user.username",
             email: user.email,
             idGoogle: user.googleId,
-            twoFASecret: this.generate2FASecret(),
+            twoFASecret: this.generate2FASecret(user.email),
             password: "google",
             profile: {
               create: {

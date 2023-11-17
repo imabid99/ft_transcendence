@@ -50,9 +50,9 @@ export class FriendshipService {
         },
       });
       this.notificationGateway.friendRequest(senderId, receiverId);
-      return notification;
+      return ;
     } catch (error) {
-      throw error;
+       return  error;
     }
   }
 
@@ -79,7 +79,7 @@ export class FriendshipService {
       });
       this.notificationGateway.acceptFriendRequest(senderId, receiverId);
     } catch (error) {
-      throw error;
+       return  error;
     }
   }
 
@@ -108,20 +108,26 @@ export class FriendshipService {
       });
       this.notificationGateway.refuseFriendRequest(senderId, receiverId);
     } catch (error) {
-      throw error;
+       return  error;
     }
   }
 
-  async showFriendship(senderId: string, receiverId: string): Promise<void> {
+  async showFriendship(senderId: string, receiverId: string): Promise<any> {
     try {
-      await this.prisma.friendship.findMany({
+      const existingRelationship = await this.prisma.friendship.findFirst({
         where: {
-          senderId,
-          receiverId,
-        }
+          OR: [
+            { senderId, receiverId },
+            { senderId: receiverId, receiverId: senderId },
+          ],
+        },
       });
+      let isFreind : boolean = false;
+      if (existingRelationship && existingRelationship.status === FriendshipStatus.ACCEPTED) 
+          return isFreind = true;
+      return isFreind;
     } catch (error) {
-      throw error;
+       return  error;
     }
   }
 

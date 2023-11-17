@@ -13,7 +13,7 @@ type ChannelProps = {
 
 export default function Channel({avatar, channel, lastMessage, lastMessageTime, notification, active, link}: ChannelProps) {
     return (
-        <Link href={`/Chat/${link}`} className="cursor-pointer w-full flex justify-between items-center " >
+        <Link href={`${link}`} className="cursor-pointer w-full flex justify-between items-center " >
             <div className="flex items-center gap-[14px]">
                 <Avatar url={avatar} status={active}/>
                 <span>
