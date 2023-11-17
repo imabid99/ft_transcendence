@@ -1,5 +1,5 @@
 'use client';
-import Modes from "../../components/Dashboard/Game/Mode/Modes";
+
 import { Canvas, useFrame } from "@react-three/fiber";
 import React, { useRef, useState, useEffect, useMemo, useContext } from "react";
 import {
@@ -461,8 +461,102 @@ const Game = () => {
 
 
   return (
-	<Modes />
-	  
+	<>
+
+	  <Canvas
+		shadows
+		camera={{ fov: 75, near: 0.1, far: 300, position: [0, 10, 20] }}
+	  >
+		{/*<Sparkles
+			count={2000}
+			speed={4}
+			opacity={1} 
+			color={ 0x00ffff }
+			size={Float32Array.from(Array.from({ length: 2000 }, () => Math.random() * (80 - 5) + 10))}
+			scale={250}
+			noise={1000}
+		/>*/}
+
+		{/* <Perf position="bottom-right" /> */}
+		<ambientLight color={"#ffffff"} intensity={1} />
+		<directionalLight
+			position={[-0.04, 4.5, -4]}
+			color={"#ffffff"}
+			intensity={1}
+			castShadow
+			shadow-mapSize={[1024, 1024]}
+			shadow-camera-left={-120}
+			shadow-camera-right={120}
+			shadow-camera-top={120}
+			shadow-camera-bottom={-120}
+			shadow-camera-near={-50}
+			shadow-camera-far={60}
+		/>
+			<Physics>
+				{/* <Debug color="black" scale={1.1}> */}
+					<Plane/>
+					<Player1Paddle/>
+					<Player2Paddle/>
+					<GameBall/>
+					<SideRock1/>
+					<SideRock2/>
+				{/* </Debug> */}
+			</Physics>
+			{/* <mesh rotation-x={-Math.PI * 0.5} scale={[10, 10, 10]} position={[0, -0.1, 0]} receiveShadow> */}
+				{/* <planeGeometry args={[20, 20]} /> */}
+				{/* <circleGeometry args={[16, 50]} /> */}
+				{/* <meshStandardMaterial color={planecolor} /> */}
+			{/* </mesh> */}
+			<mesh receiveShadow rotation-x={- Math.PI * 0.5} position-y={0.02}>
+				<planeGeometry args={[20, 0.2]}/>
+				<meshStandardMaterial color={'#FFFFFF'}/>
+			</mesh>
+			<mesh receiveShadow rotation-x={-Math.PI * 0.5} rotation-z={-Math.PI * 0.5} position-y={0.02}>
+				<planeGeometry args={[20, 0.03]}/>
+				<meshStandardMaterial color={'#FFFFFF'}/>
+			</mesh>
+			<mesh receiveShadow rotation-x={-Math.PI * 0.5} position-y={0.02} position-z={9.95}>
+				<planeGeometry args={[20, 0.1]}/>
+				<meshStandardMaterial color={'#FFFFFF'}/>
+			</mesh>
+			<mesh receiveShadow rotation-x={-Math.PI * 0.5} position-y={0.02} position-z={-9.95}>
+				<planeGeometry args={[20, 0.1]}/>
+				<meshStandardMaterial color={'#FFFFFF'}/>
+			</mesh>
+			{
+				/*
+					map == "forest" && <Forest/> 
+					map == "desert" && <Desert/>
+					map == "snow" && <Snow/>
+				*/
+			}
+
+			
+				{/* {currentMap === 'Desert' && <Desert />}
+				{currentMap === 'Forest' && <Forest />}
+				{currentMap === 'Snow' && <Snow />} */}
+			{/* <Forest/> */}
+			<Desert/>
+			{/* <Snow/> */}
+			<Scoreboard />
+
+		<Sky sunPosition={[-0.07, -0.03, -0.75]} />
+		<OrbitControls  
+			minAzimuthAngle={-Math.PI / 2}
+			maxAzimuthAngle={Math.PI / 2}
+			minPolarAngle={Math.PI / 20}
+			maxPolarAngle={Math.PI - Math.PI / 2}
+			maxDistance={50}
+			minDistance={10}
+			maxZoom={50}
+			minZoom={10}
+			enablePan={false}
+		/>
+		<SoftShadows />
+		{/* <fog attach="fog" color={fogcolor} near={1} far={fogfar} /> */}
+	  </Canvas>
+	  {/* <button onClick={switchMap}>Switch Map</button> */}
+	</>
   );
 };
 
