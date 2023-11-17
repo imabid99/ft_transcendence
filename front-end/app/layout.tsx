@@ -3,6 +3,7 @@ import { Inter } from 'next/font/google'
 import Head from 'next/head'
 import React from 'react'
 import ContextProvider from './contextApi'
+import Reload from './reload'
 const inter = Inter({ subsets: ['latin'] })
 
 export const metadata = {
@@ -26,9 +27,11 @@ export default function RootLayout({
           <link rel="icon" href="/favicon.ico" />
         </Head>
           <div className=' w-[100vw] flex '>
-          <ContextProvider>
-            {children}
-          </ContextProvider>
+            <ContextProvider>
+              <Reload>
+                {children}
+              </Reload>
+            </ContextProvider>
           </div>
         </body>
     </html>
