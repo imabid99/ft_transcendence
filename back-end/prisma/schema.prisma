@@ -56,7 +56,7 @@ model Notification {
   id               String   @id @default(uuid())
   type             String
   message          String
-  actionUserId     String   @unique
+  actionUserId     String  
   actionUserAvatar String?
   actionUserName   String?
   isRead           Boolean  @default(false)
@@ -67,8 +67,8 @@ model Notification {
 
 model Friendship {
   id           String           @id @default(uuid())
-  senderId     String           @unique
-  receiverId   String           @unique
+  senderId     String           
+  receiverId   String           
   status       FriendshipStatus
   actionUserId String
   timestamp    DateTime         @default(now())

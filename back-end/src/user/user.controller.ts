@@ -58,6 +58,7 @@ export class userController {
   @Get("userinfo")
   @UseGuards(AuthGuard("jwt"))
   async getUserInfo(@Req() req): Promise<void> {
+    
     return this.userService.getUserInfo(req.user.id);
   }
   @Delete("delete")
