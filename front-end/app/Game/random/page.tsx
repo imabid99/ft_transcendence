@@ -13,35 +13,45 @@ import {
 import { useControls } from "leva";
 import { Perf } from "r3f-perf";
 import * as THREE from "three";
-import "../globals.css";
+import "../../globals.css";
 import  Model2  from "./model2";
 import  Model3  from "./model3";
 import  Forest  from "./forest";
 import  Desert from "./desert"
 import  Snow from "./snow"
-import { contextdata } from "../contextApi";
+import { contextdata } from "../../contextApi";
+import { io } from "socket.io-client";
 import { Physics, usePlane, useBox, useSphere, Debug} from '@react-three/cannon'
 import { is } from "@react-three/fiber/dist/declarations/src/core/utils";
 
 // map = snow, desert, forest; mode = friend, bot, random
 
-const Game = () => {
-
+const Random = () => {
 
 	const Controls = {
 		left: "left",
 		right: "right",
-	}	
-	
+	}
+
 	const map = useMemo(() => [
 		{ name: Controls.left, keys: ['ArrowLeft'], player: 'player1' },
 		{ name: Controls.right, keys: ['ArrowRight'], playerd: 'player1' },
 		{ name: Controls.left, keys: ['ArrowLeft'], player: 'player2' },
 		{ name: Controls.right, keys: ['ArrowRight'], player: 'player2' },
 	  ], []);
-	
 
+	/// SOCKET MANAGER
 
+	const {profiles, user} :any= useContext(contextdata);
+	const name = `${user?.profile.firstName} ${user?.profile.lastName}`;
+	const socket = io(`http://${process.env.NEXT_PUBLIC_APP_URL}:3000/Game`);
+
+	useEffect(() => {
+		socket.on("connect", () => {console.log(name + " is Connected to server");});
+		socket.on("disconnect", () => {console.log(name + " is Disconnected from server");
+		socket.disconnect();});
+
+	}, []);
 
 	// GUI CONTROLS
 // 	const controls = useControls({});
@@ -53,7 +63,7 @@ const Game = () => {
 	// const { paddlecolor } = useControls("color", { paddlecolor: "#abebff" });
 	// const { fogcolor } = useControls("color", { fogcolor: "#382f21" });
 	// const { fogfar } = useControls("color", { fogfar: 180 });
-		  
+
 	function Plane(props: any) {
 		const [ref, api] = usePlane(() => ({type: "Static", material: { friction: 0 }, args: [20, 20],  rotation: [-Math.PI / 2, 0, 0],...props}), useRef<THREE.Mesh>(null))
 
@@ -70,8 +80,11 @@ const Game = () => {
 		const [ref, api] = useBox(() => ({ mass: 0, type: "Static", material: { restitution: 1.06, friction: 0 },args: [3, 1, 0.3], position: [0, 0.5, 9], ...props }), useRef<THREE.Mesh>(null));
 
 		useEffect(() => {
+		  if (!user) return;
 		  let isMovingLeft = false;
 		  let isMovingRight = false;
+      let touchleft = false;
+      let touchright = false;
 		  let paddleposX = 0;
 		  let targetPosX = paddleposX;
 		  let animationFrameId: number | null = null;
@@ -105,16 +118,51 @@ const Game = () => {
 		  window.addEventListener("keydown", handleKeyDown);
 		  window.addEventListener("keyup", handleKeyUp);
 
-		  
+      // Touch
+
+      const handleTouchStart = (event: TouchEvent) => {
+        event.preventDefault();
+        if (event.touches[0].clientX < window.innerWidth / 2) {
+          touchleft = true;
+        } else {
+          touchright = true;
+        }
+        if (!isUpdating) {
+          isUpdating = true;
+          animationFrameId = requestAnimationFrame(updatePosition);
+        }
+      };
+
+      const handleTouchEnd = (event: TouchEvent) => {
+        event.preventDefault();
+        if (event.changedTouches[0].clientX < window.innerWidth / 2) {
+          touchleft = false;
+        } else {
+          touchright = false;
+        }
+
+        if (!isMovingLeft && !isMovingRight && animationFrameId !== null) {
+          cancelAnimationFrame(animationFrameId);
+          animationFrameId = null;
+          isUpdating = false;
+        }
+      };
+
+      window.addEventListener('touchstart', handleTouchStart);
+      window.addEventListener('touchend', handleTouchEnd);
+
+
+
 		  const updatePosition = () => {
 			if (ref.current) {
-				if (isMovingLeft) {
+				if (isMovingLeft || touchleft) {
 					targetPosX = Math.max(targetPosX - 0.6, -5);
-					} else if (isMovingRight) {
+					} else if (isMovingRight || touchright) {
 						targetPosX = Math.min(targetPosX + 0.6, 5);
 					}
-					const smoothingFactor = 0.4; 
+					const smoothingFactor = 0.4;
 					paddleposX = paddleposX + (targetPosX - paddleposX) * smoothingFactor;
+					socket.emit('paddle-pos', { x: - paddleposX, y: 0.5, z: -9, playerId: socket.id});
 					// setTimeout(() => {
 						api.position.set(paddleposX, 0.5, 9);
 					// }, 5);
@@ -122,17 +170,18 @@ const Game = () => {
 				animationFrameId = requestAnimationFrame(updatePosition);
 		  };
 
-
-	  
 		  return () => {
 			window.removeEventListener("keydown", handleKeyDown);
 			window.removeEventListener("keyup", handleKeyUp);
+      window.removeEventListener('touchstart', handleTouchStart);
+      window.removeEventListener('touchend', handleTouchEnd);
+			socket.off('paddle-pos');
 			if (animationFrameId !== null) {
 				cancelAnimationFrame(animationFrameId);
 			  }
 		  };
-		}, []);
-	  
+		}, [user]);
+
 		return (
 		  <RoundedBox
 			ref={ref}
@@ -149,8 +198,6 @@ const Game = () => {
 		  </RoundedBox>
 		);
 	  }
-	  
-	  
 
 	function Player2Paddle(props: any) {
 		// console.log("P2START");
@@ -169,7 +216,7 @@ const Game = () => {
 					isMovingRight = true;
 				}
 			};
-			
+
 			const handleKeyUp = (event: KeyboardEvent) => {
 				if (event.code === "KeyA") {
 					isMovingLeft = false;
@@ -177,11 +224,10 @@ const Game = () => {
 					isMovingRight = false;
 				}
 			};
-			
+
 			window.addEventListener("keydown", handleKeyDown);
 			window.addEventListener("keyup", handleKeyUp);
-            api.position.set(position.current.x, 0.5, -9);
-			
+
 			// const updatePosition = () => {
 			// 	// if (ref.current) {
 			// 	// 	// if (isMovingLeft) {
@@ -189,20 +235,25 @@ const Game = () => {
 			// 	// 	// 	} else if (isMovingRight) {
 			// 	// 	// 		targetPosX = Math.min(targetPosX + 0.5, 5);
 			// 	// 	// 	}
-			// 	// 	// 	const smoothingFactor = 0.5; 
+			// 	// 	// 	const smoothingFactor = 0.5;
 			// 	// 	// 	paddleposX = paddleposX + (targetPosX - paddleposX) * smoothingFactor;
 			// 	// 	// 	// api.position.set(paddleposX, 0.5, -9);
 			// 	// 	}
-				
+
 			// 	requestAnimationFrame(updatePosition);
 			// };
-			
+
 			// requestAnimationFrame(updatePosition);
-	
-		
+			socket.on('paddle-pos', (data) => {
+				if (data.playerId === socket.id) return;
+				api.position.set(data.x, data.y, data.z);
+			});
+
 			return () => {
 				window.removeEventListener("keydown", handleKeyDown);
 				window.removeEventListener("keyup", handleKeyUp);
+				// socket.off('paddle-move');
+				socket.off('paddle-pos');
 			};
 		}, []);
 
@@ -211,9 +262,9 @@ const Game = () => {
 				ref={ref}
 				args={[3, 1, 0.3]}
 				position={[0, 0.5, -9]}
-				radius={0.15} 
+				radius={0.15}
 				smoothness={4}
-				bevelSegments={4} 
+				bevelSegments={4}
 				creaseAngle={0.4}
 				castShadow
 				receiveShadow
@@ -223,46 +274,79 @@ const Game = () => {
 			);
 	}
 
+
+
 	let hasServed = false;
-	
+
 	const position = useRef(new THREE.Vector3(0, 0, 0));
 
 	function GameBall(props: any) {
 		let direction = 1;
 
-		const [ref, api] = useSphere(() => ({ mass: 1, material: { restitution: 1.06, friction: 0 },args: [0.32, 42, 16], position: [0, 0.35, 0], ...props }), useRef<THREE.Mesh>(null))
+		  const [ref, api] = useSphere(
+      () => ({
+        mass: 1,
+        material: { restitution: 1.06, friction: 0 },
+        args: [0.32, 42, 16],
+        position: [0, 0.35, 0],
+        ...props,
+      }),
+      useRef<THREE.Mesh>(null)
+    );
 
-
+    const speed = useRef(new THREE.Vector3(0, 0, 0));
 
 		useEffect(() => {
 			let isServing = false;
-			
+      let isServingmobile = false;
+
 			const ServeDown = (event: KeyboardEvent) => {
 				if (event.code === 'Space') {
 					isServing = true;
-				}
-			};
-			
-			const ServeUp = (event: KeyboardEvent) => {
-				if (event.code === 'Space') {
-					isServing = false;
+					socket.emit('ball-serve', {isServing: true, isServingmobile:false, direction: -1})
 				}
 			};
 
-			const test = () => {
-			api.position.subscribe((v) => {
-					return (position.current = new THREE.Vector3(v[0], v[1], v[2]));
-				})
-				}	
-			test();
-			
+			const ServeUp = (event: KeyboardEvent) => {
+				if (event.code === 'Space') {
+					isServing = false;
+					socket.emit('ball-serve', {isServing: false, isServingmobile:false, direction: 1})
+				}
+			};
+
+      const handleTouchStart = (event: TouchEvent) => {
+        isServingmobile = true;
+        socket.emit('ball-serve', {isServing: false, isServingmobile:true, direction: -1})
+      };
+  
+      const handleTouchEnd = (event: TouchEvent) => {
+        isServingmobile = false;
+        socket.emit('ball-serve', {isServing: false, isServingmobile:false, direction: 1})
+      };
+
+      const subpos = () => {
+        api.position.subscribe((v) => {
+          return (position.current = new THREE.Vector3(v[0], v[1], v[2]));
+        });
+      };
+      subpos();
+
+      const subspeed = () => {
+        api.velocity.subscribe((v) => {
+          return (speed.current = new THREE.Vector3(v[0], v[1], v[2]));
+        });
+      };
+      subspeed();
+
 			window.addEventListener('keydown', ServeDown);
 			window.addEventListener('keyup', ServeUp);
-			
+      window.addEventListener("touchstart", handleTouchStart);
+      window.addEventListener("touchend", handleTouchEnd);
+
 			const serveball = () => {
 				// const value = Math.random() < 0.5 ? -10 : 10;
 				const value = -5;
-				if(isServing && !hasServed)
+				if((isServing || isServingmobile) && !hasServed)
 				{
 					api.applyImpulse([value * direction, 0, -10 * direction], [0, 0, 0]);
 					hasServed = true;
@@ -273,20 +357,35 @@ const Game = () => {
 					api.velocity.set(0, 0, 0);
 					hasServed = false;
 				}
+        if (speed.current.x < -10)
+          api.velocity.set(-10, speed.current.y, speed.current.z);
+        if (speed.current.x > 10)
+          api.velocity.set(10, speed.current.y, speed.current.z);
+        if (speed.current.z > 25)
+          api.velocity.set(speed.current.x, speed.current.y, 24);
+        if (speed.current.z < -25)
+          api.velocity.set(speed.current.x, speed.current.y, -24);
+
 				requestAnimationFrame(serveball);
 			};
 			requestAnimationFrame(serveball);
 
-	
+			socket.on('ball-serve', (data) => {
+				isServing = data.isServing;
+				isServingmobile = data.isServingmobile;
+				direction = data.direction;
+			});
+
 			return () => {
 				window.removeEventListener('keydown', ServeDown);
 				window.removeEventListener('keyup', ServeUp);
+        window.removeEventListener("touchstart", handleTouchStart);
+        window.removeEventListener("touchend", handleTouchEnd);
 				// socket.off('ballPosition');
+				socket.off('ball-serve');
 			};
 
 			}, []);
-
-
 
 		return (
 			<mesh position={[0, 0.35, 0]} ref={ref} castShadow receiveShadow>
@@ -302,10 +401,10 @@ const Game = () => {
 			args: [10, 3, 20],
 			position: [-11.35, 0.3, 0],
 			material: { restitution: 1.06, friction: 0 }, ...props }), useRef<THREE.Mesh>(null))
-	
+
 		return (
 				<>
-					<Model2/> 
+					<Model2/>
 					<mesh ref={ref}>
 					</mesh>
 				</>
@@ -318,29 +417,28 @@ const Game = () => {
 			args: [10, 3, 20],
 			position: [11.35, 0.3, 0],
 			material: { restitution: 1.06, friction: 0 }, ...props }), useRef<THREE.Mesh>(null))
-	
+
 		return (
 				<>
-					<Model3/> 
+					<Model3/>
 					<mesh ref={ref}>
 					</mesh>
 				</>
 			);
 	}
 
-
 	const Scoreboard = () => {
 		const [p1_count, setP1Count] = useState<number>(0);
 		const [p2_count, setP2Count] = useState<number>(0);
-	  
+
 		let animationFrameId: number | null = null;
-		
+
 		useEffect(() => {
 		  const goalCheck = () => {
 			if (position.current.z > 10) {
 			  setP1Count((prevCount) => prevCount + 1);
 			  position.current.z = 0;
-			  
+
 			}
 			if (position.current.z < -10) {
 				setP2Count((prevCount) => prevCount + 1);
@@ -348,12 +446,11 @@ const Game = () => {
 			}
 			setTimeout(() => {
 				animationFrameId = requestAnimationFrame(goalCheck);
-			}, 20); 
+			}, 20);
 		  };
 
-	  
 		  goalCheck();
-	  
+
 		  return () => {
 			if (animationFrameId !== null) {
 			  cancelAnimationFrame(animationFrameId);
@@ -362,8 +459,15 @@ const Game = () => {
 		}, []);
 
 		useEffect(() => {
+			if(!user) return;
 			if(p1_count === 7 || p2_count === 7)
 			{
+				if(p2_count === 7 )
+				{
+				  console.log(socket.id, p1_count, p2_count);
+				  const payload = {winner: socket.id, winnerscore: p2_count, loserscore: p1_count};
+				  socket.emit('player-wins', payload)
+				}
 				// else
 				// {
 				//   console.log("Opponent Wins!", p1_count, p2_count);
@@ -374,7 +478,13 @@ const Game = () => {
 				setP2Count(0);
 			}
 
-		}, [p1_count, p2_count]);
+		}, [p1_count, p2_count, user]);
+
+		useEffect(() => {
+			socket.on('player-wins', (data) => {
+				console.log("on ",data.winner, " Wins! with " + data.winnerScore + " - " + data.loserScore);
+			});
+		}, []);
 
 		return (
 		  <>
@@ -418,9 +528,8 @@ const Game = () => {
 	//   }
 	// };
 
-
   return (
-	<>
+  <div className="w-full relative">
 
 	  <Canvas
 		shadows
@@ -429,14 +538,14 @@ const Game = () => {
 		{/*<Sparkles
 			count={2000}
 			speed={4}
-			opacity={1} 
+			opacity={1}
 			color={ 0x00ffff }
 			size={Float32Array.from(Array.from({ length: 2000 }, () => Math.random() * (80 - 5) + 10))}
 			scale={250}
 			noise={1000}
 		/>*/}
 
-		{/* <Perf position="bottom-right" /> */}
+		<Perf position="bottom-right" />
 		<ambientLight color={"#ffffff"} intensity={1} />
 		<directionalLight
 			position={[-0.04, 4.5, -4]}
@@ -484,13 +593,12 @@ const Game = () => {
 			</mesh>
 			{
 				/*
-					map == "forest" && <Forest/> 
+					map == "forest" && <Forest/>
 					map == "desert" && <Desert/>
 					map == "snow" && <Snow/>
 				*/
 			}
 
-			
 				{/* {currentMap === 'Desert' && <Desert />}
 				{currentMap === 'Forest' && <Forest />}
 				{currentMap === 'Snow' && <Snow />} */}
@@ -500,7 +608,7 @@ const Game = () => {
 			<Scoreboard />
 
 		<Sky sunPosition={[-0.07, -0.03, -0.75]} />
-		<OrbitControls  
+		<OrbitControls
 			minAzimuthAngle={-Math.PI / 2}
 			maxAzimuthAngle={Math.PI / 2}
 			minPolarAngle={Math.PI / 20}
@@ -515,8 +623,9 @@ const Game = () => {
 		{/* <fog attach="fog" color={fogcolor} near={1} far={fogfar} /> */}
 	  </Canvas>
 	  {/* <button onClick={switchMap}>Switch Map</button> */}
-	</>
+  </div>
   );
 };
 
-export default Game;
+export default Random;
+
