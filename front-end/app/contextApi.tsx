@@ -9,6 +9,9 @@ let newSocket: Socket | null = null;
 let notificationsocket: Socket | null = null;
 export const contextdata = createContext({});
 import { Toaster, toast } from 'sonner'
+
+
+
 const ContextProvider = ({ children }: { children: React.ReactNode; }) => {
   
   const router = useRouter();
@@ -21,6 +24,7 @@ const ContextProvider = ({ children }: { children: React.ReactNode; }) => {
   const [myChannels, setMyChannels] = useState<any>([]);
   const [channels, setChannels] = useState<any>([]);
   const [loged, setLoged] = useState<boolean>(false);
+  const [myFriends, setMyFriends] = useState<any>([]);
   const [mediaDashbord, setMediaDashbord]  = useState<boolean>(false);
   const dashboardRef = React.useRef<HTMLDivElement | null>(null);
 
@@ -167,11 +171,31 @@ const ContextProvider = ({ children }: { children: React.ReactNode; }) => {
         return;
       }
     }
+    async function getMyFriends() {
+      try{
+        const getFriends = async () => {
+            try{
+                const res = await axiosInstance.get(`http://${process.env.NEXT_PUBLIC_APP_URL}:3000/api/friendship/show`);
+                setMyFriends(res.data);
+            }
+            catch(err){
+                console.log(err);
+            }
+        }
+        getFriends();
+    }
+    catch(error)
+    {
+        console.log(error)
+    }
+    }
+
     getChannels();
 		getUsers();
     getProfiles();
     getMessages();
     getMyChannels();
+    getMyFriends();
 		return () => {
 			setUsers([]);
       setProfiles([]);
@@ -182,7 +206,7 @@ const ContextProvider = ({ children }: { children: React.ReactNode; }) => {
 		}
 	}, [user]);
 
-  let [myNotif, setMyNotif] = useState<any>([]);
+  const [myNotif, setMyNotif] = useState<any>([]);
 
   useEffect(() => {
     if (!notifSocket) return;
@@ -217,7 +241,30 @@ const ContextProvider = ({ children }: { children: React.ReactNode; }) => {
   // },[myNotif]);
   // <Toaster />
   return (
-    <contextdata.Provider value={{socket:socket, notifSocket:notifSocket ,dashboardRef:dashboardRef, mediaDashbord:mediaDashbord,user:user, users:users, profiles:profiles , messages:messages,myChannels:myChannels, channels:channels,setChannels:setChannels, setUser:setUser,setMyChannels:setMyChannels, setUsers:setUsers, setProfiles:setProfiles , setMessages:setMessages, setLoged:setLoged , loged:loged, setMediaDashbord:setMediaDashbord}}>
+    <contextdata.Provider value={{
+        socket:socket,
+        notifSocket:notifSocket,
+        dashboardRef:dashboardRef,
+        mediaDashbord:mediaDashbord,
+        user:user,
+        users:users,
+        profiles:profiles,
+        messages:messages,
+        myChannels:myChannels,
+        channels:channels,
+        setChannels:setChannels,
+        setUser:setUser,
+        setMyChannels:setMyChannels,
+        setUsers:setUsers,
+        setProfiles:setProfiles,
+        setMessages:setMessages,
+        setLoged:setLoged,
+        loged:loged,
+        setMediaDashbord:setMediaDashbord,
+        myFriends:myFriends,
+        setMyFriends:setMyFriends,
+      
+      }}>
       <div className='w-full h-full relative'>
         {
           // myNotif.map((notif:any, index:number) => 
@@ -239,16 +286,12 @@ const ContextProvider = ({ children }: { children: React.ReactNode; }) => {
                 // console.log("myNotif : ", myNotif)
             <div className='w-full absolute'>
                 <Toaster position="top-right"  richColors/>
-                {myNotif.length !== 0 && myNotif.map((notif:any, index:number) => (
+                {myNotif.map((notif:any, index:number) => (
                   <div key={index}>
-                    
                     {notif.type === 'success' && toast.success(notif.message)}
-                    {notif.type === 'info' && toast.info(notif.message)}
-                    {notif.type === 'error' && toast.error(notif.message)}
-                    {notif.type === 'warning' && toast.warning(notif.message)}
+                    {notif.type === 'FRIEND_REQUEST' && toast.info(notif.message)}
                   </div>
-                ))
-                }
+                ))}
             </div>
             }
               {/* // <div className='absolute w-[500px] bg-red-500 top-0 right-0 z-[200]'> */}
