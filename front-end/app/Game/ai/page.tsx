@@ -548,17 +548,17 @@ const PlayWithAI = () => {
     );
   };
 
-  // const [currentMap, setCurrentMap] = useState('Desert');
+  const [currentMap, setCurrentMap] = useState('Desert');
 
-  // const switchMap = () => {
-  //   if (currentMap === 'Desert') {
-  // 	setCurrentMap('Forest');
-  //   } else if (currentMap === 'Forest') {
-  // 	setCurrentMap('Snow');
-  //   } else {
-  // 	setCurrentMap('Desert');
-  //   }
-  // };
+  const switchMap = () => {
+    if (currentMap === 'Desert') {
+  	setCurrentMap('Forest');
+    } else if (currentMap === 'Forest') {
+  	setCurrentMap('Snow');
+    } else {
+  	setCurrentMap('Desert');
+    }
+  };
 
   // const MobileControls = () => {
   //     return(
@@ -656,15 +656,15 @@ const PlayWithAI = () => {
           <planeGeometry args={[20, 0.1]} />
           <meshStandardMaterial color={"#FFFFFF"} />
         </mesh>
-        {/*
-					map == "forest" && <Forest/> 
+        
+					{/* map == "forest" && <Forest/> 
 					map == "desert" && <Desert/>
-					map == "snow" && <Snow/>
-				*/}
+					map == "snow" && <Snow/> */}
+				
 
-        {/* {currentMap === 'Desert' && <Desert />}
-				{currentMap === 'Forest' && <Forest />}
-				{currentMap === 'Snow' && <Snow />} */}
+        {/* currentMap === 'Desert' && <Desert />
+				currentMap === 'Forest' && <Forest />
+				currentMap === 'Snow' && <Snow /> */}
         {/* <Forest/> */}
         <Desert />
         {/* <Snow/> */}
