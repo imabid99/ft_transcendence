@@ -40,7 +40,8 @@ export default function Page() {
     const sendRequest = async () => {
         try{
             const res = await axiosInstance.post(`http://${process.env.NEXT_PUBLIC_APP_URL}:3000/api/friendship/request/${UserId}`);
-            console.log(res.data);
+            
+            console.log("this is data",res.data);
         }
         catch(err){
             console.log(err);
