@@ -67,6 +67,25 @@ export class NotificationGateway implements OnGatewayConnection, OnGatewayDiscon
     });
   }
 
+  sendNotification_v2(id: string, data: any) {
+    this.socketMap.get(id).forEach(socket => {
+      socket.emit('notification', {
+        type: data.type,
+        message: data.message,
+      });
+      this.sendRefresh();
+    });
+    
+  }
+
+  sendRefresh() {
+    this.socketMap.forEach((sockets) => {
+      sockets.forEach(socket => {
+        socket.emit("refresh");
+      });
+    });
+  }
+
   friendRequest(senderId : string , receiverId : string) {
     this.sendNotification(receiverId, {type : "info", message : "You have a new friend request"});
     this.sendNotification(senderId, {type : "success", message : "Request sent"});
@@ -82,5 +101,8 @@ export class NotificationGateway implements OnGatewayConnection, OnGatewayDiscon
 
   apiError(userId : string , message : string) {
     this.sendNotification(userId, {type : "error", message});
+  }
+  updated(userId : string) {
+    this.sendNotification_v2(userId, {type : "success", message : "Updated successfully"});
   }
 }
