@@ -7,40 +7,40 @@ import { MatchType, match } from "@prisma/client";
 export class GameService {
     constructor(private prisma: PrismaService) { }
 
-    async createMatch(creator : any, opponent: any, type : MatchType): Promise<string> {
+    async createMatch(creator: any, opponent: any, type: MatchType): Promise<string> {
         try {
             const match = await this.prisma.match.create({
                 data: {
-                  creatorId: creator.userId,
-                  opponentId: opponent.userId,
-                  type,
-                  creatorSocket: creator.client.id,
-                  opponentSocket: opponent.client.id,
+                    creatorId: creator.userId,
+                    opponentId: opponent.userId,
+                    type,
+                    creatorSocket: creator.client.id,
+                    opponentSocket: opponent.client.id,
                 },
-              });
+            });
             return match.id;
         } catch (error) {
-            throw error;
+            return error;
         }
     }
 
-    async getMatch(clientId : string): Promise<match> {
+    async getMatch(clientId: string): Promise<match> {
         try {
             const match = await this.prisma.match.findFirst({
                 where: {
-                  OR: [
-                    { creatorSocket: clientId },
-                    { opponentSocket: clientId },
-                  ],
+                    OR: [
+                        { creatorSocket: clientId },
+                        { opponentSocket: clientId },
+                    ],
                 },
-              })
+            })
             return match;
         } catch (error) {
-            throw error;
+            return error;
         }
     }
 
-    async getMatchById(matchId : string): Promise<match> {
+    async getMatchById(matchId: string): Promise<match> {
         try {
             const match = await this.prisma.match.findUnique({
                 where: {
@@ -49,23 +49,23 @@ export class GameService {
             })
             return match;
         } catch (error) {
-            throw error;
+            return error;
         }
     }
 
-    async submitScore(matchId : string, creatorScore : number, opponentScore : number): Promise<void> {
+    async submitScore(matchId: string, creatorScore: number, opponentScore: number): Promise<void> {
         try {
             const match = await this.prisma.match.update({
                 where: {
-                  id: matchId,
+                    id: matchId,
                 },
                 data: {
-                  creatorScore: creatorScore,
-                  opponentScore: opponentScore,
+                    creatorScore: creatorScore,
+                    opponentScore: opponentScore,
                 },
-              });
+            });
         } catch (error) {
-            throw error;
+            return error;
         }
     }
 }
