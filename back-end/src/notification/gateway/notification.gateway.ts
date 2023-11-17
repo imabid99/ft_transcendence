@@ -68,19 +68,19 @@ export class NotificationGateway implements OnGatewayConnection, OnGatewayDiscon
   }
 
   friendRequest(senderId : string , receiverId : string) {
-    this.sendNotification(receiverId, {type : "FRIEND_REQUEST", message : "You have a new friend request"});
+    this.sendNotification(receiverId, {type : "info", message : "You have a new friend request"});
     this.sendNotification(senderId, {type : "success", message : "Request sent"});
   }
 
   acceptFriendRequest(senderId : string , receiverId : string) {
-    this.sendNotification(receiverId, {type : "success", message : "Friend request accepted"});
+    this.sendNotification(receiverId, {type : "info", message : "Friend request accepted"});
     this.sendNotification(senderId, {type : "success", message : "Friend request accepted"});
   }
   refuseFriendRequest(senderId : string , receiverId : string) {
-    this.sendNotification(receiverId, {type : "success", message : "Friend request refused"});
+    this.sendNotification(receiverId, {type : "warning", message : "Friend request refused"});
   }
 
-  apiError(senderId : string , receiverId : string) {
-    this.sendNotification(receiverId, {type : "success", message : "An error occured"});
+  apiError(userId : string , message : string) {
+    this.sendNotification(userId, {type : "error", message});
   }
 }

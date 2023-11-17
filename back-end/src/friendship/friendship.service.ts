@@ -22,9 +22,11 @@ export class FriendshipService {
         },
       });
       if (existingRelationship && existingRelationship.status === FriendshipStatus.ACCEPTED) {
+        this.notificationGateway.apiError(senderId, "You're already friends with this user");
         throw new ConflictException("You're already friends with this user");
       }
       else if (existingRelationship && existingRelationship.status === FriendshipStatus.PENDING) {
+        this.notificationGateway.apiError(senderId, "You've already sent a friend request to this user");
         throw new ConflictException("You've already sent a friend request to this user");
       }
       console.log("request is ", senderId, receiverId);
