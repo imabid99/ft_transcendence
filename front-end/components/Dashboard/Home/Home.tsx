@@ -2,13 +2,14 @@
 
 import Header from "./Header/Header"
 import Body from "./Body/Body"
-import { useState , useRef, use, useEffect} from 'react'
+import { useState , useRef, use, useEffect, useContext} from 'react'
 import RightModal from "./Modal/Modal"
 import LeaderModal from "./LeaderModal/LeaderModal"
 import User from "./LeaderModal/User"
 import FriendNotifications from "../Notifications/Friend_notifications"
 import AchievementsNotifications from "../Notifications/Achievement_Notifications"
 import axiosInstance from "@/utils/axiosInstance"
+import { contextdata } from "@/app/contextApi"
 export default function Home() {
     const HeadermodalRef = useRef(null);
     const leaderRef = useRef(null);
@@ -18,6 +19,21 @@ export default function Home() {
     const [showModal, setShowModal] = useState(false);
     const [allNotifications, setAllNotifications] = useState<any>([]);
     const [Friends, setFriends] = useState<any>([]);
+    const [reload, setReload] = useState<string>("");
+    const {notifSocket}:any = useContext(contextdata);
+    
+    useEffect(() => {
+        if(!notifSocket)
+            return;
+        console.log("reload");
+        notifSocket.on("reload", () => {
+            // setReload(!reload);
+            setReload(new Date().getTime().toString());
+
+        })
+    }
+    ,[notifSocket])
+
     useEffect(() => {
         try{
             const getNotificatons = async () => {
@@ -37,7 +53,7 @@ export default function Home() {
             console.log(error)
         }
     }
-    ,[])
+    ,[reload])
 
     useEffect(() => {
         try{

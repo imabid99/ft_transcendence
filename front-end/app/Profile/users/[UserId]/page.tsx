@@ -33,6 +33,8 @@ export default function Page() {
     const name = `${profile?.firstName} ${profile?.lastName}`;
     const [isUser, setIsUser] = useState<boolean>(true);
     const [loading, setLoading] = useState<boolean>(true);
+    const {notifSocket}:any = useContext(contextdata);
+    const  [isClicked, setIsClicked] = useState<boolean>(false);
 
 
     const sendRequest = async () => {
@@ -44,10 +46,11 @@ export default function Page() {
             console.log(err);
         }
     }
-
+    const  handleClick = () => {
+        setIsClicked(true);
+        sendRequest();
+    }
     useEffect(() => {
-
-        
         const getProfile = async () => {
             try{
                 const res = await axiosInstance.get(`http://${process.env.NEXT_PUBLIC_APP_URL}:3000/api/user/profile/${UserId}`);
@@ -134,7 +137,8 @@ export default function Page() {
                     </button>
                         </div>
                     <div className="button-container2">
-                    <button onClick={sendRequest} className="w-[30px] h-[29px] rounded-[9px] bg-[#5085AB] flex items-center justify-center gap-[5px]">
+                    {/* <button onClick={handleClick} disabled={isClicked} className="w-[30px] h-[29px] rounded-[9px] bg-[#5085AB] flex items-center justify-center gap-[5px]" > */}
+                    <button onClick={handleClick} disabled={isClicked} className={`w-[30px] h-[29px] rounded-[9px] bg-[#5085AB] flex items-center justify-center gap-[5px]  ${!isClicked ? 'bg-[#5085AB]' : 'bg-[#D0D0D0] cursor-not-allowed '}`} >
                     <svg width="10" height="10" viewBox="0 0 10 10" fill="none" xmlns="http://www.w3.org/2000/svg">
                     <path d="M3.75 6.58694C5.7834 6.58694 7.5 6.93914 7.5 8.29934C7.5 9.65955 5.77239 10 3.75 10C1.7166 10 0 9.64727 0 8.2876C0 6.9274 1.72711 6.58694 3.75 6.58694ZM8.49949 2.63158C8.7476 2.63158 8.94897 2.84708 8.94897 3.11138V3.73045H9.55051C9.79812 3.73045 10 3.94595 10 4.21025C10 4.47455 9.79812 4.69005 9.55051 4.69005H8.94897V5.30968C8.94897 5.57398 8.7476 5.78947 8.49949 5.78947C8.25188 5.78947 8.05 5.57398 8.05 5.30968V4.69005H7.44949C7.20137 4.69005 7 4.47455 7 4.21025C7 3.94595 7.20137 3.73045 7.44949 3.73045H8.05V3.11138C8.05 2.84708 8.25188 2.63158 8.49949 2.63158ZM3.75 0C5.12729 0 6.23132 1.17717 6.23132 2.64571C6.23132 4.11424 5.12729 5.29141 3.75 5.29141C2.37271 5.29141 1.26868 4.11424 1.26868 2.64571C1.26868 1.17717 2.37271 0 3.75 0Z" fill="white"/>
                     </svg>
@@ -300,7 +304,7 @@ export default function Page() {
                     </span>
                 </div>
                 </div>
-                <ImageGrid images={images} />
+                {/* <ImageGrid images={images} /> */}
             </div>
             </div>
         </div>

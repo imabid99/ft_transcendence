@@ -1,4 +1,3 @@
-
 import {
   SubscribeMessage,
   WebSocketGateway,
@@ -11,6 +10,9 @@ import { PrismaService } from "../../prisma/prisma.service";
 import { UserService } from "../../user/user.service";
 import { UseGuards } from '@nestjs/common';
 import { AuthGuard } from "@nestjs/passport";
+import { NotificationService } from "../notification.service";
+import jwt_decode from "jwt-decode";
+import { FriendshipService } from "../../friendship/friendship.service";
 
 @WebSocketGateway({
   cors: {
@@ -22,22 +24,63 @@ import { AuthGuard } from "@nestjs/passport";
 export class NotificationGateway implements OnGatewayConnection, OnGatewayDisconnect {
   constructor(
     private prisma: PrismaService,
-    private userService: UserService
   ) { }
   @WebSocketServer()
   server: SocketIO.Server;
 
   private socketMap: Map<string, Socket[]> = new Map<string, Socket[]>();
 
-  @UseGuards(AuthGuard("jwt"))
   async handleConnection(socket: Socket) {
-   
+    console.log(`Client connected`);
+    const token = socket.handshake.headers.authorization?.split(" ")[1];
+    const user: any = jwt_decode(token);
+    if (user && user.userId) {
+      if (!this.socketMap.has(user.userId)) {
+        this.socketMap.set(user.userId, []);
+      }
+      this.socketMap.get(user.userId).push(socket);
+    }
   }
 
-
-  @UseGuards(AuthGuard("jwt"))
   async handleDisconnect(socket: Socket) {
+    const token = socket.handshake.headers.authorization?.split(" ")[1];
+    const user: any = jwt_decode(token);
+    if (user && user.userId && this.socketMap.has(user.userId)) {
+      const sockets = this.socketMap.get(user.userId);
+      const index = sockets.indexOf(socket);
+      if (index !== -1) {
+        sockets.splice(index, 1);
+      }
+      if (sockets.length === 0) {
+        this.socketMap.delete(user.userId);
+      }
+    }
   }
 
-  
+  sendNotification(id: string, data: any) {
+    this.socketMap.get(id).forEach(socket => {
+      socket.emit('notification', {
+        type: data.type,
+        message: data.message,
+      });
+      socket.emit("reload");
+    });
+  }
+
+  friendRequest(senderId : string , receiverId : string) {
+    this.sendNotification(receiverId, {type : "FRIEND_REQUEST", message : "You have a new friend request"});
+    this.sendNotification(senderId, {type : "success", message : "Request sent"});
+  }
+
+  acceptFriendRequest(senderId : string , receiverId : string) {
+    this.sendNotification(receiverId, {type : "success", message : "Friend request accepted"});
+    this.sendNotification(senderId, {type : "success", message : "Friend request accepted"});
+  }
+  refuseFriendRequest(senderId : string , receiverId : string) {
+    this.sendNotification(receiverId, {type : "success", message : "Friend request refused"});
+  }
+
+  apiError(senderId : string , receiverId : string) {
+    this.sendNotification(receiverId, {type : "success", message : "An error occured"});
+  }
 }

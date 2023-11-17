@@ -21,6 +21,7 @@ import { UploadModule } from "./upload/upload.module";
 import { NotificationModule } from "./notification/notification.module";
 import { GameModule } from "./Game/game.module";
 import { friendshipModule } from "./friendship/friendship.module";
+import { NotificationGateway } from "./notification/gateway/notification.gateway";
 
 @Module({
   imports: [
@@ -32,18 +33,18 @@ import { friendshipModule } from "./friendship/friendship.module";
     }),
     ChatModule,
     UploadModule,
-    NotificationModule,
     GameModule,
     friendshipModule,
     MulterModule.register({
       dest: "./uploads/all",
     }),
   ],
-  controllers: [AppController, userController, authController, friendshipController],
+  controllers: [AppController, userController, authController],
   providers: [
     AppService,
     AuthService,
     UserService,
+    NotificationGateway,
     JwtStrategy,
     GoogleStrategy,
     FortyTwoStrategy,
