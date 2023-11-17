@@ -182,7 +182,7 @@ const ContextProvider = ({ children }: { children: React.ReactNode; }) => {
 		}
 	}, [user]);
 
-  const [myNotif, setMyNotif] = useState<any>([]);
+  let [myNotif, setMyNotif] = useState<any>([]);
 
   useEffect(() => {
     if (!notifSocket) return;
@@ -190,9 +190,14 @@ const ContextProvider = ({ children }: { children: React.ReactNode; }) => {
     notifSocket.on('notification', (payload:any) => {
       console.log("payload : ", payload);
       setMyNotif((prev:any) => [...prev, payload]);
+      setTimeout(() => {
+        setMyNotif([]);
+      }
+      , 100);
     })
     return () => {
-      notifSocket.off('errorNotif');
+      setMyNotif([]);
+      socket.off('notification');
     }
   }
   , [notifSocket]);
@@ -234,12 +239,16 @@ const ContextProvider = ({ children }: { children: React.ReactNode; }) => {
                 // console.log("myNotif : ", myNotif)
             <div className='w-full absolute'>
                 <Toaster position="top-right"  richColors/>
-                {myNotif.map((notif:any, index:number) => (
+                {myNotif.length !== 0 && myNotif.map((notif:any, index:number) => (
                   <div key={index}>
+                    
                     {notif.type === 'success' && toast.success(notif.message)}
-                    {notif.type === 'FRIEND_REQUEST' && toast.info(notif.message)}
+                    {notif.type === 'info' && toast.info(notif.message)}
+                    {notif.type === 'error' && toast.error(notif.message)}
+                    {notif.type === 'warning' && toast.warning(notif.message)}
                   </div>
-                ))}
+                ))
+                }
             </div>
             }
               {/* // <div className='absolute w-[500px] bg-red-500 top-0 right-0 z-[200]'> */}
