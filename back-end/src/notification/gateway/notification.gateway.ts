@@ -77,6 +77,18 @@ export class NotificationGateway implements OnGatewayConnection, OnGatewayDiscon
     });
     
   }
+  sendNotification_v3(id: string, data: any) {
+    this.socketMap.get(id).forEach(socket => {
+      socket.emit('notification', {
+        type: data.type,
+        message: data.message,
+      });
+      socket.emit("reload");
+      setTimeout(() => {
+        socket.emit("refresh");
+      } , 500);
+    });
+  }
 
   sendRefresh() {
     setTimeout(() => {
@@ -94,8 +106,8 @@ export class NotificationGateway implements OnGatewayConnection, OnGatewayDiscon
   }
 
   acceptFriendRequest(senderId : string , receiverId : string) {
-    this.sendNotification(receiverId, {type : "info", message : "Friend request accepted"});
-    this.sendNotification(senderId, {type : "success", message : "Friend request accepted"});
+    this.sendNotification_v3(receiverId, {type : "info", message : "Friend request accepted"});
+    this.sendNotification_v3(senderId, {type : "success", message : "Friend request accepted"});
   }
   refuseFriendRequest(senderId : string , receiverId : string) {
     this.sendNotification(receiverId, {type : "warning", message : "Friend request refused"});
