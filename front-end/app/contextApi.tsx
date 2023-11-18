@@ -8,7 +8,6 @@ import io, { Socket } from 'socket.io-client';
 let newSocket: Socket | null = null;
 let notificationsocket: Socket | null = null;
 export const contextdata = createContext({});
-import { Toaster, toast } from 'sonner'
 
 
 
@@ -206,40 +205,6 @@ const ContextProvider = ({ children }: { children: React.ReactNode; }) => {
 		}
 	}, [user]);
 
-  const [myNotif, setMyNotif] = useState<any>([]);
-
-  useEffect(() => {
-    if (!notifSocket) return;
-    console.log("heeere notifSocket");
-    notifSocket.on('notification', (payload:any) => {
-      console.log("payload : ", payload);
-      setMyNotif((prev:any) => [...prev, payload]);
-      setTimeout(() => {
-        setMyNotif([]);
-      }
-      , 100);
-    })
-    return () => {
-      setMyNotif([]);
-      socket.off('notification');
-    }
-  }
-  , [notifSocket]);
-  // console.log("myNotif : ", myNotif);
-  // <Toaster position="top-right" richColors />
-  // useEffect(() => {
-  //   myNotif.forEach((notif:any) => {
-  //     console.log("notif loop ");
-  //     if (notif.type === 'success') {
-  //       toast.success(notif.message);
-  //     }
-  //     if (notif.type === 'FRIEND_REQUEST') {
-  //       console.log("notif : ", notif);
-  //       toast.info(notif.message);
-  //     }
-  //   });
-  // },[myNotif]);
-  // <Toaster />
   return (
     <contextdata.Provider value={{
         socket:socket,
@@ -265,61 +230,7 @@ const ContextProvider = ({ children }: { children: React.ReactNode; }) => {
         setMyFriends:setMyFriends,
       
       }}>
-      <div className='w-full h-full relative'>
-        {
-          // myNotif.map((notif:any, index:number) => 
-          //   <Toaster position="top-right" richColors />
-          //   console.log("notif loop ");
-            // if (notif.type === 'success') {
-            //   toast.success(notif.message);
-            // }
-            // if (notif.type === 'FRIEND_REQUEST') {
-            //   console.log("notif : ", notif);
-            //   toast.info(notif.message);
-            // }
-          //         <div key={index} >
-          //           {notif.type === 'success' && toast.success(notif.message)}
-          //           {notif.type === 'info' && toast.info(notif.message)}
-          //           <Toaster />
-          //         </div>
-          // })
-                // console.log("myNotif : ", myNotif)
-                <div className='w-full absolute'>
-                <Toaster position="top-right"  richColors/>
-                {myNotif.length !== 0 && myNotif.map((notif:any, index:number) => (
-                  <div key={index}>
-                    
-                    {notif.type === 'success' && toast.success(notif.message)}
-                    {notif.type === 'info' && toast.info(notif.message)}
-                    {notif.type === 'error' && toast.error(notif.message)}
-                    {notif.type === 'warning' && toast.warning(notif.message)}
-                  </div>
-                ))
-                }
-            </div>
-            }
-              {/* // <div className='absolute w-[500px] bg-red-500 top-0 right-0 z-[200]'> */}
-                 {/* {
-              //     myNotif.map((notif:any, index:number) => (
-              //       <div key={index}>
-              //         {notif.message}
-              //         {notif.type}
-              //       </div>
-              //     ))
-              //   } */}
-                                   {/* {
-              //       myNotif.map((notif:any, index:number) => (
-              //         <div key={index} >
-              //           {notif.type === 'success' && toast.success(notif.message)}
-              //           {notif.type === 'info' && toast.info(notif.message)}
-              //           <Toaster />
-              //         </div>
-              //       ))
-              //     } */}
-               {/* </div> */}
-        
         {children}
-      </div>
     </contextdata.Provider>
   );
 }
