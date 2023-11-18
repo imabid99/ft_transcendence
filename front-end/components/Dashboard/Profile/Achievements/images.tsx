@@ -2,17 +2,40 @@ import React, { useState } from 'react';
 import Image from 'next/image';
 import Loading from '@/app/loading';
 import { Blurhash } from 'react-blurhash';
-type ImageType = {
-  src: string;
-  alt: string;
-  className?: string;
-};
+const images = [
+  [
+      { unlocked: 'ach1.svg', locked: 'ach1Lock.svg', alt: 'Ach1' },
+      { unlocked: 'ach2.svg', locked: 'ach2Lock.svg', alt: 'Ach2'},
+  ],
+  [
+      { unlocked: 'ach3.svg', locked: 'ach3Lock.svg', alt: 'Ach3'},
+      { unlocked: 'ach4.svg', locked: 'ach4Lock.svg', alt: 'Ach4'},
+      { unlocked: 'ach5.svg', locked: 'ach5Lock.svg', alt: 'Ach5', className: 'lg:block hidden'},
+  ],
+  [
+      { unlocked: 'ach6.svg', locked: 'ach6Lock.svg', alt: 'Ach6'},
+      { unlocked: 'ach7.svg', locked: 'ach7Lock.svg', alt: 'Ach7'},
+  ],
+  [
+      { unlocked: 'ach5.svg', locked: 'ach5Lock.svg', alt: 'Ach5', className: 'pb-[30px] block lg:hidden'},
+  ],
+];
+// type ImageType = {
+//   src: string;
+//   alt: string;
+//   className?: string;
+// };
 
-type ImageComponentProps = {
-  images: ImageType[][];
-};
+// type ImageComponentProps = {
+//   images: ImageType[][];
+// };
+images.forEach(row => {
+  row.forEach(image => {
+      console.log(image.locked);
+  });
+});
 
-function ImageComponent({ images }: ImageComponentProps) {
+function ImageComponent() {
   const [loading, setLoading] = useState(true);
   const [showImages, setShowImages] = useState(false);
   // const handleImageLoad = () => {
@@ -30,7 +53,8 @@ function ImageComponent({ images }: ImageComponentProps) {
         <div key={rowIndex} className="flex items-center justify-center gap-[30px] flex-col sm:flex-row">
           {imageRow.map((img, imgIndex) => (
             <div key={imgIndex} className="transform hover:scale-110 transition-transform duration-300 relative">
-              <Image src={img.src} alt={img.alt} className={img.className} width={197} height={220} loading="lazy"/>
+              <Image src={img.locked} alt={img.alt} className={img.className} width={197} height={220} loading="lazy"/>
+
             </div>
           ))}
         </div>

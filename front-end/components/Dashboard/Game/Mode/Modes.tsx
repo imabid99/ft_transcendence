@@ -16,7 +16,7 @@ const Modes = ({setShow, onModeChange}:props) => {
     return (
         <>
 
-        <div className="w-[1370px] xl:h-[830px] rounded-[100px] backdrop-blur-[20px] backSh flex gap-[72px] flex-col absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2">
+        <div className="w-[1370px] xl:h-[830px] rounded-[100px] backdrop-blur-[10px] backSh flex gap-[72px] flex-col absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2">
             <div className="w-full flex justify-center pt-[24px]">
             <img src="king.svg" alt="" />
             </div>
@@ -24,7 +24,7 @@ const Modes = ({setShow, onModeChange}:props) => {
             <div className="flex gap-[20px] flex-col lg:flex-row items-center">
                 <div className={`w-[372px] min-h-[201px] rounded-[14px] aiSh relative overflow-hidden cursor-pointer ${selected === 'FRIEND' ? 'border-4 border-white backdrop-blur-[20px] bg-black' : ''}`} onClick={() => handleClick('FRIEND')}>
                 <img
-                    src="forest.svg"
+                    src="play2.jpeg"
                     alt=""
                     className="absolute top-0 left-0 w-full h-full object-cover  z-0 blur-[0.5px]"
                 />
@@ -36,7 +36,7 @@ const Modes = ({setShow, onModeChange}:props) => {
                 <div className={`w-[372px] h-[201px] rounded-[14px] aiSh relative overflow-hidden cursor-pointer ${selected === 'RANDOM' ? 'border-4 border-white backdrop-blur-md'  : ''}`}
             onClick={() => handleClick('RANDOM')}>
                 <img
-                    src="aiimg.svg"
+                    src="playR.jpeg"
                     alt=""
                     className="absolute top-0 left-0 w-full h-full object-cover  z-0 blur-[0.5px]"
                 />
@@ -50,7 +50,7 @@ const Modes = ({setShow, onModeChange}:props) => {
                 <div className={`w-[372px] h-[201px] rounded-[14px] aiSh relative overflow-hidden cursor-pointer ${selected === 'AI' ? 'border-4 border-white backdrop-blur-md' : ''}`}
             onClick={() => handleClick('AI')}>
                 <img
-                    src="aiimg.svg"
+                    src="playai1.jpeg"
                     alt=""
                     className="absolute top-0 left-0 w-full h-full object-cover  z-0 blur-[0.5px]"
                 />
