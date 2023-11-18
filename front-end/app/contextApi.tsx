@@ -210,7 +210,7 @@ const ContextProvider = ({ children }: { children: React.ReactNode; }) => {
 
   useEffect(() => {
     if (!notifSocket) return;
-    console.log("notifSocket : ", notifSocket);
+    console.log("heeere notifSocket");
     notifSocket.on('notification', (payload:any) => {
       console.log("payload : ", payload);
       setMyNotif((prev:any) => [...prev, payload]);
@@ -284,14 +284,18 @@ const ContextProvider = ({ children }: { children: React.ReactNode; }) => {
           //         </div>
           // })
                 // console.log("myNotif : ", myNotif)
-            <div className='w-full absolute'>
+                <div className='w-full absolute'>
                 <Toaster position="top-right"  richColors/>
-                {myNotif.map((notif:any, index:number) => (
+                {myNotif.length !== 0 && myNotif.map((notif:any, index:number) => (
                   <div key={index}>
+                    
                     {notif.type === 'success' && toast.success(notif.message)}
-                    {notif.type === 'FRIEND_REQUEST' && toast.info(notif.message)}
+                    {notif.type === 'info' && toast.info(notif.message)}
+                    {notif.type === 'error' && toast.error(notif.message)}
+                    {notif.type === 'warning' && toast.warning(notif.message)}
                   </div>
-                ))}
+                ))
+                }
             </div>
             }
               {/* // <div className='absolute w-[500px] bg-red-500 top-0 right-0 z-[200]'> */}

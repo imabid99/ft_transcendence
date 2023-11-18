@@ -41,7 +41,7 @@ export default function Page() {
     const sendRequest = async () => {
         try{
             const res = await axiosInstance.post(`http://${process.env.NEXT_PUBLIC_APP_URL}:3000/api/friendship/request/${UserId}`);
-            console.log("res is", res);
+            // console.log("res is", res);
         }
         catch(err){
             console.log(err);
@@ -49,7 +49,7 @@ export default function Page() {
     }
     const checkFriendship = async () => {
         try{
-            const res = await axiosInstance.get(`http://${process.env.NEXT_PUBLIC_APP_URL}:3000/api/friendship/check/${UserId}`);
+            const res = await axiosInstance.get(`http://${process.env.NEXT_PUBLIC_APP_URL}:3000/api/friendship/show/${UserId}`);
             console.log("res is", res);
             if(res.data.isFriend)
             {
@@ -60,6 +60,7 @@ export default function Page() {
             console.log(err);
         }
     }
+    checkFriendship();
     useEffect(() => {
         const getProfile = async () => {
             try{
