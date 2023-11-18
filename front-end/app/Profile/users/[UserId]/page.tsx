@@ -49,9 +49,9 @@ export default function Page() {
     }
     const checkFriendship = async () => {
         try{
-            const res = await axiosInstance.get(`http://${process.env.NEXT_PUBLIC_APP_URL}:3000/api/friendship/check/${UserId}`);
+            const res = await axiosInstance.get(`http://${process.env.NEXT_PUBLIC_APP_URL}:3000/api/friendship/show/${UserId}`);
             console.log("res is", res);
-            if(res.data.isFriend)
+            if(res.data)
             {
                 console.log("res is", res);
                 setIsFriend(true);
@@ -61,6 +61,7 @@ export default function Page() {
             console.log(err);
         }
     }
+    checkFriendship();
     useEffect(() => {
         const getProfile = async () => {
             try{
