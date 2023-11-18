@@ -1,10 +1,11 @@
 import { channels } from './../../node_modules/.prisma/client/index.d';
 import { Injectable, NotFoundException } from "@nestjs/common";
 import { PrismaService } from "../prisma/prisma.service";
+import { NotificationGateway } from 'src/notification/gateway/notification.gateway';
 
 @Injectable()
 export class UploadService {
-  constructor(private prisma: PrismaService) { }
+  constructor(private prisma: PrismaService , private notificationGateway : NotificationGateway) { }
 
   async uploadAvatar(path: string, userId: string): Promise<any> {
     try {
@@ -25,6 +26,7 @@ export class UploadService {
           avatar: path,
         },
       });
+      this.notificationGateway.updated(userId);
     } catch (error) {
       return error;
     }
@@ -37,7 +39,6 @@ export class UploadService {
           userId,
         },
       });
-      return profile.avatar;
     } catch (error) {
       return error;
     }
@@ -52,6 +53,7 @@ export class UploadService {
           cover: path,
         },
       });
+      this.notificationGateway.updated(userId);
     } catch (error) {
       return error;
     }
@@ -110,6 +112,7 @@ export class UploadService {
           avatar: "uploads/default/nouser.avif",
         },
       });
+      this.notificationGateway.updated(userId);
     } catch (error) {
       return error;
     }

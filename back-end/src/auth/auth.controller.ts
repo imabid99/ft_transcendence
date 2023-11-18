@@ -4,6 +4,7 @@ import {
   Get,
   Patch,
   Post,
+  Redirect,
   Req,
   Res,
   UseGuards,
@@ -51,7 +52,7 @@ export class authController {
 
   @Get("oauth2/google/callback")
   @UseGuards(AuthGuard("google"))
-  CallbackGoogle(@Req() req): Promise<string> {
+  CallbackGoogle(@Req() req,@Res() res): Promise<string> {
     return this.userService.googleJWT(req.user.email);
   }
 
