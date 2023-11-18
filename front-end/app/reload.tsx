@@ -9,6 +9,8 @@ import {
 import { useRouter } from 'next/router'
 import { contextdata } from '@/app/contextApi'
 import axiosInstance from '@/utils/axiosInstance';
+import { Toaster, toast } from 'sonner'
+
 
 
 export default function Reload({children,}: {children: React.ReactNode}) {
@@ -24,6 +26,7 @@ export default function Reload({children,}: {children: React.ReactNode}) {
 		notifSocket
 	} :any= useContext(contextdata);
 	const [refresh, setRefresh] = useState<string>("");
+	const [myNotif, setMyNotif] = useState<any>([]);
 
 	useEffect(() => {
 		if (!socket)  return;
@@ -146,10 +149,42 @@ export default function Reload({children,}: {children: React.ReactNode}) {
 		getMyFriends();
 	}, [refresh, user])
 
-    
+
+	useEffect(() => {
+	  if (!notifSocket) return;
+	  console.log("notifSocket : ", notifSocket);
+	  notifSocket.on('notification', (payload:any) => {
+		console.log("payload : ", payload);
+		setMyNotif((prev:any) => [...prev, payload]);
+		setTimeout(() => {
+		  setMyNotif([]);
+		}
+		, 100);
+	  })
+	  return () => {
+		setMyNotif([]);
+		socket.off('notification');
+	  }
+	}
+	, [notifSocket]);
     return (
-        <>
+        <div className='w-full h-ful relative'>
+			{
+            <div className='w-full absolute'>
+				<Toaster position="top-right"  richColors/>
+				{myNotif.length !== 0 && myNotif.map((notif:any, index:number) => (
+				<div key={index}>
+					
+					{notif.type === 'success' && toast.success(notif.message)}
+					{notif.type === 'info' && toast.info(notif.message)}
+					{notif.type === 'error' && toast.error(notif.message)}
+					{notif.type === 'warning' && toast.warning(notif.message)}
+				</div>
+				))
+				}
+			</div>
+			}
             {children}
-        </>
+        </div>
     )
 }
