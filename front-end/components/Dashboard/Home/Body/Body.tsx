@@ -9,8 +9,6 @@ import { type } from "os"
 import { Swiper, SwiperSlide } from 'swiper/react';
 import 'swiper/css';
 import Lottie from "lottie-react"
-import animationData from   "../../../../public/anGhost.json"
-import animationData1 from   "../../../../public/Ghost1.json"
 import animationData2 from   "../../../../public/ghost2.json"
 import { Toaster, toast } from 'sonner'
 
@@ -21,13 +19,6 @@ type Props = {
 export default function Body({ leaderRef, handelShaw }: Props) {
     const {profiles, user, socket}:any = useContext(contextdata);
     const [Friends, setFriends] = useState<any>([]);
-    const slidd = 0;
-    // const myProfile = profiles?.find((profile:any) => profile?.userId === user?.id);
-    // const name = `${myProfile?.firstName} ${myProfile?.lastName}`;
-    // const username = myProfile?.username;
-    // const avatar = myProfile?.avatar;
-    // const online = myProfile?.status;
-    // const cover = myProfile?.cover;
 
     useEffect(() => {
         try{
@@ -47,7 +38,8 @@ export default function Body({ leaderRef, handelShaw }: Props) {
         {
             console.log(error)
         }
-    }, [])
+    }, [profiles])
+    
     return (
         <div className="flex flex-col 3xl:flex-row items-center w-[100%]  h-screen">
             <div className="flex items-center flex-col 3xl:flex-row gap-[40px] 3xl:gap-[150px] w-[100%]  justify-center ">

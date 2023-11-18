@@ -10,7 +10,6 @@ import { contextdata } from "@/app/contextApi";
 import SelectUsersBody from '../group/SelectUsersBody'
 import GroupInfo from '../group/GroupInfo'
 import Search from "../search/Search";
-import axiosInstance from "@/utils/axiosInstance";
 import SearchChat from "./SearchChat";
 
 export default function  LeftSide() {
