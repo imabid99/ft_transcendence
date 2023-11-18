@@ -15,7 +15,6 @@ const ContextProvider = ({ children }: { children: React.ReactNode; }) => {
   
   const router = useRouter();
   const [user, setUser] = useState<any | null>(null);
-  const [users, setUsers] = useState<any>(null);
   const [profiles, setProfiles] = useState<any>(null);
   const [messages, setMessages] = useState<any>([]);
   const [socket, setSocket] = useState<any>(null);
@@ -88,21 +87,6 @@ const ContextProvider = ({ children }: { children: React.ReactNode; }) => {
   useEffect(() => {
     if (!user || user === undefined) {
       return;
-    }
-		async function getUsers() {
-			try
-			{
-				const resp = await axiosInstance.get(`http://${process.env.NEXT_PUBLIC_APP_URL}:3000/api/user/all`);
-        if (resp.data === null) {
-          return;
-        }
-        setUsers(resp.data);
-			}
-			catch (error)
-			{
-				console.log("error : users ",error);
-				return;
-			}
     }
     async function getProfiles() {
       try
@@ -188,15 +172,12 @@ const ContextProvider = ({ children }: { children: React.ReactNode; }) => {
         console.log(error)
     }
     }
-
     getChannels();
-		getUsers();
     getProfiles();
     getMessages();
     getMyChannels();
     getMyFriends();
 		return () => {
-			setUsers([]);
       setProfiles([]);
       setMessages([]);
       setMyChannels([]);
@@ -212,7 +193,6 @@ const ContextProvider = ({ children }: { children: React.ReactNode; }) => {
         dashboardRef:dashboardRef,
         mediaDashbord:mediaDashbord,
         user:user,
-        users:users,
         profiles:profiles,
         messages:messages,
         myChannels:myChannels,
@@ -220,7 +200,6 @@ const ContextProvider = ({ children }: { children: React.ReactNode; }) => {
         setChannels:setChannels,
         setUser:setUser,
         setMyChannels:setMyChannels,
-        setUsers:setUsers,
         setProfiles:setProfiles,
         setMessages:setMessages,
         setLoged:setLoged,

@@ -16,7 +16,6 @@ import { Toaster, toast } from 'sonner'
 export default function Reload({children,}: {children: React.ReactNode}) {
 
 	const {user,
-		setUsers,
 		setProfiles,
 		setMessages,
 		socket,
@@ -43,21 +42,7 @@ export default function Reload({children,}: {children: React.ReactNode}) {
 		if (!user) {
 			return;
 		}
-		async function getUsers() {
-			try
-			{
-				const resp = await axiosInstance.get(`http://${process.env.NEXT_PUBLIC_APP_URL}:3000/api/user/all`);
-					if (resp.data === null) {
-					return;
-				}
-				setUsers(resp.data);
-			}
-			catch (error)
-			{
-				console.log("get : users ",error);
-				return;
-			}
-		}
+
 		async function getProfiles() {
 				try
 				{
@@ -142,7 +127,6 @@ export default function Reload({children,}: {children: React.ReactNode}) {
 		  }
 		  }
 		getChannels();
-		getUsers();
 		getProfiles();
 		getMessages();
 		getMyChannels();
