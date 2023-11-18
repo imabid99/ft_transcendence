@@ -8,7 +8,6 @@ import io, { Socket } from 'socket.io-client';
 let newSocket: Socket | null = null;
 let notificationsocket: Socket | null = null;
 export const contextdata = createContext({});
-import { Toaster, toast } from 'sonner'
 
 
 
@@ -16,7 +15,6 @@ const ContextProvider = ({ children }: { children: React.ReactNode; }) => {
   
   const router = useRouter();
   const [user, setUser] = useState<any | null>(null);
-  const [users, setUsers] = useState<any>(null);
   const [profiles, setProfiles] = useState<any>(null);
   const [messages, setMessages] = useState<any>([]);
   const [socket, setSocket] = useState<any>(null);
@@ -89,21 +87,6 @@ const ContextProvider = ({ children }: { children: React.ReactNode; }) => {
   useEffect(() => {
     if (!user || user === undefined) {
       return;
-    }
-		async function getUsers() {
-			try
-			{
-				const resp = await axiosInstance.get(`http://${process.env.NEXT_PUBLIC_APP_URL}:3000/api/user/all`);
-        if (resp.data === null) {
-          return;
-        }
-        setUsers(resp.data);
-			}
-			catch (error)
-			{
-				console.log("error : users ",error);
-				return;
-			}
     }
     async function getProfiles() {
       try
@@ -189,15 +172,12 @@ const ContextProvider = ({ children }: { children: React.ReactNode; }) => {
         console.log(error)
     }
     }
-
     getChannels();
-		getUsers();
     getProfiles();
     getMessages();
     getMyChannels();
     getMyFriends();
 		return () => {
-			setUsers([]);
       setProfiles([]);
       setMessages([]);
       setMyChannels([]);
@@ -206,40 +186,6 @@ const ContextProvider = ({ children }: { children: React.ReactNode; }) => {
 		}
 	}, [user]);
 
-  const [myNotif, setMyNotif] = useState<any>([]);
-
-  useEffect(() => {
-    if (!notifSocket) return;
-    console.log("notifSocket : ", notifSocket);
-    notifSocket.on('notification', (payload:any) => {
-      console.log("payload : ", payload);
-      setMyNotif((prev:any) => [...prev, payload]);
-      setTimeout(() => {
-        setMyNotif([]);
-      }
-      , 100);
-    })
-    return () => {
-      setMyNotif([]);
-      socket.off('notification');
-    }
-  }
-  , [notifSocket]);
-  // console.log("myNotif : ", myNotif);
-  // <Toaster position="top-right" richColors />
-  // useEffect(() => {
-  //   myNotif.forEach((notif:any) => {
-  //     console.log("notif loop ");
-  //     if (notif.type === 'success') {
-  //       toast.success(notif.message);
-  //     }
-  //     if (notif.type === 'FRIEND_REQUEST') {
-  //       console.log("notif : ", notif);
-  //       toast.info(notif.message);
-  //     }
-  //   });
-  // },[myNotif]);
-  // <Toaster />
   return (
     <contextdata.Provider value={{
         socket:socket,
@@ -247,7 +193,6 @@ const ContextProvider = ({ children }: { children: React.ReactNode; }) => {
         dashboardRef:dashboardRef,
         mediaDashbord:mediaDashbord,
         user:user,
-        users:users,
         profiles:profiles,
         messages:messages,
         myChannels:myChannels,
@@ -255,7 +200,6 @@ const ContextProvider = ({ children }: { children: React.ReactNode; }) => {
         setChannels:setChannels,
         setUser:setUser,
         setMyChannels:setMyChannels,
-        setUsers:setUsers,
         setProfiles:setProfiles,
         setMessages:setMessages,
         setLoged:setLoged,
@@ -265,57 +209,7 @@ const ContextProvider = ({ children }: { children: React.ReactNode; }) => {
         setMyFriends:setMyFriends,
       
       }}>
-      <div className='w-full h-full relative'>
-        {
-          // myNotif.map((notif:any, index:number) => 
-          //   <Toaster position="top-right" richColors />
-          //   console.log("notif loop ");
-            // if (notif.type === 'success') {
-            //   toast.success(notif.message);
-            // }
-            // if (notif.type === 'FRIEND_REQUEST') {
-            //   console.log("notif : ", notif);
-            //   toast.info(notif.message);
-            // }
-          //         <div key={index} >
-          //           {notif.type === 'success' && toast.success(notif.message)}
-          //           {notif.type === 'info' && toast.info(notif.message)}
-          //           <Toaster />
-          //         </div>
-          // })
-                // console.log("myNotif : ", myNotif)
-            <div className='w-full absolute'>
-                <Toaster position="top-right"  richColors/>
-                {myNotif.map((notif:any, index:number) => (
-                  <div key={index}>
-                    {notif.type === 'success' && toast.success(notif.message)}
-                    {notif.type === 'FRIEND_REQUEST' && toast.info(notif.message)}
-                  </div>
-                ))}
-            </div>
-            }
-              {/* // <div className='absolute w-[500px] bg-red-500 top-0 right-0 z-[200]'> */}
-                 {/* {
-              //     myNotif.map((notif:any, index:number) => (
-              //       <div key={index}>
-              //         {notif.message}
-              //         {notif.type}
-              //       </div>
-              //     ))
-              //   } */}
-                                   {/* {
-              //       myNotif.map((notif:any, index:number) => (
-              //         <div key={index} >
-              //           {notif.type === 'success' && toast.success(notif.message)}
-              //           {notif.type === 'info' && toast.info(notif.message)}
-              //           <Toaster />
-              //         </div>
-              //       ))
-              //     } */}
-               {/* </div> */}
-        
         {children}
-      </div>
     </contextdata.Provider>
   );
 }

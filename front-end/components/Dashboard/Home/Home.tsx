@@ -18,7 +18,6 @@ export default function Home() {
     const [show, setShow] = useState(true);
     const [showModal, setShowModal] = useState(false);
     const [allNotifications, setAllNotifications] = useState<any>([]);
-    const [Friends, setFriends] = useState<any>([]);
     const [reload, setReload] = useState<string>("");
     const {notifSocket}:any = useContext(contextdata);
     
@@ -55,24 +54,7 @@ export default function Home() {
     }
     ,[reload])
 
-    useEffect(() => {
-        try{
-            const getFriends = async () => {
-                try{
-                    const res = await axiosInstance.get(`http://${process.env.NEXT_PUBLIC_APP_URL}:3000/api/friendship/show`);
-                    setFriends(res.data);
-                }
-                catch(err){
-                    console.log(err);
-                }
-            }
-            getFriends();
-        }
-        catch(error)
-        {
-            console.log(error)
-        }
-    }, [])
+
     const handelShaw = (Ref: any) => {
         if (Ref.current.classList.contains('hidden'))
         {
