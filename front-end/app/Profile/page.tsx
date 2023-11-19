@@ -27,24 +27,25 @@ import ImageComponent from '../../components/Dashboard/Profile/Achievements/imag
 //     ],
 // ];
 
-const images = [
-    [
-        { src: 'Air.svg', alt: 'Airwa Image' },
-        { src: 'hlock.svg', alt: 'Horrorwh Image'},
-    ],
-    [
-        { src: 'Grand copy.svg', alt: 'Kingwk Image'},
-        { src: 'Grand.svg', alt: 'GWG Image'},
-        { src: 'Luck.svg', alt: 'BWB Image', className: 'lg:block hidden'},
-    ],
-    [
-        { src: 'Unb.svg', alt: 'UNBWB Image'},
-        { src: 'iron.svg', alt: 'Ironwr Image'},
-    ],
-    [
-        { src: 'Luck.svg', alt: 'Luck Image', className: 'pb-[30px] block lg:hidden'},
-    ],
-];
+// const images = [
+//     [
+//         { unlocked: 'ach1.svg', locked: 'ach1_locked.svg', alt: 'Ach1' },
+//         { unlocked: 'ach2.svg', locked: 'ach2_locked.svg', alt: 'Ach2'},
+//     ],
+//     [
+//         { unlocked: 'ach3.svg', locked: 'ach3_locked.svg', alt: 'Ach3'},
+//         { unlocked: 'ach4.svg', locked: 'ach4_locked.svg', alt: 'Ach4'},
+//         { unlocked: 'ach5.svg', locked: 'ach5_locked.svg', alt: 'Ach5', className: 'lg:block hidden'},
+//     ],
+//     [
+//         { unlocked: 'ach6.svg', locked: 'ach6_locked.svg', alt: 'Ach6'},
+//         { unlocked: 'ach7.svg', locked: 'ach7_locked.svg', alt: 'Ach7'},
+//     ],
+//     [
+//         { unlocked: 'ach8.svg', locked: 'ach8_locked.svg', alt: 'Ach5', className: 'pb-[30px] block lg:hidden'},
+//     ],
+// ];
+
 
 
 export default function Page() {
@@ -328,7 +329,7 @@ export default function Page() {
                     </span>
                 </div>
                 </div>
-                {/* <ImageComponent images={images} /> */}
+                <ImageComponent  />
             </div>
             </div>
         </div>

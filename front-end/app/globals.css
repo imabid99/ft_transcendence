@@ -630,6 +630,15 @@ input {
 .backB{
   background: linear-gradient(90deg, rgba(1, 95, 176, 0.84) 21.28%, rgba(0, 137, 255, 0.31) 159.4%);
 }
+
 .retB {
   background: linear-gradient(155deg, rgba(0, 83, 227, 0.4) 9.36%, rgba(0, 0, 0, 0.174) 88.19%);
+}
+.backC {
+  background-color: #14774a; 
+  transition: background-color 0.3s ease; 
+}
+.backC {
+  background-color: #14774a; 
+  transition: background-color 0.3s ease; 
 }
