@@ -62,15 +62,13 @@ const Random = () => {
 		};
 	}, []);
 	
-
 	useEffect(() => {
 		if (!socket) return;
-		socket.on("connect", () => {console.log(name + " is Connected to server");
-			// socket.emit("matchmaking", { client: socket});
-		});
-		socket.on("disconnect", () => {console.log(name + " is Disconnected from server");
-		socket.disconnect();});
-
+		socket.on("connect", () => {socket.emit("matchmaking", { client: socket}), console.log(name + " is Connected to server");
+	});
+	socket.on("disconnect", () => {console.log(name + " is Disconnected from server");
+	socket.disconnect();});
+	
 	}, [socket]);
 
 	// GUI CONTROLS

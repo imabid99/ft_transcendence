@@ -47,10 +47,11 @@ const InviteAFriend = () => {
 	const {profiles, user} :any= useContext(contextdata);
 	const name = `${user?.profile.firstName} ${user?.profile.lastName}`;
 
+
 	useEffect(() => {
 		const newSocket = io(`http://${process.env.NEXT_PUBLIC_APP_URL}:3000/Game`, {
 			extraHeaders: {
-			Authorization: `Bearer ${getLocalStorageItem("Token")}`,
+				Authorization: `Bearer ${getLocalStorageItem("Token")}`,
 			}
 		});
 		if(newSocket)
