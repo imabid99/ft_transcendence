@@ -64,8 +64,8 @@ export default function GroupInfo({setShowBody,setGroupUsers,groupUsers}:GroupIn
                     }
                     const res = await axiosInstance.post(`http://${process.env.NEXT_PUBLIC_APP_URL}:3000/api/upload/channelAvatar/${data.groupId}`,avatar)
                     res && setShowAnimationLoading(false)
-                    res && socket.emit('refresh-event');
                     res && setAvatar(null);
+                    res && socket.emit('refresh-event');
                     res && router.push(`/Chat`)
                 }
                 catch(err){

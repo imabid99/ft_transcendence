@@ -15,10 +15,14 @@ import SearchChat from "./SearchChat";
 export default function  LeftSide() {
 
 	const [showBody, setShowBody] = useState<string | null>(null);
-	const {user, dashboardRef,setMediaDashbord} :any= useContext(contextdata);
+	const {user,profiles, dashboardRef,setMediaDashbord} :any= useContext(contextdata);
 	const [groupUsers, setGroupUsers] = useState<number[]>([]);
     const [showModal, setShowModal] = useState(false);
 
+	const getAvatar = (id:number) => {
+		const profile = profiles.find((profile:any) => profile.user_id === id)
+		return profile?.avatar
+	}
 	return (
 		<>	
 			<div className="chat__left w-[450px]  bg-[#FFF] border-r-[1px] relative overflow-hidden lg:max-xl:w-[350px] lsm:max-lg:w-full"
@@ -38,7 +42,7 @@ export default function  LeftSide() {
 							</div>
 							<div className="flex items-center gap-[10px]">
 								<img
-									src={`http://${process.env.NEXT_PUBLIC_APP_URL}:3000/${user?.profile.avatar}`}
+									src={`http://${process.env.NEXT_PUBLIC_APP_URL}:3000/${getAvatar(user?.id)}`}
 									alt=""
 									className="max-w-[64px] max-h-[64px] min-w-[64px] min-h-[64px] rounded-full object-cover border-[3px] border-[#064A85] border-opacity-25"
 								/>

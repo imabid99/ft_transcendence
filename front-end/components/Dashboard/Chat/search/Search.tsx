@@ -9,11 +9,11 @@ type Props = {
 }
 
 export default function Search({setShowBody}: Props) {
-    const {user, profiles,channels,socket}:any = useContext(contextdata);
+    const {user, myFriends,channels,socket}:any = useContext(contextdata);
     const [isProtected, setIsProtected] = useState<string|null>(null);
     const [password, setPassword] = useState<string>("");
     const router = useRouter()
-    const showUsers = profiles?.filter((ur:any) => {
+    const showUsers = myFriends?.filter((ur:any) => {
         return ur.username === user?.username ? false : true
     })
 

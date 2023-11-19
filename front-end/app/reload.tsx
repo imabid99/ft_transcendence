@@ -22,10 +22,12 @@ export default function Reload({children,}: {children: React.ReactNode}) {
 		setMyChannels,
 		setChannels,
 		setMyFriends,
-		notifSocket
+		notifSocket,
+		setUser,
 	} :any= useContext(contextdata);
 	const [refresh, setRefresh] = useState<string>("");
 	const [myNotif, setMyNotif] = useState<any>([]);
+	const router = useRouter();
 
 	useEffect(() => {
 		if (!socket)  return;
@@ -125,6 +127,7 @@ export default function Reload({children,}: {children: React.ReactNode}) {
 		  {
 			  console.log(error)
 		  }
+
 		  }
 		getChannels();
 		getProfiles();
@@ -136,19 +139,23 @@ export default function Reload({children,}: {children: React.ReactNode}) {
 
 	useEffect(() => {
 	  if (!notifSocket) return;
-	  console.log("notifSocket : ", notifSocket);
-	  notifSocket.on('notification', (payload:any) => {
-		console.log("payload : ", payload);
-		setMyNotif((prev:any) => [...prev, payload]);
-		setTimeout(() => {
-		  setMyNotif([]);
-		}
-		, 100);
-	  })
-	  return () => {
+
+		console.log("notifSocket : ", notifSocket);
+		notifSocket.on('notification', (payload:any) => {
+			console.log("payload : ", payload);
+			setMyNotif((prev:any) => [...prev, payload]);
+			setTimeout(() => {
+			setMyNotif([]);
+			}
+			, 100);
+		})
+		notifSocket.on('start-invite-game', (payload:any) => {
+			router.push(`/game/invite/${payload.gameId}`);
+		})
+		return () => {
 		setMyNotif([]);
 		socket.off('notification');
-	  }
+		}
 	}
 	, [notifSocket]);
     return (
