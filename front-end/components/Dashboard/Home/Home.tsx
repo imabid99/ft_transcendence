@@ -7,6 +7,7 @@ import RightModal from "./Modal/Modal"
 import LeaderModal from "./LeaderModal/LeaderModal"
 import User from "./LeaderModal/User"
 import FriendNotifications from "../Notifications/Friend_notifications"
+import GameNotifications from "../Notifications/Game_notifications"
 import AchievementsNotifications from "../Notifications/Achievement_Notifications"
 import axiosInstance from "@/utils/axiosInstance"
 import { contextdata } from "@/app/contextApi"
@@ -137,10 +138,10 @@ export default function Home() {
                         {
                             return <FriendNotifications name={notif.actionUserName} avatar={notif.actionUserAvatar} userId={notif.actionUserId} notId={notif.id} key={notif.id}/>
                         }
-                        // else if(notif.type === "achievement")
-                        // {
-                        //     return <AchievementsNotifications name={notif.sender.name} avatar={notif.sender.avatar}/>
-                        // }
+                        if(notif.type === "Match_Invitation")
+                        {
+                            return <GameNotifications name={notif.actionUserName} avatar={notif.actionUserAvatar} userId={notif.actionUserId} notId={notif.id} key={notif.id}/>
+                        }
                     })}
                     {/* {Friends.map((friend: any, index: number) => {
                         if(friend.status === "pending")
