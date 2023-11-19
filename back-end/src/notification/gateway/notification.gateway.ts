@@ -66,8 +66,18 @@ export class NotificationGateway implements OnGatewayConnection, OnGatewayDiscon
       socket.emit("reload");
     });
   }
+
+  sendNotification_redirect(id: string, data: any) {
+    this.socketMap.get(id).forEach(socket => {
+      socket.emit('notification', {
+        type: data.type,
+        message: data.message,
+      });
+      socket.emit("redirect", { link : data.link });
+    });
+  }
   
-  sendNotification_v2(id: string, data: any) {
+  sendNotification_refresh(id: string, data: any) {
     this.socketMap.get(id).forEach(socket => {
       this.sendRefresh();
       socket.emit('notification', {
@@ -75,9 +85,9 @@ export class NotificationGateway implements OnGatewayConnection, OnGatewayDiscon
         message: data.message,
       });
     });
-    
   }
-  sendNotification_v3(id: string, data: any) {
+
+  sendNotification_v2(id: string, data: any) {
     this.socketMap.get(id).forEach(socket => {
       socket.emit('notification', {
         type: data.type,
@@ -100,23 +110,38 @@ export class NotificationGateway implements OnGatewayConnection, OnGatewayDiscon
     }, 500);
   }
 
+  async inviteMatch(senderId : string , receiverId : string) {
+    this.sendNotification_v2(receiverId, {type : "info", message : "You have a new match invitation"});
+    this.sendNotification_redirect(senderId, {type : "success", message : "Invitation sent", link : "/Game"});
+  }
+
   friendRequest(senderId : string , receiverId : string) {
     this.sendNotification(receiverId, {type : "info", message : "You have a new friend request"});
     this.sendNotification(senderId, {type : "success", message : "Request sent"});
   }
 
   acceptFriendRequest(senderId : string , receiverId : string) {
-    this.sendNotification_v3(receiverId, {type : "info", message : "Friend request accepted"});
-    this.sendNotification_v3(senderId, {type : "success", message : "Friend request accepted"});
+    this.sendNotification_v2(receiverId, {type : "info", message : "Friend request accepted"});
+    this.sendNotification_v2(senderId, {type : "success", message : "Friend request accepted"});
   }
   refuseFriendRequest(senderId : string , receiverId : string) {
     this.sendNotification(receiverId, {type : "warning", message : "Friend request refused"});
+  }
+
+  acceptMatchRequest(senderId : string , receiverId : string) {
+    this.sendNotification_redirect(receiverId, {type : "info", message : "Match request accepted", link : "/Game"});
+    this.sendNotification_v2(senderId, {type : "success", message : "Match request accepted"});
+  }
+
+  refuseMatchRequest(senderId : string , receiverId : string) {
+    this.sendNotification(senderId, {type : "warning", message : "Match request refused"});
+    this.sendNotification(receiverId, {type : "warning", message : "Match request refused"});
   }
 
   apiError(userId : string , message : string) {
     this.sendNotification(userId, {type : "error", message});
   }
   updated(userId : string) {
-    this.sendNotification_v2(userId, {type : "success", message : "Updated successfully"});
+    this.sendNotification_refresh(userId, {type : "success", message : "Updated successfully"});
   }
 }
