@@ -18,22 +18,6 @@ import { Req, UseGuards } from "@nestjs/common";
 import { AuthGuard } from "@nestjs/passport";
 import { GameService } from "src/Game/game.service";
 
-class GameStateManager {
-  private gameData: any = {}; // Initialize with your game data structure
-
-  updateGame(data: any) {
-    // Update the game state using data received from clients
-    // This could include ball position, paddle positions, scores, etc.
-    // You need to define the structure of `data` based on your game logic.
-    // Update this.gameData accordingly.
-  }
-
-  getGameData() {
-    return this.gameData;
-  }
-}
-
-const gameStateManager = new GameStateManager();
 
 @WebSocketGateway({
   cors: {
@@ -52,6 +36,8 @@ export class GameGateway implements OnGatewayConnection, OnGatewayDisconnect {
   server: SocketIO.Server;
 
   private waitingPlayers: { username: string; userId : string ;client: Socket }[] = [];
+  private socketMap: Map<string, Socket[]> = new Map<string, Socket[]>();
+
   
   private matches: Map<
   string,
@@ -70,9 +56,19 @@ export class GameGateway implements OnGatewayConnection, OnGatewayDisconnect {
     return false;
   }
 
-  @UseGuards(AuthGuard("jwt"))
   async handleConnection(client: Socket) {
-    // console.log("server listening on port 3000");
+    const token = client.handshake.headers.authorization?.split(" ")[1];
+    const user: any = jwt_decode(token);
+    if (user && user.userId) {
+      if (!this.socketMap.has(user.userId)) {
+        this.socketMap.set(user.userId, []);
+      }
+      this.socketMap.get(user.userId).push(client);
+    }
+  }
+
+  @SubscribeMessage("matchmaking")
+  async randomMatchmaking(client: Socket) {
     const token = client.handshake.headers.authorization?.split(" ")[1];
     if (token) {
       const decoded: any = jwt_decode(token);
@@ -103,6 +99,10 @@ export class GameGateway implements OnGatewayConnection, OnGatewayDisconnect {
     }
   }
 
+  // @SubscribeMessage("CreateInvite")
+  // async 
+
+
   handleDisconnect(client: Socket) {
     const token = client.handshake.headers.authorization?.split(" ")[1];
     if (token) {
@@ -119,21 +119,6 @@ export class GameGateway implements OnGatewayConnection, OnGatewayDisconnect {
     this.matches.delete(client.id);
   }
 
-  // @SubscribeMessage("paddle-move")
-  // handlePaddleMove(
-  //   client: Socket,
-  //   payload: { direction: string; moving: boolean; playerId?: string }
-  // ) {
-  //   const match = this.matches.get(client.id);
-  //   if (match) {
-  //     const { matchId, players } = match;
-  //     // if (players[0].client.id === client.id) {
-  //     gameStateManager.updateGame({ paddleMove: payload });
-  //     this.server.to(matchId).emit("paddle-move", payload);
-  //     // }
-  //   }
-  // }
-
   @SubscribeMessage("paddle-pos")
   async handlePaddlePos(
     client: Socket,
@@ -145,15 +130,6 @@ export class GameGateway implements OnGatewayConnection, OnGatewayDisconnect {
     }
   }
 
-  // @SubscribeMessage('ballPosition')
-  // handleBallPosition(client: Socket, payload: {x: number, y: number, z: number}) {
-  //   const match = this.matches.get(client.id);
-  //   if (match) {
-  //     const { matchId, players } = match;
-  //       // this.server.to(matchId).emit('ballPosition', payload);
-  //       client.broadcast.to(matchId).emit('ballPosition', payload);
-  //   }
-  // }
   @SubscribeMessage("ball-serve")
   async handleBallServe(
     client: Socket,

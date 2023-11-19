@@ -22,6 +22,7 @@ import { NotificationModule } from "./notification/notification.module";
 import { GameModule } from "./Game/game.module";
 import { friendshipModule } from "./friendship/friendship.module";
 import { NotificationGateway } from "./notification/gateway/notification.gateway";
+import { GameController } from "./Game/game.controller";
 
 @Module({
   imports: [
@@ -31,9 +32,9 @@ import { NotificationGateway } from "./notification/gateway/notification.gateway
       secret: process.env.JWT_SECRET,
       signOptions: { expiresIn: "1d" },
     }),
+    GameModule,
     ChatModule,
     UploadModule,
-    GameModule,
     friendshipModule,
     MulterModule.register({
       dest: "./uploads/all",

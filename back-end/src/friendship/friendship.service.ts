@@ -52,6 +52,7 @@ export class FriendshipService {
       this.notificationGateway.friendRequest(senderId, receiverId);
       return ;
     } catch (error) {
+       console.log("error is ", error);
        return  error;
     }
   }
