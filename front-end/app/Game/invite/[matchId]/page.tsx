@@ -23,10 +23,12 @@ import { contextdata } from "../../../contextApi";
 import { io } from "socket.io-client";
 import { Physics, usePlane, useBox, useSphere, Debug} from '@react-three/cannon'
 import { is } from "@react-three/fiber/dist/declarations/src/core/utils";
+import { getLocalStorageItem } from "@/utils/localStorage";
 
 // map = snow, desert, forest; mode = friend, bot, random
 
 const InviteAFriend = () => {
+	const [socket, setSocket] = useState<any>(null);
 
 	const Controls = {
 		left: "left",
@@ -44,9 +46,24 @@ const InviteAFriend = () => {
 
 	const {profiles, user} :any= useContext(contextdata);
 	const name = `${user?.profile.firstName} ${user?.profile.lastName}`;
-	const socket = io(`http://${process.env.NEXT_PUBLIC_APP_URL}:3000/Game`);
 
 	useEffect(() => {
+		const newSocket = io(`http://${process.env.NEXT_PUBLIC_APP_URL}:3000/Game`, {
+			extraHeaders: {
+			Authorization: `Bearer ${getLocalStorageItem("Token")}`,
+			}
+		});
+		if(newSocket)
+		{
+			setSocket(newSocket);
+		}
+		return () => {
+			newSocket.disconnect();
+		};
+	}, []);
+
+	useEffect(() => {
+		if (!socket) return;
 		socket.on("connect", () => {console.log(name + " is Connected to server");});
 		socket.on("disconnect", () => {console.log(name + " is Disconnected from server");
 		socket.disconnect();});
@@ -244,7 +261,7 @@ const InviteAFriend = () => {
 			// };
 
 			// requestAnimationFrame(updatePosition);
-			socket.on('paddle-pos', (data) => {
+			socket.on('paddle-pos', (data: any) => {
 				if (data.playerId === socket.id) return;
 				api.position.set(data.x, data.y, data.z);
 			});
@@ -370,7 +387,7 @@ const InviteAFriend = () => {
 			};
 			requestAnimationFrame(serveball);
 
-			socket.on('ball-serve', (data) => {
+			socket.on('ball-serve', (data: any) => {
 				isServing = data.isServing;
 				isServingmobile = data.isServingmobile;
 				direction = data.direction;
@@ -481,7 +498,7 @@ const InviteAFriend = () => {
 		}, [p1_count, p2_count, user]);
 
 		useEffect(() => {
-			socket.on('player-wins', (data) => {
+			socket.on('player-wins', (data: any) => {
 				console.log("on ",data.winner, " Wins! with " + data.winnerScore + " - " + data.loserScore);
 			});
 		}, []);

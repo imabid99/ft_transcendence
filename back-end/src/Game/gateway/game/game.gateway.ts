@@ -74,7 +74,8 @@ export class GameGateway implements OnGatewayConnection, OnGatewayDisconnect {
       const decoded: any = jwt_decode(token);
       const userId = decoded.userId;
       const username = decoded.username;
-      console.log(`Client ${decoded.username} connected`);
+      // console.log(`Client ${decoded.username} connected`);
+      console.log(`User ${username} started matchmaking`);
       const newObject = {
         userId : userId,
         username: username,
