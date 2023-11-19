@@ -149,9 +149,9 @@ export default function Reload({children,}: {children: React.ReactNode}) {
 			}
 			, 100);
 		})
-		// notifSocket.on('start-invite-game', (payload:any) => {
-		// 	router.push(`/game/invite/${payload.gameId}`);
-		// })
+		notifSocket.on('redirect', (payload:any) => {
+			router.push(`${payload.link}`);
+		})
 		return () => {
 			setMyNotif([]);
 			socket.off('notification');
