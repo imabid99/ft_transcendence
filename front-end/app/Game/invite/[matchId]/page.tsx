@@ -13,7 +13,7 @@ import {
 import { useControls } from "leva";
 import { Perf } from "r3f-perf";
 import * as THREE from "three";
-import "../../globals.css";
+import "../../../globals.css";
 import  Model2  from "./model2";
 import  Model3  from "./model3";
 import  Forest  from "./forest";
