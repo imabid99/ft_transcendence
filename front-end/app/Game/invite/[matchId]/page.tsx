@@ -13,13 +13,13 @@ import {
 import { useControls } from "leva";
 import { Perf } from "r3f-perf";
 import * as THREE from "three";
-import "../../globals.css";
+import "../../../globals.css";
 import  Model2  from "./model2";
 import  Model3  from "./model3";
 import  Forest  from "./forest";
 import  Desert from "./desert"
 import  Snow from "./snow"
-import { contextdata } from "../../contextApi";
+import { contextdata } from "../../../contextApi";
 import { io } from "socket.io-client";
 import { Physics, usePlane, useBox, useSphere, Debug} from '@react-three/cannon'
 import { is } from "@react-three/fiber/dist/declarations/src/core/utils";
@@ -27,7 +27,7 @@ import { getLocalStorageItem } from "@/utils/localStorage";
 
 // map = snow, desert, forest; mode = friend, bot, random
 
-const Random = () => {
+const InviteAFriend = () => {
 	const [socket, setSocket] = useState<any>(null);
 
 	const Controls = {
@@ -47,10 +47,11 @@ const Random = () => {
 	const {profiles, user} :any= useContext(contextdata);
 	const name = `${user?.profile.firstName} ${user?.profile.lastName}`;
 
+
 	useEffect(() => {
 		const newSocket = io(`http://${process.env.NEXT_PUBLIC_APP_URL}:3000/Game`, {
 			extraHeaders: {
-			Authorization: `Bearer ${getLocalStorageItem("Token")}`,
+				Authorization: `Bearer ${getLocalStorageItem("Token")}`,
 			}
 		});
 		if(newSocket)
@@ -61,15 +62,14 @@ const Random = () => {
 			newSocket.disconnect();
 		};
 	}, []);
-	
+
 	useEffect(() => {
 		if (!socket) return;
-		socket.on("connect", () => {socket.emit("matchmaking", { client: socket}), console.log(name + " is Connected to server");
-	});
-	socket.on("disconnect", () => {console.log(name + " is Disconnected from server");
-	socket.disconnect();});
-	
-	}, [socket]);
+		socket.on("connect", () => {console.log(name + " is Connected to server");});
+		socket.on("disconnect", () => {console.log(name + " is Disconnected from server");
+		socket.disconnect();});
+
+	}, []);
 
 	// GUI CONTROLS
 // 	const controls = useControls({});
@@ -645,5 +645,5 @@ const Random = () => {
   );
 };
 
-export default Random;
+export default InviteAFriend;
 
