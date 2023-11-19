@@ -32,6 +32,7 @@ export class GameGateway implements OnGatewayConnection, OnGatewayDisconnect {
     private userService: UserService,
     private gameService: GameService
   ) {}
+
   @WebSocketServer()
   server: SocketIO.Server;
 
@@ -56,14 +57,19 @@ export class GameGateway implements OnGatewayConnection, OnGatewayDisconnect {
     return false;
   }
 
-  async handleConnection(client: Socket) {
-    const token = client.handshake.headers.authorization?.split(" ")[1];
-    const user: any = jwt_decode(token);
-    if (user && user.userId) {
-      if (!this.socketMap.has(user.userId)) {
-        this.socketMap.set(user.userId, []);
+  handleConnection(client: Socket) {
+    try {
+
+      const token = client.handshake.headers.authorization?.split(" ")[1];
+      const user: any = jwt_decode(token);
+      if (user && user.userId) {
+        if (!this.socketMap.has(user.userId)) {
+          this.socketMap.set(user.userId, []);
+        }
+        this.socketMap.get(user.userId).push(client);
       }
-      this.socketMap.get(user.userId).push(client);
+    } catch (e) {
+      console.log(e);
     }
   }
 
@@ -98,9 +104,6 @@ export class GameGateway implements OnGatewayConnection, OnGatewayDisconnect {
       }
     }
   }
-
-  // @SubscribeMessage("CreateInvite")
-  // async 
 
 
   handleDisconnect(client: Socket) {
