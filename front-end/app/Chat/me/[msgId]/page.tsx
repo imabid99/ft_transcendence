@@ -27,7 +27,7 @@ export default function Page() {
   const [isIblocked, setIsIblocked] = useState<boolean>(false);
   const [receiver, setReceiver] = useState<any>(null);
   const [isUser, setIsUser] = useState<boolean>(true);
-  const {user,socket} :any= useContext(contextdata);
+  const {user,profiles,socket} :any= useContext(contextdata);
   const inputRef = useRef<HTMLInputElement | null>(null);;
   const router = useRouter();
 
@@ -35,6 +35,7 @@ export default function Page() {
   {
     router.push('/Chat');
   }
+  
   useEffect(() => {
     if(!user || !receiver || !socket) return;
     
