@@ -112,7 +112,7 @@ export class GameGateway implements OnGatewayConnection, OnGatewayDisconnect {
       const index = this.waitingPlayers.findIndex(
         (player) => player.client === client
       );
-      if (index !== -1) {
+      if (index !== -1) { 
         this.waitingPlayers.splice(index, 1);
       }
     }

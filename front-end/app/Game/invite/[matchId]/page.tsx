@@ -19,7 +19,7 @@ import  Model3  from "./model3";
 import  Forest  from "./forest";
 import  Desert from "./desert"
 import  Snow from "./snow"
-import { contextdata } from "../../contextApi";
+import { contextdata } from "../../../contextApi";
 import { io } from "socket.io-client";
 import { Physics, usePlane, useBox, useSphere, Debug} from '@react-three/cannon'
 import { is } from "@react-three/fiber/dist/declarations/src/core/utils";
