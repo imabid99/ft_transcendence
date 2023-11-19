@@ -28,9 +28,16 @@ export default function Page() {
   const [group, setGroup] = useState<any>(null);
   const infoRef = useRef<HTMLInputElement | null>(null);
   const inputRef = useRef<HTMLInputElement | null>(null);;
-  const {user, socket} :any= useContext(contextdata);
+  const {user, profiles, socket} :any= useContext(contextdata);
   
-  
+  const getAvatar = (id: number) => {
+    const profile = profiles.find((profile:any) => profile.userId === id);
+    if (profile) {
+      return profile.avatar;
+    }
+    return null;
+  }
+
   useEffect(() => {
     async function getgroup() {
       try {
@@ -84,7 +91,7 @@ export default function Page() {
 				content: content,
 				createdAt: new Date().toISOString(),
         groupId: msgId,
-        Avatar: user.profile.avatar,
+        Avatar: getAvatar(user.id),
 			},
 		}
 		socket.emit("message-to-group", payload);
@@ -155,7 +162,7 @@ export default function Page() {
           {
             user && messages?.map((message:Message, index) => {
               return (
-                message.fromName !== user.username ? (<LeftMessagesGroup key={`LeftMessagesGroup${index}`} message={message} />) : (<RightMessages key={`RightMessages${index}`} message={message} avatar={user.profile.avatar} />)
+                message.fromName !== user.username ? (<LeftMessagesGroup key={`LeftMessagesGroup${index}`} message={message} />) : (<RightMessages key={`RightMessages${index}`} message={message} avatar={getAvatar(user.id)} />)
               )
             })
           }

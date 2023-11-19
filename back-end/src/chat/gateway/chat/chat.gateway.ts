@@ -11,9 +11,6 @@ import * as jwt from "jsonwebtoken";
 import jwt_decode from "jwt-decode";
 import { PrismaService } from "../../../prisma/prisma.service";
 import { UserService } from "../../../user/user.service";
-import { customStorage } from 'src/upload/multer-config';
-import { UseInterceptors } from '@nestjs/common';
-import { FileInterceptor } from '@nestjs/platform-express';
 
 
 @WebSocketGateway({

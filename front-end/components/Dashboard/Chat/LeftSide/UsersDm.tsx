@@ -9,7 +9,7 @@ type constextType = {
 };
 
 export default function UsersDm() {
-    const {profiles, user, messages} :any= useContext(contextdata);
+    const {myFriends, user, messages} :any= useContext(contextdata);
     messages?.sort((a: any, b: any) => {
       return (
         new Date(a.createdAt).getTime() -
@@ -17,7 +17,7 @@ export default function UsersDm() {
       );
     });
     
-    profiles?.sort((a: any, b: any) => {
+    myFriends?.sort((a: any, b: any) => {
       const lastMessageA = getLastMessage(messages, a.userId);
       if (!lastMessageA) return 1;
       const lastMessageB = getLastMessage(messages, b.userId);
@@ -53,7 +53,7 @@ export default function UsersDm() {
           </span>
           <div className="flex flex-col gap-[20px]  rounded-[5px] w-full">
             {
-              user && profiles?.map((ur: any) => {
+              user && myFriends?.map((ur: any) => {
                 return (
                   ur.userId === user.id  || getLastMessage(messages, ur.userId)?.content === undefined   ?  null : 
                   (<Channel

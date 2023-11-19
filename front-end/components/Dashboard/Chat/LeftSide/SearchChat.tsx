@@ -8,13 +8,13 @@ export default function SearchChat() {
 
 	const inputRef = useRef<HTMLInputElement | null>(null);
 	const [closeSearch, setCloseSearch] = useState<boolean>(true);
-	const { profiles, user } :any= useContext(contextdata);
+	const { myFriends, user } :any= useContext(contextdata);
 	const [users, setUsers] = useState<any>([]);
 	const [showBody, setShowBody] = useState<boolean>(false);
 
 	const handleSearch = (e: any) => {
 		const value = e.target.value;
-		const result = profiles.filter((profile: any) => {
+		const result = myFriends.filter((profile: any) => {
 			if (profile.userId === user.id) return false;
 			return profile.firstName.toLowerCase().includes(value.toLowerCase()) || profile.lastName.toLowerCase().includes(value.toLowerCase())|| profile.username.toLowerCase().includes(value.toLowerCase());
 		});

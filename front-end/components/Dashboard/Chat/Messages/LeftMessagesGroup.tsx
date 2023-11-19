@@ -13,7 +13,7 @@ export default function LeftMessagesGroup({message}: LeftMessagesProps) {
     return (
         <div className="flex gap-[16px] items-start"> 
             <img src={`
-            http://${process.env.NEXT_PUBLIC_APP_URL}:3000/${message?.Avatar}
+                http://${process.env.NEXT_PUBLIC_APP_URL}:3000/${message?.Avatar}
             `} alt="" className="rounded-full min-w-[44px] min-h-[44px]  max-w-[44px] max-h-[44px] self-end mb-[29px] object-cover"/>
             <span className="flex flex-col gap-[6px]">
                 <span className="text-[#AEAEAE] text-[15px] font-[Poppins] font-[500] self-start">{message?.fromName}</span>

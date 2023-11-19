@@ -6,7 +6,7 @@ import {
     useRef,
     useContext,
 } from 'react'
-import { useRouter } from 'next/router'
+import { useRouter } from 'next/navigation'
 import { contextdata } from '@/app/contextApi'
 import axiosInstance from '@/utils/axiosInstance';
 import { Toaster, toast } from 'sonner'
@@ -22,10 +22,12 @@ export default function Reload({children,}: {children: React.ReactNode}) {
 		setMyChannels,
 		setChannels,
 		setMyFriends,
-		notifSocket
+		notifSocket,
+		setUser,
 	} :any= useContext(contextdata);
 	const [refresh, setRefresh] = useState<string>("");
 	const [myNotif, setMyNotif] = useState<any>([]);
+	const router = useRouter();
 
 	useEffect(() => {
 		if (!socket)  return;
@@ -125,6 +127,7 @@ export default function Reload({children,}: {children: React.ReactNode}) {
 		  {
 			  console.log(error)
 		  }
+
 		  }
 		getChannels();
 		getProfiles();
@@ -136,19 +139,23 @@ export default function Reload({children,}: {children: React.ReactNode}) {
 
 	useEffect(() => {
 	  if (!notifSocket) return;
-	  console.log("notifSocket : ", notifSocket);
-	  notifSocket.on('notification', (payload:any) => {
-		console.log("payload : ", payload);
-		setMyNotif((prev:any) => [...prev, payload]);
-		setTimeout(() => {
-		  setMyNotif([]);
+
+		console.log("notifSocket : ", notifSocket);
+		notifSocket.on('notification', (payload:any) => {
+			console.log("payload : ", payload);
+			setMyNotif((prev:any) => [...prev, payload]);
+			setTimeout(() => {
+			setMyNotif([]);
+			}
+			, 100);
+		})
+		notifSocket.on('redirect', (payload:any) => {
+			router.push(`${payload.link}`);
+		})
+		return () => {
+			setMyNotif([]);
+			socket.off('notification');
 		}
-		, 100);
-	  })
-	  return () => {
-		setMyNotif([]);
-		socket.off('notification');
-	  }
 	}
 	, [notifSocket]);
     return (
