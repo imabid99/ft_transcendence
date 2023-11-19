@@ -53,7 +53,7 @@ function ImageComponent() {
         <div key={rowIndex} className="flex items-center justify-center gap-[30px] flex-col sm:flex-row">
           {imageRow.map((img, imgIndex) => (
             <div key={imgIndex} className="transform hover:scale-110 transition-transform duration-300 relative">
-              <Image src={img.locked} alt={img.alt} className={img.className} width={197} height={220} loading="lazy"/>
+              <Image src={img.unlocked} alt={img.alt} className={img.className} width={197} height={220} loading="lazy"/>
 
             </div>
           ))}

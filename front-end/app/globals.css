@@ -634,3 +634,11 @@ input {
 .retB {
   background: linear-gradient(155deg, rgba(0, 83, 227, 0.4) 9.36%, rgba(0, 0, 0, 0.174) 88.19%);
 }
+.backC {
+  background-color: #14774a; 
+  transition: background-color 0.3s ease; 
+}
+.backC {
+  background-color: #14774a; 
+  transition: background-color 0.3s ease; 
+}

@@ -16,7 +16,7 @@ type props  = {
 
 const Maps = ({setShow, onMapChange}:props) => {
     const [selected, setSelected] = useState('');
-    const [videoSource, setVideoSource] = useState('Europa Official Game Reveal Trailer.mp4'); // Set your default video source here
+    const [videoSource, setVideoSource] = useState(""); // Set your default video source here
 
     const handleClick = (map:string) => {
   setSelected(map);
