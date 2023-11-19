@@ -6,7 +6,7 @@ import {
     useRef,
     useContext,
 } from 'react'
-import { useRouter } from 'next/router'
+import { useRouter } from 'next/navigation'
 import { contextdata } from '@/app/contextApi'
 import axiosInstance from '@/utils/axiosInstance';
 import { Toaster, toast } from 'sonner'
@@ -149,12 +149,12 @@ export default function Reload({children,}: {children: React.ReactNode}) {
 			}
 			, 100);
 		})
-		notifSocket.on('start-invite-game', (payload:any) => {
-			router.push(`/game/invite/${payload.gameId}`);
-		})
+		// notifSocket.on('start-invite-game', (payload:any) => {
+		// 	router.push(`/game/invite/${payload.gameId}`);
+		// })
 		return () => {
-		setMyNotif([]);
-		socket.off('notification');
+			setMyNotif([]);
+			socket.off('notification');
 		}
 	}
 	, [notifSocket]);
