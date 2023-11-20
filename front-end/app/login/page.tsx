@@ -93,7 +93,7 @@ export default function Home() {
           </div>
           <form action="" className="flex flex-col items-center gap-[24px] pt-[24px]" onSubmit={handleSubmit}>
             <div className="flex flex-col gap-[16px]">
-              <input onChange={(e) => setEmail(e.target.value)} type="email" className="text-[#064A85] w-[217px] h-[45px] rounded-[11px] border-[1px] border-[#DDDDDD]  p-[27px] sm:w-[376px] md:w-[376px] md:h-[62px]" placeholder="Email or Username" />
+              <input onChange={(e) => setEmail(e.target.value)} type="email" className="text-[#064A85] w-[217px] h-[45px] rounded-[11px] border-[1px] border-[#DDDDDD]  p-[27px] sm:w-[376px] md:w-[376px] md:h-[62px]" placeholder="User name" />
               <input onChange={(e) => setPassword(e.target.value)}  type="password" className="text-[#064A85] w-[217px] h-[45px] rounded-[11px] border-[1px] border-[#DDDDDD]  p-[27px] sm:w-[376px] md:w-[376px] md:h-[62px]" placeholder="Password" />
             </div>
             <button className="w-[217px] h-[53px] bg-gradient-to-r from-cyan-500 to-blue-500 rounded-[11px] text-[#FFF] text-[20px] font-[500] md:h-[68.345px] l-inp">Login</button>
