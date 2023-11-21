@@ -13,6 +13,7 @@ import axiosInstance from '@/utils/axiosInstance';
 import Image from "next/image"
 import Header from '@/components/Dashboard/Setting/Header/Header';
 import Loading from '../loading';
+import {useForm} from 'react-hook-form';
 
 
 export default function Page() {
@@ -23,6 +24,40 @@ export default function Page() {
   const name = `${myProfile?.firstName} ${myProfile?.lastName}`;
   const [showConfi, setShowConfi] = useState(false);
   const [isloading, setIsLoading] = useState(true);
+  const first = myProfile?.firstName;
+  const last = myProfile?.lastName;
+  const ema = myProfile?.email;
+  
+  type FormValues = {
+    firstName: string;
+    lastName: string;
+    email: string;
+    oldpassword: string;
+    newpassword: string;
+    confirmpassword: string;
+  }
+  // type FormValues1 = {
+  //   oldpassword: string;
+  //   newpassword: string;
+  //   confirmpassword: string;
+  // }
+  // console.log("myProfile : ", myProfile);
+ 
+  console.log("user : ", myProfile?.first);
+  const form = useForm<FormValues>({mode: 'all',
+  defaultValues: {
+    firstName: `this is profile ${myProfile?.firstName}`,
+    lastName: myProfile?.lastName,
+    email: myProfile?.email,
+  }});
+  const {register, handleSubmit, formState } = form;
+  const {errors, isDirty} = formState;
+  const form1 = useForm<FormValues>({mode: 'all'});
+  const {register : register1, handleSubmit : handleSubmit1, formState: formState1  } = form1;
+  const {errors: errors1, isDirty : isDirty1} = formState;
+
+
+
 
   useEffect(() => {
     const token = checkLoged();
@@ -92,7 +127,64 @@ export default function Page() {
     }
   }
 
+  const onSubmit = async (data: FormValues) => {
+    console.log(data);
+  }
+  const registerOptions = {
+    firstName: { required: "First name is required",
+    maxLength: {
+      value: 20,
+      message: "should not exceed 20 characters",
+    },
+    minLength: {
+      value: 2,
+      message: "at least 3 characters",
+    },
+    validate: (val:any) =>
+    val?.match(/\p{L}/gu)?.join('') === val || 'must contain only characters'
+    // validate: (value:any) => {
+    //         return (
+    //           [/[a-z]/, /[A-Z]/, /[0-9]/].every((pattern) =>
+    //             pattern.test(value)
+    //           ) || "can contain only letters"
+    //         );
+    //       },
+   },
+    lastName: { required: "Last name is required",
+    maxLength: {
+      value: 20,
+      message: "should not exceed 20 characters",
+    },
+    minLength: {
+      value: 2,
+      message: "at least 3 characters",
+    },
+    validate: (val:any) =>
+        val?.match(/\p{L}/gu)?.join('') === val || 'must contain only characters'
+    // validate: (value:any) => {
+    //   return (
+    //     [/[a-z]/, /[A-Z]/, /[0-9]/].every((pattern) =>
+    //       pattern.test(value)
+    //     ) || "can contain only letters"
+    //   );
+    // },
+   },
 
+    email: { required: "Email is required",
+    pattern: {
+      value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
+      message: "invalid email address"
+    },
+    emailAvailable: async (value:string) => {
+      console.log("emailAvailable", value);
+      const response = await axios.post(`http://${process.env.NEXT_PUBLIC_APP_URL}:3000/api/auth/emailAvailable`, {
+        email: value,
+      });
+      if (response.status !== 200) 
+        return "Email already exists";
+    },
+  },
+  };
 
   return (
     <div className='flex items-center  flex-col  gap-[40px] w-[100%] justify-start 3xl:gap-[160px] 3xl:px-[10px]  '>
@@ -136,30 +228,34 @@ export default function Page() {
               </button>
             </div>
           </div>
-          <form className="items-center flex flex-col gap-[16px]">
+          <form className="items-center flex flex-col gap-[16px]" onSubmit={handleSubmit(onSubmit)} noValidate>
             <div className="flex  gap-[16px] w-11/12 flex-col sm:flex-row">
               <input
-                className="w-full h-[66px] border-[1px] border-[#D8D8D8] rounded-[15px] placeholder:indent-[24px] indent-[24px]"
-                type="text"
-                name=""
+
+className={`w-full h-[66px] border-[1px] border-[#D8D8D8] rounded-[15px] placeholder:indent-[24px] indent-[24px]  ${errors.firstName ? 'border-[2px] border-red-400 placeholder:text-red-400' : 'placeholder:text-white'}` }
+                type="firstName"
                 id=""
                 placeholder="First name"
+                {...register("firstName", registerOptions.firstName)}
               />
               <input
-                className="w-full h-[66px] border-[1px] border-[#D8D8D8] rounded-[15px] placeholder:indent-[24px] indent-[24px]"
-                type="text"
-                name=""
+                 className={`w-full h-[66px] border-[1px] border-[#D8D8D8] rounded-[15px] placeholder:indent-[24px] indent-[24px]  ${errors.lastName ? 'border-[2px] border-red-400 placeholder:text-red-400' : 'placeholder:text-white'}` }
+                // className="w-full h-[66px] border-[1px] border-[#D8D8D8] rounded-[15px] placeholder:indent-[24px] indent-[24px]"
+                type="lastName"
                 id=""
                 placeholder="Last name"
+                {...register("lastName", registerOptions.lastName)}
               />
             </div>
             <div className="w-11/12">
               <input
-                className="w-full sm:w-[49%] h-[66px] border-[1px] border-[#D8D8D8] rounded-[15px] placeholder:indent-[24px] indent-[24px]"
-                type="text"
-                name=""
+              className={`w-full sm:w-[49%] h-[66px] border-[1px] border-[#D8D8D8] rounded-[15px] placeholder:indent-[24px] indent-[24px]  ${errors.email ? 'border-[2px] border-red-400 placeholder:text-red-400' : 'placeholder:text-white'}` }
+                // className="w-full sm:w-[49%] h-[66px] border-[1px] border-[#D8D8D8] rounded-[15px] placeholder:indent-[24px] indent-[24px]"
+                type="email"
+                
                 id=""
                 placeholder="Email"
+                {...register("email", registerOptions.email)}
               />
             </div>
             <div className="flex flex-col sm:flex-row justify-center items-center sm:justify-end gap-[8px] w-11/12 pb-[35px] xl:pb-0">

@@ -97,9 +97,9 @@ export default function Home() {
     password: string;
   }
   
-  const form = useForm<FormValues>();
-  const {register, handleSubmit, watch,formState } = form;
-  const {errors} = formState;
+  const form = useForm<FormValues>({mode: 'all'});
+  const {register, handleSubmit, formState } = form;
+  const {errors, isDirty} = formState;
   const onSubmit = async (data: FormValues) => {
     console.log(data);
     // e.preventDefault();
@@ -121,7 +121,7 @@ export default function Home() {
       return;
     }
   }
-
+  const onError = (errors:any) => console.log(errors);
   // required: "required",
     // maxLength: {
     // value: 15,
@@ -145,6 +145,8 @@ export default function Home() {
       value: 2,
       message: "at least 3 characters",
     },
+    validate: (val:any) =>
+    val?.match(/\p{L}/gu)?.join('') === val || 'must contain only characters'
     // validate: (value:any) => {
     //         return (
     //           [/[a-z]/, /[A-Z]/, /[0-9]/].every((pattern) =>
@@ -162,6 +164,8 @@ export default function Home() {
       value: 2,
       message: "at least 3 characters",
     },
+    validate: (val:any) =>
+        val?.match(/\p{L}/gu)?.join('') === val || 'must contain only characters'
     // validate: (value:any) => {
     //   return (
     //     [/[a-z]/, /[A-Z]/, /[0-9]/].every((pattern) =>
@@ -170,12 +174,30 @@ export default function Home() {
     //   );
     // },
    },
-    userName: { required: "Name is required" },
+    userName: { required: "Name is required",
+    usernameAvailable: async (value:string) => {
+      console.log("usernameAvailable", value);
+      const response = await axios.post(`http://${process.env.NEXT_PUBLIC_APP_URL}:3000/api/auth/usernameAvailable`, {
+        username: value,
+      });
+      if (response.status !== 200) 
+        return "Username already exists";
+    }
+    },
     email: { required: "Email is required",
     pattern: {
       value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
       message: "invalid email address"
-    } },
+    },
+    emailAvailable: async (value:string) => {
+      console.log("emailAvailable", value);
+      const response = await axios.post(`http://${process.env.NEXT_PUBLIC_APP_URL}:3000/api/auth/emailAvailable`, {
+        email: value,
+      });
+      if (response.status !== 200) 
+        return "Email already exists";
+    },
+  },
     password: {
       required: "Password is required",
       minLength: {
@@ -189,9 +211,9 @@ export default function Home() {
           ) || "must include lower, upper, number, and special chars"
         );
       },
+
     }
   };
-  const errorClass = errors.firstName ? 'border-red-500' : '';
   return (
     
     <>
@@ -199,7 +221,7 @@ export default function Home() {
   <div className="h-[100vh] w-[100%] flex justify-around items-center bgImg bg-no-repeat bg-cover bg-center " style={{backgroundImage: 'url("backfilter.svg")'}}> 
     <div className=" w-[100vw]  h-full bg-blue-200 bg-opacity-0 backdrop-blur-[7px] flex flex-row items-center justify-center md:w-11/12 md:max-h-[735px] md:rounded-[61px] xl:max-w-[1404px] xl:mx-auto">
     {/* <div className=" w-[100vw]  h-full bg-white flex flex-row items-center justify-center md:w-11/12 md:max-h-[735px] md:rounded-[61px] xl:max-w-[1404px] xl:mx-auto"> */}
-      <div className="w-[100%] flex flex-col items-center justify-center xl:w-[35%] py-[50px]">
+      <div className="w-[100%] flex flex-col items-center justify-center xl:w-[30%] py-[50px]">
 
         <div className="flex flex-col pt-[20px] gap-[16px] sm:flex-row w-full items-center justify-center">
           <button className="flex justify-evenly items-center w-[170px] h-[52px] border-[0.1px] rounded-[11px] border-white cursor-pointer">
@@ -227,17 +249,17 @@ export default function Home() {
         <div className=" w-full">
           <form
             noValidate
-            onSubmit={handleSubmit(onSubmit)}
+            onSubmit={handleSubmit(onSubmit, onError)}
             action=""
-            className="flex flex-col items-center gap-[24px] pt-[16px]"
+            className="flex flex-col items-center gap-[24px] pt-[16px] "
           >
-            <div className="flex flex-col gap-[16px]  w-[70%] md:w-[50%] xl:w-full">
-              <div className="flex flex-col gap-[16px] sm:flex-row  w-full">
+            <div className="flex flex-col gap-[16px]  w-[70%] md:w-[50%] xl:w-full ">
+              <div className="flex flex-col gap-[10px] justify-between sm:flex-row  w-full ">
                 <div className='pb-[20px]'>
                 <input
                   {...register("firstName", registerOptions.firstName)}
                   type="firstName"
-                  className={`text-white h-[50px] rounded-[11px] border-[0.1px]   p-[27px] w-[100%]  bg-white bg-opacity-10 backdrop-blur-lg  ${errors.firstName ? 'border-[2px] border-red-400 placeholder:text-red-400' : 'placeholder:text-white'}` }                  
+                  className={`text-white h-[50px] rounded-[11px] border-[0.1px]   p-[27px] w-full  bg-white bg-opacity-10 backdrop-blur-lg  ${errors.firstName ? 'border-[2px] border-red-400 placeholder:text-red-400' : 'placeholder:text-white'}` }                  
                   placeholder="First name"
                 />
                 <ErrorMessage message={errors.firstName?.message || ''} />
@@ -246,7 +268,7 @@ export default function Home() {
                 <input
                   {...register("lastName", registerOptions.lastName)}
                   type="lastName"
-                  className={`text-white h-[50px] rounded-[11px] border-[0.1px]   p-[27px] w-[100%]   bg-white bg-opacity-10 backdrop-blur-lg  ${errors.lastName ? 'border-[2px] border-red-400 placeholder:text-red-400' : 'placeholder:text-white'}` }
+                  className={`text-white h-[50px] rounded-[11px] border-[0.1px]   p-[27px] w-full   bg-white bg-opacity-10 backdrop-blur-lg  ${errors.lastName ? 'border-[2px] border-red-400 placeholder:text-red-400' : 'placeholder:text-white'}` }
                   placeholder="Last name"
                   />
                   <ErrorMessage message={errors.lastName?.message || ''} />
@@ -281,7 +303,7 @@ export default function Home() {
               </div>
             </div>
               {/* <p className="text-red-500 text-[15px] ">{errors.firstName?.message}</p> */}
-            <button  className="w-[217px] h-[53px] bg-gradient-to-r from-cyan-500 to-blue-500 rounded-[11px] text-[#FFF] text-[20px] font-[500] md:h-[68.345px] l-inp">Sign up</button>
+            <button disabled={!isDirty} className="w-[217px] h-[53px] bg-gradient-to-r from-cyan-500 to-blue-500 rounded-[11px] text-[#FFF] text-[20px] font-[500] md:h-[68.345px] l-inp">Sign up</button>
           </form>
         </div>
         <div className="flex flex-row items-center gap-[2px] pt-[24px]">
