@@ -61,9 +61,32 @@ export class userController {
     
     return this.userService.getUserInfo(req.user.id);
   }
+
   @Delete("delete")
   @UseGuards(AuthGuard("jwt"))
   async deleteUser(@Req() req): Promise<void> {
     return this.userService.deleteUser(req.user.id);
   }
+
+  @Get("check-username/:username")
+  async checkUsername(@Param("username") username: string): Promise<boolean> {
+    return this.userService.checkUsername(username);
+  }
+
+  @Get("check-email/:email")
+  async checkEmail(@Param("email") email: string): Promise<boolean> {
+    return this.userService.checkEmail(email);
+  }
+
+  @Patch("change-password")
+  async changePassword(@Req() req): Promise<void> {
+    return this.userService.changePassword(req.user.id, req.body);
+  }
+
+  @Patch("change-data")
+  @UseGuards(AuthGuard("jwt"))
+  async changeData(@Req() req): Promise<void> {
+    return this.userService.changeData(req.user.id, req.body);
+  }
+
 }
