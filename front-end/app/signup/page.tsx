@@ -111,10 +111,9 @@ export default function Home() {
         firstName: data.firstName,
         lastName: data.lastName,
         username: data.userName,
-       });
+       });   
        if (response.status !== 200) 
-        router.push('/login');
-       
+       router.push('/login');
     } catch (e:any) 
     {
       console.log("Error : ", e.response.data);
