@@ -31,7 +31,7 @@ export default function Page() {
   const inputRef = useRef<HTMLInputElement | null>(null);;
   const router = useRouter();
 
-  if (user?.id === msgId || (myFriends && !myFriends.find((friend: any) => friend.id === msgId)))
+  if (user?.id === msgId )
   {
     router.push('/Chat');
   }
@@ -150,6 +150,15 @@ export default function Page() {
     }
   }, [messages])
   
+  useEffect(() => {
+    if(!myFriends) return;
+
+    if(!myFriends.find((friend: any) => friend.userId === msgId))
+    {
+      router.push('/Chat');
+    }
+
+    }, [myFriends])
   if(!isUser)
   {
     return <NotUser />
@@ -186,21 +195,24 @@ export default function Page() {
 
 
   const handleBlock = async () => {
-    const payload = {
-      userId: user?.id,
-      blockedId: receiver?.userId,
+    try{
+      const res = await axiosInstance.patch(`http://${process.env.NEXT_PUBLIC_APP_URL}:3000/api/friendship/block/${receiver?.userId}`);
+      console.log(res.data);
     }
-    socket.emit('block-user', payload);
-    setIsBlocked(true);
+    catch(err){
+      console.log(err);
+    }
     setIsIblocked(true);
+    router.push('/Chat');
   }
   const handleUnBlock = async () => {
-    const payload = {
-      userId: user?.id,
-      blockedId: receiver?.userId,
+    try{
+      const res = await axiosInstance.patch(`http://${process.env.NEXT_PUBLIC_APP_URL}:3000/api/friendship/unblock/${receiver?.userId}`);
+      console.log(res.data);
     }
-    socket.emit('unblock-user', payload);
-    setIsBlocked(false);
+    catch(err){
+      console.log(err);
+    }
     setIsIblocked(false);
   }
   

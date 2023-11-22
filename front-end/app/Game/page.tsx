@@ -3,7 +3,7 @@ import Modes from "@/components/Dashboard/Game/Mode/Modes";
 import { useState, useEffect } from "react";
 import Maps from "@/components/Dashboard/Game/Map/Maps";
 import { useRouter } from 'next/navigation';
-
+import FriendSearch from "@/components/Dashboard/Game/Friend_Search/Friend_Search";
 const Game = () => {
     const [Show, setShow] = useState<string | null>(null);
     const [selectedMap, setSelectedMap] = useState<string | null>(null);
@@ -37,9 +37,9 @@ const Game = () => {
 					/>
 			</div>
 			{
-				Show == null ? <Modes setShow={setShow} onModeChange={handleModeChange} />
+				Show == null ? <Maps setShow={setShow} onMapChange={handleMapChange} />
 				:
-				Show == 'map' && <Maps setShow={setShow} onMapChange={handleMapChange} />
+				Show == 'map' && <FriendSearch  />
 				// :
 				// Show == 'slect' && <Select />
 			}

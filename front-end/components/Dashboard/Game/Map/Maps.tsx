@@ -37,7 +37,7 @@ const Maps = ({setShow, onMapChange}:props) => {
                     data-wf-ignore={true}
                 />
         </div>
-        <div className="w-[1370px] xl:h-[830px] rounded-[100px] backdrop-blur-[10px] backSh flex gap-[72px] flex-col absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2">
+        <div className="w-[100%] max-w-[1370px] xl:h-[830px] rounded-[100px] backdrop-blur-[10px] backSh flex gap-[72px] flex-col absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2">
             <div className="w-full flex justify-center pt-[24px]">
             <img src="king.svg" alt="" />
             </div>

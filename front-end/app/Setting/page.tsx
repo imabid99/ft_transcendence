@@ -13,6 +13,7 @@ import axiosInstance from '@/utils/axiosInstance';
 import Image from "next/image"
 import Header from '@/components/Dashboard/Setting/Header/Header';
 import Loading from '../loading';
+import {useForm} from 'react-hook-form';
 
 
 export default function Page() {
@@ -23,6 +24,36 @@ export default function Page() {
   const name = `${myProfile?.firstName} ${myProfile?.lastName}`;
   const [showConfi, setShowConfi] = useState(false);
   const [isloading, setIsLoading] = useState(true);
+  const first = myProfile?.firstName;
+  const last = myProfile?.lastName;
+  const ema = myProfile?.email;
+  
+  type FormValues = {
+    firstName: string;
+    lastName: string;
+    email: string;
+    oldpassword: string;
+    newpassword: string;
+    confirmpassword: string;
+    twofactory: string;
+  }
+  // type FormValues1 = {
+  //   oldpassword: string;
+  //   newpassword: string;
+  //   confirmpassword: string;
+  // }
+  const form = useForm<FormValues>({mode: 'all'});
+  const {register, handleSubmit, formState, watch } = form;
+  const {errors, isDirty} = formState;
+  const form1 = useForm<FormValues>({});
+  const {register : register1, handleSubmit : handleSubmit1, formState: formState1,watch : watch1  } = form1;
+  const {errors: errors1, isDirty : isDirty1} = formState1;
+  const form2 = useForm<FormValues>({});
+  const {register : register2, handleSubmit : handleSubmit2, formState: formState2,watch : watch2  } = form2;
+  const {errors: errors2, isDirty : isDirty2} = formState2;
+
+
+
 
   useEffect(() => {
     const token = checkLoged();
@@ -55,6 +86,7 @@ export default function Page() {
   if (isloading) {
     return <Loading />;
   }
+
   function handleFileInputChange(e:any) 
   {
     const file = e.target.files?.[0];
@@ -69,6 +101,7 @@ export default function Page() {
     });
   }
   const avatarUrl = `http://${process.env.NEXT_PUBLIC_APP_URL}:3000/${myProfile?.avatar}`;
+  
   function deleteAvatar() {
     axiosInstance.delete(`http://${process.env.NEXT_PUBLIC_APP_URL}:3000/api/upload/userAvatar`).then((res) => {
       })
@@ -76,7 +109,6 @@ export default function Page() {
         console.log(err);
       });
   }
-
 
   const deleteUser = async (e : any) => {
     e.preventDefault();
@@ -92,7 +124,175 @@ export default function Page() {
     }
   }
 
+  const onSubmit = async (data: FormValues) => {
+    console.log(data);
+    try {
+      const response = await axiosInstance.patch(`http://${process.env.NEXT_PUBLIC_APP_URL}:3000/api/user/change-data`, {
+        email: data.email,
+        firstName: data.firstName,
+        lastName: data.lastName,
+       });   
+       console.log(response);
+    } catch (e:any) 
+    {
+      console.log("Error : ", e.response.data);
+      return;
+    }
+  }
+  const onError = (errors:any) => console.log(errors);
 
+  const onSubmit1 = async (data: FormValues) => {
+    console.log(data);
+    try {
+      const response = await axiosInstance.patch(`http://${process.env.NEXT_PUBLIC_APP_URL}:3000/api/user/change-password`, {
+        oldPassword: data.oldpassword,
+        newPassword: data.newpassword,
+       });   
+       console.log(response);
+    } catch (e:any) 
+    {
+      console.log("Error : ", e.response.data);
+      return;
+    }
+  }
+  const onSubmit2 = async (data: FormValues) => {
+    console.log(data);
+    try {
+      const response = await axiosInstance.patch(`http://${process.env.NEXT_PUBLIC_APP_URL}:3000/api/auth/2fa_enable`, {
+        twofactory : data.twofactory,
+       });   
+       console.log(response);
+    } catch (e:any) 
+    {
+      console.log("Error : ", e.response.data);
+      return;
+    }
+  }
+  const registerOptions = {
+    firstName: { required: "First name is required",
+    maxLength: {
+      value: 20,
+      message: "should not exceed 20 characters",
+    },
+    minLength: {
+      value: 2,
+      message: "at least 3 characters",
+    },
+    validate: (val:any) =>
+    val?.match(/\p{L}/gu)?.join('') === val || 'must contain only characters'
+   },
+    lastName: { required: "Last name is required",
+    maxLength: {
+      value: 20,
+      message: "should not exceed 20 characters",
+    },
+    minLength: {
+      value: 2,
+      message: "at least 3 characters",
+    },
+    validate: (val:any) =>
+        val?.match(/\p{L}/gu)?.join('') === val || 'must contain only characters'
+   },
+    email: { required: "Email is required",
+    pattern: {
+      value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
+      message: "invalid email address"
+    },
+    emailAvailable: async (value:string) => {
+      console.log("emailAvailable", value);
+      const response = await axios.post(`http://${process.env.NEXT_PUBLIC_APP_URL}:3000/api/auth/emailAvailable`, {
+        email: value,
+      });
+      if (response.status !== 200) 
+        return "Email already exists";
+    },
+  },
+  newpassword: {
+    required: "Password is required",
+    minLength: {
+      value: 8,
+      message: "Password must have at least 8 characters"
+    },
+    validate: (value:string) => {
+      return (
+        [/[a-z]/, /[A-Z]/, /[0-9]/, /[^a-zA-Z0-9]/].every((pattern) =>
+          pattern.test(value)
+        ) || "must include lower, upper, number, and special chars"
+      );
+    },
+
+  },
+  oldpassword: {
+    required: "Password is required",
+    minLength: {
+      value: 8,
+      message: "Password must have at least 8 characters"
+    },
+    validate: async (value:string) => {
+      console.log("oldpassword", value);
+      const response = await axiosInstance.post(`http://${process.env.NEXT_PUBLIC_APP_URL}:3000/api/user/check-password`, {
+        password : value,
+      });
+      console.log(response);
+      if (response.data !== true) 
+        return "old password incorrect";
+    }
+  },
+
+  confirmpassword: {
+    required: "Password is required",
+    minLength: {
+      value: 8,
+      message: "Password must have at least 8 characters"
+    },
+    validate: (val: string) => {
+      if (watch1('newpassword') != val) {
+        return "Your passwords do no match";
+      }
+    },
+  },
+
+  twofactory: {
+    required: "is required",
+    minLength: {
+      value: 6,
+      message: "must have at least 8 characters"
+    },
+    validate: async (value:string) => {
+      console.log("oldpassword", value);
+      const response = await axiosInstance.patch(`http://${process.env.NEXT_PUBLIC_APP_URL}:3000/api/auth/2fa_enable`, {
+        twofactory : value,
+      });
+      console.log(response);
+      if (response.data !== true) 
+        return "two factory incorrect";
+    }
+  },
+
+  };
+
+  // const { register : register2, handleSubmit : handleSubmit2 } = useForm();
+  // const [verificationCode, setVerificationCode] = useState(Array(6).fill(''));
+
+  // const handleInputChange = (index : any, e:any) => {
+  //   const value = e.target.value;
+  //   setVerificationCode((prevCodes) => {
+  //     const newCodes = [...prevCodes];
+  //     newCodes[index] = value;
+
+  //     // Move focus to the next input
+  //     if (index < newCodes.length - 1 && value !== '') {
+  //       document.getElementById(`code${index + 1}`)?.focus();
+  //     }
+
+  //     return newCodes;
+  //   });
+  // };
+
+  // const onSubmit2 = (data:any) => {
+  //   // Handle form submission, e.g., enable or disable two-factor authentication
+  //   console.log("haelashkf",data);
+  // };
 
   return (
     <div className='flex items-center  flex-col  gap-[40px] w-[100%] justify-start 3xl:gap-[160px] 3xl:px-[10px]  '>
@@ -136,38 +336,36 @@ export default function Page() {
               </button>
             </div>
           </div>
-          <form className="items-center flex flex-col gap-[16px]">
+          <form className="items-center flex flex-col gap-[16px]" onSubmit={handleSubmit(onSubmit, onError)} noValidate>
             <div className="flex  gap-[16px] w-11/12 flex-col sm:flex-row">
               <input
-                className="w-full h-[66px] border-[1px] border-[#D8D8D8] rounded-[15px] placeholder:indent-[24px] indent-[24px]"
-                type="text"
-                name=""
+
+              className={`w-full h-[66px] border-[1px] border-[#D8D8D8] rounded-[15px] placeholder:indent-[24px] indent-[24px]  ${errors.firstName ? 'border-[2px] border-red-400 placeholder:text-red-400' : ""}` }
+                type="firstName"
                 id=""
                 placeholder="First name"
+                {...register("firstName", registerOptions.firstName)}
               />
               <input
-                className="w-full h-[66px] border-[1px] border-[#D8D8D8] rounded-[15px] placeholder:indent-[24px] indent-[24px]"
-                type="text"
-                name=""
+                className={`w-full h-[66px] border-[1px] border-[#D8D8D8] rounded-[15px] placeholder:indent-[24px] indent-[24px]  ${errors.lastName ? 'border-[2px] border-red-400 placeholder:text-red-400' : ""}` }
+                type="lastName"
                 id=""
                 placeholder="Last name"
+                {...register("lastName", registerOptions.lastName)}
               />
             </div>
             <div className="w-11/12">
               <input
-                className="w-full sm:w-[49%] h-[66px] border-[1px] border-[#D8D8D8] rounded-[15px] placeholder:indent-[24px] indent-[24px]"
-                type="text"
-                name=""
+              className={`w-full sm:w-[49%] h-[66px] border-[1px] border-[#D8D8D8] rounded-[15px] placeholder:indent-[24px] indent-[24px]  ${errors.email ? 'border-[2px] border-red-400 placeholder:text-red-400' : ""}` }
+                type="email"
+                
                 id=""
                 placeholder="Email"
+                {...register("email", registerOptions.email)}
               />
             </div>
             <div className="flex flex-col sm:flex-row justify-center items-center sm:justify-end gap-[8px] w-11/12 pb-[35px] xl:pb-0">
-                <input
-                  type="submit"
-                  className="w-[160px] h-[50px] rounded-[12px]  cursor-pointer text-[#fff] text-[13px] font-[600] b-save"
-                  value="Save Changes"
-                />
+            <button disabled={!isDirty} className={`w-[160px] h-[50px] rounded-[12px] cursor-pointer text-[#fff] text-[13px] font-[600] b-save `}>Save changes</button>
                 <input
                   type="reset"
                   className="w-[160px] h-[50px] rounded-[12px] cursor-pointer text-[#02539D] text-[13px] font-[600] bg-[#F9F9F9] b-reset"
@@ -180,30 +378,30 @@ export default function Page() {
           <div className="text-[20px] text-center sm:text-left sm:text-[25px] font-[600] text-[#043B6A] pt-[20px] sm:pl-[40px] pb-[28px]">
             Password
           </div>
-          <form className="items-center flex flex-col gap-[16px]">
+          <form className="items-center flex flex-col gap-[16px]"  onSubmit={handleSubmit1(onSubmit1)} noValidate>
             <div className="w-11/12">
               <input
-                className="w-full sm:w-[49%] h-[66px] border-[1px] border-[#D8D8D8] rounded-[15px] placeholder:indent-[24px] indent-[24px]"
-                type="text"
-                name=""
+                className={`w-full sm:w-[49%] h-[66px] border-[1px] border-[#D8D8D8] rounded-[15px] placeholder:indent-[24px] indent-[24px]  ${errors1.oldpassword ? 'border-[2px] border-red-400 placeholder:text-red-400' : ""}` }
+                type="password"
                 id=""
                 placeholder="Old password"
+                {...register1("oldpassword", registerOptions.oldpassword)}
               />
             </div>
             <div className="flex  gap-[16px] w-11/12 flex-col sm:flex-row">
               <input
-                className="w-full h-[66px] border-[1px] border-[#D8D8D8] rounded-[15px] placeholder:indent-[24px] indent-[24px]"
-                type="text"
-                name=""
+                className={`w-full h-[66px] border-[1px] border-[#D8D8D8] rounded-[15px] placeholder:indent-[24px] indent-[24px]  ${errors1.newpassword ? 'border-[2px] border-red-400 placeholder:text-red-400' : ""}` }
+                type="password"
                 id=""
                 placeholder="New password"
+                {...register1("newpassword", registerOptions.newpassword)}
               />
               <input
-                className="w-full h-[66px] border-[1px] border-[#D8D8D8] rounded-[15px] placeholder:indent-[24px] indent-[24px]"
-                type="text"
-                name=""
+                className={`w-full h-[66px] border-[1px] border-[#D8D8D8] rounded-[15px] placeholder:indent-[24px] indent-[24px]  ${errors1.confirmpassword ? 'border-[2px] border-red-400 placeholder:text-red-400' : ""}` }
+                type="password"
                 id=""
                 placeholder="Confirm password"
+                {...register1("confirmpassword", registerOptions.confirmpassword)}
               />
             </div>
             <div className="flex flex-col sm:flex-row justify-center items-center sm:justify-end gap-[8px] w-11/12 pt-[10px] pb-[40px] xl:pb-0">
@@ -240,8 +438,9 @@ export default function Page() {
               Enter 6-digit code from your two factor authenticator APP.
             </p>
           </div>
-          <div className="flex flex-col gap-[22px] sm:flex-row justify-center items-center pt-[16px]  w-[100%]">
-            <div className="flex gap-[5px]">
+          {/* <div className="flex flex-col gap-[22px] sm:flex-row justify-center items-center pt-[16px]  w-[100%]"> */}
+
+            {/* <div className="flex gap-[5px]">
               <input
                 type="text"
                 className="border-[#7D8493] bg-[#F8F8F8] w-[48px] h-[48px] rounded-[15px] indent-[16px]"
@@ -268,20 +467,33 @@ export default function Page() {
                 type="text"
                 className="border-[#7D8493] bg-[#F8F8F8] w-[48px] h-[48px] rounded-[15px] indent-[16px]"
               />
-            </div>
+            </div> */}
+            <form action="" className=' flex items-center w-full flex-col' onSubmit={handleSubmit2(onSubmit2)} noValidate>
+            <div className="flex flex-col gap-[22px] sm:flex-row justify-center items-center pt-[16px]  w-[100%] ">
+            <input type="twofactory"
+              maxLength={6}
+              pattern="\d*"
+              onInput={(event) => {
+                event.currentTarget.value = event.currentTarget.value.replace(/[^0-9]/g, '');
+              }}
+              {...register2("twofactory", registerOptions.twofactory)}
+            // className="text-center border-[#7D8493] bg-[#F8F8F8] w-[250px] xl:w-[343px] h-[48px] rounded-[15px] "
+            className={`text-center border-[#7D8493] bg-[#F8F8F8] w-[250px] xl:w-[343px] h-[48px] rounded-[15px]  ${errors2.twofactory ? 'border-[2px] border-red-400 placeholder:text-red-400' : ""}` }
+            />
           </div>
-          <div className="flex flex-col sm:flex-row justify-center items-center  pt-[24px] pb-[40px] gap-[8px] w-full  xl:pb-0">
+              <div className="flex flex-col sm:flex-row justify-center items-center  pt-[24px] pb-[40px] gap-[8px] w-full  xl:pb-0">
                 <input
                   type="submit"
                   className="w-[160px] h-[50px] rounded-[12px]  cursor-pointer text-[#fff] text-[13px] font-[600] b-authS"
                   value="Enable"
                 />
                 <input
-                  type="reset"
+                  type="submit"
                   className="w-[160px] h-[50px] rounded-[12px] cursor-pointer text-[#fff] text-[13px] font-[600] bg-[#F9F9F9] b-authR"
                   value="Disable"
                 />
-            </div>
+              </div>
+            </form>
         </div>
         {
           showConfi && (

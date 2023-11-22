@@ -66,14 +66,14 @@ export class authController {
   }
   @Patch("2fa_enable")
   @UseGuards(AuthGuard("jwt"))
-  async enable2FA(@Req() req, @Body() body): Promise<void> {
-    await this.authService.enable2FA(req.user.id, body.code);
+  async enable2FA(@Req() req, @Body() body): Promise<any> {
+    return await this.authService.enable2FA(req.user.id, body.twofactory);
   }
 
   @Patch("2fa_disable")
   @UseGuards(AuthGuard("jwt"))
-  async disable2FA(@Req() req, @Body() body): Promise<void> {
-    await this.authService.disable2FA(req.user.id, body.code);
+  async disable2FA(@Req() req, @Body() body): Promise<any> {
+    return await this.authService.disable2FA(req.user.id, body.twofactory);
   }
 
   @Post("2fa_verify")
