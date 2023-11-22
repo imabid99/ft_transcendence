@@ -10,6 +10,7 @@ import { useContext } from "react";
 import { contextdata } from "@/app/contextApi";
 import Notif from "./Notif";
 import Loading from "../loading";
+import Reload from "../reload";
 
 
 export default function ChatLayout({ children }: { children: React.ReactNode }) {
@@ -57,7 +58,9 @@ export default function ChatLayout({ children }: { children: React.ReactNode }) 
         <div className="h-[100vh] w-[100vw] flex  pl-[150px] bg-[#FAFDFF] lsm:max-lg:overflow-x-hidden lsm:max-lg:pl-[100px] lsm:max-sm:pl-[0px]">
           <Dashboard path='Chat'/>
           <LeftSide />
-          {children}
+          <Reload>
+              {children}
+          </Reload>
         </div>
     </div>
   );

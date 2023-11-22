@@ -28,9 +28,9 @@ export default function RootLayout({
         </Head>
           <div className=' w-[100vw] flex '>
             <ContextProvider>
-              <Reload>
+              {/* <Reload> */}
                 {children}
-              </Reload>
+              {/* </Reload> */}
             </ContextProvider>
           </div>
         </body>
