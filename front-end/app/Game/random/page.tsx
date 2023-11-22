@@ -28,7 +28,44 @@ import { getLocalStorageItem } from "@/utils/localStorage";
 // map = snow, desert, forest; mode = friend, bot, random
 
 const Random = () => {
+	console.log("Hii random !");
 	const [socket, setSocket] = useState<any>(null);
+	/// SOCKET MANAGER
+
+	const {profiles, user} :any= useContext(contextdata);
+	const name = `${user?.profile.firstName} ${user?.profile.lastName}`;
+
+	useEffect(() => {
+		const headers = {
+			// Authorization: `Bearer ${getLocalStorageItem("Token")}`,
+			Cookie: 'random',
+		};
+		const newSocket = io(`http://${process.env.NEXT_PUBLIC_APP_URL}:3000/Game`,
+		{
+			auth: {
+				...headers,
+			},
+		});
+		if(newSocket)
+		{
+			setSocket(newSocket);
+		}
+		return () => {
+			newSocket.disconnect();
+		};
+	}, []);
+	
+	useEffect(() => {
+		if (!socket) return;
+		// socket.on("connect", () => {console.log(name + " is Connected to server");});
+		socket.emit("matchmaking");
+
+		return () => {
+			socket.off("connect");
+			socket.off("matchmaking");
+			socket.disconnect();
+		}
+	}, [socket]);
 
 	const Controls = {
 		left: "left",
@@ -42,34 +79,6 @@ const Random = () => {
 		{ name: Controls.right, keys: ['ArrowRight'], player: 'player2' },
 	  ], []);
 
-	/// SOCKET MANAGER
-
-	const {profiles, user} :any= useContext(contextdata);
-	const name = `${user?.profile.firstName} ${user?.profile.lastName}`;
-
-	useEffect(() => {
-		const newSocket = io(`http://${process.env.NEXT_PUBLIC_APP_URL}:3000/Game`, {
-			extraHeaders: {
-			Authorization: `Bearer ${getLocalStorageItem("Token")}`,
-			}
-		});
-		if(newSocket)
-		{
-			setSocket(newSocket);
-		}
-		return () => {
-			newSocket.disconnect();
-		};
-	}, []);
-	
-	useEffect(() => {
-		if (!socket) return;
-		socket.on("connect", () => {socket.emit("matchmaking", { client: socket}), console.log(name + " is Connected to server");
-	});
-	socket.on("disconnect", () => {console.log(name + " is Disconnected from server");
-	socket.disconnect();});
-	
-	}, [socket]);
 
 	// GUI CONTROLS
 // 	const controls = useControls({});
@@ -181,9 +190,9 @@ const Random = () => {
 					const smoothingFactor = 0.4;
 					paddleposX = paddleposX + (targetPosX - paddleposX) * smoothingFactor;
 					socket.emit('paddle-pos', { x: - paddleposX, y: 0.5, z: -9, playerId: socket.id});
-					// setTimeout(() => {
+					setTimeout(() => {
 						api.position.set(paddleposX, 0.5, 9);
-					// }, 5);
+					}, 5);
 			}
 				animationFrameId = requestAnimationFrame(updatePosition);
 		  };
@@ -191,12 +200,12 @@ const Random = () => {
 		  return () => {
 			window.removeEventListener("keydown", handleKeyDown);
 			window.removeEventListener("keyup", handleKeyUp);
-      window.removeEventListener('touchstart', handleTouchStart);
-      window.removeEventListener('touchend', handleTouchEnd);
+			window.removeEventListener('touchstart', handleTouchStart);
+			window.removeEventListener('touchend', handleTouchEnd);
 			socket.off('paddle-pos');
 			if (animationFrameId !== null) {
 				cancelAnimationFrame(animationFrameId);
-			  }
+			}
 		  };
 		}, [user]);
 

@@ -12,7 +12,7 @@ services:
   frontend:
     image: node:16
     working_dir: /app
-    command: bash -c "npm install && npm run build && npm run dev -- -p 1337"
+    command: bash -c "npm install &&  npm run dev -- -p 1337"
     volumes:
       - ./front-end:/app
     ports:
