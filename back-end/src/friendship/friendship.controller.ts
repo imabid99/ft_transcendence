@@ -73,7 +73,7 @@ export class friendshipController {
     return this.friendshipService.isUserBlocked(req.user.id, params.id);
   }
 
-  @Get("show/blocked")
+  @Get("blocked")
   @UseGuards(AuthGuard("jwt"))
   async showBlocked(@Req() req): Promise<any> {
     return this.friendshipService.getBlocked(req.user.id);
