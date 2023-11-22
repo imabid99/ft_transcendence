@@ -25,7 +25,7 @@ export class GameService {
         }
     }
 
-    async getMatch(clientId: string): Promise<match> {
+    async  getMatch(clientId: string): Promise<match> {
         try {
             const match = await this.prisma.match.findFirst({
                 where: {
