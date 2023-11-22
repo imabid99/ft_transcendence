@@ -55,4 +55,27 @@ export class friendshipController {
     return this.friendshipService.getRequests(req.user.id);
   }
 
+  @Patch("block/:id")
+  @UseGuards(AuthGuard("jwt"))
+  async blockUser(@Req() req, @Param() params: any): Promise<any> {
+    return this.friendshipService.blockUser(req.user.id, params.id);
+  }
+
+  @Patch("unblock/:id")
+  @UseGuards(AuthGuard("jwt"))
+  async unblockUser(@Req() req, @Param() params: any): Promise<any> {
+    return this.friendshipService.unblockUser(req.user.id, params.id);
+  }
+
+  @Get("isblocked/:id")
+  @UseGuards(AuthGuard("jwt"))
+  async isBlocked(@Req() req, @Param() params: any): Promise<any> {
+    return this.friendshipService.isUserBlocked(req.user.id, params.id);
+  }
+
+  @Get("show/blocked")
+  @UseGuards(AuthGuard("jwt"))
+  async showBlocked(@Req() req): Promise<any> {
+    return this.friendshipService.getBlocked(req.user.id);
+  }
 }

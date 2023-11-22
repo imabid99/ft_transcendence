@@ -211,4 +211,87 @@ export class UserService {
     delete user.password;
     return user;
   }
+
+
+  async checkUsername(username: string): Promise<boolean> {
+    try {
+      const exist = await this.prisma.user.findUnique({
+        where: { username },
+      });
+      if (exist) {
+        return true;
+      }
+      return false;
+    } catch (error) {
+      return error;
+    }
+  }
+
+  async checkEmail(email: string): Promise<boolean> {
+    try {
+      const exist = await this.prisma.user.findUnique({
+        where: { email },
+      });
+      if (exist) {
+        return true;
+      }
+      return false;
+    } catch (error) {
+      return error;
+    }
+  }
+
+  async changePassword(userid: string, data: any): Promise<any> {
+    const { newPassword, oldPassword } = data;
+    try {
+      const user = await this.prisma.user.findUnique({
+        where: {
+          id: userid,
+        },
+      });
+      const valid = await bcrypt.compare(oldPassword, user.password);
+      if (!valid) {
+        throw new BadRequestException("Wrong password");
+      }
+      const salt = await bcrypt.genSalt();
+      const hash = await bcrypt.hash(newPassword, salt);
+      await this.prisma.user.update({
+        where: {
+          id: userid,
+        },
+        data: {
+          password: hash,
+        },
+      });
+      return;
+    } catch (error) {
+      return error;
+    }
+  }
+
+  changeData(data: any, id: string): Promise<any> {
+    const { username, email, firstName, lastName } = data;
+    if (!username || !email || !firstName || !lastName) {
+      throw new BadRequestException("Invalid input");
+    }
+    try {
+      return this.prisma.user.update({
+        where: {
+          id: id,
+        },
+        data: {
+          username: username,
+          email: email,
+          profile: {
+            update: {
+              firstName: firstName,
+              lastName: lastName,
+            },
+          },
+        },
+      });
+    } catch (error) {
+      return error;
+    }
+  }
 }
