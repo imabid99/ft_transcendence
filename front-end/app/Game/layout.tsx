@@ -2,7 +2,7 @@ import "../globals.css";
 import Head from "next/head";
 import Dashboard from '@/components/Dashboard/Dashboard/Dashboard'
 export const metadata = {
-  title: "Inbox",
+  title: "Game",
   description: "ft_transcendence",
 };
 

@@ -20,7 +20,7 @@ export default function  LeftSide() {
     const [showModal, setShowModal] = useState(false);
 
 	const getAvatar = (id:number) => {
-		const profile = profiles.find((profile:any) => profile.user_id === id)
+		const profile = profiles?.find((profile:any) => profile.userId === id)
 		return profile?.avatar
 	}
 	return (

@@ -32,6 +32,7 @@ export class GameGateway implements OnGatewayConnection, OnGatewayDisconnect {
     private userService: UserService,
     private gameService: GameService
   ) {}
+
   @WebSocketServer()
   server: SocketIO.Server;
 
@@ -56,14 +57,24 @@ export class GameGateway implements OnGatewayConnection, OnGatewayDisconnect {
     return false;
   }
 
-  async handleConnection(client: Socket) {
-    const token = client.handshake.headers.authorization?.split(" ")[1];
-    const user: any = jwt_decode(token);
-    if (user && user.userId) {
-      if (!this.socketMap.has(user.userId)) {
-        this.socketMap.set(user.userId, []);
+  
+  handleConnection(client: Socket) {
+    try {
+      const token = client.handshake.headers.authorization?.split(" ")[1];
+      if (token) {
+
+        console.log("this is the header in con",client.handshake.headers.authorization);
+        jwt.verify(token, process.env.JWT_SECRET);
+        const user: any = jwt_decode(token);
+        if (user && user.userId) {
+          if (!this.socketMap.has(user.userId)) {
+            this.socketMap.set(user.userId, []);
+          }
+          this.socketMap.get(user.userId).push(client);
+        }
       }
-      this.socketMap.get(user.userId).push(client);
+    } catch (e) {
+      console.log(e);
     }
   }
 
@@ -74,7 +85,7 @@ export class GameGateway implements OnGatewayConnection, OnGatewayDisconnect {
       const decoded: any = jwt_decode(token);
       const userId = decoded.userId;
       const username = decoded.username;
-      // console.log(`Client ${decoded.username} connected`);
+      console.log(`Client ${decoded.username} connected`);
       console.log(`User ${username} started matchmaking`);
       const newObject = {
         userId : userId,
@@ -100,24 +111,27 @@ export class GameGateway implements OnGatewayConnection, OnGatewayDisconnect {
     }
   }
 
-  // @SubscribeMessage("CreateInvite")
-  // async 
-
 
   handleDisconnect(client: Socket) {
-    const token = client.handshake.headers.authorization?.split(" ")[1];
-    if (token) {
-      const decoded: any = jwt_decode(token);
-      const username = decoded.username;
-      console.log(`Client ${username} disconnected`);
-      const index = this.waitingPlayers.findIndex(
-        (player) => player.client === client
-      );
-      if (index !== -1) { 
-        this.waitingPlayers.splice(index, 1);
-      }
+    try {
+      const token = client.handshake.headers.authorization?.split(" ")[1];
+      if (token) {
+        console.log("this is the header in descon",client.handshake.headers.authorization);
+        const user: any = jwt_decode(token);
+        if (user && user.userId && this.socketMap.has(user.userId)) {
+          const sockets = this.socketMap.get(user.userId);
+          const index = sockets.indexOf(client);
+          if (index !== -1) {
+            sockets.splice(index, 1);
+          }
+          if (sockets.length === 0) {
+            this.socketMap.delete(user.userId);
+          }
+        }
     }
-    this.matches.delete(client.id);
+      } catch (e) {
+        console.log(e);
+      }
   }
 
   @SubscribeMessage("paddle-pos")
