@@ -157,6 +157,11 @@ export class FriendshipService {
         return friendship.sender.profile;
       }
     });
+
+    friends = friends.filter((friend, index, self) =>
+    index === self.findIndex((t) => (t.userId === friend.userId)));
+
+  return friends;
   }
 
   async getBlocked(userId: string) {
