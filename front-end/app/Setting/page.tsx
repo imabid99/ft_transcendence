@@ -41,13 +41,17 @@ export default function Page() {
   //   newpassword: string;
   //   confirmpassword: string;
   // }
-  // console.log("myProfile : ", myProfile);
-  console.log("user : ", myProfile?.first);
   const form = useForm<FormValues>({mode: 'all'});
-  const {register, handleSubmit, formState } = form;
+  const {register, handleSubmit, formState, watch } = form;
   const {errors, isDirty} = formState;
-  const form1 = useForm<FormValues>({mode: 'all'});
-  const {register : register1, handleSubmit : handleSubmit1, formState: formState1  } = form1;
+  const form1 = useForm<FormValues>({
+    defaultValues: {
+      newpassword: '',
+      confirmpassword: '',
+      // other fields...
+    },
+  });
+  const {register : register1, handleSubmit : handleSubmit1, formState: formState1,watch : watch1  } = form1;
   const {errors: errors1, isDirty : isDirty1} = formState1;
 
 
@@ -165,13 +169,6 @@ export default function Page() {
     },
     validate: (val:any) =>
     val?.match(/\p{L}/gu)?.join('') === val || 'must contain only characters'
-    // validate: (value:any) => {
-    //         return (
-    //           [/[a-z]/, /[A-Z]/, /[0-9]/].every((pattern) =>
-    //             pattern.test(value)
-    //           ) || "can contain only letters"
-    //         );
-    //       },
    },
     lastName: { required: "Last name is required",
     maxLength: {
@@ -184,14 +181,6 @@ export default function Page() {
     },
     validate: (val:any) =>
         val?.match(/\p{L}/gu)?.join('') === val || 'must contain only characters'
-    // validate: (value:any) => {
-    //   return (
-    //     [/[a-z]/, /[A-Z]/, /[0-9]/].every((pattern) =>
-    //       pattern.test(value)
-    //     ) || "can contain only letters"
-    //   );
-    // },
-
    },
     email: { required: "Email is required",
     pattern: {
@@ -207,7 +196,7 @@ export default function Page() {
         return "Email already exists";
     },
   },
-  password: {
+  newpassword: {
     required: "Password is required",
     minLength: {
       value: 8,
@@ -221,7 +210,34 @@ export default function Page() {
       );
     },
 
-  }
+  },
+  oldpassword: {
+    required: "Password is required",
+    minLength: {
+      value: 8,
+      message: "Password must have at least 8 characters"
+    },
+    validate: async (value:string) => {
+      const response = await axios.post(`http://${process.env.NEXT_PUBLIC_APP_URL}:3000/api/user/check-email`, {
+        oldpassword : value,
+      });
+      if (response.data !== false) 
+        return "Email already exists";
+    }
+  },
+
+  confirmpassword: {
+    required: "Password is required",
+    minLength: {
+      value: 8,
+      message: "Password must have at least 8 characters"
+    },
+    validate: (val: string) => {
+      if (watch1('newpassword') != val) {
+        return "Your passwords do no match";
+      }
+    },
+  },
   };
 
   return (
@@ -277,8 +293,7 @@ export default function Page() {
                 {...register("firstName", registerOptions.firstName)}
               />
               <input
-                 className={`w-full h-[66px] border-[1px] border-[#D8D8D8] rounded-[15px] placeholder:indent-[24px] indent-[24px]  ${errors.lastName ? 'border-[2px] border-red-400 placeholder:text-red-400' : ""}` }
-                // className="w-full h-[66px] border-[1px] border-[#D8D8D8] rounded-[15px] placeholder:indent-[24px] indent-[24px]"
+                className={`w-full h-[66px] border-[1px] border-[#D8D8D8] rounded-[15px] placeholder:indent-[24px] indent-[24px]  ${errors.lastName ? 'border-[2px] border-red-400 placeholder:text-red-400' : ""}` }
                 type="lastName"
                 id=""
                 placeholder="Last name"
@@ -288,7 +303,6 @@ export default function Page() {
             <div className="w-11/12">
               <input
               className={`w-full sm:w-[49%] h-[66px] border-[1px] border-[#D8D8D8] rounded-[15px] placeholder:indent-[24px] indent-[24px]  ${errors.email ? 'border-[2px] border-red-400 placeholder:text-red-400' : ""}` }
-                // className="w-full sm:w-[49%] h-[66px] border-[1px] border-[#D8D8D8] rounded-[15px] placeholder:indent-[24px] indent-[24px]"
                 type="email"
                 
                 id=""
@@ -297,11 +311,7 @@ export default function Page() {
               />
             </div>
             <div className="flex flex-col sm:flex-row justify-center items-center sm:justify-end gap-[8px] w-11/12 pb-[35px] xl:pb-0">
-            <button disabled={!isDirty} className={`w-[160px] h-[50px] rounded-[12px] cursor-pointer text-[#fff] text-[13px] font-[600] b-save `}>Save changes</button>                {/* <input
-                  type="submit"
-                  className="w-[160px] h-[50px] rounded-[12px]  cursor-pointer text-[#fff] text-[13px] font-[600] b-save"
-                  value="Save Changes"
-                /> */}
+            <button disabled={!isDirty} className={`w-[160px] h-[50px] rounded-[12px] cursor-pointer text-[#fff] text-[13px] font-[600] b-save `}>Save changes</button>
                 <input
                   type="reset"
                   className="w-[160px] h-[50px] rounded-[12px] cursor-pointer text-[#02539D] text-[13px] font-[600] bg-[#F9F9F9] b-reset"
@@ -321,7 +331,7 @@ export default function Page() {
                 type="password"
                 id=""
                 placeholder="Old password"
-                {...register1("oldpassword", registerOptions.password)}
+                {...register1("oldpassword", registerOptions.oldpassword)}
               />
             </div>
             <div className="flex  gap-[16px] w-11/12 flex-col sm:flex-row">
@@ -330,14 +340,14 @@ export default function Page() {
                 type="password"
                 id=""
                 placeholder="New password"
-                {...register1("newpassword", registerOptions.password)}
+                {...register1("newpassword", registerOptions.newpassword)}
               />
               <input
                 className={`w-full h-[66px] border-[1px] border-[#D8D8D8] rounded-[15px] placeholder:indent-[24px] indent-[24px]  ${errors1.confirmpassword ? 'border-[2px] border-red-400 placeholder:text-red-400' : ""}` }
                 type="password"
                 id=""
                 placeholder="Confirm password"
-                {...register1("confirmpassword", registerOptions.password)}
+                {...register1("confirmpassword", registerOptions.confirmpassword)}
               />
             </div>
             <div className="flex flex-col sm:flex-row justify-center items-center sm:justify-end gap-[8px] w-11/12 pt-[10px] pb-[40px] xl:pb-0">

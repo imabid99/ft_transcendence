@@ -69,13 +69,11 @@ export class userController {
   }
   
   @Post("check-username")
-  @UseGuards(AuthGuard("jwt"))
   async checkUsername(@Req() req): Promise<boolean> {
     return this.userService.checkUsername(req.body.username);
   }
   
   @Post("check-email")
-  @UseGuards(AuthGuard("jwt"))
   async checkEmail(@Req() req): Promise<boolean> {
     return this.userService.checkEmail(req.body.email);
   }

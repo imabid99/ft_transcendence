@@ -20,75 +20,6 @@ export default function Home() {
 
   const router = useRouter();
   const [isloading, setIsLoading] = useState(true);
-  // const [email, setEmail] = useState('');
-  // const [password, setPassword] = useState('');
-  // const [firstName, setfirstName] = useState('');
-  // const [lastName, setlastName] = useState('');
-  // const [userName, setuserName] = useState('');
-
-  
-  // const imageUrls = [
-  //   'first4.png',
-  //   'jus.png',
-  //   'first1.png',
-  //   'first2.png',
-  //   'first3.png',
-  //   'lala.png',
-  //   'first5.png',
-  // ];
-  // const [currentImageIndex, setCurrentImageIndex] = useState(0);
-
-  // const changeImage = () => {
-  //   setCurrentImageIndex((prevIndex) => (prevIndex + 1) % imageUrls.length);
-  // };
-
-  // useEffect(() => {
-  //   const intervalId = setInterval(changeImage, 10000);
-
-  //   return () => clearInterval(intervalId);
-  // }, []);
-  // const styling = {
-  //   backgroundImage: `url(${imageUrls[currentImageIndex]})`,
-  // }
-  // useEffect(() => {
-  //   const token = getLocalStorageItem("Token");
-  //   if (token) {
-  //     router.push('/');
-  //     return;
-  //   }
-  //   setIsLoading(false);
-    
-  // }, []);
-
-  // if (isloading) {
-  //   return (
-  //     <div className="flex justify-center items-center w-screen h-screen bg-gray-50 dark:bg-gray-900">
-  //       <div className="animate-spin rounded-full h-32 w-32 border-t-2 border-b-2 border-gray-900"></div>
-  //     </div>
-  //   );
-  // }
-
-  // const handleSubmit = async (e:any) =>
-  // {
-  //   e.preventDefault();
-  //   if (!email || !password|| !firstName || !lastName || !userName) return;
-  //   try {
-  //     const response = await axios.post(`http://${process.env.NEXT_PUBLIC_APP_URL}:3000/api/auth/signup`, {
-  //       email: email,
-  //       password: password,
-  //       firstName: firstName,
-  //       lastName: lastName,
-  //       username: userName,
-  //      });
-  //      if (response.status !== 200) 
-  //       router.push('/login');
-       
-  //   } catch (e:any) 
-  //   {
-  //     console.log("Error : ", e.response.data);
-  //     return;
-  //   }
-  // }
   type FormValues = {
     firstName: string;
     lastName: string;
@@ -102,8 +33,6 @@ export default function Home() {
   const {errors, isDirty} = formState;
   const onSubmit = async (data: FormValues) => {
     console.log(data);
-    // e.preventDefault();
-    // if (!email || !password|| !firstName || !lastName || !userName) return;
     try {
       const response = await axios.post(`http://${process.env.NEXT_PUBLIC_APP_URL}:3000/api/auth/signup`, {
         email: data.email,
@@ -121,19 +50,6 @@ export default function Home() {
     }
   }
   const onError = (errors:any) => console.log(errors);
-  // required: "required",
-    // maxLength: {
-    // value: 15,
-    //       message: "must be max 15 chars",
-    //     },
-    //     validate: (value) => {
-    //       return (
-    //         [/[a-z]/, /[A-Z]/, /[0-9]/].every((pattern) =>
-    //           pattern.test(value)
-    //         ) || "cannot special chars, only lower, upper, number"
-    //       );
-    //     },
-    //   }
   const registerOptions = {
     firstName: { required: "First name is required",
     maxLength: {
@@ -146,13 +62,6 @@ export default function Home() {
     },
     validate: (val:any) =>
     val?.match(/\p{L}/gu)?.join('') === val || 'must contain only characters'
-    // validate: (value:any) => {
-    //         return (
-    //           [/[a-z]/, /[A-Z]/, /[0-9]/].every((pattern) =>
-    //             pattern.test(value)
-    //           ) || "can contain only letters"
-    //         );
-    //       },
    },
     lastName: { required: "Last name is required",
     maxLength: {
@@ -165,21 +74,13 @@ export default function Home() {
     },
     validate: (val:any) =>
         val?.match(/\p{L}/gu)?.join('') === val || 'must contain only characters'
-    // validate: (value:any) => {
-    //   return (
-    //     [/[a-z]/, /[A-Z]/, /[0-9]/].every((pattern) =>
-    //       pattern.test(value)
-    //     ) || "can contain only letters"
-    //   );
-    // },
    },
     userName: { required: "Name is required",
-    usernameAvailable: async (value:string) => {
-      console.log("usernameAvailable", value);
+    validate: async (value:string) => {
       const response = await axios.post(`http://${process.env.NEXT_PUBLIC_APP_URL}:3000/api/user/check-username`, {
         username: value,
       });
-      if (response.data !== true) 
+      if (response.data !== false) 
         return "Username already exists";
     }
     },
@@ -188,15 +89,14 @@ export default function Home() {
       value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
       message: "invalid email address"
     },
-    emailAvailable: async (value:any) => {
-      console.log("emailAvailable", value);
+    validate: async (value:string) => {
       const response = await axios.post(`http://${process.env.NEXT_PUBLIC_APP_URL}:3000/api/user/check-email`, {
         email: value,
       });
-      console.log("emailAvailable", response);
-      if (response.data !== true) 
+      if (response.data !== false) 
         return "Email already exists";
-    },
+
+    }
   },
     password: {
       required: "Password is required",
@@ -217,10 +117,8 @@ export default function Home() {
   return (
     
     <>
-     {/* /*style={{ backgroundImage: 'url("first4.png")' }}    style={styling}*/}
   <div className="h-[100vh] w-[100%] flex justify-around items-center bgImg bg-no-repeat bg-cover bg-center " style={{backgroundImage: 'url("backfilter.svg")'}}> 
     <div className=" w-[100vw]  h-full bg-blue-200 bg-opacity-0 backdrop-blur-[7px] flex flex-row items-center justify-center md:w-11/12 md:max-h-[735px] md:rounded-[61px] xl:max-w-[1404px] xl:mx-auto">
-    {/* <div className=" w-[100vw]  h-full bg-white flex flex-row items-center justify-center md:w-11/12 md:max-h-[735px] md:rounded-[61px] xl:max-w-[1404px] xl:mx-auto"> */}
       <div className="w-[100%] flex flex-col items-center justify-center xl:w-[30%] py-[50px]">
 
         <div className="flex flex-col pt-[20px] gap-[16px] sm:flex-row w-full items-center justify-center">
@@ -302,7 +200,7 @@ export default function Home() {
                 <ErrorMessage message={errors.password?.message || ''} />
               </div>
             </div>
-              {/* <p className="text-red-500 text-[15px] ">{errors.firstName?.message}</p> */}
+
             <button disabled={!isDirty} className="w-[217px] h-[53px] bg-gradient-to-r from-cyan-500 to-blue-500 rounded-[11px] text-[#FFF] text-[20px] font-[500] md:h-[68.345px] l-inp">Sign up</button>
           </form>
         </div>
@@ -325,8 +223,3 @@ export default function Home() {
 
   )
 }
-
-
-
-
-// {"email":"asabbar@asabbar1.com","password":"asabbar","firstName":"achraf","lastName":"sabbar","username":"asabbar"}
