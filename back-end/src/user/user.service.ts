@@ -241,6 +241,21 @@ export class UserService {
     }
   }
 
+  async checkPassword(password: string, id: string): Promise<boolean> {
+    try {
+      const user = await this.prisma.user.findUnique({
+        where: { id },
+      });
+      const valid = await bcrypt.compare(password, user.password);
+      if (valid) {
+        return true;
+      }
+      return false;
+    } catch (error) {
+      return error;
+    }
+  }
+
   async changePassword(userid: string, data: any): Promise<any> {
     const { newPassword, oldPassword } = data;
     try {

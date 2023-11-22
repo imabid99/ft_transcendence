@@ -7,6 +7,7 @@ import axiosInstance from '@/utils/axiosInstance';
 import io, { Socket } from 'socket.io-client';
 let newSocket: Socket | null = null;
 let notificationsocket: Socket | null = null;
+
 export const contextdata = createContext({});
 
 
@@ -57,7 +58,7 @@ const ContextProvider = ({ children }: { children: React.ReactNode; }) => {
   }, [loged]);
 
   useEffect(() => {
-    if (!user || user === undefined) {
+    if (!user ) {
       return;
     }
     newSocket = io(`http://${process.env.NEXT_PUBLIC_APP_URL}:3000/chat`, {
@@ -79,8 +80,8 @@ const ContextProvider = ({ children }: { children: React.ReactNode; }) => {
       setNotifSocket(notificationsocket);
     }
     return () => {
-      if(newSocket){ newSocket.disconnect()}
-      if(notificationsocket){ notificationsocket.disconnect()}
+      newSocket?.disconnect()
+      notificationsocket?.disconnect()
     }
   }, [user]);
 

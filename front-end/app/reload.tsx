@@ -34,10 +34,15 @@ export default function Reload({children,}: {children: React.ReactNode}) {
 		socket.on("refresh", () => {
 			setRefresh(new Date().getTime().toString());
 		});
-		notifSocket.on("refresh", () => {
-			setRefresh(new Date().getTime().toString());
+		// notifSocket.on("refresh", () => {
+		// 	setRefresh(new Date().getTime().toString());
+		// }
+		// );
+		return () => {
+			socket.off("refresh");
+			// notifSocket.off("refresh");
+			// notifSocket?.disconnect();
 		}
-		);
 	}, [socket]);
 
 	useEffect(() => {
@@ -137,27 +142,27 @@ export default function Reload({children,}: {children: React.ReactNode}) {
 	}, [refresh, user])
 
 
-	useEffect(() => {
-	  if (!notifSocket) return;
+	// useEffect(() => {
+	//   if (!notifSocket) return;
 
-		console.log("notifSocket : ", notifSocket);
-		notifSocket.on('notification', (payload:any) => {
-			console.log("payload : ", payload);
-			setMyNotif((prev:any) => [...prev, payload]);
-			setTimeout(() => {
-			setMyNotif([]);
-			}
-			, 100);
-		})
-		notifSocket.on('redirect', (payload:any) => {
-			router.push(`${payload.link}`);
-		})
-		return () => {
-			setMyNotif([]);
-			socket.off('notification');
-		}
-	}
-	, [notifSocket]);
+	// 	console.log("notifSocket : ", notifSocket);
+	// 	notifSocket.on('notification', (payload:any) => {
+	// 		console.log("payload : ", payload);
+	// 		setMyNotif((prev:any) => [...prev, payload]);
+	// 		setTimeout(() => {
+	// 		setMyNotif([]);
+	// 		}
+	// 		, 100);
+	// 	})
+	// 	notifSocket.on('redirect', (payload:any) => {
+	// 		router.push(`${payload.link}`);
+	// 	})
+	// 	return () => {
+	// 		setMyNotif([]);
+	// 		notifSocket.off('notification');
+	// 	}
+	// }
+	// , [notifSocket]);
     return (
         <div className='w-full h-ful relative'>
 			{

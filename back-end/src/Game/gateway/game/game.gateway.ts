@@ -57,6 +57,7 @@ export class GameGateway implements OnGatewayConnection, OnGatewayDisconnect {
     return false;
   }
 
+  
   handleConnection(client: Socket) {
     try {
       const token = client.handshake.headers.authorization?.split(" ")[1];
@@ -133,27 +134,27 @@ export class GameGateway implements OnGatewayConnection, OnGatewayDisconnect {
       }
   }
 
-  // @SubscribeMessage("paddle-pos")
-  // async handlePaddlePos(
-  //   client: Socket,
-  //   payload: { x: number, y: number, z: number; playerId?: string }
-  // ) {
-  //   const match = await this.gameService.getMatch(client.id);
-  //   if (match) {
-  //     this.server.to(match.id).emit('paddle-pos', payload);
-  //   }
-  // }
+  @SubscribeMessage("paddle-pos")
+  async handlePaddlePos(
+    client: Socket,
+    payload: { x: number, y: number, z: number; playerId?: string }
+  ) {
+    const match = await this.gameService.getMatch(client.id);
+    if (match) {
+      this.server.to(match.id).emit('paddle-pos', payload);
+    }
+  }
 
-  // @SubscribeMessage("ball-serve")
-  // async handleBallServe(
-  //   client: Socket,
-  //   payload: { isServing: boolean; isServingmobile: boolean; direction: number }
-  // ) {
-  //   const match = await this.gameService.getMatch(client.id);
-  //   if (match) {
-  //     client.broadcast.to(match.id).emit("ball-serve", payload);
-  //   }
-  // }
+  @SubscribeMessage("ball-serve")
+  async handleBallServe(
+    client: Socket,
+    payload: { isServing: boolean; isServingmobile: boolean; direction: number }
+  ) {
+    const match = await this.gameService.getMatch(client.id);
+    if (match) {
+      client.broadcast.to(match.id).emit("ball-serve", payload);
+    }
+  }
 
   @SubscribeMessage("player-wins")
   async handleScoreUpdate(

@@ -27,11 +27,11 @@ export default function Page() {
   const [isIblocked, setIsIblocked] = useState<boolean>(false);
   const [receiver, setReceiver] = useState<any>(null);
   const [isUser, setIsUser] = useState<boolean>(true);
-  const {user,profiles,socket} :any= useContext(contextdata);
+  const {user,myFriends,profiles,socket} :any= useContext(contextdata);
   const inputRef = useRef<HTMLInputElement | null>(null);;
   const router = useRouter();
 
-  if (user?.id === msgId) 
+  if (user?.id === msgId || (myFriends && !myFriends.find((friend: any) => friend.id === msgId)))
   {
     router.push('/Chat');
   }
