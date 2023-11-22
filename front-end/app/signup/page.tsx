@@ -176,10 +176,10 @@ export default function Home() {
     userName: { required: "Name is required",
     usernameAvailable: async (value:string) => {
       console.log("usernameAvailable", value);
-      const response = await axios.post(`http://${process.env.NEXT_PUBLIC_APP_URL}:3000/api/auth/usernameAvailable`, {
+      const response = await axios.post(`http://${process.env.NEXT_PUBLIC_APP_URL}:3000/api/user/check-username`, {
         username: value,
       });
-      if (response.status !== 200) 
+      if (response.data !== true) 
         return "Username already exists";
     }
     },
@@ -188,12 +188,13 @@ export default function Home() {
       value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
       message: "invalid email address"
     },
-    emailAvailable: async (value:string) => {
+    emailAvailable: async (value:any) => {
       console.log("emailAvailable", value);
-      const response = await axios.post(`http://${process.env.NEXT_PUBLIC_APP_URL}:3000/api/auth/emailAvailable`, {
+      const response = await axios.post(`http://${process.env.NEXT_PUBLIC_APP_URL}:3000/api/user/check-email`, {
         email: value,
       });
-      if (response.status !== 200) 
+      console.log("emailAvailable", response);
+      if (response.data !== true) 
         return "Email already exists";
     },
   },

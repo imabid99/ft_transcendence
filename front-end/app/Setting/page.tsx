@@ -125,11 +125,12 @@ export default function Page() {
   const onSubmit = async (data: FormValues) => {
     console.log(data);
     try {
-      const response = await axios.post(`http://${process.env.NEXT_PUBLIC_APP_URL}:3000/api/auth/signup`, {
+      const response = await axiosInstance.patch(`http://${process.env.NEXT_PUBLIC_APP_URL}:3000/api/user/change-data`, {
         email: data.email,
         firstName: data.firstName,
         lastName: data.lastName,
        });   
+       console.log(response);
     } catch (e:any) 
     {
       console.log("Error : ", e.response.data);
@@ -141,11 +142,11 @@ export default function Page() {
   const onSubmit1 = async (data: FormValues) => {
     console.log(data);
     try {
-      const response = await axios.post(`http://${process.env.NEXT_PUBLIC_APP_URL}:3000/api/auth/signup`, {
-        email: data.email,
-        firstName: data.firstName,
-        lastName: data.lastName,
+      const response = await axiosInstance.patch(`http://${process.env.NEXT_PUBLIC_APP_URL}:3000/api/user/change-password`, {
+        oldPassword: data.oldpassword,
+        newPassword: data.newpassword,
        });   
+       console.log(response);
     } catch (e:any) 
     {
       console.log("Error : ", e.response.data);
@@ -321,11 +322,6 @@ export default function Page() {
                 id=""
                 placeholder="Old password"
                 {...register1("oldpassword", registerOptions.password)}
-                // className="w-full sm:w-[49%] h-[66px] border-[1px] border-[#D8D8D8] rounded-[15px] placeholder:indent-[24px] indent-[24px]"
-                // type="text"
-                // name=""
-                // id=""
-                // placeholder="Old password"
               />
             </div>
             <div className="flex  gap-[16px] w-11/12 flex-col sm:flex-row">
@@ -335,11 +331,6 @@ export default function Page() {
                 id=""
                 placeholder="New password"
                 {...register1("newpassword", registerOptions.password)}
-                // className="w-full h-[66px] border-[1px] border-[#D8D8D8] rounded-[15px] placeholder:indent-[24px] indent-[24px]"
-                // type="text"
-                // name=""
-                // id=""
-                // placeholder="New password"
               />
               <input
                 className={`w-full h-[66px] border-[1px] border-[#D8D8D8] rounded-[15px] placeholder:indent-[24px] indent-[24px]  ${errors1.confirmpassword ? 'border-[2px] border-red-400 placeholder:text-red-400' : ""}` }
@@ -347,11 +338,6 @@ export default function Page() {
                 id=""
                 placeholder="Confirm password"
                 {...register1("confirmpassword", registerOptions.password)}
-                // className="w-full h-[66px] border-[1px] border-[#D8D8D8] rounded-[15px] placeholder:indent-[24px] indent-[24px]"
-                // type="text"
-                // name=""
-                // id=""
-                // placeholder="Confirm password"
               />
             </div>
             <div className="flex flex-col sm:flex-row justify-center items-center sm:justify-end gap-[8px] w-11/12 pt-[10px] pb-[40px] xl:pb-0">
