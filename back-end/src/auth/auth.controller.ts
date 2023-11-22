@@ -24,17 +24,17 @@ export class authController {
   ) {}
 
   @Post("login")
-  signin(@Body() userData: UserDataLogin) {
+  signin(@Body() userData: UserDataLogin) : Promise<any> {
     return this.authService.login(userData);
   }
   @Post("signup")
-  signup(@Body() userData: UserData) {
+  signup(@Body() userData: UserData) : Promise<any>{
     return this.authService.addUser(userData);
   }
 
   @Get("oauth2/42")
   @UseGuards(AuthGuard("42"))
-  async auth42(): Promise<void> {
+  async auth42(): Promise<any> {
     return;
   }
 

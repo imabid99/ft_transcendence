@@ -56,7 +56,7 @@ model Notification {
   id               String   @id @default(uuid())
   type             String
   message          String
-  actionUserId     String  
+  actionUserId     String
   actionUserAvatar String?
   actionUserName   String?
   isRead           Boolean  @default(false)
@@ -67,8 +67,8 @@ model Notification {
 
 model Friendship {
   id           String           @id @default(uuid())
-  senderId     String           
-  receiverId   String           
+  senderId     String
+  receiverId   String
   status       FriendshipStatus
   actionUserId String
   timestamp    DateTime         @default(now())
@@ -78,17 +78,17 @@ model Friendship {
 }
 
 model match {
-  id             String   @id @default(uuid())
+  id             String    @id @default(uuid())
   type           MatchType
-  createdAt      DateTime @default(now())
+  createdAt      DateTime  @default(now())
   creatorId      String
-  creator        User     @relation("matches_created", fields: [creatorId], references: [id])
+  creator        User      @relation("matches_created", fields: [creatorId], references: [id])
   opponentId     String
-  opponent       User     @relation("matches_invited", fields: [opponentId], references: [id])
+  opponent       User      @relation("matches_invited", fields: [opponentId], references: [id])
   creatorScore   Int?
   opponentScore  Int?
-  creatorSocket  String
-  opponentSocket String
+  creatorSocket  String?
+  opponentSocket String?
 }
 
 model Profile {

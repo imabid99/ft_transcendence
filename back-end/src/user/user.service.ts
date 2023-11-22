@@ -284,9 +284,9 @@ export class UserService {
     }
   }
 
-  changeData(id: string, data: any): Promise<any> {
-    const { email, firstName, lastName } = data;
-    if (!email || !firstName || !lastName) {
+  changeData(data: any, id: string): Promise<any> {
+    const { username, email, firstName, lastName } = data;
+    if (!username || !email || !firstName || !lastName) {
       throw new BadRequestException("Invalid input");
     }
     try {
@@ -295,6 +295,7 @@ export class UserService {
           id: id,
         },
         data: {
+          username: username,
           email: email,
           profile: {
             update: {
