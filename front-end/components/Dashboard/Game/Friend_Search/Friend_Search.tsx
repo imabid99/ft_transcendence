@@ -1,7 +1,9 @@
 import Link from "next/link";
-
-import {useState} from 'react';
 import Friend from "../../Home/Friend/Friend";
+import { useContext, useEffect, useState } from 'react';
+import axiosInstance from "@/utils/axiosInstance";
+import { contextdata } from '@/app/contextApi';
+import FriendCard from "./Friend_Card";
 // type props  = {
 //     name: string,
 //     username: string,
@@ -15,13 +17,32 @@ type props  = {
     onMapChange: any
 }
 
-const FriendSearch = ({setShow, onMapChange}:props) => {
-
-
+const FriendSearch = () => {
+  const {profiles, user, socket}:any = useContext(contextdata);
+  const [Friends, setFriends] = useState<any>([]);
+  useEffect(() => {
+    try{
+        const getFriends = async () => {
+            try{
+                const res = await axiosInstance.get(`http://${process.env.NEXT_PUBLIC_APP_URL}:3000/api/friendship/show`);
+                console.log(res.data);
+                setFriends(res.data);
+            }
+            catch(err){
+                console.log(err);
+            }
+        }
+        getFriends();
+    }
+    catch(error)
+    {
+        console.log(error)
+    }
+}, [profiles])
     return (
         <>
 
-  <div className="w-[1370px] xl:h-[830px] rounded-[100px] backdrop-blur-[20px] backSh flex gap-[30px] flex-col items-center">
+  <div className="w-[100%] max-w-[1370px] xl:h-[830px] rounded-[100px] backdrop-blur-[20px] backSh flex gap-[30px] flex-col items-center absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2">
     <div className="flex flex-col gap-[16px] w-10/12 ">
       <div className="w-full  pt-[49px]">
         <input
@@ -33,126 +54,18 @@ const FriendSearch = ({setShow, onMapChange}:props) => {
       <div className="w-full h-[491px] rounded-[34px] backdrop-blur-[20px] inpShad flex items-center flex-col  ">
         <div className=" pt-[20px] w-10/12">
           <p className="text-[#fff] text-[20px] font-[400] font-['Fredoka']">
-            Online Friend
+            Friends
           </p>
         </div>
         <div className="pt-[20px] w-10/12 flex flex-col gap-[20px] overflow-y-scroll scrollbar-hide">
-          <div className="w-full md:h-[121px] rounded-[22px] backdrop-blur-[20px] flex items-center justify-center ">
-            <div className="flex items-center justify-between  w-11/12  flex-col md:flex-row gap-[20px]  md:p-0">
-              <div className="flex items-center gap-[24px] flex-col md:flex-row py-[15px]">
-                <div className="w-[92px] h-[92px] rounded-full ">
-                  <img
-                    src="snow.svg"
-                    alt=""
-                    className="rounded-full w-full h-full object-cover"
-                  />
-                </div>
-                <div className="flex flex-col ">
-                  <p className="text-[20px] md:text-[30px] text-[#3271A8] font-['Fredoka'] font-[400]">
-                    Achraf Sabbar
-                  </p>
-                  <p className="text-[10px] md:text-[20px] text-[#064A85] font-['Fredoka'] font-[600]">
-                    LVL 5
-                  </p>
-                </div>
-              </div>
-              <div className="pb-[15px] md:pb-0">
-                <button className="w-[144px] h-[46px] rounded-[8px] bg-[#3271A8] flex items-center justify-center gap-[5px] playButt">
-                  <img src="pong-icon.svg" alt="" className="w-[15px]" />
-                  <p className="text-[#fff] text-[13px] font-[400] font-['Fredoka']">
-                    Invite To Play
-                  </p>
-                </button>
-              </div>
-            </div>
-          </div>
-          <div className="w-full md:h-[121px] rounded-[22px] backdrop-blur-[20px] flex items-center justify-center ">
-            <div className="flex items-center justify-between  w-11/12  flex-col md:flex-row gap-[20px]  md:p-0">
-              <div className="flex items-center gap-[24px] flex-col md:flex-row py-[15px]">
-                <div className="w-[92px] h-[92px] rounded-full ">
-                  <img
-                    src="snow.svg"
-                    alt=""
-                    className="rounded-full w-full h-full object-cover"
-                  />
-                </div>
-                <div className="flex flex-col ">
-                  <p className="text-[20px] md:text-[30px] text-[#3271A8] font-['Fredoka'] font-[400]">
-                    Achraf Sabbar
-                  </p>
-                  <p className="text-[10px] md:text-[20px] text-[#064A85] font-['Fredoka'] font-[600]">
-                    LVL 5
-                  </p>
-                </div>
-              </div>
-              <div className="pb-[15px] md:pb-0">
-                <button className="w-[144px] h-[46px] rounded-[8px] bg-[#3271A8] flex items-center justify-center gap-[5px] playButt">
-                  <img src="pong-icon.svg" alt="" className="w-[15px]" />
-                  <p className="text-[#fff] text-[13px] font-[400] font-['Fredoka']">
-                    Invite To Play
-                  </p>
-                </button>
-              </div>
-            </div>
-          </div>
-          <div className="w-full md:h-[121px] rounded-[22px] backdrop-blur-[20px] flex items-center justify-center ">
-            <div className="flex items-center justify-between  w-11/12  flex-col md:flex-row gap-[20px]  md:p-0">
-              <div className="flex items-center gap-[24px] flex-col md:flex-row py-[15px]">
-                <div className="w-[92px] h-[92px] rounded-full ">
-                  <img
-                    src="snow.svg"
-                    alt=""
-                    className="rounded-full w-full h-full object-cover"
-                  />
-                </div>
-                <div className="flex flex-col ">
-                  <p className="text-[20px] md:text-[30px] text-[#3271A8] font-['Fredoka'] font-[400]">
-                    Achraf Sabbar
-                  </p>
-                  <p className="text-[10px] md:text-[20px] text-[#064A85] font-['Fredoka'] font-[600]">
-                    LVL 5
-                  </p>
-                </div>
-              </div>
-              <div className="pb-[15px] md:pb-0">
-                <button className="w-[144px] h-[46px] rounded-[8px] bg-[#3271A8] flex items-center justify-center gap-[5px] playButt">
-                  <img src="pong-icon.svg" alt="" className="w-[15px]" />
-                  <p className="text-[#fff] text-[13px] font-[400] font-['Fredoka']">
-                    Invite To Play
-                  </p>
-                </button>
-              </div>
-            </div>
-          </div>
-          <div className="w-full md:h-[121px] rounded-[22px] backdrop-blur-[20px] flex items-center justify-center ">
-            <div className="flex items-center justify-between  w-11/12  flex-col md:flex-row gap-[20px]  md:p-0">
-              <div className="flex items-center gap-[24px] flex-col md:flex-row py-[15px]">
-                <div className="w-[92px] h-[92px] rounded-full ">
-                  <img
-                    src="snow.svg"
-                    alt=""
-                    className="rounded-full w-full h-full object-cover"
-                  />
-                </div>
-                <div className="flex flex-col ">
-                  <p className="text-[20px] md:text-[30px] text-[#3271A8] font-['Fredoka'] font-[400]">
-                    Achraf Sabbar
-                  </p>
-                  <p className="text-[10px] md:text-[20px] text-[#064A85] font-['Fredoka'] font-[600]">
-                    LVL 5
-                  </p>
-                </div>
-              </div>
-              <div className="pb-[15px] md:pb-0">
-                <button className="w-[144px] h-[46px] rounded-[8px] bg-[#3271A8] flex items-center justify-center gap-[5px] playButt">
-                  <img src="pong-icon.svg" alt="" className="w-[15px]" />
-                  <p className="text-[#fff] text-[13px] font-[400] font-['Fredoka']">
-                    Invite To Play
-                  </p>
-                </button>
-              </div>
-            </div>
-          </div>
+         
+          {Friends.map((friend: any) => (
+             <FriendCard avatar={friend?.avatar} name={`${friend?.firstName} ${friend?.lastName}`} online={friend?.status}/>
+          ))}
+          <FriendCard avatar="avatar.png" name="Imad" online="ofline"/>
+          <FriendCard avatar="avatar.png" name="Imad" online="online"/>
+          <FriendCard avatar="avatar.png" name="Imad" online="online"/>
+          <FriendCard avatar="avatar.png" name="Imad" online="online"/>
         </div>
       </div>
     </div>

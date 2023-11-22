@@ -153,7 +153,7 @@ export class AuthService {
         encoding: "base32",
         token: token,
       });
-
+      console.log(verified);
       if (verified) {
         await this.prisma.user.update({
           where: {
@@ -163,10 +163,8 @@ export class AuthService {
             twoFAActive: true,
           },
         });
-        return "Updated successfully!";
-      } else {
-        throw new BadRequestException("Invalid token");
-      }
+      } 
+      return verified;
     } catch (error) {
       return error;
     }

@@ -37,9 +37,9 @@ const Game = () => {
 					/>
 			</div>
 			{
-				Show == null ? <Modes setShow={setShow} onModeChange={handleModeChange} />
+				Show == null ? <Maps setShow={setShow} onMapChange={handleMapChange} />
 				:
-				Show == 'map' && <FriendSearch setShow={setShow} onMapChange={handleMapChange} />
+				Show == 'map' && <FriendSearch  />
 				// :
 				// Show == 'slect' && <Select />
 			}
