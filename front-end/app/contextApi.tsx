@@ -5,6 +5,7 @@ import { getLocalStorageItem , removeLocalStorageItem } from '@/utils/localStora
 import { useRouter } from 'next/navigation';
 import axiosInstance from '@/utils/axiosInstance';
 import io, { Socket } from 'socket.io-client';
+import { Toaster, toast } from 'sonner';
 let newSocket: Socket | null = null;
 let notificationsocket: Socket | null = null;
 
@@ -25,6 +26,7 @@ const ContextProvider = ({ children }: { children: React.ReactNode; }) => {
   const [loged, setLoged] = useState<boolean>(false);
   const [myFriends, setMyFriends] = useState<any>([]);
   const [mediaDashbord, setMediaDashbord]  = useState<boolean>(false);
+  const [myNotif, setMyNotif] = useState<any>([]);
   const dashboardRef = React.useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
@@ -160,6 +162,7 @@ const ContextProvider = ({ children }: { children: React.ReactNode; }) => {
         const getFriends = async () => {
             try{
                 const res = await axiosInstance.get(`http://${process.env.NEXT_PUBLIC_APP_URL}:3000/api/friendship/show`);
+                console.log("myFrinds : ", res.data);
                 setMyFriends(res.data);
             }
             catch(err){
@@ -186,7 +189,28 @@ const ContextProvider = ({ children }: { children: React.ReactNode; }) => {
 
 		}
 	}, [user]);
+	useEffect(() => {
+	  if (!notifSocket) return;
 
+		console.log("notifSocket : ", notifSocket);
+		notifSocket.on('notification', (payload:any) => {
+			console.log("payload : ", payload);
+			setMyNotif((prev:any) => [...prev, payload]);
+			setTimeout(() => {
+			setMyNotif([]);
+			}
+			, 100);
+		})
+		notifSocket.on('redirect', (payload:any) => {
+			router.push(`${payload.link}`);
+		})
+		return () => {
+			setMyNotif([]);
+			notifSocket.off('notification');
+      notifSocket.disconnect();  
+		}
+	}
+	, [notifSocket]);
   return (
     <contextdata.Provider value={{
         socket:socket,
@@ -210,7 +234,24 @@ const ContextProvider = ({ children }: { children: React.ReactNode; }) => {
         setMyFriends:setMyFriends,
       
       }}>
-        {children}
+        <div className='w-full h-full relative'>
+            {
+              <div className='w-full absolute'>
+                <Toaster position="top-right"  richColors/>
+                {myNotif.length !== 0 && myNotif.map((notif:any, index:number) => (
+                <div key={index}>
+                  
+                  {notif.type === 'success' && toast.success(notif.message)}
+                  {notif.type === 'info' && toast.info(notif.message)}
+                  {notif.type === 'error' && toast.error(notif.message)}
+                  {notif.type === 'warning' && toast.warning(notif.message)}
+                </div>
+                ))
+                }
+              </div>
+            }
+          {children}
+        </div>
     </contextdata.Provider>
   );
 }

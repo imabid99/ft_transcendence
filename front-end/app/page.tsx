@@ -5,6 +5,7 @@ import { checkLoged } from "@/utils/localStorage"
 import { useRouter } from "next/navigation"
 import { useEffect, useState } from "react"
 import Loading from "./loading"
+import Reload from "./reload"
 
 
 export default function Page() {
@@ -28,11 +29,11 @@ export default function Page() {
 
 
   return (
-    <>
-      <Dashboard path='Home'/>
-      <div className='h-[100vh] w-[100vw] flex pl-[150px] bg-[#FAFDFF] lsm:max-lg:overflow-x-hidden lsm:max-lg:pl-[100px] lsm:max-sm:pl-[0px]'>
-        <HomeDash />
-      </div>
-    </>
+    <Reload>
+        <Dashboard path='Home'/>
+        <div className='h-[100vh] w-[100vw] flex pl-[150px] bg-[#FAFDFF] lsm:max-lg:overflow-x-hidden lsm:max-lg:pl-[100px] lsm:max-sm:pl-[0px]'>
+          <HomeDash />
+        </div>
+    </Reload>
   )
 }

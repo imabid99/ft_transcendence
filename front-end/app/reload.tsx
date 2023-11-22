@@ -26,7 +26,7 @@ export default function Reload({children,}: {children: React.ReactNode}) {
 		setUser,
 	} :any= useContext(contextdata);
 	const [refresh, setRefresh] = useState<string>("");
-	const [myNotif, setMyNotif] = useState<any>([]);
+	// const [myNotif, setMyNotif] = useState<any>([]);
 	const router = useRouter();
 
 	useEffect(() => {
@@ -34,14 +34,13 @@ export default function Reload({children,}: {children: React.ReactNode}) {
 		socket.on("refresh", () => {
 			setRefresh(new Date().getTime().toString());
 		});
-		// notifSocket.on("refresh", () => {
-		// 	setRefresh(new Date().getTime().toString());
-		// }
-		// );
+		notifSocket.on("refresh", () => {
+			setRefresh(new Date().getTime().toString());
+		}
+		);
 		return () => {
 			socket.off("refresh");
-			// notifSocket.off("refresh");
-			// notifSocket?.disconnect();
+			notifSocket.off("refresh");
 		}
 	}, [socket]);
 
@@ -141,46 +140,9 @@ export default function Reload({children,}: {children: React.ReactNode}) {
 		getMyFriends();
 	}, [refresh, user])
 
-
-	// useEffect(() => {
-	//   if (!notifSocket) return;
-
-	// 	console.log("notifSocket : ", notifSocket);
-	// 	notifSocket.on('notification', (payload:any) => {
-	// 		console.log("payload : ", payload);
-	// 		setMyNotif((prev:any) => [...prev, payload]);
-	// 		setTimeout(() => {
-	// 		setMyNotif([]);
-	// 		}
-	// 		, 100);
-	// 	})
-	// 	notifSocket.on('redirect', (payload:any) => {
-	// 		router.push(`${payload.link}`);
-	// 	})
-	// 	return () => {
-	// 		setMyNotif([]);
-	// 		notifSocket.off('notification');
-	// 	}
-	// }
-	// , [notifSocket]);
     return (
-        <div className='w-full h-ful relative'>
-			{
-            <div className='w-full absolute'>
-				<Toaster position="top-right"  richColors/>
-				{myNotif.length !== 0 && myNotif.map((notif:any, index:number) => (
-				<div key={index}>
-					
-					{notif.type === 'success' && toast.success(notif.message)}
-					{notif.type === 'info' && toast.info(notif.message)}
-					{notif.type === 'error' && toast.error(notif.message)}
-					{notif.type === 'warning' && toast.warning(notif.message)}
-				</div>
-				))
-				}
-			</div>
-			}
+		<>
             {children}
-        </div>
+		</>
     )
 }
