@@ -157,6 +157,33 @@ export class FriendshipService {
         return friendship.sender.profile;
       }
     });
+  }
+
+  async getBlocked(userId: string) {
+    const friendships = await this.prisma.friendship.findMany({
+      where: {
+        OR: [
+          { senderId: userId, status: FriendshipStatus.BLOCKED },
+          { receiverId: userId, status: FriendshipStatus.BLOCKED },
+        ],
+      },
+      include: {
+        sender: {
+          select: { id: true, profile: true }, 
+        },
+        receiver: {
+          select: { id: true, profile: true },
+        },
+      },
+    });
+
+    let friends = friendships.flatMap(friendship => {
+      if (friendship.senderId === userId) {
+        return friendship.receiver.profile;
+      } else {
+        return friendship.sender.profile;
+      }
+    });
 
     // Deduplicate the friends by their id
     friends = friends.filter((friend, index, self) =>
@@ -185,53 +212,54 @@ export class FriendshipService {
     }));
   }
 
-  // async blockUser(blockerId: string, blockedId: string) {
-  //     // Check if there's already a relationship
-  //     const existingRelationship = await this.prisma.friendship.findFirst({
-  //       where: {
-  //         OR: [
-  //           { senderId: blockerId, receiverId: blockedId },
-  //           { senderId: blockedId, receiverId: blockerId },
-  //         ],
-  //       },
-  //     });
+  async blockUser(blockerId: string, blockedId: string) : Promise<any> {
+      // Check if there's already a relationship
+      const existingRelationship = await this.prisma.friendship.findFirst({
+        where: {
+          OR: [
+            { senderId: blockerId, receiverId: blockedId },
+            { senderId: blockedId, receiverId: blockerId },
+          ],
+        },
+      });
 
-  //     if (existingRelationship) {
-  //       return this.prisma.friendship.update({
-  //         where: { id: existingRelationship.id },
-  //         data: { status: 'BLOCKED', actionUserId: blockerId },
-  //       });
-  //     } else {
-  //       return this.prisma.friendship.create({
-  //         data: {
-  //           senderId: blockerId,
-  //           receiverId: blockedId,
-  //           status: 'BLOCKED',
-  //           actionUserId: blockerId,
-  //         },
-  //       });
-  //     }
-  //   }
-  //   async unblockUser(blockerId: string, blockedId: string) {
-  //     return this.prisma.friendship.deleteMany({
-  //       where: {
-  //         senderId: blockerId,
-  //         receiverId: blockedId,
-  //         status: 'BLOCKED',
-  //       },
-  //     });
-  //   }
+      if (existingRelationship) {
+        return this.prisma.friendship.update({
+          where: { id: existingRelationship.id },
+          data: { status: FriendshipStatus.BLOCKED, actionUserId: blockerId },
+        });
+      } else {
+        return this.prisma.friendship.create({
+          data: {
+            senderId: blockerId,
+            receiverId: blockedId,
+            status: FriendshipStatus.BLOCKED,
+            actionUserId: blockerId,
+          },
+        });
+      }
+    }
 
-  //   async isUserBlocked(userId: string, potentialBlockerId: string) {
-  //     const blockedRelationship = await this.prisma.friendship.findFirst({
-  //       where: {
-  //         senderId: potentialBlockerId,
-  //         receiverId: userId,
-  //         status: 'BLOCKED',
-  //       },
-  //     });
-  //     return Boolean(blockedRelationship);
-  //   }
+    async unblockUser(blockerId: string, blockedId: string) {
+      return this.prisma.friendship.deleteMany({
+        where: {
+          senderId: blockerId,
+          receiverId: blockedId,
+          status: FriendshipStatus.BLOCKED,
+        },
+      });
+    }
+
+    async isUserBlocked(userId: string, potentialBlockerId: string) {
+      const blockedRelationship = await this.prisma.friendship.findFirst({
+        where: {
+          senderId: potentialBlockerId,
+          receiverId: userId,
+          status: FriendshipStatus.BLOCKED,
+        },
+      });
+      return Boolean(blockedRelationship);
+    }
 
   //   async getFriendshipStatus(userId: string, friendId: string) {
   //     const friendship = await this.prisma.friendship.findFirst({

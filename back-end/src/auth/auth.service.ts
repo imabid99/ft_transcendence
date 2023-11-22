@@ -91,10 +91,10 @@ export class AuthService {
     return QRCode.toBuffer(data);
   }
 
-  generate2FASecret(ussername : string): string {
+  generate2FASecret(username : string): string {
     const secret = speakeasy.generateSecret({
       length: 20,
-      name: `ft_transendance:${uuidv4()}`,
+      name: `Pong Masters:${username}`,
     });
     return secret.base32;
   }
@@ -109,7 +109,7 @@ export class AuthService {
       const url = speakeasy.otpauthURL({
         secret: user.twoFASecret,
         encoding: "base32",
-        label: "ft_transendance",
+        label: "Pong Masters",
         algorithm: "sha512",
       });
       return this.generateQR(url);
