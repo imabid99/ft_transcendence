@@ -29,7 +29,8 @@ export default function Page() {
   const first = myProfile?.firstName;
   const last = myProfile?.lastName;
   const ema = myProfile?.email;
-
+  const [twofactoryInput, setTwofactoryInput] = useState<string>("");
+  
   type FormValues = {
     firstName: string;
     lastName: string;
@@ -40,8 +41,8 @@ export default function Page() {
     twofactory: string;
   };
   // type FormValues1 = {
-  //   oldpassword: string;
-  //   newpassword: string;
+    //   oldpassword: string;
+    //   newpassword: string;
   //   confirmpassword: string;
   // }
   const form = useForm<FormValues>({ mode: "all" });
@@ -55,24 +56,21 @@ export default function Page() {
     watch: watch1,
   } = form1;
   const { errors: errors1, isDirty: isDirty1 } = formState1;
-  const form2 = useForm<FormValues>({});
-  const {
-    register: register2,
-    handleSubmit: handleSubmit2,
-    formState: formState2,
-    watch: watch2,
-  } = form2;
-  const { errors: errors2, isDirty: isDirty2 } = formState2;
-
+  
+  
   useEffect(() => {
     const token = checkLoged();
     if (!token) {
       router.push("/login");
       return;
     }
+    if(!user) return;
+    console.log("user : ", user?.twoFAActive);
+    setTwofactoryIsEnable(!user?.twoFAActive);
     setIsLoading(false);
-  }, []);
-
+  }, [user]);
+  const [twofactoryIsEnable, setTwofactoryIsEnable] = useState<boolean>(true);
+  
   const qrcode = async (e: any) => {
     e.preventDefault();
 
@@ -181,21 +179,7 @@ export default function Page() {
       return;
     }
   };
-  const onSubmit2 = async (data: FormValues) => {
-    console.log(data);
-    try {
-      const response = await axiosInstance.patch(
-        `http://${process.env.NEXT_PUBLIC_APP_URL}:3000/api/auth/2fa_enable`,
-        {
-          twofactory: data.twofactory,
-        }
-      );
-      console.log(response);
-    } catch (e: any) {
-      console.log("Error : ", e.response.data);
-      return;
-    }
-  };
+ 
   const registerOptions = {
     firstName: {
       required: "First name is required",
@@ -330,6 +314,42 @@ export default function Page() {
   //   // Handle form submission, e.g., enable or disable two-factor authentication
   //   console.log("haelashkf",data);
   // };
+
+  const handleEnableTwoFactory = async (e: any) => {
+    e.preventDefault();
+    try {
+      const response = await axiosInstance.patch(
+        `http://${process.env.NEXT_PUBLIC_APP_URL}:3000/api/auth/2fa_enable`,
+        {
+          twofactory: twofactoryInput,
+        }
+      );
+      console.log("handleEnableTwoFactory : ", response.data);
+      if (response.data === true) {
+        setTwofactoryIsEnable(false);
+      }
+    } catch (e: any) {
+      console.log("Error : ", e.response.data);
+      return;
+    }
+  };
+  const handleDisableTwoFactory = async (e: any) => {
+    e.preventDefault();
+    try {
+      const response = await axiosInstance.patch(
+        `http://${process.env.NEXT_PUBLIC_APP_URL}:3000/api/auth/2fa_disable`,
+        {
+          twofactory: twofactoryInput,
+        }
+      );
+      if (response.data === true) {
+        setTwofactoryIsEnable(true);
+      }
+    } catch (e: any) {
+      console.log("Error : ", e.response.data);
+      return;
+    }
+  };
 
   return (
     <div className="flex items-center  flex-col  gap-[80px] 3xl:gap-0 w-[100%] justify-start  3xl:px-[10px]  ">
@@ -547,7 +567,6 @@ export default function Page() {
             <form
               action=""
               className=" flex items-center w-full flex-col"
-              onSubmit={handleSubmit2(onSubmit2)}
               noValidate
             >
               <div className="flex flex-col gap-[22px] sm:flex-row justify-center items-center pt-[16px]  w-[100%] ">
@@ -559,26 +578,47 @@ export default function Page() {
                     event.currentTarget.value =
                       event.currentTarget.value.replace(/[^0-9]/g, "");
                   }}
-                  {...register2("twofactory", registerOptions.twofactory)}
-                  // className="text-center border-[#7D8493] bg-[#F8F8F8] w-[250px] xl:w-[343px] h-[48px] rounded-[15px] "
-                  className={`text-center border-[#7D8493] bg-[#F8F8F8] w-[250px] xl:w-[343px] h-[48px] rounded-[15px]  ${
-                    errors2.twofactory
-                      ? "border-[2px] border-red-400 placeholder:text-red-400"
-                      : ""
-                  }`}
+                  onChange={(e) => setTwofactoryInput(e.target.value)}
+                  className={`text-center border-[#7D8493] bg-[#F8F8F8] w-[250px] xl:w-[343px] h-[48px] rounded-[15px] `}
                 />
               </div>
               <div className="flex flex-col sm:flex-row justify-center items-center  pt-[24px] pb-[40px] gap-[8px] w-full  xl:pb-0">
-                <input
-                  type="submit"
-                  className="w-[160px] h-[50px] rounded-[12px]  cursor-pointer text-[#fff] text-[13px] font-[600] b-authS"
-                  value="Enable"
-                />
-                <input
-                  type="submit"
-                  className="w-[160px] h-[50px] rounded-[12px] cursor-pointer text-[#fff] text-[13px] font-[600] bg-[#F9F9F9] b-authR"
-                  value="Disable"
-                />
+                {
+                    twofactoryIsEnable?
+                    (
+                      <input
+                        type="submit"
+                        className="w-[160px] h-[50px] rounded-[12px]  cursor-pointer text-[#fff] text-[13px] font-[600] b-authS"
+                        value="Enable"
+                        onClick={handleEnableTwoFactory}
+                      />
+                      
+                    ):
+                    (
+                        <div
+                          className="w-[160px] h-[50px] rounded-[12px]  flex justify-center items-center cursor-default text-[#fff] text-[13px] font-[600] bg-[#d0d0d0] "
+                        >Enable</div>
+                        
+                    )
+                }
+                {
+                    !twofactoryIsEnable  ?
+                    (
+                      <input
+                        type="submit"
+                        className="w-[160px] h-[50px] rounded-[12px] cursor-pointer text-[#fff] text-[13px] font-[600] bg-[#F9F9F9] b-authR"
+                        value="Disable"
+                        onClick={handleDisableTwoFactory}
+                      />
+                      
+                    ):
+                    (
+                        <div
+                          className="w-[160px] h-[50px] rounded-[12px]  flex justify-center items-center cursor-default text-[#fff] text-[13px] font-[600] bg-[#d0d0d0] "
+                        >Disable</div>
+                    )
+                }
+
               </div>
             </form>
           </div>

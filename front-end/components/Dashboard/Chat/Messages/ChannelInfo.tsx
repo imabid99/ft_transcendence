@@ -39,7 +39,7 @@ export default function ChannelInfo({infoRef, handleshowInfo, group, userId}: Ch
     }
 
     return (
-        <div className="h-[100vh] bg-[#FFF] min-w-[524px] fixed right-[-700px] top-0 z-[60] groupInfo p-[42px] !pb-0 ease-in duration-300 delay-100 "
+        <div className="h-[100vh] bg-[#FFF] lsm:max-sm:w-[100vw] sm:min-w-[524px] fixed right-[-700px] top-0 z-[60] groupInfo p-[42px] !pb-0 ease-in duration-300 delay-100 "
             ref={infoRef}>
             <div className="w-full h-full  flex relative  flex-col gap-[30px] overflow-y-scroll no-scrollbar ">
                 <div className="w-full flex items-center justify-between">
@@ -65,7 +65,7 @@ export default function ChannelInfo({infoRef, handleshowInfo, group, userId}: Ch
                     </p>
                     {
                         showAccessPassword &&
-                            <div className="min-h-full w-full absolute top-0 left-0 bg-white flex  justify-center  gap-[20px]">
+                            <div className="min-h-full w-full absolute top-0 left-0 bg-white flex  justify-center  gap-[20px] lsm:max-sm:flex-col lsm:max-sm:justify-start lsm:max-sm:items-center">
                                     <button className="bg-[#00959C] px-[20px] py-[22px] flex justify-between items-center w-[220px] rounded-[11px]  max-h-[62px]" onClick={handleRemove}>
                                         <span>
                                             <svg width="20" height="24" viewBox="0 0 20 24" fill="none" xmlns="http://www.w3.org/2000/svg">

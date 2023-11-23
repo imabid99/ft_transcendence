@@ -53,7 +53,6 @@ export default function Page() {
     const blockUser = async () => {
         try{
             const res = await axiosInstance.patch(`http://${process.env.NEXT_PUBLIC_APP_URL}:3000/api/friendship/block/${UserId}`);
-            console.log("res is blockuser", res);
         }
         catch(err){
             console.log(err);
@@ -62,7 +61,7 @@ export default function Page() {
     const unblockUser = async () => {
         try{
             const res = await axiosInstance.patch(`http://${process.env.NEXT_PUBLIC_APP_URL}:3000/api/friendship/unblock/${UserId}`);
-            console.log("res is blockuser", res); 
+            console.log("res is hhhhhh blockuser", res); 
         }
         catch(err){
             console.log(err);
@@ -85,10 +84,10 @@ export default function Page() {
     const checkFriendship = async () => {
         try{
             const res = await axiosInstance.get(`http://${process.env.NEXT_PUBLIC_APP_URL}:3000/api/friendship/show/${UserId}`);
-            console.log("res isfri", res);
+            // console.log("res isfri", res);
             if(res.data)
             {
-                console.log("res is", res);
+                // console.log("res is", res);
                 setIsFriend(true);
             }
         }
