@@ -17,6 +17,7 @@ import { use } from "passport";
 import { Req, UseGuards } from "@nestjs/common";
 import { AuthGuard } from "@nestjs/passport";
 import { GameService } from "src/Game/game.service";
+import { v4 as uuidv4 } from 'uuid';
 
 
 @WebSocketGateway({
@@ -63,7 +64,7 @@ export class GameGateway implements OnGatewayConnection, OnGatewayDisconnect {
       const token = client.handshake.headers.authorization?.split(" ")[1];
       if (token) {
 
-        console.log("this is the header in con",client.handshake.headers.authorization);
+        // console.log("this is the header in con",client.handshake.headers.authorization);
         jwt.verify(token, process.env.JWT_SECRET);
         const user: any = jwt_decode(token);
         if (user && user.userId) {
@@ -78,6 +79,7 @@ export class GameGateway implements OnGatewayConnection, OnGatewayDisconnect {
     }
   }
 
+  //RANDOM GAME
   @SubscribeMessage("matchmaking")
   async randomMatchmaking(client: Socket) {
     const token = client.handshake.headers.authorization?.split(" ")[1];
@@ -96,7 +98,6 @@ export class GameGateway implements OnGatewayConnection, OnGatewayDisconnect {
       if (this.waitingPlayers.length >= 2) {
         const creator = this.waitingPlayers.shift();
         const opponent = this.waitingPlayers.shift();
-
         if (creator.username !== opponent.username) {
           console.log(
             `Match started between ${creator.client.id} and ${opponent.client.id}`
@@ -109,29 +110,6 @@ export class GameGateway implements OnGatewayConnection, OnGatewayDisconnect {
         }
       }
     }
-  }
-
-
-  handleDisconnect(client: Socket) {
-    try {
-      const token = client.handshake.headers.authorization?.split(" ")[1];
-      if (token) {
-        console.log("this is the header in descon",client.handshake.headers.authorization);
-        const user: any = jwt_decode(token);
-        if (user && user.userId && this.socketMap.has(user.userId)) {
-          const sockets = this.socketMap.get(user.userId);
-          const index = sockets.indexOf(client);
-          if (index !== -1) {
-            sockets.splice(index, 1);
-          }
-          if (sockets.length === 0) {
-            this.socketMap.delete(user.userId);
-          }
-        }
-    }
-      } catch (e) {
-        console.log(e);
-      }
   }
 
   @SubscribeMessage("paddle-pos")
@@ -184,4 +162,77 @@ export class GameGateway implements OnGatewayConnection, OnGatewayDisconnect {
       this.server.to(match.id).emit('player-wins', { winner, winnerScore, loserScore });
     }
   }
+
+  //INVITE GAME
+  private waitingForConnection: Map<string, { roomId: string, inviterSocket: Socket }> = new Map();
+
+  @SubscribeMessage("InviteGame")
+  async inviteGame(client: Socket, payload: { invitedId: string }) {
+    const token = client.handshake.headers.authorization?.split(" ")[1];
+    if (token) {
+      const decoded: any = jwt_decode(token);
+      const userId = decoded.userId;
+      const username = decoded.username;
+      console.log(`Client ${decoded.username} invited ${payload.invitedId}`);
+      const roomId = uuidv4();
+      client.join(roomId);
+      this.waitingForConnection.set(payload.invitedId, { roomId, inviterSocket: client });
+    }
+  }
+  
+  @SubscribeMessage("AcceptMatchInvitation")
+  async acceptMatchInvitation(client: Socket, payload: { userId: string }) {
+    const inviteData = this.waitingForConnection.get(payload.userId);
+    if (inviteData) {
+      client.join(inviteData.roomId);
+      this.server.to(inviteData.roomId).emit("StartGame", { matchID: inviteData.roomId, redirectURL: `/Game/invite/${inviteData.roomId}` });
+      this.waitingForConnection.delete(payload.userId);
+    }
+  }
+
+  @SubscribeMessage("invite-paddle-pos")
+  async handleInvitePaddlePos(
+    client: Socket,
+    payload: { x: number, y: number, z: number; playerId?: string }
+  ) {
+    const match = await this.gameService.getMatch(client.id);
+    if (match) {
+      this.server.to(match.id).emit('invite-paddle-pos', payload);
+    }
+  }
+
+  @SubscribeMessage("invite-paddle-pos")
+  async handleInviteBallServe(
+    client: Socket,
+    payload: { isServing: boolean; isServingmobile: boolean; direction: number }
+  ) {
+    const match = await this.gameService.getMatch(client.id);
+    if (match) {
+      client.broadcast.to(match.id).emit("invite-paddle-pos", payload);
+    }
+  }
+
+  handleDisconnect(client: Socket) {
+    try {
+      const token = client.handshake.headers.authorization?.split(" ")[1];
+      if (token) {
+        // console.log("this is the header in descon",client.handshake.headers.authorization);
+        const user: any = jwt_decode(token);
+        if (user && user.userId && this.socketMap.has(user.userId)) {
+          const sockets = this.socketMap.get(user.userId);
+          const index = sockets.indexOf(client);
+          if (index !== -1) {
+            sockets.splice(index, 1);
+          }
+          if (sockets.length === 0) {
+            this.socketMap.delete(user.userId);
+          }
+        }
+    }
+      } catch (e) {
+        console.log(e);
+      }
+  }
+
+
 }
