@@ -218,7 +218,9 @@ export class FriendshipService {
   }
 
   async blockUser(blockerId: string, blockedId: string) : Promise<any> {
-      // Check if there's already a relationship
+      if (this.isUserBlocked(blockerId, blockedId)) {
+        return ("You've already blocked this user");
+      }
       const existingRelationship = await this.prisma.friendship.findFirst({
         where: {
           OR: [
@@ -229,12 +231,13 @@ export class FriendshipService {
       });
 
       if (existingRelationship) {
-        return this.prisma.friendship.update({
+        this.prisma.friendship.update({
           where: { id: existingRelationship.id },
           data: { status: FriendshipStatus.BLOCKED, actionUserId: blockerId },
         });
+        return ("Blocked");
       } else {
-        return this.prisma.friendship.create({
+        this.prisma.friendship.create({
           data: {
             senderId: blockerId,
             receiverId: blockedId,
@@ -242,6 +245,7 @@ export class FriendshipService {
             actionUserId: blockerId,
           },
         });
+        return ("Blocked");
       }
     }
 
@@ -258,11 +262,14 @@ export class FriendshipService {
     async isUserBlocked(userId: string, potentialBlockerId: string) {
       const blockedRelationship = await this.prisma.friendship.findFirst({
         where: {
-          senderId: potentialBlockerId,
-          receiverId: userId,
+          OR: [
+            { senderId: potentialBlockerId, receiverId: userId },
+            { senderId: userId, receiverId: potentialBlockerId },
+          ],
           status: FriendshipStatus.BLOCKED,
         },
       });
+      // console.log("blockedRelationship is ", blockedRelationship);
       return Boolean(blockedRelationship);
     }
 
