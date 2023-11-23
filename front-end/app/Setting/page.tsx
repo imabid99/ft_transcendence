@@ -324,9 +324,9 @@ export default function Page() {
           twofactory: twofactoryInput,
         }
       );
-      // console.log("handleEnableTwoFactory : ", response);
+      console.log("handleEnableTwoFactory : ", response.data);
       if (response.data === true) {
-        setTwofactoryIsEnable(true);
+        setTwofactoryIsEnable(false);
       }
     } catch (e: any) {
       console.log("Error : ", e.response.data);
@@ -343,7 +343,7 @@ export default function Page() {
         }
       );
       if (response.data === true) {
-        setTwofactoryIsEnable(false);
+        setTwofactoryIsEnable(true);
       }
     } catch (e: any) {
       console.log("Error : ", e.response.data);
