@@ -101,11 +101,11 @@ export default function Page() {
     const avatarUrl = `http://${process.env.NEXT_PUBLIC_APP_URL}:3000/${myProfile?.avatar}`;
     const coverUrl = `http://${process.env.NEXT_PUBLIC_APP_URL}:3000/${myProfile?.cover}`;
     return (
-        <div className='flex items-center  flex-col  gap-[40px] w-[100%] justify-start 3xl:gap-[160px] 3xl:px-[30px]  '>
+        <div className='flex items-center  flex-col  gap-[80px] 3xl:gap-0 w-[100%] justify-start  3xl:px-[30px]  '>
         {/* <div className='bg-black px-[60px] '>
         </div> */}
             <Header/>
-        <div className="flex items-center flex-col 3xl:flex-row gap-[40px] w-[100%] 3xl:justify-center ">
+        <div className="flex items-center flex-col 3xl:flex-row gap-[40px] w-[100%] 3xl:justify-center h-full z-[10]">
             <div className=" flex max-w-[922px] w-11/12 xl:h-[823px] rounded-[42px] sh-d bg-white">
             <div className="mx-auto w-11/12 mt-[34px] 3xl:w-[915px] 3xl:px-[40px]">
             {/* <div className="mx-auto w-[910px] mt-[34px]  px-[40px]"> */}
