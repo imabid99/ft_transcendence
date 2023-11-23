@@ -59,6 +59,15 @@ export default function Page() {
             console.log(err);
         }
     }
+    const unblockUser = async () => {
+        try{
+            const res = await axiosInstance.patch(`http://${process.env.NEXT_PUBLIC_APP_URL}:3000/api/friendship/unblock/${UserId}`);
+            console.log("res is blockuser", res);
+        }
+        catch(err){
+            console.log(err);
+        }
+    }
     const isBlockedUser = async () => {
         try{
             const res = await axiosInstance.get(`http://${process.env.NEXT_PUBLIC_APP_URL}:3000/api/friendship/isBlocked/${UserId}`);
@@ -194,7 +203,7 @@ export default function Page() {
                     <div className="button-container2">
                     <button
                         className="w-[80px] sm:w-[91px] h-[29px] rounded-[9px] bg-[#5085AB] flex items-center justify-center gap-[5px]"
-                        onClick={blockUser}
+                        onClick={isBlocked ? unblockUser : blockUser}
                     >
                         {isBlocked ? (
                           <>
