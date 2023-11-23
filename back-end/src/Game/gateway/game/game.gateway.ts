@@ -190,27 +190,6 @@ export class GameGateway implements OnGatewayConnection, OnGatewayDisconnect {
     }
   }
 
-  @SubscribeMessage("invite-paddle-pos")
-  async handleInvitePaddlePos(
-    client: Socket,
-    payload: { x: number, y: number, z: number; playerId?: string }
-  ) {
-    const match = await this.gameService.getMatch(client.id);
-    if (match) {
-      this.server.to(match.id).emit('invite-paddle-pos', payload);
-    }
-  }
-
-  @SubscribeMessage("invite-paddle-pos")
-  async handleInviteBallServe(
-    client: Socket,
-    payload: { isServing: boolean; isServingmobile: boolean; direction: number }
-  ) {
-    const match = await this.gameService.getMatch(client.id);
-    if (match) {
-      client.broadcast.to(match.id).emit("invite-paddle-pos", payload);
-    }
-  }
 
   @SubscribeMessage("createMatch")
   async createMatch(client: Socket) {

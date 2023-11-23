@@ -103,11 +103,10 @@ model Profile {
   lastMessageTime DateTime?
   avatar          String    @default("uploads/default/nouser.avif")
   cover           String    @default("uploads/default/first3.png")
-  gaemePlayed     Int       @default(0)
   win             Int       @default(0)
   lose            Int       @default(0)
   points          Int       @default(0)
-  level           Float     @default(0.0)
+  level           Int     @default(0)
 }
 
 model channels {

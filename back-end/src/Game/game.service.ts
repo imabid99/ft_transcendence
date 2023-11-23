@@ -14,7 +14,7 @@ export class GameService {
                 data: {
                     creatorId: creatorId,
                     opponentId: opponentId,
-                    type,
+                    type: type,
                 },
             });
             return match.id;
@@ -71,7 +71,24 @@ export class GameService {
 
     async submitScore(matchId: string, creatorScore: number, opponentScore: number): Promise<void> {
         try {
-            const match = await this.prisma.match.update({
+            // const match = this.prisma.match.findUnique({
+            //     where: {
+            //         id: matchId,
+            //     },
+            // });
+            // const opponentId = match.opponentId;
+            // const creatorId = match.creatorId;
+            // const creator = await this.prisma.profile.findUnique({ where: { userId: creatorId } });
+            // const opponent = await this.prisma.profile.findUnique({ where: { userId: opponentId } });
+            // await this.prisma.profile.update({
+            //     where: {
+            //         userId: creatorId,
+            //     },
+            //     data: {
+            //         level : creator.score + creatorScore,
+            //     },
+            // });
+            await this.prisma.match.update({
                 where: {
                     id: matchId,
                 },
@@ -84,6 +101,8 @@ export class GameService {
             return error;
         }
     }
+
+
 
     async makeRequest(senderId: string, OpponentId: string): Promise<void> {
         try {
