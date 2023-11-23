@@ -62,7 +62,7 @@ export default function Page() {
     const unblockUser = async () => {
         try{
             const res = await axiosInstance.patch(`http://${process.env.NEXT_PUBLIC_APP_URL}:3000/api/friendship/unblock/${UserId}`);
-            console.log("res is blockuser", res);
+            console.log("res is blockuser", res); 
         }
         catch(err){
             console.log(err);
