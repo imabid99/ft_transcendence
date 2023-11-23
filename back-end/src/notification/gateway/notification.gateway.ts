@@ -144,4 +144,12 @@ export class NotificationGateway implements OnGatewayConnection, OnGatewayDiscon
   updated(userId : string) {
     this.sendNotification_refresh(userId, {type : "success", message : "Updated successfully"});
   }
+
+  unblockUser(userId : string) {
+    this.sendNotification_refresh(userId, {type : "success", message : "User unblocked"});
+  }
+
+  blockUser(userId : string) {
+    this.sendNotification_refresh(userId, {type : "success", message : "User blocked"});
+  }
 }
