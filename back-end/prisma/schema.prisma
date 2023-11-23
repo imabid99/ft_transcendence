@@ -91,6 +91,7 @@ model match {
   opponentSocket String?
 }
 
+
 model Profile {
   user            User      @relation(fields: [userId], references: [id])
   userId          String    @unique
@@ -106,7 +107,15 @@ model Profile {
   win             Int       @default(0)
   lose            Int       @default(0)
   points          Int       @default(0)
-  level           Int     @default(0)
+  level           Int       @default(0)
+  achievements    Achievement[]
+}
+
+model Achievement {
+  id        Int      @id @default(autoincrement())
+  achieved  Boolean  @default(false)
+  profile   Profile  @relation(fields: [profileId], references: [userId])
+  profileId String
 }
 
 model channels {
