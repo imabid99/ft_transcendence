@@ -3,8 +3,9 @@ import { useRouter } from "next/navigation";
 import axios from "axios";
 import Link from "next/link";
 import { useForm } from "react-hook-form";
-import ErrorMessage from "@/components/signUp/Error_Message";
-// import CompleteProfile from '@/components/completeProfile/complete_profile';
+import ErrorMessage from "@/components/Dashboard/signUp/Error_Message";
+import CompleteProfile from "@/components/Dashboard/CompleteProfile/CompleteProfile";
+
 
 
 import { useState, useEffect, useRef, use } from "react";
@@ -15,7 +16,6 @@ import {
 } from "@/utils/localStorage";
 import { on } from "events";
 import Email from "next-auth/providers/email";
-import CompleteProfile from "@/components/CompleteProfile/CompleteProfile";
 
 
 export default function Home() {
@@ -42,32 +42,33 @@ export default function Home() {
   const { register, handleSubmit, formState } = form;
   const { errors, isDirty } = formState;
   const onSubmit = async (data: FormValues) => {
-    console.log(data);
-    try {
-      const response = await axios.post(
-        `http://${process.env.NEXT_PUBLIC_APP_URL}:3000/api/auth/signup`,
-        {
-          email: data.email,
-          password: data.password,
-          firstName: data.firstName,
-          lastName: data.lastName,
-          username: data.userName,
-        }
-      );
-      if (response.status !== 200) {
+    // console.log(data);
+    // try {
+    //   const response = await axios.post(
+    //     `http://${process.env.NEXT_PUBLIC_APP_URL}:3000/api/auth/signup`,
+    //     {
+    //       email: data.email,
+    //       password: data.password,
+    //       firstName: data.firstName,
+    //       lastName: data.lastName,
+    //       username: data.userName,
+    //     }
+    //   );
+    //   if (response.status !== 200) {
         setShowCompleteProfile(true);
         setInfo({
           firstName: data.firstName,
           lastName: data.lastName,
           userName: data.userName,
           email: data.email,
+          password: data.password,
         });
-      }
-    } catch (e: any) {
-      console.log("Error : ", e.response.data);
-      return;
-    }
-  };
+  }
+  //   } catch (e: any) {
+  //     console.log("Error : ", e.response.data);
+  //     return;
+  //   }
+  // };
   const onError = (errors: any) => console.log(errors);
   const registerOptions = {
     firstName: {
@@ -77,7 +78,7 @@ export default function Home() {
         message: "should not exceed 20 characters",
       },
       minLength: {
-        value: 2,
+        value: 3,
         message: "at least 3 characters",
       },
       validate: (val: any) =>
@@ -91,7 +92,7 @@ export default function Home() {
         message: "should not exceed 20 characters",
       },
       minLength: {
-        value: 2,
+        value: 3,
         message: "at least 3 characters",
       },
       validate: (val: any) =>
@@ -190,9 +191,9 @@ export default function Home() {
                       <input
                         {...register("firstName", registerOptions.firstName)}
                         type="firstName"
-                        className={`text-white h-[50px] rounded-[11px] border-[0.1px]   p-[27px] w-full  bg-white bg-opacity-10 backdrop-blur-lg  ${
+                        className={`text-white h-[65px] rounded-[11px] border-[0.1px]   p-[27px] w-full  bg-white bg-opacity-10 backdrop-blur-lg  ${
                           errors.firstName
-                            ? "border-[2px] border-red-400 placeholder:text-red-400"
+                            ? "border-[1px] border-red-400 placeholder:text-red-400"
                             : "placeholder:text-white"
                         }`}
                         placeholder="First name"
@@ -203,9 +204,9 @@ export default function Home() {
                       <input
                         {...register("lastName", registerOptions.lastName)}
                         type="lastName"
-                        className={`text-white h-[50px] rounded-[11px] border-[0.1px]   p-[27px] w-full   bg-white bg-opacity-10 backdrop-blur-lg  ${
+                        className={`text-white h-[65px] rounded-[11px] border-[0.1px]   p-[27px] w-full   bg-white bg-opacity-10 backdrop-blur-lg  ${
                           errors.lastName
-                            ? "border-[2px] border-red-400 placeholder:text-red-400"
+                            ? "border-[1px] border-red-400 placeholder:text-red-400"
                             : "placeholder:text-white"
                         }`}
                         placeholder="Last name"
@@ -217,9 +218,9 @@ export default function Home() {
                     <input
                       {...register("userName", registerOptions.userName)}
                       type="userName"
-                      className={`text-white h-[50px] rounded-[11px] border-[0.1px]   p-[27px] w-full  bg-white bg-opacity-10 backdrop-blur-lg  ${
+                      className={`text-white h-[65px] rounded-[11px] border-[0.1px]   p-[27px] w-full  bg-white bg-opacity-10 backdrop-blur-lg  ${
                         errors.userName
-                          ? "border-[2px] border-red-400 placeholder:text-red-400"
+                          ? "border-[1px] border-red-400 placeholder:text-red-400"
                           : "placeholder:text-white"
                       }`}
                       placeholder="Username"
@@ -230,9 +231,9 @@ export default function Home() {
                     <input
                       {...register("email", registerOptions.email)}
                       type="email"
-                      className={`text-white h-[50px] rounded-[11px] border-[0.1px]   p-[27px] w-full  bg-white bg-opacity-10 backdrop-blur-lg  ${
+                      className={`text-white h-[65px] rounded-[11px] border-[0.1px]   p-[27px] w-full  bg-white bg-opacity-10 backdrop-blur-lg  ${
                         errors.email
-                          ? "border-[2px] border-red-400 placeholder:text-red-400"
+                          ? "border-[1px] border-red-400 placeholder:text-red-400"
                           : "placeholder:text-white"
                       }`}
                       placeholder="Email"
@@ -243,9 +244,9 @@ export default function Home() {
                     <input
                       {...register("password", registerOptions.password)}
                       type="password"
-                      className={`text-white h-[50px] rounded-[11px] border-[0.1px]   p-[27px] w-full  bg-white bg-opacity-10 backdrop-blur-lg  ${
+                      className={`text-white h-[65px] rounded-[11px] border-[0.1px]   p-[27px] w-full  bg-white bg-opacity-10 backdrop-blur-lg  ${
                         errors.password
-                          ? "border-[2px] border-red-400 placeholder:text-red-400"
+                          ? "border-[1px] border-red-400 placeholder:text-red-400"
                           : "placeholder:text-white"
                       }`}
                       placeholder="Password"

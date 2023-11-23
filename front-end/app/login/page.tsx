@@ -3,7 +3,7 @@ import {useRouter} from 'next/navigation';
 import axios from 'axios';
 import Link from 'next/link';
 import {useForm} from 'react-hook-form';
-import ErrorMessage from '@/components/signUp/Error_Message';
+import ErrorMessage from '@/components/Dashboard/signUp/Error_Message';
 import {
   useState,
   useEffect,

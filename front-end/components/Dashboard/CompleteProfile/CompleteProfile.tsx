@@ -3,7 +3,7 @@ import {useRouter} from 'next/navigation';
 import axios from 'axios';
 import Link from 'next/link';
 import {useForm} from 'react-hook-form';
-import ErrorMessage from '@/components/signUp/Error_Message';
+import ErrorMessage from '../signUp/Error_Message';
 import { useContext } from 'react';
 import { contextdata } from '@/app/contextApi';
 
@@ -23,7 +23,7 @@ export default function CompleteProfile({info}:any) {
   const {profiles, user, socket}:any = useContext(contextdata);
   const myProfile = profiles?.find((profile:any) => profile?.userId === user?.id);
   const name = `${myProfile?.firstName} ${myProfile?.lastName}`;
-
+  const [avatarUrl, setAvatarUrl] = useState("/groupAvatar.jpg");
 
     const router = useRouter();
     const [isloading, setIsLoading] = useState(true);
@@ -40,7 +40,7 @@ export default function CompleteProfile({info}:any) {
       defaultValues: {
         firstName: info.firstName,
         lastName: info.lastName,
-        userName: info.username,
+        userName: info.userName,
         email: info.email,
       }
     });
@@ -52,10 +52,12 @@ export default function CompleteProfile({info}:any) {
       try {
         const response = await axios.post(`http://${process.env.NEXT_PUBLIC_APP_URL}:3000/api/auth/signup`, {
           email: data.email,
-          password: data.password,
+          // password: data.password,
           firstName: data.firstName,
           lastName: data.lastName,
           username: data.userName,
+          password: info.password,
+          // avatar: myAvatar,
          });   
          if (response.status !== 200) 
          router.push('/login');
@@ -73,7 +75,7 @@ export default function CompleteProfile({info}:any) {
         message: "should not exceed 20 characters",
       },
       minLength: {
-        value: 2,
+        value: 3,
         message: "at least 3 characters",
       },
       validate: (val:any) =>
@@ -85,7 +87,7 @@ export default function CompleteProfile({info}:any) {
         message: "should not exceed 20 characters",
       },
       minLength: {
-        value: 2,
+        value: 3,
         message: "at least 3 characters",
       },
       validate: (val:any) =>
@@ -139,7 +141,22 @@ export default function CompleteProfile({info}:any) {
           console.log(err);
       });
   }
-  const avatarUrl = `http://${process.env.NEXT_PUBLIC_APP_URL}:3000/${myProfile?.avatar}`;
+  console.log("this is my profile : ", myProfile);
+  const handleUploadImage = (e: any) => {
+    const file = e.target.files?.[0];
+    const maxFileSize = 1024 * 1024 * 5;
+    const formData = new FormData();
+    formData.append('file', file);
+
+    if (!file) return;
+    if (file?.size > maxFileSize) {
+        alert("File is too large. Please upload a file smaller than 5 MB.");
+        return;
+    }
+    // setAvatar(formData);
+    setAvatarUrl(URL.createObjectURL(file));
+}
+  // const avatarUrl = `http://${process.env.NEXT_PUBLIC_APP_URL}:3000/${myProfile?.avatar}`;
     return (
         
         <>
@@ -167,7 +184,7 @@ export default function CompleteProfile({info}:any) {
                     type="file"
                     id="upload"
                     className="absolute hidden cursor-pointer"
-                    onChange={(e) => handleFileInputChange(e)}
+                    onChange={handleUploadImage}
                 />
         </div>
         {/* <div className="flex flex-col pt-[20px] gap-[16px] sm:flex-row w-full items-center justify-center">

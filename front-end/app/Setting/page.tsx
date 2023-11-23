@@ -332,9 +332,9 @@ export default function Page() {
   // };
 
   return (
-    <div className="flex items-center  flex-col  gap-[40px] w-[100%] justify-start 3xl:gap-[160px] 3xl:px-[10px]  ">
+    <div className="flex items-center  flex-col  gap-[80px] 3xl:gap-0 w-[100%] justify-start  3xl:px-[10px]  ">
       <Header />
-      <div className="flex flex-col 3xl:flex-row items-center w-[100%] gap-[50px] ">
+      <div className="flex flex-col 3xl:flex-row items-center w-[100%] gap-[50px] h-full ">
         {showConfi && (
           <div className=" w-full h-full fixed top-0 left-0 z-[8]  inset-0  bg-opacity-5 backdrop-blur-[1.5px]" />
         )}

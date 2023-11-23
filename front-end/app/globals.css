@@ -660,3 +660,9 @@ input {
 
 
 }
+
+
+.sSha {
+
+  box-shadow: 0px 0px 0px 0px rgba(32, 83, 152, 0.13), 0px 152px 335px 0px rgba(32, 83, 152, 0.13), 0px 609px 609px 0px rgba(32, 83, 152, 0.11), 0px 1370px 822px 0px rgba(32, 83, 152, 0.06), 0px 2435px 974px 0px rgba(32, 83, 152, 0.02), 0px 3804px 1065px 0px rgba(32, 83, 152, 0.00); 
+}
