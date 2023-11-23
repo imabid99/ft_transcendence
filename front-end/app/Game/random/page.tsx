@@ -27,7 +27,7 @@ import { getLocalStorageItem } from "@/utils/localStorage";
 
 // map = snow, desert, forest; mode = friend, bot, random
 
-const Random = () => {
+const Random = ({selectedMap}: any) => {
 	console.log("Hii random !");
 	const [socket, setSocket] = useState<any>(null);
 	/// SOCKET MANAGER
@@ -629,8 +629,14 @@ const Random = () => {
 				{/* {currentMap === 'Desert' && <Desert />}
 				{currentMap === 'Forest' && <Forest />}
 				{currentMap === 'Snow' && <Snow />} */}
+			{
+				selectedMap === 'desert' ? <Desert /> :
+				selectedMap === 'forest' ? <Forest /> :
+				selectedMap === 'snow' ? <Snow /> : null
+			}
+
 			{/* <Forest/> */}
-			<Desert/>
+			{/* <Desert/> */}
 			{/* <Snow/> */}
 			<Scoreboard />
 

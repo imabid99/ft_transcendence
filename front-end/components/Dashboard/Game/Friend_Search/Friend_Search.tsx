@@ -4,20 +4,10 @@ import { useContext, useEffect, useState } from 'react';
 import axiosInstance from "@/utils/axiosInstance";
 import { contextdata } from '@/app/contextApi';
 import FriendCard from "./Friend_Card";
-// type props  = {
-//     name: string,
-//     username: string,
-//     avatar: string,
-//     cover: string,
-//     online: string
-//     userId: string
-// }
-type props  = {
-    setShow: any,
-    onMapChange: any
-}
 
-const FriendSearch = () => {
+
+
+const FriendSearch = ({setShow}: any) => {
   const {profiles, user, socket}:any = useContext(contextdata);
   const [Friends, setFriends] = useState<any>([]);
   useEffect(() => {
@@ -58,23 +48,15 @@ const FriendSearch = () => {
           </p>
         </div>
         <div className="pt-[20px] w-10/12 flex flex-col gap-[20px] overflow-y-scroll scrollbar-hide">
-         
           {Friends.map((friend: any) => (
-             <FriendCard avatar={friend?.avatar} name={`${friend?.firstName} ${friend?.lastName}`} online={friend?.status}/>
+              <FriendCard avatar={friend?.avatar} name={`${friend?.firstName} ${friend?.lastName}`} online={friend?.status}/>
           ))}
-          <FriendCard avatar="avatar.png" name="Imad" online="ofline"/>
-          <FriendCard avatar="avatar.png" name="Imad" online="online"/>
-          <FriendCard avatar="avatar.png" name="Imad" online="online"/>
-          <FriendCard avatar="avatar.png" name="Imad" online="online"/>
         </div>
       </div>
     </div>
     <div className="w-full  flex justify-center gap-[10px] pb-[40px] flex-col items-center md:flex-row">
-      <button className="w-[240px] h-[77px] retB rounded-[14px] text-white text-[30px] font-[400] hover:bg-gray-400 font-['Fredoka']">
+      <button onClick={()=>{setShow('map')}} className="w-[240px] h-[77px] retB rounded-[14px] text-white text-[30px] font-[400] hover:bg-gray-400 font-['Fredoka']">
         Back
-      </button>
-      <button className="w-[240px] h-[77px] backB rounded-[14px] text-white text-[30px] font-[400] hover:bg-gray-400 font-['Fredoka']">
-        Next
       </button>
     </div>
   </div>
