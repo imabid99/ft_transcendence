@@ -42,34 +42,45 @@ const InviteAFriend = () => {
 		{ name: Controls.right, keys: ['ArrowRight'], player: 'player2' },
 	  ], []);
 
-	/// SOCKET MANAGER
 
-	const {profiles, user} :any= useContext(contextdata);
+
+	console.log("Hii invite !");
+  
+	const { profiles, user }: any = useContext(contextdata);
 	const name = `${user?.profile.firstName} ${user?.profile.lastName}`;
-
-
+  
 	useEffect(() => {
-		const newSocket = io(`http://${process.env.NEXT_PUBLIC_APP_URL}:3000/Game`, {
-			extraHeaders: {
-				Authorization: `Bearer ${getLocalStorageItem("Token")}`,
-			}
-		});
-		if(newSocket)
+	  const headers = {
+		// Authorization: `Bearer ${getLocalStorageItem("Token")}`,
+		Cookie: "invite",
+	  };
+	  const newSocket = io(
+		`http://${process.env.NEXT_PUBLIC_APP_URL}:3000/Game`,
 		{
-			setSocket(newSocket);
+		  auth: {
+			...headers,
+		  },
 		}
-		return () => {
-			newSocket.disconnect();
-		};
+	  );
+	  if (newSocket) {
+		setSocket(newSocket);
+	  }
+	  return () => {
+		newSocket.disconnect();
+	  };
 	}, []);
-
+  
 	useEffect(() => {
-		if (!socket) return;
-		socket.on("connect", () => {console.log(name + " is Connected to server");});
-		socket.on("disconnect", () => {console.log(name + " is Disconnected from server");
-		socket.disconnect();});
-
-	}, []);
+	  if (!socket) return;
+	  // socket.on("connect", () => {console.log(name + " is Connected to server");});
+	  socket.emit("createMatch");
+  
+	  return () => {
+		socket.off("connect");
+		socket.off("createMatch");
+		socket.disconnect();
+	  };
+	}, [socket]);
 
 	// GUI CONTROLS
 // 	const controls = useControls({});
