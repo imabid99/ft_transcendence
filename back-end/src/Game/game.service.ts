@@ -71,23 +71,71 @@ export class GameService {
 
     async submitScore(matchId: string, creatorScore: number, opponentScore: number): Promise<void> {
         try {
-            // const match = this.prisma.match.findUnique({
-            //     where: {
-            //         id: matchId,
-            //     },
-            // });
-            // const opponentId = match.opponentId;
-            // const creatorId = match.creatorId;
-            // const creator = await this.prisma.profile.findUnique({ where: { userId: creatorId } });
-            // const opponent = await this.prisma.profile.findUnique({ where: { userId: opponentId } });
-            // await this.prisma.profile.update({
-            //     where: {
-            //         userId: creatorId,
-            //     },
-            //     data: {
-            //         level : creator.score + creatorScore,
-            //     },
-            // });
+            const match = await this.prisma.match.findUnique({
+                where: {
+                  id: matchId,
+                },
+              });
+              
+              const creatorId = match.creatorId;
+              const opponentId = match.opponentId;
+              const creatorScore = match.creatorScore;
+              const opponentScore = match.opponentScore;
+              
+              if (creatorScore > opponentScore) {
+                await this.prisma.profile.update({
+                  where: {
+                    userId: creatorId,
+                  },
+                  data: {
+                    level: {
+                      increment: 50
+                    },
+                    win: {
+                      increment: 1
+                    },
+                  },
+                });
+                await this.prisma.profile.update({
+                  where: {
+                    userId: opponentId,
+                  },
+                  data: {
+                    lose: {
+                      increment: 1
+                    },
+                  },
+                });
+              } else if (opponentScore > creatorScore) {
+                await this.prisma.profile.update({
+                  where: {
+                    userId: opponentId,
+                  },
+                  data: {
+                    level: {
+                        increment: 50
+                    },
+                    win: {
+                        increment: 1
+                    },
+                  },
+                });
+                await this.prisma.profile.update({
+                    where: {
+                      userId: creatorId,
+                    },
+                    data: {
+                      lose: {
+                          increment: 1
+                      },
+                    },
+                  });
+              }
+
+
+
+
+
             await this.prisma.match.update({
                 where: {
                     id: matchId,
