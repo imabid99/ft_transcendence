@@ -112,7 +112,7 @@ export class NotificationGateway implements OnGatewayConnection, OnGatewayDiscon
 
   async inviteMatch(senderId : string , receiverId : string) {
     this.sendNotification_v2(receiverId, {type : "info", message : "You have a new match invitation"});
-    this.sendNotification_redirect(senderId, {type : "success", message : "Invitation sent", link : "/Game"});
+    this.sendNotification_redirect(senderId, {type : "success", message : "Invitation sent", link : "/Game/invite"});
   }
 
   friendRequest(senderId : string , receiverId : string) {
@@ -128,9 +128,9 @@ export class NotificationGateway implements OnGatewayConnection, OnGatewayDiscon
     this.sendNotification(receiverId, {type : "warning", message : "Friend request refused"});
   }
 
-  acceptMatchRequest(senderId : string , receiverId : string) {
-    this.sendNotification_redirect(receiverId, {type : "info", message : "Match request accepted", link : "/Game"});
-    this.sendNotification_v2(senderId, {type : "success", message : "Match request accepted"});
+  acceptMatchRequest(senderId : string , receiverId : string, matchId : string) {
+    this.sendNotification_redirect(receiverId, {type : "info", message : "Match request accepted", link : `/Game/invite/${matchId}`});
+    this.sendNotification_redirect(senderId, {type : "success", message : "Match request accepted", link : `/Game/invite/${matchId}`});
   }
 
   refuseMatchRequest(senderId : string , receiverId : string) {
