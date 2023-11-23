@@ -8,15 +8,13 @@ import { NotificationGateway } from "src/notification/gateway/notification.gatew
 export class GameService {
     constructor(private prisma: PrismaService, private notificationGateway : NotificationGateway) { }
 
-    async createMatch(creator: any, opponent: any, type: MatchType): Promise<string> {
+    async createMatch(creatorId: any, opponentId: any, type: MatchType): Promise<string> {
         try {
             const match = await this.prisma.match.create({
                 data: {
-                    creatorId: creator.userId,
-                    opponentId: opponent.userId,
+                    creatorId: creatorId,
+                    opponentId: opponentId,
                     type,
-                    creatorSocket: creator.client.id,
-                    opponentSocket: opponent.client.id,
                 },
             });
             return match.id;
@@ -34,6 +32,23 @@ export class GameService {
                         { opponentSocket: clientId },
                     ],
                 },
+            })
+            return match;
+        } catch (error) {
+            return error;
+        }
+    }
+
+    async  getMatch2(clientId: string): Promise<match> {
+        try {
+            const match = await this.prisma.match.findFirst({
+                where: {
+                    OR: [
+                        { creatorId: clientId },
+                        { opponentId: clientId },
+                    ],
+                },
+                orderBy: { createdAt: 'desc' },
             })
             return match;
         } catch (error) {
@@ -92,13 +107,31 @@ export class GameService {
         }
     }
 
+    async upateMatch(matchId, creatorSocket : string, opponentSocket : string) : Promise<void> 
+    {
+        try {
+            await this.prisma.match.update({
+                where: {
+                    id: matchId,
+                },
+                data: {
+                    creatorSocket: creatorSocket,
+                    opponentSocket: opponentSocket,
+                },
+            });
+        } catch (error) {
+            return error;
+        }
+    }
+
     async acceptRequest(senderId: string, receiverId: string, notId : string): Promise<void> {
         try {
             await this.prisma.notification.delete({
                 where: {
-                  id: notId,        },
+                  id: notId,  },
               });
-            this.notificationGateway.acceptMatchRequest(senderId, receiverId);
+            const matchId = await this.createMatch(senderId, receiverId, MatchType.FRIEND);
+            this.notificationGateway.acceptMatchRequest(senderId, receiverId, matchId);
         } catch (error) {
             return error;
         }
