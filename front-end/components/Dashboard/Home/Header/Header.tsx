@@ -3,7 +3,7 @@ import UserModal from '../userModal/userModal'
 import { useContext, useRef, useState } from 'react';
 import { contextdata } from '@/app/contextApi';
 import Link from 'next/link';
-import Channel from '../../Channel/Channel';
+import Avatar from '../../Chat/Avatar/Avatar';
 
 type HeaderProps = {
     modalRef?: any,
@@ -12,7 +12,39 @@ type HeaderProps = {
     notifRef?: any,
     notifIconRef?: any
 }
+type ChannelProps = {
+    avatar: string,
+    channel: string,
+    lastMessage: string | null | undefined,
+    lastMessageTime: string | null | undefined,
+    notification: number,
+    active: boolean,
+    link: string,
+}
 
+
+function UserComponent({avatar, channel, lastMessage, lastMessageTime, notification, active, link}: ChannelProps) {
+    return (
+        <Link href={`${link}`} className="cursor-pointer w-full flex justify-between items-center hover:bg-[#f3f3f3f5] p-[15px] rounded-[10px]" >
+            <div className="flex items-center gap-[14px]">
+                <Avatar url={avatar} status={active}/>
+                <span>
+                    <p className="text-[#034B8A] text-[20px] font-[Poppins] font-[500] max-screenscreenscreenscreen truncate lsm:max-lg:max-w-[152px]">
+                        {channel}
+                    </p>
+                    <p className="text-[#C0C1C5] text-[16px] font-[Poppins] font-[300] max-w-[200px] truncate lg:max-xl:max-w-[150px] lsm:max-lg:max-w-[120px]">
+                        {lastMessage}
+                    </p>
+                </span>
+            </div>
+            <div className="flex flex-col items-end gap-[13px]">
+                <p className="text-[#C0C1C5] text-[14] font-[Poppins] font-[300]">
+                    {lastMessageTime}
+                </p>
+            </div>
+        </Link>
+)
+}
 
 export default function Header({show, modalRef,handelShaw,notifRef,notifIconRef}: HeaderProps) {
     const {profiles, user}:any = useContext(contextdata);
@@ -101,7 +133,7 @@ export default function Header({show, modalRef,handelShaw,notifRef,notifIconRef}
                                             {
                                                 users?.map((user: any) => {
                                                     return(
-                                                        <Channel
+                                                        <UserComponent
                                                             avatar={`http://${process.env.NEXT_PUBLIC_APP_URL}:3000/${user.avatar}`}
                                                             channel={`${user.firstName} ${user.lastName}`}
                                                             lastMessage={''}

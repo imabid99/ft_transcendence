@@ -197,23 +197,22 @@ export default function Page() {
   const handleBlock = async () => {
     try{
       const res = await axiosInstance.patch(`http://${process.env.NEXT_PUBLIC_APP_URL}:3000/api/friendship/block/${receiver?.userId}`);
-      console.log(res.data);
+      setIsIblocked(true);
+      router.push('/Chat');
     }
-    catch(err){
-      console.log(err);
+    catch(err:any){
+      console.log(err.message);
     }
-    setIsIblocked(true);
-    router.push('/Chat');
   }
+
   const handleUnBlock = async () => {
     try{
       const res = await axiosInstance.patch(`http://${process.env.NEXT_PUBLIC_APP_URL}:3000/api/friendship/unblock/${receiver?.userId}`);
-      console.log(res.data);
+      setIsIblocked(false);
     }
-    catch(err){
-      console.log(err);
+    catch(err:any){
+      console.log(err.message);
     }
-    setIsIblocked(false);
   }
   
   const handleInvite = async () => {
