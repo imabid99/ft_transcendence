@@ -187,29 +187,6 @@ export default function CompleteProfile({info}:any) {
                     onChange={handleUploadImage}
                 />
         </div>
-        {/* <div className="flex flex-col pt-[20px] gap-[16px] sm:flex-row w-full items-center justify-center">
-          <button className="flex justify-evenly items-center w-[170px] h-[52px] border-[0.1px] rounded-[11px] border-white cursor-pointer">
-            <img src="goog.svg" alt="" className="w-[20.153px] h-[20.56px]" />
-            <p className="text-white text-[10px] font-[400] cursor-pointer">
-              Log in with google 
-            </p>
-          </button>
-          <button className="flex justify-evenly items-center w-[170px] h-[52px] border-[0.1px] rounded-[11px] border-white cursor-pointer">
-            <img
-              src="423918.logowik 1.png"
-              alt=""
-              className="w-[25px] h-[21px]"
-            />
-            <p className="text-white text-[10px] font-[400] cursor-pointer">
-              Log in with intra
-            </p>
-          </button>
-        </div> */}
-        {/* <div className="flex w-full pt-[20px] justify-center  gap-[10px] items-center">
-          <div className="w-[61px] h-[1px] bg-white" />
-          <p className="text-white text-[15px] font-[400]">OR</p>
-          <div className="w-[61px] h-[1px] bg-white" />
-        </div> */}
         <div className=" w-full">
           <form
             noValidate

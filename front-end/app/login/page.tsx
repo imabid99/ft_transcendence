@@ -2,16 +2,19 @@
 import {useRouter} from 'next/navigation';
 import axios from 'axios';
 import Link from 'next/link';
-import {useForm} from 'react-hook-form';
+import {set, useForm} from 'react-hook-form';
 import ErrorMessage from '@/components/Dashboard/signUp/Error_Message';
 import {
   useState,
   useEffect,
-  useContext
+  useContext,
+  use
 } from 'react';
 import { setLocalStorageItem, getLocalStorageItem, removeLocalStorageItem } from '@/utils/localStorage';
 import { contextdata } from '@/app/contextApi';
 import { signIn } from 'next-auth/react';
+// import axiosInstance from '@/utils/axiosInstance';
+import TwoFa from '@/components/Dashboard/Login/TwoFa';
 
 export default function Home() {
 
@@ -21,6 +24,7 @@ export default function Home() {
   // const [password, setPassword] = useState('');
   const [logInAnimation, setLogInAnimation] = useState(false);
   const {loged, setLoged}:any = useContext(contextdata);
+  const [showTwoFa, setShowTwoFa] = useState(false);
 
   // useEffect(() => {
   //   const token = getLocalStorageItem("Token");
@@ -75,6 +79,7 @@ export default function Home() {
   const form = useForm<FormValues>({mode: 'all'});
   const {register, handleSubmit, formState } = form;
   const {errors, isDirty} = formState;
+  const [jwtToken, setJwtToken] = useState<string>("");
   const onSubmit = async (data: FormValues) => {
     console.log(data);
     // e.preventDefault();
@@ -84,18 +89,44 @@ export default function Home() {
         email: data.email,
         password: data.password,
       });
-      setLocalStorageItem("Token", response.data);
+      console.log("setJwtToken : ", response.data);
+      setJwtToken(response.data);
+      // setLocalStorageItem("Token", response.data);
       } catch (e:any) 
       {
         console.log("Login : ", e.response.data);
         // setLogInAnimation(false);
         return;
       }
-      setTimeout(() => {
-        setLoged(!loged);
-        router.push('/');
-      }, 1000);
   }
+  useEffect(() => {
+    if (!jwtToken) {
+      return;
+    }
+    const getUser = async () => {
+      console.log("jwtToken : ", jwtToken);
+      try
+      {
+        const resp = await axios.get(`http://${process.env.NEXT_PUBLIC_APP_URL}:3000/api/user/userinfo`,{headers: {Authorization: `Bearer ${jwtToken}`}});
+        if (resp.data.twoFAActive) {
+          setShowTwoFa(true);
+        }
+        else {
+            setLocalStorageItem("Token", jwtToken);
+            setLoged(!loged);
+            router.push('/');
+        }
+      }
+      catch (error)
+      {
+        console.log("getUser : ",error);
+        removeLocalStorageItem("Token");
+        router.push("/login");
+        return;
+      }
+    }
+    getUser();
+  }, [jwtToken]);
   const onError = (errors:any) => console.log(errors);
   // required: "required",
     // maxLength: {
@@ -193,7 +224,8 @@ export default function Home() {
     
     <>
      {/* /*style={{ backgroundImage: 'url("first4.png")' }}    style={styling}*/}
-  <div className="h-[100vh] w-[100%] flex justify-around items-center bgImg bg-no-repeat bg-cover bg-center " style={{backgroundImage: 'url("backfilter.svg")'}}> 
+     {showTwoFa && <TwoFa jwtToken={jwtToken}/>}
+  {<div className="h-[100vh] w-[100%] flex justify-around items-center bgImg bg-no-repeat bg-cover bg-center " style={{backgroundImage: 'url("backfilter.svg")'}}> 
     <div className=" w-[100vw]  h-full bg-blue-200 bg-opacity-0 backdrop-blur-[7px] flex flex-row items-center justify-center md:w-11/12 md:max-h-[735px] md:rounded-[61px] xl:max-w-[1404px] xl:mx-auto">
     {/* <div className=" w-[100vw]  h-full bg-white flex flex-row items-center justify-center md:w-11/12 md:max-h-[735px] md:rounded-[61px] xl:max-w-[1404px] xl:mx-auto"> */}
       <div className="w-[100%] flex flex-col items-center justify-center xl:w-[30%] py-[50px]">
@@ -275,7 +307,7 @@ export default function Home() {
         <img src="heroball.png" alt="" className="mt-[-200px] ml-[60px]  top-[440px] left-[45px] animateball absolute" />
       </div>
     </div>
-  </div>
+  </div>}
 </> 
 
   )
