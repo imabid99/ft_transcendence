@@ -91,6 +91,7 @@ model match {
   opponentSocket String?
 }
 
+
 model Profile {
   user            User      @relation(fields: [userId], references: [id])
   userId          String    @unique
@@ -103,11 +104,23 @@ model Profile {
   lastMessageTime DateTime?
   avatar          String    @default("uploads/default/nouser.avif")
   cover           String    @default("uploads/default/first3.png")
-  gaemePlayed     Int       @default(0)
   win             Int       @default(0)
   lose            Int       @default(0)
   points          Int       @default(0)
-  level           Float     @default(0.0)
+  xp              Int       @default(0)
+  level           Int       @default(0)
+  invitematchcount Int      @default(0)
+  randommatchcount Int      @default(0)
+  twc             Int       @default(0)
+  ratio           Float     @default(0)
+  achievements    Achievement[]
+}
+
+model Achievement {
+  id          Int      @id @default(autoincrement())
+  completed   Boolean  @default(false)
+  profile     Profile  @relation(fields: [profileId], references: [userId])
+  profileId   String
 }
 
 model channels {

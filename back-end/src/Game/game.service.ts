@@ -14,7 +14,7 @@ export class GameService {
                 data: {
                     creatorId: creatorId,
                     opponentId: opponentId,
-                    type,
+                    type: type,
                 },
             });
             return match.id;
@@ -69,12 +69,130 @@ export class GameService {
         }
     }
 
+    // expectedScore(rating1: number, rating2: number): number {
+    //     return 1 / (1 + Math.pow(10, (rating2 - rating1) / 400));
+    // }
+  
+    // updateRating(rating: number, expected: number, actual: number, k: number = 32): number {
+    //     return rating + k * (actual - expected);
+    // }
+
+    async checkAchievements(profile: any) {
+        const achievements = await this.prisma.achievement.findMany({
+            where: {
+                profileId: profile.userId,
+            },
+        });
+    
+        return achievements.map(achievement => {
+            let completed = false;
+            switch (achievement.id) {
+                case 1:
+                    completed = profile.twc >= 1;
+                    break;
+                case 2:
+                    completed = profile.win >= 1;
+                    break;
+                case 3:
+                    completed = profile.lose >= 1;
+                    break;
+                case 4:
+                    completed = profile.invitematchcount + profile.randommatchcount >= 50;
+                    break;
+                case 5:
+                    completed = profile.invitematchcount >= 1;
+                    break;
+                case 6:
+                    completed = profile.randommatchcount >= 20;
+                    break;
+                case 7:
+                    completed = achievements.every(a => a.id !== 7 && a.completed);
+                    break;
+                default:
+                    break;
+            }
+    
+            return {
+                ...achievement,
+                completed,
+            };
+        });
+    }
+
     async submitScore(matchId: string, creatorScore: number, opponentScore: number): Promise<void> {
         try {
-            const match = await this.prisma.match.update({
+            const match = await this.prisma.match.findUnique({
                 where: {
                     id: matchId,
                 },
+            });
+    
+            const MatchType = match.type;
+    
+            const creatorId = match.creatorId;
+            const opponentId = match.opponentId;
+    
+            const creatorProfile = await this.prisma.profile.findUnique({ where: { userId: creatorId } });
+            const opponentProfile = await this.prisma.profile.findUnique({ where: { userId: opponentId } });
+    
+            const creatorActual = creatorScore > opponentScore ? 1 : 0;
+            const opponentActual = opponentScore > creatorScore ? 1 : 0;
+    
+            if (creatorActual) {
+                creatorProfile.xp += 100;
+                creatorProfile.level = creatorProfile.xp < 500 ? 0 : Math.floor((creatorProfile.xp - 500) / 1000) + 1;
+                creatorProfile.points += 50;
+            
+                let requiredXPForThisLevel = creatorProfile.level * 1000 + 500;
+                creatorProfile.ratio = creatorProfile.xp / requiredXPForThisLevel;
+            }
+            
+            if (opponentActual) {
+                opponentProfile.xp += 100;
+                opponentProfile.level = opponentProfile.xp < 500 ? 0 : Math.floor((opponentProfile.xp - 500) / 1000) + 1;
+                opponentProfile.points += 50;
+            
+                let requiredXPForThisLevel = opponentProfile.level * 1000 + 500;
+                opponentProfile.ratio = opponentProfile.xp / requiredXPForThisLevel;
+            }
+    
+            const creatorAchievements = await this.checkAchievements(creatorProfile);
+            const opponentAchievements = await this.checkAchievements(opponentProfile);
+    
+            await this.prisma.profile.update({
+                where: { userId: creatorId },
+                data: {
+                    xp: creatorProfile.xp,
+                    level: creatorProfile.level,
+                    points: creatorProfile.points,
+                    ratio: creatorProfile.ratio,
+                    win: creatorActual ? { increment: 1 } : undefined,
+                    lose: creatorActual ? undefined : { increment: 1 },
+                    invitematchcount: MatchType === "FRIEND" ? { increment: 1 } : undefined,
+                    randommatchcount: MatchType === "RANDOM" ? { increment: 1 } : undefined,
+                    twc: creatorScore === 7 && opponentScore === 6 ? { increment: 1 } : undefined,
+                    achievements: { set: creatorAchievements },
+                },
+            });
+    
+            await this.prisma.profile.update({
+                where: { userId: opponentId },
+                data: {
+                    xp: opponentProfile.xp,
+                    level: opponentProfile.level,
+                    points: opponentProfile.points,
+                    ratio: opponentProfile.ratio,
+                    win: opponentActual ? { increment: 1 } : undefined,
+                    lose: opponentActual ? undefined : { increment: 1 },
+                    invitematchcount: MatchType === "FRIEND" ? { increment: 1 } : undefined,
+                    randommatchcount: MatchType === "RANDOM" ? { increment: 1 } : undefined,
+                    twc: opponentScore === 7 && creatorScore === 6 ? { increment: 1 } : undefined,
+                    achievements: { set: opponentAchievements },
+                },
+            });
+    
+            await this.prisma.match.update({
+                where: { id: matchId },
                 data: {
                     creatorScore: creatorScore,
                     opponentScore: opponentScore,
@@ -84,6 +202,8 @@ export class GameService {
             return error;
         }
     }
+
+
 
     async makeRequest(senderId: string, OpponentId: string): Promise<void> {
         try {
