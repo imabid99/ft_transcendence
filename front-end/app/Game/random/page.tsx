@@ -33,89 +33,116 @@ import { getLocalStorageItem } from "@/utils/localStorage";
 
 // map = snow, desert, forest; mode = friend, bot, random
 
-const Random = () => {
-	// console.log("Hii random !");
+const Random = ({selectedMap}: any) => {
+	console.log("Hii random !");
 	const [socket, setSocket] = useState<any>(null);
 	/// SOCKET MANAGER
 
-	const {profiles, user} :any= useContext(contextdata);
-	const name = `${user?.profile.firstName} ${user?.profile.lastName}`;
+  const { profiles, user }: any = useContext(contextdata);
+  const name = `${user?.profile.firstName} ${user?.profile.lastName}`;
 
-	useEffect(() => {
-		const headers = {
-			// Authorization: `Bearer ${getLocalStorageItem("Token")}`,
-			Cookie: 'random',
-		};
-		const newSocket = io(`http://${process.env.NEXT_PUBLIC_APP_URL}:3000/Game`,
-		{
-			auth: {
-				...headers,
-			},
-		});
-		if(newSocket)
-		{
-			setSocket(newSocket);
-		}
-		return () => {
-			newSocket.disconnect();
-		};
-	}, []);
-	
-	useEffect(() => {
-		if (!socket) return;
-		// socket.on("connect", () => {console.log(name + " is Connected to server");});
-		socket.emit("matchmaking");
+  useEffect(() => {
+    const headers = {
+      // Authorization: `Bearer ${getLocalStorageItem("Token")}`,
+      Cookie: "random",
+    };
+    const newSocket = io(
+      `http://${process.env.NEXT_PUBLIC_APP_URL}:3000/Game`,
+      {
+        auth: {
+          ...headers,
+        },
+      }
+    );
+    if (newSocket) {
+      setSocket(newSocket);
+    }
+    return () => {
+      newSocket.disconnect();
+    };
+  }, []);
 
-		return () => {
-			socket.off("connect");
-			socket.off("matchmaking");
-			socket.disconnect();
-		}
-	}, [socket]);
+  useEffect(() => {
+    if (!socket) return;
+    // socket.on("connect", () => {console.log(name + " is Connected to server");});
+    socket.emit("matchmaking");
 
-	const Controls = {
-		left: "left",
-		right: "right",
-	}
+    return () => {
+      socket.off("connect");
+      socket.off("matchmaking");
+      socket.disconnect();
+    };
+  }, [socket]);
 
-	const map = useMemo(() => [
-		{ name: Controls.left, keys: ['ArrowLeft'], player: 'player1' },
-		{ name: Controls.right, keys: ['ArrowRight'], playerd: 'player1' },
-		{ name: Controls.left, keys: ['ArrowLeft'], player: 'player2' },
-		{ name: Controls.right, keys: ['ArrowRight'], player: 'player2' },
-	  ], []);
+  const Controls = {
+    left: "left",
+    right: "right",
+  };
 
+  const map = useMemo(
+    () => [
+      { name: Controls.left, keys: ["ArrowLeft"], player: "player1" },
+      { name: Controls.right, keys: ["ArrowRight"], playerd: "player1" },
+      { name: Controls.left, keys: ["ArrowLeft"], player: "player2" },
+      { name: Controls.right, keys: ["ArrowRight"], player: "player2" },
+    ],
+    []
+  );
 
-	// GUI CONTROLS
-// 	const controls = useControls({});
-//   const { sunPosition } = useControls("sky", {
-// 	sunPosition: [-0.07, -0.03, -0.75],
-//   });
-	// const { planecolor } = useControls("color", { planecolor: "#51b151" });
-	// const { floorcolor } = useControls("color", { floorcolor: "#1572ff" });
-	// const { paddlecolor } = useControls("color", { paddlecolor: "#abebff" });
-	// const { fogcolor } = useControls("color", { fogcolor: "#382f21" });
-	// const { fogfar } = useControls("color", { fogfar: 180 });
+  // GUI CONTROLS
+  // 	const controls = useControls({});
+  //   const { sunPosition } = useControls("sky", {
+  // 	sunPosition: [-0.07, -0.03, -0.75],
+  //   });
+  // const { planecolor } = useControls("color", { planecolor: "#51b151" });
+  // const { floorcolor } = useControls("color", { floorcolor: "#1572ff" });
+  // const { paddlecolor } = useControls("color", { paddlecolor: "#abebff" });
+  // const { fogcolor } = useControls("color", { fogcolor: "#382f21" });
+  // const { fogfar } = useControls("color", { fogfar: 180 });
 
-	function Plane(props: any) {
-		const [ref, api] = usePlane(() => ({type: "Static", material: { friction: 0 }, args: [20, 20],  rotation: [-Math.PI / 2, 0, 0],...props}), useRef<THREE.Mesh>(null))
+  function Plane(props: any) {
+    const [ref, api] = usePlane(
+      () => ({
+        type: "Static",
+        material: { friction: 0 },
+        args: [20, 20],
+        rotation: [-Math.PI / 2, 0, 0],
+        ...props,
+      }),
+      useRef<THREE.Mesh>(null)
+    );
 
-		return (
-			<mesh ref={ref} rotation-x={-Math.PI * 0.5} position-y={0.02} receiveShadow>
-				<planeGeometry args={[20, 20]} />
-				<meshStandardMaterial color={'#1572ff'} />
-			</mesh>
-		);
-	}
+    return (
+      <mesh
+        ref={ref}
+        rotation-x={-Math.PI * 0.5}
+        position-y={0.02}
+        receiveShadow
+      >
+        <planeGeometry args={[20, 20]} />
+        <meshStandardMaterial color={"#1572ff"} />
+      </mesh>
+    );
+  }
 
-	function Player1Paddle(props: any) {
-		// console.log("P1START");
-		const [ref, api] = useBox(() => ({ mass: 0, type: "Static", material: { restitution: 1.06, friction: 0 },args: [3, 1, 0.3], position: [0, 0.5, 9], ...props }), useRef<THREE.Mesh>(null));
+  function Player1Paddle(props: any) {
+    // console.log("P1START");
+    const [ref, api] = useBox(
+      () => ({
+        mass: 0,
+        type: "Static",
+        material: { restitution: 1.06, friction: 0 },
+        args: [3, 1, 0.3],
+        position: [0, 0.5, 9],
+        ...props,
+      }),
+      useRef<THREE.Mesh>(null)
+    );
 
-		useEffect(() => {
-		  if (!user) return;
-		  let isMovingLeft = false;
-		  let isMovingRight = false;
+    useEffect(() => {
+      if (!user) return;
+      let isMovingLeft = false;
+      let isMovingRight = false;
       let touchleft = false;
       let touchright = false;
       let paddleposX = 0;
@@ -681,14 +708,14 @@ const Random = () => {
 					map == "desert" && <Desert/>
 					map == "snow" && <Snow/>
 				*/}
-
-        {/* {currentMap === 'Desert' && <Desert />}
-				{currentMap === 'Forest' && <Forest />}
-				{currentMap === 'Snow' && <Snow />} */}
-        {/* <Forest/> */}
-        <Desert />
-        {/* <Snow/> */}
-        <Scoreboard />
+			{
+			selectedMap === 'desert' ? <Desert /> :
+			selectedMap === 'forest' ? <Forest /> :
+			selectedMap === 'snow' ? <Snow /> : null
+			}
+			{/* <Desert/> */}
+			{/* <Snow/> */}
+			<Scoreboard />
 
         <Sky sunPosition={[-0.07, -0.03, -0.75]} />
         <OrbitControls
