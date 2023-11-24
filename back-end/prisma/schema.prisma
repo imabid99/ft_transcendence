@@ -108,14 +108,17 @@ model Profile {
   lose            Int       @default(0)
   points          Int       @default(0)
   level           Int       @default(0)
+  invitematchcount Int      @default(0)
+  randommatchcount Int      @default(0)
+  twc             Int       @default(0)
   achievements    Achievement[]
 }
 
 model Achievement {
-  id        Int      @id @default(autoincrement())
-  achieved  Boolean  @default(false)
-  profile   Profile  @relation(fields: [profileId], references: [userId])
-  profileId String
+  id          Int      @id @default(autoincrement())
+  completed   Boolean  @default(false)
+  profile     Profile  @relation(fields: [profileId], references: [userId])
+  profileId   String
 }
 
 model channels {
