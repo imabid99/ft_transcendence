@@ -284,18 +284,17 @@ export class UserService {
     }
   }
 
-  changeData(data: any, id: string): Promise<any> {
-    const { username, email, firstName, lastName } = data;
-    if (!username || !email || !firstName || !lastName) {
+  async changeData(id: string,data: any): Promise<any> {
+    const { email, firstName, lastName } = data;
+    if (!email || !firstName || !lastName) {
       throw new BadRequestException("Invalid input");
     }
     try {
-      return this.prisma.user.update({
+      await this.prisma.user.update({
         where: {
           id: id,
         },
         data: {
-          username: username,
           email: email,
           profile: {
             update: {
@@ -305,6 +304,7 @@ export class UserService {
           },
         },
       });
+      return "changed";
     } catch (error) {
       return error;
     }

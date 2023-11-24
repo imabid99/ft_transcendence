@@ -3,7 +3,6 @@ type props  = {
 }
 
 export default function ErrorMessage({message}: props) {
-    // console.log("this is message", message);
     return (
         
         message ? (
