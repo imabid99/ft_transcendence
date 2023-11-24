@@ -107,10 +107,12 @@ model Profile {
   win             Int       @default(0)
   lose            Int       @default(0)
   points          Int       @default(0)
+  xp              Int       @default(0)
   level           Int       @default(0)
   invitematchcount Int      @default(0)
   randommatchcount Int      @default(0)
   twc             Int       @default(0)
+  ratio           Float     @default(0)
   achievements    Achievement[]
 }
 

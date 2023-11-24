@@ -69,13 +69,13 @@ export class GameService {
         }
     }
 
-    expectedScore(rating1: number, rating2: number): number {
-        return 1 / (1 + Math.pow(10, (rating2 - rating1) / 400));
-    }
+    // expectedScore(rating1: number, rating2: number): number {
+    //     return 1 / (1 + Math.pow(10, (rating2 - rating1) / 400));
+    // }
   
-    updateRating(rating: number, expected: number, actual: number, k: number = 32): number {
-        return rating + k * (actual - expected);
-    }
+    // updateRating(rating: number, expected: number, actual: number, k: number = 32): number {
+    //     return rating + k * (actual - expected);
+    // }
 
     async checkAchievements(profile: any) {
         const achievements = await this.prisma.achievement.findMany({
@@ -126,7 +126,7 @@ export class GameService {
                     id: matchId,
                 },
             });
-
+    
             const MatchType = match.type;
     
             const creatorId = match.creatorId;
@@ -135,25 +135,37 @@ export class GameService {
             const creatorProfile = await this.prisma.profile.findUnique({ where: { userId: creatorId } });
             const opponentProfile = await this.prisma.profile.findUnique({ where: { userId: opponentId } });
     
-            const creatorRating = creatorProfile.level;
-            const opponentRating = opponentProfile.level;
-    
-            const creatorExpected = this.expectedScore(creatorRating, opponentRating);
-            const opponentExpected = this.expectedScore(opponentRating, creatorRating);
-    
             const creatorActual = creatorScore > opponentScore ? 1 : 0;
             const opponentActual = opponentScore > creatorScore ? 1 : 0;
     
-            const newCreatorRating = this.updateRating(creatorRating, creatorExpected, creatorActual);
-            const newOpponentRating = this.updateRating(opponentRating, opponentExpected, opponentActual);
-
+            if (creatorActual) {
+                creatorProfile.xp += 100;
+                creatorProfile.level = creatorProfile.xp < 500 ? 0 : Math.floor((creatorProfile.xp - 500) / 1000) + 1;
+                creatorProfile.points += 50;
+            
+                let requiredXPForThisLevel = creatorProfile.level * 1000 + 500;
+                creatorProfile.ratio = creatorProfile.xp / requiredXPForThisLevel;
+            }
+            
+            if (opponentActual) {
+                opponentProfile.xp += 100;
+                opponentProfile.level = opponentProfile.xp < 500 ? 0 : Math.floor((opponentProfile.xp - 500) / 1000) + 1;
+                opponentProfile.points += 50;
+            
+                let requiredXPForThisLevel = opponentProfile.level * 1000 + 500;
+                opponentProfile.ratio = opponentProfile.xp / requiredXPForThisLevel;
+            }
+    
             const creatorAchievements = await this.checkAchievements(creatorProfile);
             const opponentAchievements = await this.checkAchievements(opponentProfile);
-            
+    
             await this.prisma.profile.update({
                 where: { userId: creatorId },
-                data: { 
-                    level: newCreatorRating,
+                data: {
+                    xp: creatorProfile.xp,
+                    level: creatorProfile.level,
+                    points: creatorProfile.points,
+                    ratio: creatorProfile.ratio,
                     win: creatorActual ? { increment: 1 } : undefined,
                     lose: creatorActual ? undefined : { increment: 1 },
                     invitematchcount: MatchType === "FRIEND" ? { increment: 1 } : undefined,
@@ -162,11 +174,14 @@ export class GameService {
                     achievements: { set: creatorAchievements },
                 },
             });
-            
+    
             await this.prisma.profile.update({
                 where: { userId: opponentId },
-                data: { 
-                    level: newOpponentRating,
+                data: {
+                    xp: opponentProfile.xp,
+                    level: opponentProfile.level,
+                    points: opponentProfile.points,
+                    ratio: opponentProfile.ratio,
                     win: opponentActual ? { increment: 1 } : undefined,
                     lose: opponentActual ? undefined : { increment: 1 },
                     invitematchcount: MatchType === "FRIEND" ? { increment: 1 } : undefined,
@@ -175,7 +190,7 @@ export class GameService {
                     achievements: { set: opponentAchievements },
                 },
             });
-            
+    
             await this.prisma.match.update({
                 where: { id: matchId },
                 data: {
