@@ -4,6 +4,8 @@ import { useState, useEffect } from "react";
 import Maps from "@/components/Dashboard/Game/Map/Maps";
 import { useRouter } from 'next/navigation';
 import FriendSearch from "@/components/Dashboard/Game/Friend_Search/Friend_Search";
+import PlayWithAI from "./ai/page";
+import Random from "./random/page";
 const Game = () => {
     const [Show, setShow] = useState<string | null>(null);
     const [selectedMap, setSelectedMap] = useState<string | null>(null);
@@ -18,8 +20,9 @@ const Game = () => {
         setSelectedMode(mode);
     }
 
-    console.log("this is map",selectedMode);
-
+    console.log("this is map",selectedMap);
+    // console.log("this is map",selected);
+	console.log("this is map hahahahah",Show);
 	// 7ett dakchi dyalk hna a Imad
 		
 	return (
@@ -37,11 +40,22 @@ const Game = () => {
 					/>
 			</div>
 			{
-				Show == null ? <Maps setShow={setShow} onMapChange={handleMapChange} />
-				:
-				Show == 'map' && <FriendSearch  />
-				// :
-				// Show == 'slect' && <Select />
+			Show == null ? <Maps setShow={setShow} onMapChange={handleMapChange} />
+			:
+			Show == 'map' ? <Modes  setShow={setShow} onModeChange={handleModeChange}/>
+			:
+			Show == 'FRIEND' ? (
+			<FriendSearch setShow={setShow}/>
+			) : Show == 'AI' ? (
+				console.log("this is map",Show),
+			// router.push('/Game/ai?name=John', { selectedMap })
+			// router.push('/Game/ai?selectedMap=snow')
+			// router.push(`/Game/ai?name=${selectedMap}`)
+			<PlayWithAI selectedMap={selectedMap} />
+			) : (
+			// router.push('/Game/random', { Show })
+			<Random selectedMap={selectedMap} />
+			)
 			}
 		</>
 		// <div className="w-full relative">

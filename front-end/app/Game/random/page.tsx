@@ -33,10 +33,10 @@ import { getLocalStorageItem } from "@/utils/localStorage";
 
 // map = snow, desert, forest; mode = friend, bot, random
 
-const Random = () => {
-  console.log("Hii random !");
-  const [socket, setSocket] = useState<any>(null);
-  /// SOCKET MANAGER
+const Random = ({selectedMap}: any) => {
+	console.log("Hii random !");
+	const [socket, setSocket] = useState<any>(null);
+	/// SOCKET MANAGER
 
   const { profiles, user }: any = useContext(contextdata);
   const name = `${user?.profile.firstName} ${user?.profile.lastName}`;
@@ -708,14 +708,14 @@ const Random = () => {
 					map == "desert" && <Desert/>
 					map == "snow" && <Snow/>
 				*/}
-
-        {/* {currentMap === 'Desert' && <Desert />}
-				{currentMap === 'Forest' && <Forest />}
-				{currentMap === 'Snow' && <Snow />} */}
-        {/* <Forest/> */}
-        <Desert />
-        {/* <Snow/> */}
-        <Scoreboard />
+			{
+			selectedMap === 'desert' ? <Desert /> :
+			selectedMap === 'forest' ? <Forest /> :
+			selectedMap === 'snow' ? <Snow /> : null
+			}
+			{/* <Desert/> */}
+			{/* <Snow/> */}
+			<Scoreboard />
 
         <Sky sunPosition={[-0.07, -0.03, -0.75]} />
         <OrbitControls

@@ -28,10 +28,12 @@ import {
   Debug,
 } from "@react-three/cannon";
 import { is } from "@react-three/fiber/dist/declarations/src/core/utils";
+import { useRouter, useSearchParams } from 'next/navigation';
 
 // map = snow, desert, forest; mode = friend, bot, random
 
-const PlayWithAI = () => {
+
+const PlayWithAI = ({selectedMap}: any) => {
   const Controls = {
     left: "left",
     right: "right",
@@ -46,7 +48,15 @@ const PlayWithAI = () => {
     ],
     []
   );
+    console.log("this is map lololololosdfasdfasdfasdf", selectedMap);
+  // const router = useRouter();
+  // const [searchParams, { selectedMap }] = useSearchParams();
+  // const [searchParams] = useSearchParams();
+  // const params = new URLSearchParams(searchParams);
+  // const selectedMap = params.get('selectedMap');
 
+
+  // console.log("this is map lololololo", selectedMap);
   // GUI CONTROLS
   // 	const controls = useControls({});
   //   const { sunPosition } = useControls("sky", {
@@ -662,11 +672,13 @@ const PlayWithAI = () => {
 					map == "snow" && <Snow/> */}
 				
 
-        {/* currentMap === 'Desert' && <Desert />
-				currentMap === 'Forest' && <Forest />
-				currentMap === 'Snow' && <Snow /> */}
+        {
+          selectedMap === 'desert' ? <Desert /> :
+          selectedMap === 'forest' ? <Forest /> :
+          selectedMap === 'snow' ? <Snow /> : null
+        }
         {/* <Forest/> */}
-        <Desert />
+        {/* <Desert /> */}
         {/* <Snow/> */}
         <Scoreboard />
 

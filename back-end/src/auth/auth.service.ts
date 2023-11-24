@@ -94,7 +94,7 @@ export class AuthService {
   generate2FASecret(username : string): string {
     const secret = speakeasy.generateSecret({
       length: 20,
-      name: `Pong Masters:${username}`,
+      name: `The kingdom of Pong : ${username}`,
     });
     return secret.base32;
   }
@@ -109,7 +109,7 @@ export class AuthService {
       const url = speakeasy.otpauthURL({
         secret: user.twoFASecret,
         encoding: "base32",
-        label: "Pong Masters",
+        label: `The kingdom of Pong`,
         algorithm: "sha1",
       });
       return this.generateQR(url);
@@ -132,6 +132,7 @@ export class AuthService {
         token: token,
         algorithm: "sha1"
       });
+      console.log("helllllll " ,verified);
       return verified;
     } catch (error) {
       return error;
