@@ -708,11 +708,11 @@ const Random = ({selectedMap}: any) => {
 					map == "desert" && <Desert/>
 					map == "snow" && <Snow/>
 				*/}
-			{
-			selectedMap === 'desert' ? <Desert /> :
-			selectedMap === 'forest' ? <Forest /> :
-			selectedMap === 'snow' ? <Snow /> : null
-			}
+      {
+          selectedMap === 'desert' ? <Desert /> :
+          selectedMap === 'snow' ? <Snow /> :
+          <Forest />
+      }
 			{/* <Desert/> */}
 			{/* <Snow/> */}
 			<Scoreboard />
