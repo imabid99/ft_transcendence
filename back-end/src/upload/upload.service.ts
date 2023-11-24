@@ -1,4 +1,3 @@
-import { channels } from './../../node_modules/.prisma/client/index.d';
 import { Injectable, NotFoundException } from "@nestjs/common";
 import { PrismaService } from "../prisma/prisma.service";
 import { NotificationGateway } from 'src/notification/gateway/notification.gateway';

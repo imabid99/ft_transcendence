@@ -72,7 +72,7 @@ export class AuthService {
           username: userData.username,
           email: userData.email,
           password: hash,
-          twoFASecret: this.generate2FASecret(userData.username),
+          twoFASecret: await this.generate2FASecret(userData.username),
           profile: {
             create: {
               firstName: userData.firstName,
@@ -87,14 +87,14 @@ export class AuthService {
       return error;
     }
   }
-  async generateQR(data: string): Promise<Buffer> {
+  generateQR(data: string): Buffer {
     return QRCode.toBuffer(data);
   }
 
   generate2FASecret(username : string): string {
     const secret = speakeasy.generateSecret({
       length: 20,
-      name: `Pong Masters:${username}`,
+      name: `The kingdom of Pong : ${username}`,
     });
     return secret.base32;
   }
@@ -109,52 +109,39 @@ export class AuthService {
       const url = speakeasy.otpauthURL({
         secret: user.twoFASecret,
         encoding: "base32",
-        label: "Pong Masters",
-        algorithm: "sha512",
+        label: `The kingdom of Pong`,
+        algorithm: "sha1",
       });
       return this.generateQR(url);
     } catch (error) {
       return error;
     }
   }
-  async verify2FA(id: string, token: string): Promise<any> {
+
+  async verify2FA(id: string, token: string): Promise<boolean> {
     try {
       const user = await this.prisma.user.findUnique({
         where: {
           id,
         },
       });
-
+      
       const verified = speakeasy.totp.verify({
         secret: user.twoFASecret,
         encoding: "base32",
         token: token,
+        algorithm: "sha1"
       });
-
-      if (verified) {
-        return "Verification successful!";
-      } else {
-        throw new BadRequestException("Invalid token");
-      }
+      console.log("helllllll " ,verified);
+      return verified;
     } catch (error) {
       return error;
     }
   }
+
   async enable2FA(id: string, token: string): Promise<any> {
     try {
-      const user = await this.prisma.user.findUnique({
-        where: {
-          id,
-        },
-      });
-      console.log(token);
-      const verified = speakeasy.totp.verify({
-        secret: user.twoFASecret,
-        encoding: "base32",
-        token: token,
-      });
-      console.log(verified);
-      if (verified) {
+      if (await this.verify2FA(id, token) === true) {
         await this.prisma.user.update({
           where: {
             id,
@@ -163,27 +150,16 @@ export class AuthService {
             twoFAActive: true,
           },
         });
-      } 
-      return verified;
+        return true;
+      }else
+        return false;
     } catch (error) {
       return error;
     }
   }
   async disable2FA(id: string, token: string): Promise<any> {
     try {
-      const user = await this.prisma.user.findUnique({
-        where: {
-          id,
-        },
-      });
-
-      const verified = speakeasy.totp.verify({
-        secret: user.twoFASecret,
-        encoding: "base32",
-        token: token,
-      });
-
-      if (verified) {
+      if (await this.verify2FA(id, token) === true) {
         await this.prisma.user.update({
           where: {
             id,
@@ -192,9 +168,9 @@ export class AuthService {
             twoFAActive: false,
           },
         });
-        return "Updated successfully!";
+        return true;
       } else {
-        throw new BadRequestException("Invalid token");
+        return false;
       }
     } catch (error) {
       return error;
@@ -212,7 +188,7 @@ export class AuthService {
             username: user.username,
             email: user.email,
             id42: user.fortyTwoId,
-            twoFASecret: this.generate2FASecret(user.username),
+            twoFASecret: await this.generate2FASecret(user.username),
             password: "42",
             profile: {
               create: {
@@ -242,7 +218,7 @@ export class AuthService {
             username: "user.username",
             email: user.email,
             idGoogle: user.googleId,
-            twoFASecret: this.generate2FASecret(user.email),
+            twoFASecret: await this.generate2FASecret(user.email),
             password: "google",
             profile: {
               create: {

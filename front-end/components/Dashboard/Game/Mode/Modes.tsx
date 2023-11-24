@@ -9,10 +9,11 @@ type props  = {
 const Modes = ({setShow, onModeChange}:props) => {
     const [selected, setSelected] = useState('');
     const handleClick = (mode:string) => {
-  setSelected(mode);
-  onModeChange(mode);
-  
-}
+    setSelected(mode);
+    onModeChange(mode);
+    }
+    
+    console.log("this is mode ahdfasdf",selected);
     return (
         <>
 
@@ -62,7 +63,10 @@ const Modes = ({setShow, onModeChange}:props) => {
             </div>
             </div>
             <div className="w-full  flex justify-center gap-[10px] pb-[40px] flex-col items-center md:flex-row">
-            <button disabled={!selected} onClick={()=>setShow("map")} className={`w-[240px] h-[77px] backB rounded-[14px] text-white text-[30px] font-[400] hover:bg-gray-400 font-['Fredoka'] ${!selected ? 'cursor-not-allowed text-[20px]' : ''}`}>
+            <button onClick={()=>{setShow(null)}} className="w-[240px] h-[77px] retB rounded-[14px] text-white text-[30px] font-[400] hover:bg-gray-400 font-['Fredoka']">
+                Back
+            </button>
+            <button disabled={!selected} onClick={()=>setShow(selected)} className={`w-[240px] h-[77px] backB rounded-[14px] text-white text-[30px] font-[400] hover:bg-gray-400 font-['Fredoka'] ${!selected ? 'cursor-not-allowed text-[20px]' : ''}`}>
                 {selected ? 'Next' : 'Choose Mode'}
             </button>
             </div>

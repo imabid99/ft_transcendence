@@ -16,7 +16,7 @@ type props  = {
 
 const Maps = ({setShow, onMapChange}:props) => {
     const [selected, setSelected] = useState('');
-    const [videoSource, setVideoSource] = useState(""); // Set your default video source here
+    const [videoSource, setVideoSource] = useState("");
 
     const handleClick = (map:string) => {
   setSelected(map);
@@ -92,9 +92,6 @@ const Maps = ({setShow, onMapChange}:props) => {
             </div>
             </div>
             <div className="w-full  flex justify-center gap-[10px] pb-[40px] flex-col items-center md:flex-row">
-            <button onClick={()=>{setShow(null)}} className="w-[240px] h-[77px] retB rounded-[14px] text-white text-[30px] font-[400] hover:bg-gray-400 font-['Fredoka']">
-                Back
-            </button>
             <button disabled={!selected} onClick={()=>setShow("map")} className={`w-[240px] h-[77px] backB rounded-[14px] text-white text-[30px] font-[400] hover:bg-gray-400 font-['Fredoka'] ${!selected ? 'cursor-not-allowed text-[20px]' : ''}`}>
                 {selected ? 'Next' : 'Choose Map'}
             </button>
