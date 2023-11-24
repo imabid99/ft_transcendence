@@ -13,7 +13,7 @@ interface AuthenticatedRequest extends Request {
 
 @Injectable()
 export class AuthMiddleware implements NestMiddleware {
-  constructor(private readonly authService: UserService) {}
+  constructor(private readonly userService: UserService) {}
 
   async use(req: AuthenticatedRequest, res: Response, next: NextFunction) {
     const authHeader = req.headers.authorization;
@@ -28,7 +28,7 @@ export class AuthMiddleware implements NestMiddleware {
 
     try {
       const decoded = jwt.verify(token, process.env.JWT_SECRET);
-      const user = await this.authService.validateUser(decoded);
+      const user = await this.userService.validateUser(decoded);
 
       if (!user) {
         throw new UnauthorizedException("Invalid user");

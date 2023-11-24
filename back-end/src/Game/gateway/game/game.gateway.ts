@@ -9,7 +9,6 @@ import * as SocketIO from "socket.io";
 import * as jwt from "jsonwebtoken";
 import jwt_decode from "jwt-decode";
 import { PrismaService } from "../../../prisma/prisma.service";
-import { UserService } from "../../../user/user.service";
 import { Server } from "socket.io";
 import { subscribe } from "diagnostics_channel";
 import { MatchType } from "@prisma/client";
@@ -30,7 +29,6 @@ import { v4 as uuidv4 } from 'uuid';
 export class GameGateway implements OnGatewayConnection, OnGatewayDisconnect {
   constructor(
     private prisma: PrismaService,
-    private userService: UserService,
     private gameService: GameService
   ) {}
 
@@ -246,6 +244,4 @@ export class GameGateway implements OnGatewayConnection, OnGatewayDisconnect {
         console.log(e);
       }
   }
-
-
 }
