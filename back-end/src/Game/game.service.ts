@@ -140,20 +140,24 @@ export class GameService {
     
             if (creatorActual) {
                 creatorProfile.xp += 100;
-                creatorProfile.level = creatorProfile.xp < 500 ? 0 : Math.floor((creatorProfile.xp - 500) / 1000) + 1;
+                creatorProfile.nextLevelXp = creatorProfile.level === 0 ? 500 : (creatorProfile.level + 1) * 1000;
+                if (creatorProfile.xp >= creatorProfile.nextLevelXp) {
+                    creatorProfile.level += 1;
+                    creatorProfile.xp = creatorProfile.xp - creatorProfile.nextLevelXp;
+                }
+                creatorProfile.percentage = (creatorProfile.xp / creatorProfile.nextLevelXp) * 100;
                 creatorProfile.points += 50;
-            
-                let requiredXPForThisLevel = creatorProfile.level * 1000 + 500;
-                creatorProfile.ratio = creatorProfile.xp / requiredXPForThisLevel;
             }
             
             if (opponentActual) {
                 opponentProfile.xp += 100;
-                opponentProfile.level = opponentProfile.xp < 500 ? 0 : Math.floor((opponentProfile.xp - 500) / 1000) + 1;
+                opponentProfile.nextLevelXp = opponentProfile.level === 0 ? 500 : (opponentProfile.level + 1) * 1000;
+                if (opponentProfile.xp >= opponentProfile.nextLevelXp) {
+                    opponentProfile.level += 1;
+                    opponentProfile.xp = opponentProfile.xp - opponentProfile.nextLevelXp;
+                }
+                opponentProfile.percentage = (opponentProfile.xp / opponentProfile.nextLevelXp) * 100;
                 opponentProfile.points += 50;
-            
-                let requiredXPForThisLevel = opponentProfile.level * 1000 + 500;
-                opponentProfile.ratio = opponentProfile.xp / requiredXPForThisLevel;
             }
     
             const creatorAchievements = await this.checkAchievements(creatorProfile);
@@ -166,6 +170,8 @@ export class GameService {
                     level: creatorProfile.level,
                     points: creatorProfile.points,
                     ratio: creatorProfile.ratio,
+                    nextLevelXp: creatorProfile.nextLevelXp,
+                    percentage: creatorProfile.percentage,
                     win: creatorActual ? { increment: 1 } : undefined,
                     lose: creatorActual ? undefined : { increment: 1 },
                     invitematchcount: MatchType === "FRIEND" ? { increment: 1 } : undefined,
@@ -182,6 +188,7 @@ export class GameService {
                     level: opponentProfile.level,
                     points: opponentProfile.points,
                     ratio: opponentProfile.ratio,
+                    nextLevelXp: opponentProfile.nextLevelXp,
                     win: opponentActual ? { increment: 1 } : undefined,
                     lose: opponentActual ? undefined : { increment: 1 },
                     invitematchcount: MatchType === "FRIEND" ? { increment: 1 } : undefined,

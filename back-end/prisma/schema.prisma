@@ -113,6 +113,8 @@ model Profile {
   randommatchcount Int      @default(0)
   twc             Int       @default(0)
   ratio           Float     @default(0)
+  nextLevelXp     Int       @default(500)
+  percentage      Float     @default(0)
   achievements    Achievement[]
 }
 
