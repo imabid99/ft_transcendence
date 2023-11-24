@@ -77,7 +77,7 @@ export class GameService {
         return rating + k * (actual - expected);
     }
 
-    async checkAchievements(profile) {
+    async checkAchievements(profile: any) {
         const achievements = await this.prisma.achievement.findMany({
             where: {
                 profileId: profile.userId,
