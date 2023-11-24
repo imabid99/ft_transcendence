@@ -42,19 +42,6 @@ export default function Home() {
   const { register, handleSubmit, formState } = form;
   const { errors, isDirty } = formState;
   const onSubmit = async (data: FormValues) => {
-    // console.log(data);
-    // try {
-    //   const response = await axios.post(
-    //     `http://${process.env.NEXT_PUBLIC_APP_URL}:3000/api/auth/signup`,
-    //     {
-    //       email: data.email,
-    //       password: data.password,
-    //       firstName: data.firstName,
-    //       lastName: data.lastName,
-    //       username: data.userName,
-    //     }
-    //   );
-    //   if (response.status !== 200) {
         setShowCompleteProfile(true);
         setInfo({
           firstName: data.firstName,
@@ -64,11 +51,7 @@ export default function Home() {
           password: data.password,
         });
   }
-  //   } catch (e: any) {
-  //     console.log("Error : ", e.response.data);
-  //     return;
-  //   }
-  // };
+
   const onError = (errors: any) => console.log(errors);
   const registerOptions = {
     firstName: {

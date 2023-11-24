@@ -21,9 +21,7 @@ const Game = () => {
     }
 
     console.log("this is map",selectedMap);
-    // console.log("this is map",selected);
 	console.log("this is map hahahahah",Show);
-	// 7ett dakchi dyalk hna a Imad
 		
 	return (
 		<>
@@ -48,18 +46,12 @@ const Game = () => {
 			<FriendSearch setShow={setShow}/>
 			) : Show == 'AI' ? (
 				console.log("this is map",Show),
-			// router.push('/Game/ai?name=John', { selectedMap })
-			// router.push('/Game/ai?selectedMap=snow')
-			// router.push(`/Game/ai?name=${selectedMap}`)
 			<PlayWithAI selectedMap={selectedMap} />
 			) : (
-			// router.push('/Game/random', { Show })
 			<Random selectedMap={selectedMap} />
 			)
 			}
 		</>
-		// <div className="w-full relative">
-		// </div>
 	);
 };
 
