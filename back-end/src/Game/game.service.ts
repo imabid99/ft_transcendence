@@ -72,7 +72,7 @@ export class GameService {
     // expectedScore(rating1: number, rating2: number): number {
     //     return 1 / (1 + Math.pow(10, (rating2 - rating1) / 400));
     // }
-  
+
     // updateRating(rating: number, expected: number, actual: number, k: number = 32): number {
     //     return rating + k * (actual - expected);
     // }
@@ -81,9 +81,10 @@ export class GameService {
         const achievements = await this.prisma.achievement.findMany({
             where: {
                 profileId: profile.userId,
-            },
+            }
         });
     
+        console.log("achievements : ", achievements);
         return achievements.map(achievement => {
             let completed = false;
             switch (achievement.id) {
@@ -111,7 +112,6 @@ export class GameService {
                 default:
                     break;
             }
-    
             return {
                 ...achievement,
                 completed,
@@ -146,6 +146,7 @@ export class GameService {
                     creatorProfile.xp = creatorProfile.xp - creatorProfile.nextLevelXp;
                 }
                 creatorProfile.percentage = (creatorProfile.xp / creatorProfile.nextLevelXp) * 100;
+                console.log("perc   ",creatorProfile.percentage);
                 creatorProfile.points += 50;
             }
             
@@ -157,6 +158,7 @@ export class GameService {
                     opponentProfile.xp = opponentProfile.xp - opponentProfile.nextLevelXp;
                 }
                 opponentProfile.percentage = (opponentProfile.xp / opponentProfile.nextLevelXp) * 100;
+                console.log("perc   ",opponentProfile.percentage);
                 opponentProfile.points += 50;
             }
     

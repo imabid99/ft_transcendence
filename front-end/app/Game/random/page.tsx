@@ -627,7 +627,7 @@ const Random = ({selectedMap}: any) => {
   // };
 
   return (
-    <div className="w-full relative">
+    <div className="w-full h-full relative">
       <Canvas
         shadows
         camera={{ fov: 75, near: 0.1, far: 300, position: [0, 10, 20] }}

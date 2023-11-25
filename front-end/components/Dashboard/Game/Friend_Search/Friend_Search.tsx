@@ -32,7 +32,7 @@ const FriendSearch = ({setShow}: any) => {
     return (
         <>
 
-  <div className="w-[100%] max-w-[1370px] xl:h-[830px] rounded-[100px] backdrop-blur-[20px] backSh flex gap-[30px] flex-col items-center absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2">
+  <div className="w-[100%] max-w-[1370px] xl:h-[830px] rounded-[100px] backdrop-blur-[20px] backSh flex gap-[30px] flex-col items-center">
     <div className="flex flex-col gap-[16px] w-10/12 ">
       <div className="w-full  pt-[49px]">
         <input
