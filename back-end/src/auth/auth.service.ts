@@ -13,12 +13,14 @@ import { UserService } from "../user/user.service";
 import * as QRCode from "qrcode";
 import * as speakeasy from "speakeasy";
 import { v4 as uuidv4 } from "uuid";
+import { NotificationGateway } from "src/notification/gateway/notification.gateway";
 
 @Injectable()
 export class AuthService {
   constructor(
     private prisma: PrismaService,
-    private userService: UserService
+    private userService: UserService,
+    private notificationGateway : NotificationGateway,
   ) { }
 
   async login(userData: UserDataLogin): Promise<any> {
@@ -132,7 +134,6 @@ export class AuthService {
         token: token,
         algorithm: "sha1"
       });
-      console.log("helllllll " ,verified);
       return verified;
     } catch (error) {
       return error;
@@ -150,6 +151,7 @@ export class AuthService {
             twoFAActive: true,
           },
         });
+        this.notificationGateway.updated(id);
         return true;
       }else
         return false;
@@ -168,6 +170,7 @@ export class AuthService {
             twoFAActive: false,
           },
         });
+        this.notificationGateway.updated(id);
         return true;
       } else {
         return false;
