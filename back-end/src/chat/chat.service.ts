@@ -1,12 +1,14 @@
 import { Injectable, UseGuards , NotFoundException } from '@nestjs/common';
 import { PrismaService } from "../prisma/prisma.service";
 import { UserService } from 'src/user/user.service';
+import { FriendshipService } from 'src/friendship/friendship.service';
 
 @Injectable()
 export class ChatService {
     constructor(
       private prisma: PrismaService,
       private userService: UserService,
+      private friendshipService: FriendshipService,
       
       ) {}
 
@@ -48,8 +50,17 @@ export class ChatService {
           delete channel.Band;
           delete channel.Muts;
         }
-
         const membersProfile = await this.getMembersProfile(channel.Members);
+        const myBlocked = await this.friendshipService.getBlocked(myId);
+        console.log("myBlocked", myBlocked);
+        channel.Messages = channel.Messages.filter((message) => {
+          if (myBlocked.includes(message.fromName)) {
+            return false;
+          }
+          return true;
+        }
+        );
+        console.log("channel.Messages", channel.Messages);
         return {channel, membersProfile};
     }
     async getMembersProfile(members: any): Promise<any> {

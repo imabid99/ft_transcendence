@@ -8,7 +8,6 @@ type LeftMessagesProps = {
 }
 
 export default function LeftMessagesGroup({message}: LeftMessagesProps) {
-    console.log("LeftMessagesGroup : ", message)
 
     return (
         <div className="flex gap-[16px] items-start"> 

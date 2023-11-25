@@ -8,6 +8,7 @@ import { UserService } from "../user/user.service";
 import { PrismaService } from "../prisma/prisma.service";
 import { NotificationModule } from "src/notification/notification.module";
 import { NotificationGateway } from "src/notification/gateway/notification.gateway";
+import { FriendshipService } from "src/friendship/friendship.service";
 
 @Module({
   imports: [
@@ -17,6 +18,6 @@ import { NotificationGateway } from "src/notification/gateway/notification.gatew
     NotificationModule,
   ],
   controllers: [uploadController],
-  providers: [UploadService, ChatService, UserService, PrismaService, NotificationGateway],
+  providers: [UploadService, ChatService, FriendshipService,UserService, PrismaService, NotificationGateway],
 })
 export class UploadModule {}

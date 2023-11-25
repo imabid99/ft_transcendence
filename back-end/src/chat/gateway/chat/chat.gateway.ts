@@ -368,7 +368,6 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
         this.server.to(user.username).emit("errorNotif", {message: `you are banned from this group`, type: false});
         return;
       }
-      console.log("payload : ", payload);
       
       await this.prisma.message.create({
         data: {
@@ -389,7 +388,6 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
   const jwt = client.handshake.headers.authorization?.split(" ")[1];
   if(jwt)
   {
-    console.log("leaveGroup payload : ", payload);
 
     const info:any= jwt_decode(jwt);
     const user = await this.prisma.user.findUnique({

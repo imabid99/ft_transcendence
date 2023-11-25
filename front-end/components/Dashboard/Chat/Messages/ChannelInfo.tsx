@@ -135,7 +135,7 @@ export default function ChannelInfo({infoRef, handleshowInfo, group, userId}: Ch
                             const avatar = group.membersProfile.filter((profile: any) => profile.userId === member.id)[0]?.avatar;
                             return (
                                 <HandlRightClick mytype={1} type={3} id={member.id}  key={`${member.id}`}>
-                                    <Link href={`/profile/users/${member.id}`}>
+                                    <Link href={`/Profile/users/${member.id}`}>
                                         <div className="w-full flex items-center gap-[10px] justify-between cursor-pointer">
                                             <span className="flex items-center gap-[10px]">
                                                 <img src={`http://${process.env.NEXT_PUBLIC_APP_URL}:3000/${avatar}`} alt="" className="rounded-full w-[60px] h-[60px] object-cover"/>
@@ -162,7 +162,7 @@ export default function ChannelInfo({infoRef, handleshowInfo, group, userId}: Ch
                             const avatar = group.membersProfile.filter((profile: any) => profile.userId === owner.id)[0]?.avatar;
                             return (
                                 <HandlRightClick mytype={mytype} type={3} id={owner.id}  key={`${owner.id}`}>
-                                    <Link href={`/profile/users/${owner.id}`}>
+                                    <Link href={`/Profile/users/${owner.id}`}>
                                         <div className="w-full flex items-center gap-[10px] justify-between cursor-pointer">
                                             <span className="flex items-center gap-[10px]">
                                                 <img src={`http://${process.env.NEXT_PUBLIC_APP_URL}:3000/${avatar}`}  alt="" className="rounded-full w-[60px] h-[60px] object-cover"/>
@@ -202,7 +202,7 @@ export default function ChannelInfo({infoRef, handleshowInfo, group, userId}: Ch
                             const avatar = group.membersProfile.filter((profile: any) => profile.userId === admin.id)[0]?.avatar;
                             return (
                                 <HandlRightClick mytype={mytype} type={2} id={admin.id} groupId={group.channel.id}  key={`${admin.id}`}>
-                                    <Link href={`/profile/users/${admin.id}`}>
+                                    <Link href={`/Profile/users/${admin.id}`}>
                                         <div className="w-full flex items-center gap-[10px] justify-between cursor-pointer">
                                             <span className="flex items-center gap-[10px]">
                                                 <img src={`http://${process.env.NEXT_PUBLIC_APP_URL}:3000/${avatar}`}  alt="" className="rounded-full w-[60px] h-[60px] object-cover"/>
@@ -242,7 +242,7 @@ export default function ChannelInfo({infoRef, handleshowInfo, group, userId}: Ch
                             const avatar = group.membersProfile.filter((profile: any) => profile.userId === member.id)[0]?.avatar;
                             return(
                                 <HandlRightClick mytype={mytype} type={1} id={member.id} groupId={group.channel.id}  key={`${member.id}`}>
-                                    <Link href={`/profile/users/${member.id}`} >
+                                    <Link href={`/Profile/users/${member.id}`} >
                                         <div className="w-full flex items-center gap-[10px] justify-between cursor-pointer">
                                             <span className="flex items-center gap-[10px]">
                                                 <img src={`http://${process.env.NEXT_PUBLIC_APP_URL}:3000/${avatar}`} alt="" className="rounded-full w-[60px] h-[60px] object-cover"/>
@@ -280,7 +280,7 @@ export default function ChannelInfo({infoRef, handleshowInfo, group, userId}: Ch
                             return(
                                 <HandlRightClick mytype={userId == mute.id ? 1 : mytype} type={1} id={mute.id} groupId={group.channel.id}  key={`${mute.id}`} isMute={true}>
                                     <div className='flex  items-center justify-between opacity-60 w-full'>
-                                        <Link href={`/profile/users/${mute.id}`} >
+                                        <Link href={`/Profile/users/${mute.id}`} >
                                             <div className="w-full flex items-center gap-[10px] justify-between cursor-pointer">
                                                 <span className="flex items-center gap-[10px]">
                                                     <img src={`http://${process.env.NEXT_PUBLIC_APP_URL}:3000/${avatar}`} alt="" className="rounded-full w-[60px] h-[60px] object-cover"/>
@@ -321,7 +321,7 @@ export default function ChannelInfo({infoRef, handleshowInfo, group, userId}: Ch
                             return(
                                 <HandlRightClick mytype={userId == ban.id ? 1 : mytype} type={1} id={ban.id} groupId={group.channel.id}  key={`${ban.id}`} isBan={true}>
                                     <div className='flex  items-center justify-between opacity-60 w-full'>
-                                        <Link href={`/profile/users/${ban.id}`} >
+                                        <Link href={`/Profile/users/${ban.id}`} >
                                             <div className="w-full flex items-center gap-[10px] justify-between cursor-pointer">
                                                 <span className="flex items-center gap-[10px]">
                                                     <img src={`http://${process.env.NEXT_PUBLIC_APP_URL}:3000/${avatar}`} alt="" className="rounded-full w-[60px] h-[60px] object-cover"/>
