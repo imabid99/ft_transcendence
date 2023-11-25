@@ -72,6 +72,16 @@ export class GameGateway implements OnGatewayConnection, OnGatewayDisconnect {
           }
           this.socketMap.get(user.userId).push(client);
         }
+        const matchtype_ = client.handshake.auth.matchType;
+        console.log(matchtype_);
+        if(matchtype_ === 'Random')
+        {
+          this.randomMatchmaking(client);
+        }
+        else if(matchtype_ === 'Invite')
+        {
+          this.createMatch(client);
+        }
       }
     } catch (e) {
       console.log(e);
@@ -79,11 +89,48 @@ export class GameGateway implements OnGatewayConnection, OnGatewayDisconnect {
   }
 
   //RANDOM GAME
+  // @SubscribeMessage("matchmaking")
+  // async randomMatchmaking(client: Socket) {
+  //   const token = client.handshake.headers.authorization?.split(" ")[1];
+  //   if (token) {
+  //     const decoded: any = jwt_decode(token);
+  //     const userId = decoded.userId;
+  //     const username = decoded.username;
+  //     console.log(`Client ${decoded.username} connected`);
+  //     console.log(`User ${username} started matchmaking`);
+  //     const newObject = {
+  //       userId : userId,
+  //       username: username,
+  //       client: client,
+  //     };
+  //     this.waitingPlayers.push(newObject);
+  //     if (this.waitingPlayers.length >= 2) {
+  //       const creator = this.waitingPlayers.shift();
+  //       const opponent = this.waitingPlayers.shift();
+  //       if (creator.username !== opponent.username) {
+  //         console.log(
+  //           `Match started between ${creator.client.id} and ${opponent.client.id}`
+  //         );
+  //         const matchId = await this.gameService.createMatch(creator.userId, opponent.userId, MatchType.RANDOM);
+  //         creator.client.join(matchId);
+  //         opponent.client.join(matchId);
+  //       } else {
+  //         this.waitingPlayers.unshift(opponent);
+  //       }
+  //     }
+  //   }
+  // }
+
   @SubscribeMessage("matchmaking")
   async randomMatchmaking(client: Socket) {
+    try {
     const token = client.handshake.headers.authorization?.split(" ")[1];
     if (token) {
       const decoded: any = jwt_decode(token);
+      console.log('decoded token:', decoded);
+      if (!decoded || !decoded.userId || !decoded.username) {
+        throw new Error('Invalid token');
+      }
       const userId = decoded.userId;
       const username = decoded.username;
       console.log(`Client ${decoded.username} connected`);
@@ -97,11 +144,12 @@ export class GameGateway implements OnGatewayConnection, OnGatewayDisconnect {
       if (this.waitingPlayers.length >= 2) {
         const creator = this.waitingPlayers.shift();
         const opponent = this.waitingPlayers.shift();
-        if (creator.username !== opponent.username) {
+
+        if (creator.userId !== opponent.userId) {
           console.log(
             `Match started between ${creator.client.id} and ${opponent.client.id}`
           );
-          const matchId = await this.gameService.createMatch(creator.userId, opponent.userId, MatchType.RANDOM);
+          const matchId = await this.gameService.createMatch(creator, opponent, MatchType.RANDOM);
           creator.client.join(matchId);
           opponent.client.join(matchId);
         } else {
@@ -109,7 +157,15 @@ export class GameGateway implements OnGatewayConnection, OnGatewayDisconnect {
         }
       }
     }
+    else {
+      throw new Error('No token provided');
+    }
+  } catch (error) {
+    console.error('An error occurred:', error);
   }
+  }
+
+  
 
   @SubscribeMessage("paddle-pos")
   async handlePaddlePos(
@@ -191,11 +247,54 @@ export class GameGateway implements OnGatewayConnection, OnGatewayDisconnect {
   }
 
 
-  @SubscribeMessage("createMatch")
-  async createMatch(client: Socket) {
+  // @SubscribeMessage("createMatch")
+  // async createMatch(client: Socket) {
+  //   const token = client.handshake.headers.authorization?.split(" ")[1];
+  //   if (token) {
+  //     const decoded: any = jwt_decode(token);
+  //     const userId = decoded.userId;
+  //     const username = decoded.username;
+  //     console.log(`Client ${decoded.username} connected`);
+  //     const newObject = {
+  //       userId : userId,
+  //       username: username,
+  //       client: client,
+  //     };
+  //     this.waitingPlayers.push(newObject);
+  //     if (this.waitingPlayers.length >= 2) {
+  //       const creator = this.waitingPlayers.shift();
+  //       const opponent = this.waitingPlayers.shift();
+  //       if (creator.username !== opponent.username) {
+  //         console.log(
+  //           `Match started between ${creator.client.id} and ${opponent.client.id}`
+  //         );
+  //         console.log("test");
+  //         const match = await this.gameService.getMatch2(creator.userId);
+  //         if (match) {
+  //           console.log(match);
+  //           await this.gameService.upateMatch(match.id, creator.client.id, opponent.client.id);
+  //           creator.client.join(match.id);
+  //           opponent.client.join(match.id);
+  //         } else {
+  //           console.log('No match found for user: ', creator.userId);
+  //         }
+  //       } else {
+  //         this.waitingPlayers.unshift(opponent);
+  //       }
+  //     }
+  //   }
+  // }
+
+@SubscribeMessage("createMatch")
+async createMatch(client: Socket) {
+  try {
     const token = client.handshake.headers.authorization?.split(" ")[1];
     if (token) {
       const decoded: any = jwt_decode(token);
+      console.log('decoded token:', decoded);
+      if (!decoded || !decoded.userId || !decoded.username) {
+        throw new Error('Invalid token');
+      }
       const userId = decoded.userId;
       const username = decoded.username;
       console.log(`Client ${decoded.username} connected`);
@@ -212,18 +311,26 @@ export class GameGateway implements OnGatewayConnection, OnGatewayDisconnect {
           console.log(
             `Match started between ${creator.client.id} and ${opponent.client.id}`
           );
-          console.log("test");
           const match = await this.gameService.getMatch2(creator.userId);
-          console.log(match);
-          await this.gameService.upateMatch(match.id, creator.client.id, opponent.client.id);
-          creator.client.join(match.id);
-          opponent.client.join(match.id);
+          if (match) {
+            console.log(match);
+            await this.gameService.upateMatch(match.id, creator.client.id, opponent.client.id);
+            creator.client.join(match.id);
+            opponent.client.join(match.id);
+          } else {
+            console.log('No match found for user: ', creator.userId);
+          }
         } else {
           this.waitingPlayers.unshift(opponent);
         }
       }
+    } else {
+      throw new Error('No token provided');
     }
+  } catch (error) {
+    console.error('An error occurred:', error);
   }
+}
 
   handleDisconnect(client: Socket) {
     try {
