@@ -146,12 +146,12 @@ export class GameGateway implements OnGatewayConnection, OnGatewayDisconnect {
         const opponent = this.waitingPlayers.shift();
 
         if (creator.userId !== opponent.userId) {
-          console.log(
-            `Match started between ${creator.client.id} and ${opponent.client.id}`
-          );
           const matchId = await this.gameService.createMatch(creator, opponent, MatchType.RANDOM);
           creator.client.join(matchId);
           opponent.client.join(matchId);
+          console.log(
+            `Match started between ${creator.client.id} and ${opponent.client.id}, in match ${matchId}`
+          );
         } else {
           this.waitingPlayers.unshift(opponent);
         }

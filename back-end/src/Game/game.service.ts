@@ -17,8 +17,10 @@ export class GameService {
                     type: type,
                 },
             });
+            console.log("This is the match   ",match);
             return match.id;
         } catch (error) {
+            console.log("This is The ERROR  ",error);
             return error;
         }
     }
