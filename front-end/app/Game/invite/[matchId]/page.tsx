@@ -192,7 +192,7 @@ const InviteAFriend = () => {
 					}
 					const smoothingFactor = 0.4;
 					paddleposX = paddleposX + (targetPosX - paddleposX) * smoothingFactor;
-					socket.emit('paddle-pos', { x: - paddleposX, y: 0.5, z: -9, playerId: socket.id});
+					socket.emit('paddle-pos', { x: - paddleposX, y: 0.5, z: -9, playerId: user?.profile.userId});
 					// setTimeout(() => {
 						api.position.set(paddleposX, 0.5, 9);
 					// }, 5);
@@ -275,7 +275,7 @@ const InviteAFriend = () => {
 
 			// requestAnimationFrame(updatePosition);
 			socket.on('paddle-pos', (data: any) => {
-				if (data.playerId === socket.id) return;
+				if (data.playerId === user?.profile.userId) return;
 				api.position.set(data.x, data.y, data.z);
 			});
 
@@ -494,8 +494,8 @@ const InviteAFriend = () => {
 			{
 				if(p2_count === 7 )
 				{
-				  console.log(socket.id, p1_count, p2_count);
-				  const payload = {winner: socket.id, winnerscore: p2_count, loserscore: p1_count};
+				  console.log(user.userId, p1_count, p2_count);
+				  const payload = {winner: user?.profile.userId, winnerscore: p2_count, loserscore: p1_count};
 				  socket.emit('player-wins', payload)
 				}
 				// else

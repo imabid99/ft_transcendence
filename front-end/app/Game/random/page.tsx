@@ -227,7 +227,7 @@ const Random = ({selectedMap}: any) => {
             x: -paddleposX,
             y: 0.5,
             z: -9,
-            playerId: socket.id,
+            playerId: user?.profile.userId,
           });
           setTimeout(() => {
             api.position.set(paddleposX, 0.5, 9);
@@ -321,7 +321,7 @@ const Random = ({selectedMap}: any) => {
 
       // requestAnimationFrame(updatePosition);
       socket.on("paddle-pos", (data: any) => {
-        if (data.playerId === socket.id) return;
+        if (data.playerId === user?.profile.userId) return;
         api.position.set(data.x, data.y, data.z);
       });
 
@@ -558,9 +558,9 @@ const Random = ({selectedMap}: any) => {
       if (!user) return;
       if (p1_count === 7 || p2_count === 7) {
         if (p2_count === 7) {
-          console.log(socket.id, p1_count, p2_count);
+          console.log(user?.profile.userId, p1_count, p2_count);
           const payload = {
-            winner: socket.id,
+            winner: user?.profile.userId,
             winnerscore: p2_count,
             loserscore: p1_count,
           };
