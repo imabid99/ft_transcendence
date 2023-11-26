@@ -30,8 +30,6 @@ const Friend = ({ cover, avatar, name, username, online,userId }:props) => {
                         <svg width="242" height="64" viewBox="0 0 242 64" fill="none" xmlns="http://www.w3.org/2000/svg">
                         <path d="M33 2.33827C19.8 -4.46173 -1.83333 15.8333 -10.5 21.4999L-14 61.3393L251.5 63.3393V54.3393C252.833 47.6726 261.1 36.3 251.5 21.5C241.9 6.7 217.5 -0.000549078 209.5 2.33827C199 5.40798 192.5 15.8393 165 15.8393C137.5 15.8393 130 6.33929 111.5 2.33827C93 -1.66275 89 15.8393 67.5 15.8393C46 15.8393 49.5 10.8383 33 2.33827Z" fill="white"/>
                         </svg>
-                    {/* <div className="w-[950px] h-[600px] bg-black z-[1] mt-[-10px]">
-                    </div> */}
                 </span>
         <div className="w-[242px] h-[92px]">
         <img
