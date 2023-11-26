@@ -23,6 +23,7 @@ import { v4 as uuidv4 } from 'uuid';
   cors: {
     origin: true,
     methods: ["GET", "POST"],
+
   },
   namespace: "Game",
 })
@@ -57,11 +58,14 @@ export class GameGateway implements OnGatewayConnection, OnGatewayDisconnect {
   }
 
   
+  
   handleConnection(client: Socket) {
+    const token = client.handshake.headers.authorization?.split(" ")[1];
+    console.log("tokena at con ",token);
     try {
-      const token = client.handshake.headers.authorization?.split(" ")[1];
-      if (token) {
 
+      if (token) {
+        console.log("this is the header in con",client.handshake.headers.authorization);
         // console.log("this is the header in con",client.handshake.headers.authorization);
         const user: any = jwt_decode(token);
         if (user && user.userId) {
@@ -82,7 +86,7 @@ export class GameGateway implements OnGatewayConnection, OnGatewayDisconnect {
         }
       }
     } catch (e) {
-      console.log(e);
+      console.log("error at con ", e);
     }
   }
 
@@ -123,6 +127,7 @@ export class GameGateway implements OnGatewayConnection, OnGatewayDisconnect {
   async randomMatchmaking(client: Socket) {
     try {
     const token = client.handshake.headers.authorization?.split(" ")[1];
+    console.log("tokena at matchmaking ",token);
     if (token) {
       const decoded: any = jwt_decode(token);
       console.log('decoded token:', decoded);
@@ -144,7 +149,8 @@ export class GameGateway implements OnGatewayConnection, OnGatewayDisconnect {
         const opponent = this.waitingPlayers.shift();
 
         if (creator.userId !== opponent.userId) {
-          const matchId = await this.gameService.createMatch(creator, opponent, MatchType.RANDOM);
+          const matchId = await this.gameService.createMatch(creator.userId, opponent.userId, MatchType.RANDOM);
+          await this.gameService.upateMatch(matchId, creator.client.id, opponent.client.id);
           creator.client.join(matchId);
           opponent.client.join(matchId);
           console.log(
@@ -287,6 +293,7 @@ export class GameGateway implements OnGatewayConnection, OnGatewayDisconnect {
 async createMatch(client: Socket) {
   try {
     const token = client.handshake.headers.authorization?.split(" ")[1];
+    console.log("tokena at createMatch ",token);
     if (token) {
       const decoded: any = jwt_decode(token);
       console.log('decoded token:', decoded);
@@ -348,7 +355,7 @@ async createMatch(client: Socket) {
         }
     }
       } catch (e) {
-        console.log(e);
+        console.log("Error at descon", e);
       }
   }
 }

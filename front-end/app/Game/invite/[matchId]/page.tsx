@@ -23,32 +23,32 @@ import { contextdata } from "../../../contextApi";
 import { io } from "socket.io-client";
 import { Physics, usePlane, useBox, useSphere, Debug} from '@react-three/cannon'
 import { is } from "@react-three/fiber/dist/declarations/src/core/utils";
-import { getLocalStorageItem } from "@/utils/localStorage";
+import { checkLoged, getLocalStorageItem } from "@/utils/localStorage";
+import { useRouter } from "next/navigation";
+import Loading from "@/app/loading";
 
 // map = snow, desert, forest; mode = friend, bot, random
 
 const InviteAFriend = () => {
-	const [socket, setSocket] = useState<any>(null);
 
+
+	
+	const [socket, setSocket] = useState<any>(null);
+	const { user }: any = useContext(contextdata);
+	const [isLoading, setIsLoading] = useState<boolean>(true);
+	const router = useRouter();
 	const Controls = {
 		left: "left",
 		right: "right",
 	}
-
-	const map = useMemo(() => [
-		{ name: Controls.left, keys: ['ArrowLeft'], player: 'player1' },
-		{ name: Controls.right, keys: ['ArrowRight'], playerd: 'player1' },
-		{ name: Controls.left, keys: ['ArrowLeft'], player: 'player2' },
-		{ name: Controls.right, keys: ['ArrowRight'], player: 'player2' },
-	  ], []);
+	
+	
+	
+	
+	
 
 
 
-	console.log("Hii invite !");
-  
-	const { profiles, user }: any = useContext(contextdata);
-	const name = `${user?.profile.firstName} ${user?.profile.lastName}`;
-  
   useEffect(() => {
     const headers = {
       Authorization: `Bearer ${getLocalStorageItem("Token")}`,
@@ -82,6 +82,15 @@ const InviteAFriend = () => {
 		socket.disconnect();
 	  };
 	}, [socket]);
+	useEffect(() => {
+		const token = checkLoged();
+		if (!token) {
+		router.push("/login");
+		return;
+		}
+		if(!user) return;
+		setIsLoading(false);
+	}, [user]);
 
 	// GUI CONTROLS
 // 	const controls = useControls({});
@@ -557,7 +566,9 @@ const InviteAFriend = () => {
 	// 	setCurrentMap('Desert');
 	//   }
 	// };
-
+	if (isLoading) {
+		return <Loading />;
+	}	
   return (
   <div className="w-full  h-full relative">
 
