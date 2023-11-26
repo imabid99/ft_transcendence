@@ -34,6 +34,7 @@ export class GameService {
                         { opponentSocket: clientId },
                     ],
                 },
+                orderBy: { createdAt: 'desc' },
             })
             return match;
         } catch (error) {
@@ -216,6 +217,8 @@ export class GameService {
     async upateMatch(matchId, creatorSocket : string, opponentSocket : string) : Promise<void> 
     {
         try {
+            console.log("this creatorSocket in up ",creatorSocket);
+            console.log("this opponentSocket in up",opponentSocket);
             await this.prisma.match.update({
                 where: {
                     id: matchId,
@@ -226,6 +229,7 @@ export class GameService {
                 },
             });
         } catch (error) {
+            console.log("This is the ERROR  in updateMatch ",error);
             return error;
         }
     }
