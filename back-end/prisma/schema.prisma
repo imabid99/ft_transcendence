@@ -115,14 +115,20 @@ model Profile {
   ratio           Float     @default(0)
   nextLevelXp     Int       @default(500)
   percentage      Int       @default(0)
-  achievements    Achievement[]
+  achievements    Achievement?
 }
 
 model Achievement {
-  id          Int      @id @default(autoincrement())
-  completed   Boolean  @default(false)
-  profile     Profile  @relation(fields: [profileId], references: [userId])
-  profileId   String
+  id          String   @id @default(uuid())
+  user     Profile  @relation(fields: [userId], references: [userId])
+  userId   String   @unique
+  ach1        Boolean  @default(false)
+  ach2        Boolean  @default(false)
+  ach3        Boolean  @default(false)
+  ach4        Boolean  @default(false)
+  ach5        Boolean  @default(false)
+  ach6        Boolean  @default(false)
+  ach7        Boolean  @default(false)
 }
 
 model channels {
