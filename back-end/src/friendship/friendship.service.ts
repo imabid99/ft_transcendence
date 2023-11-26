@@ -10,6 +10,7 @@ export class FriendshipService {
 
   async makeRequest(senderId: string, receiverId: string): Promise<any> {
     try {
+      console.log("request is ", senderId, receiverId);
       if (senderId === receiverId) {
         throw new BadRequestException("You can't send a friend request to yourself");
       }
@@ -29,7 +30,6 @@ export class FriendshipService {
         this.notificationGateway.apiError(senderId, "You've already sent a friend request to this user");
         throw new ConflictException("You've already sent a friend request to this user");
       }
-      console.log("request is ", senderId, receiverId);
       await this.prisma.friendship.create({
         data: {
           senderId,

@@ -134,6 +134,10 @@ export class AuthService {
         token: token,
         algorithm: "sha1"
       });
+      if (verified === true)
+        this.notificationGateway.apiSuccess(id, "Code verified");
+      else if (verified === false)
+        this.notificationGateway.apiError(id, "Code is not valid");
       return verified;
     } catch (error) {
       return error;
@@ -151,7 +155,7 @@ export class AuthService {
             twoFAActive: true,
           },
         });
-        this.notificationGateway.updated(id);
+        this.notificationGateway.apiSuccess(id, "2FA enabled");
         return true;
       }else
         return false;
@@ -170,7 +174,7 @@ export class AuthService {
             twoFAActive: false,
           },
         });
-        this.notificationGateway.updated(id);
+        this.notificationGateway.apiSuccess(id, "2FA disabled");
         return true;
       } else {
         return false;

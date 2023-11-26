@@ -39,7 +39,7 @@ import { AuthModule } from "./auth/auth.module";
     NotificationModule,
     UserModule,
     AuthModule,
-    // friendshipModule,
+    friendshipModule,
     MulterModule.register({
       dest: "./uploads/all",
     }),

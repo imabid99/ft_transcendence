@@ -139,6 +139,10 @@ export class NotificationGateway implements OnGatewayConnection, OnGatewayDiscon
   apiError(userId : string , message : string) {
     this.sendNotification(userId, {type : "error", message});
   }
+
+  apiSuccess(userId : string , message : string) {
+    this.sendNotification(userId, {type : "success", message});
+  }
   updated(userId : string) {
     this.sendNotification_refresh(userId, {type : "success", message : "Updated successfully"});
   }
