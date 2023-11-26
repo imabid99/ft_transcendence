@@ -81,6 +81,10 @@ export class AuthService {
               lastName: userData.lastName,
               email: userData.email,
               username: userData.username,
+              achievements : {
+                create : {
+                }
+              }
             },
           },
         },
