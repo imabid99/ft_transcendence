@@ -30,7 +30,9 @@ export class UserService {
   }
 
   async getProfiles() {
-    const profiles = await this.prisma.profile.findMany();
+    const profiles = await this.prisma.profile.findMany({
+      include: { achievements: true },
+    });
     return profiles;
   }
 

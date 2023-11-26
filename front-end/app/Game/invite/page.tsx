@@ -7,7 +7,7 @@ import { io } from "socket.io-client";
 const Invite = () => {
 		
 	return (
-		<div className="w-full relative flex justify-center items-center">
+		<div className="w-full  h-full relative flex justify-center items-center">
 			<div >
 				Invite Loading Screen HERE!
 			</div>

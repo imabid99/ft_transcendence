@@ -411,15 +411,15 @@ export default function Page() {
                   {...register("email", registerOptions.email)}
                 />
               </div>
-              <div className="flex flex-col sm:flex-row justify-center items-center sm:justify-end gap-[8px] w-11/12 pt-[10px] pb-[40px] xl:pb-0">
+              <div className="flex flex-col sm:flex-row justify-center items-center sm:justify-end gap-[8px] w-11/12 pt-[5px] pb-[40px] xl:pb-0">
                 <input
                   type="submit"
-                  className="w-[160px] h-[50px] rounded-[12px]  cursor-pointer text-[#fff] text-[13px] font-[600] b-save z-[10]"
+                  className="w-[160px] h-[50px] rounded-[12px]  cursor-pointer text-[#fff] text-[13px] font-[600] b-save "
                   value="Save Changes"
                 />
                 <input
                   type="reset"
-                  className="w-[160px] h-[50px] rounded-[12px] cursor-pointer text-[#02539D] text-[13px] font-[600]  b-reset z-0"
+                  className="w-[160px] h-[50px] rounded-[12px] cursor-pointer text-[#02539D] text-[13px] font-[600]  b-reset"
                   value="Discard"
                 />
               </div>
