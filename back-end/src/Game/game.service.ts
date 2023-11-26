@@ -134,9 +134,10 @@ export class GameService {
             const winnerProfile = await this.prisma.profile.findUnique({ where: { userId: winnerId } });
             const loserProfile = await this.prisma.profile.findUnique({ where: { userId: loserId } });
             
-            console.log(winnerId, " WON!");
+            console.log(winnerId, " WON! now he has ", winnerProfile.xp, " xp");
             winnerProfile.xp += 100;
-            winnerProfile.nextLevelXp = winnerProfile.level === 0 ? 500 : (winnerProfile.level + 1) * 1000;
+            // winnerProfile.nextLevelXp = winnerProfile.level === 0 ? 500 : (winnerProfile.level + 1) * 1000;
+            winnerProfile.nextLevelXp = winnerProfile.level === 0 ? 500 : 500 + winnerProfile.level * 1000;
             if (winnerProfile.xp >= winnerProfile.nextLevelXp) {
                 winnerProfile.level += 1;
                 winnerProfile.xp = winnerProfile.xp - winnerProfile.nextLevelXp;
