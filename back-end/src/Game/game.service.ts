@@ -17,8 +17,10 @@ export class GameService {
                     type: type,
                 },
             });
+            console.log("This is the match   ",match);
             return match.id;
         } catch (error) {
+            console.log("This is The ERROR  ",error);
             return error;
         }
     }
@@ -126,80 +128,7 @@ export class GameService {
                     id: matchId,
                 },
             });
-    
-            const MatchType = match.type;
-    
-            const creatorId = match.creatorId;
-            const opponentId = match.opponentId;
-    
-            const creatorProfile = await this.prisma.profile.findUnique({ where: { userId: creatorId } });
-            const opponentProfile = await this.prisma.profile.findUnique({ where: { userId: opponentId } });
-    
-            const creatorActual = creatorScore > opponentScore ? 1 : 0;
-            const opponentActual = opponentScore > creatorScore ? 1 : 0;
-    
-            if (creatorActual) {
-                creatorProfile.xp += 100;
-                creatorProfile.nextLevelXp = creatorProfile.level === 0 ? 500 : (creatorProfile.level + 1) * 1000;
-                if (creatorProfile.xp >= creatorProfile.nextLevelXp) {
-                    creatorProfile.level += 1;
-                    creatorProfile.xp = creatorProfile.xp - creatorProfile.nextLevelXp;
-                }
-                creatorProfile.percentage = (creatorProfile.xp / creatorProfile.nextLevelXp) * 100;
-                console.log("perc   ",creatorProfile.percentage);
-                creatorProfile.points += 50;
-            }
-            
-            if (opponentActual) {
-                opponentProfile.xp += 100;
-                opponentProfile.nextLevelXp = opponentProfile.level === 0 ? 500 : (opponentProfile.level + 1) * 1000;
-                if (opponentProfile.xp >= opponentProfile.nextLevelXp) {
-                    opponentProfile.level += 1;
-                    opponentProfile.xp = opponentProfile.xp - opponentProfile.nextLevelXp;
-                }
-                opponentProfile.percentage = (opponentProfile.xp / opponentProfile.nextLevelXp) * 100;
-                console.log("perc   ",opponentProfile.percentage);
-                opponentProfile.points += 50;
-            }
-    
-            const creatorAchievements = await this.checkAchievements(creatorProfile);
-            const opponentAchievements = await this.checkAchievements(opponentProfile);
-    
-            await this.prisma.profile.update({
-                where: { userId: creatorId },
-                data: {
-                    xp: creatorProfile.xp,
-                    level: creatorProfile.level,
-                    points: creatorProfile.points,
-                    ratio: creatorProfile.ratio,
-                    nextLevelXp: creatorProfile.nextLevelXp,
-                    percentage: creatorProfile.percentage,
-                    win: creatorActual ? { increment: 1 } : undefined,
-                    lose: creatorActual ? undefined : { increment: 1 },
-                    invitematchcount: MatchType === "FRIEND" ? { increment: 1 } : undefined,
-                    randommatchcount: MatchType === "RANDOM" ? { increment: 1 } : undefined,
-                    twc: creatorScore === 7 && opponentScore === 6 ? { increment: 1 } : undefined,
-                    achievements: { set: creatorAchievements },
-                },
-            });
-    
-            await this.prisma.profile.update({
-                where: { userId: opponentId },
-                data: {
-                    xp: opponentProfile.xp,
-                    level: opponentProfile.level,
-                    points: opponentProfile.points,
-                    ratio: opponentProfile.ratio,
-                    nextLevelXp: opponentProfile.nextLevelXp,
-                    win: opponentActual ? { increment: 1 } : undefined,
-                    lose: opponentActual ? undefined : { increment: 1 },
-                    invitematchcount: MatchType === "FRIEND" ? { increment: 1 } : undefined,
-                    randommatchcount: MatchType === "RANDOM" ? { increment: 1 } : undefined,
-                    twc: opponentScore === 7 && creatorScore === 6 ? { increment: 1 } : undefined,
-                    achievements: { set: opponentAchievements },
-                },
-            });
-    
+
             await this.prisma.match.update({
                 where: { id: matchId },
                 data: {
@@ -207,13 +136,68 @@ export class GameService {
                     opponentScore: opponentScore,
                 },
             });
+
+            const MatchType = match.type;
+            
+            const winnerId = creatorScore > opponentScore ? match.creatorId : match.opponentId;
+            const loserId = creatorScore > opponentScore ? match.opponentId : match.creatorId;
+            const winnerProfile = await this.prisma.profile.findUnique({ where: { userId: winnerId } });
+            const loserProfile = await this.prisma.profile.findUnique({ where: { userId: loserId } });
+            
+            console.log(winnerId, " WON!");
+            winnerProfile.xp += 100;
+            winnerProfile.nextLevelXp = winnerProfile.level === 0 ? 500 : (winnerProfile.level + 1) * 1000;
+            if (winnerProfile.xp >= winnerProfile.nextLevelXp) {
+                winnerProfile.level += 1;
+                winnerProfile.xp = winnerProfile.xp - winnerProfile.nextLevelXp;
+            }
+            winnerProfile.percentage = (winnerProfile.xp / winnerProfile.nextLevelXp) * 100;
+            winnerProfile.points += 50;
+            
+            
+            const creatorAchievements = await this.checkAchievements(winnerProfile);
+            const opponentAchievements = await this.checkAchievements(loserProfile);
+            
+            await this.prisma.profile.update({
+                where: { userId: winnerId },
+                data: {
+                    xp: winnerProfile.xp,
+                    level: winnerProfile.level,
+                    points: winnerProfile.points,
+                    ratio: winnerProfile.ratio,
+                    nextLevelXp: winnerProfile.nextLevelXp,
+                    percentage: winnerProfile.percentage,
+                    win: { increment: 1 },
+                    invitematchcount: MatchType === "FRIEND" ? { increment: 1 } : undefined,
+                    randommatchcount: MatchType === "RANDOM" ? { increment: 1 } : undefined,
+                    twc: Math.abs(creatorScore - opponentScore) === 1 ? { increment: 1 } : undefined,
+                    achievements: { set: creatorAchievements },
+                },
+            });
+            
+            await this.prisma.profile.update({
+                where: { userId: loserId },
+                data: {
+                    xp: loserProfile.xp,
+                    level: loserProfile.level,
+                    points: loserProfile.points,
+                    ratio: loserProfile.ratio,
+                    nextLevelXp: loserProfile.nextLevelXp,
+                    lose: { increment: 1 },
+                    invitematchcount: MatchType === "FRIEND" ? { increment: 1 } : undefined,
+                    randommatchcount: MatchType === "RANDOM" ? { increment: 1 } : undefined,
+                    achievements: { set: opponentAchievements },
+                },
+            });
+            
+
         } catch (error) {
             return error;
         }
     }
-
-
-
+    
+    
+    
     async makeRequest(senderId: string, OpponentId: string): Promise<void> {
         try {
             if (senderId === OpponentId) {
