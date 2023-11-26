@@ -23,6 +23,8 @@ import { GameModule } from "./Game/game.module";
 import { friendshipModule } from "./friendship/friendship.module";
 import { NotificationGateway } from "./notification/gateway/notification.gateway";
 import { GameController } from "./Game/game.controller";
+import { UserModule } from "./user/user.module";
+import { AuthModule } from "./auth/auth.module";
 
 @Module({
   imports: [
@@ -33,14 +35,16 @@ import { GameController } from "./Game/game.controller";
       signOptions: { expiresIn: "1d" },
     }),
     GameModule,
-    ChatModule,
     UploadModule,
+    NotificationModule,
+    UserModule,
+    AuthModule,
     friendshipModule,
     MulterModule.register({
       dest: "./uploads/all",
     }),
   ],
-  controllers: [AppController, userController, authController],
+  controllers: [AppController, authController],
   providers: [
     AppService,
     AuthService,

@@ -78,7 +78,7 @@ export class authController {
 
   @Post("2fa_verify")
   @UseGuards(AuthGuard("jwt"))
-  async verify2FA(@Req() req, @Body() body): Promise<void> {
-    await this.authService.verify2FA(req.user.id, body.code);
+  async verify2FA(@Req() req, @Body() body): Promise<any> {
+    return await this.authService.verify2FA(req.user.id, body.code);
   }
 }

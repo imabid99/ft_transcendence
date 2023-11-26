@@ -49,35 +49,36 @@ const InviteAFriend = () => {
 	const { profiles, user }: any = useContext(contextdata);
 	const name = `${user?.profile.firstName} ${user?.profile.lastName}`;
   
-	useEffect(() => {
-	  const headers = {
-		// Authorization: `Bearer ${getLocalStorageItem("Token")}`,
-		Cookie: "invite",
-	  };
-	  const newSocket = io(
-		`http://${process.env.NEXT_PUBLIC_APP_URL}:3000/Game`,
-		{
-		  auth: {
-			...headers,
-		  },
-		}
-	  );
-	  if (newSocket) {
-		setSocket(newSocket);
-	  }
-	  return () => {
-		newSocket.disconnect();
-	  };
-	}, []);
+  useEffect(() => {
+    const headers = {
+      Authorization: `Bearer ${getLocalStorageItem("Token")}`,
+    };
+    const matchType = 'Invite';
+      const newSocket = io(
+        `http://${process.env.NEXT_PUBLIC_APP_URL}:3000/Game`,
+        {
+          auth: {
+            ...headers,
+            matchType,
+          },
+        }
+      );
+      if (newSocket) {
+        setSocket(newSocket);
+      }
+      return () => {
+        newSocket.disconnect();
+      };
+  }, []);
   
 	useEffect(() => {
 	  if (!socket) return;
 	  // socket.on("connect", () => {console.log(name + " is Connected to server");});
-	  socket.emit("createMatch");
+	//   socket.emit("createMatch");
   
 	  return () => {
 		socket.off("connect");
-		socket.off("createMatch");
+		// socket.off("createMatch");
 		socket.disconnect();
 	  };
 	}, [socket]);
@@ -558,7 +559,7 @@ const InviteAFriend = () => {
 	// };
 
   return (
-  <div className="w-full relative">
+  <div className="w-full  h-full relative">
 
 	  <Canvas
 		shadows

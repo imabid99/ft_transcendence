@@ -33,46 +33,49 @@ import { getLocalStorageItem } from "@/utils/localStorage";
 
 // map = snow, desert, forest; mode = friend, bot, random
 
-const Random = () => {
-  console.log("Hii random !");
-  const [socket, setSocket] = useState<any>(null);
-  /// SOCKET MANAGER
+const Random = ({selectedMap}: any) => {
 
-  const { profiles, user }: any = useContext(contextdata);
-  const name = `${user?.profile.firstName} ${user?.profile.lastName}`;
+	console.log("Hii random !");
+	const [socket, setSocket] = useState<any>(null);
+	/// SOCKET MANAGER
 
+  
+	const { profiles, user }: any = useContext(contextdata);
+	const name = `${user?.profile.firstName} ${user?.profile.lastName}`;
+  
   useEffect(() => {
     const headers = {
-      // Authorization: `Bearer ${getLocalStorageItem("Token")}`,
-      Cookie: "random",
+      Authorization: `Bearer ${getLocalStorageItem("Token")}`,
     };
-    const newSocket = io(
-      `http://${process.env.NEXT_PUBLIC_APP_URL}:3000/Game`,
-      {
-        auth: {
-          ...headers,
-        },
+    const matchType = 'Random';
+      const newSocket = io(
+        `http://${process.env.NEXT_PUBLIC_APP_URL}:3000/Game`,
+        {
+          auth: {
+            ...headers,
+            matchType,
+          },
+        }
+      );
+      if (newSocket) {
+        setSocket(newSocket);
       }
-    );
-    if (newSocket) {
-      setSocket(newSocket);
-    }
-    return () => {
-      newSocket.disconnect();
-    };
+      return () => {
+        newSocket.disconnect();
+      };
   }, []);
-
-  useEffect(() => {
-    if (!socket) return;
-    // socket.on("connect", () => {console.log(name + " is Connected to server");});
-    socket.emit("matchmaking");
-
-    return () => {
-      socket.off("connect");
-      socket.off("matchmaking");
-      socket.disconnect();
-    };
-  }, [socket]);
+  
+	useEffect(() => {
+	  if (!socket) return;
+	  // socket.on("connect", () => {console.log(name + " is Connected to server");});
+	//   socket.emit("createMatch");
+  
+	  return () => {
+		socket.off("connect");
+		// socket.off("createMatch");
+		socket.disconnect();
+	  };
+	}, [socket]);
 
   const Controls = {
     left: "left",
@@ -627,7 +630,7 @@ const Random = () => {
   // };
 
   return (
-    <div className="w-full relative">
+    <div className="w-full h-full relative">
       <Canvas
         shadows
         camera={{ fov: 75, near: 0.1, far: 300, position: [0, 10, 20] }}
@@ -708,14 +711,14 @@ const Random = () => {
 					map == "desert" && <Desert/>
 					map == "snow" && <Snow/>
 				*/}
-
-        {/* {currentMap === 'Desert' && <Desert />}
-				{currentMap === 'Forest' && <Forest />}
-				{currentMap === 'Snow' && <Snow />} */}
-        {/* <Forest/> */}
-        <Desert />
-        {/* <Snow/> */}
-        <Scoreboard />
+      {
+          selectedMap === 'desert' ? <Desert /> :
+          selectedMap === 'snow' ? <Snow /> :
+          <Forest />
+      }
+			{/* <Desert/> */}
+			{/* <Snow/> */}
+			<Scoreboard />
 
         <Sky sunPosition={[-0.07, -0.03, -0.75]} />
         <OrbitControls

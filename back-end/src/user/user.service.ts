@@ -9,10 +9,11 @@ import { chPass } from "../dtos/pass.dto";
 import * as bcrypt from "bcrypt";
 import * as jwt from "jsonwebtoken";
 import { v4 as uuidv4 } from "uuid";
+import { NotificationGateway } from "src/notification/gateway/notification.gateway";
 
 @Injectable()
 export class UserService {
-  constructor(private prisma: PrismaService) { }
+  constructor(private prisma: PrismaService, private notificationGateway : NotificationGateway) { }
 
   checkMute(
     arg0: number,
@@ -29,7 +30,9 @@ export class UserService {
   }
 
   async getProfiles() {
-    const profiles = await this.prisma.profile.findMany();
+    const profiles = await this.prisma.profile.findMany({
+      include: { achievements: true },
+    });
     return profiles;
   }
 
@@ -59,8 +62,10 @@ export class UserService {
             password: hash,
           },
         });
+        this.notificationGateway.updated(id);
       } else {
-        throw new NotFoundException("User not found");
+        this.notificationGateway.apiError(id, "Wrong password");
+        throw new BadRequestException("Wrong password");
       }
     } catch (error) {
       throw new InternalServerErrorException("Internal server error");
@@ -266,6 +271,7 @@ export class UserService {
       });
       const valid = await bcrypt.compare(oldPassword, user.password);
       if (!valid) {
+        this.notificationGateway.apiError(userid, "Wrong password");
         throw new BadRequestException("Wrong password");
       }
       const salt = await bcrypt.genSalt();
@@ -278,24 +284,25 @@ export class UserService {
           password: hash,
         },
       });
+      this.notificationGateway.updated(userid);
       return;
     } catch (error) {
       return error;
     }
   }
 
-  changeData(data: any, id: string): Promise<any> {
-    const { username, email, firstName, lastName } = data;
-    if (!username || !email || !firstName || !lastName) {
+  async changeData(id: string,data: any): Promise<any> {
+    const { email, firstName, lastName } = data;
+    if (!email || !firstName || !lastName) {
+      this.notificationGateway.apiError(id, "Invalid input");
       throw new BadRequestException("Invalid input");
     }
     try {
-      return this.prisma.user.update({
+      await this.prisma.user.update({
         where: {
           id: id,
         },
         data: {
-          username: username,
           email: email,
           profile: {
             update: {
@@ -305,6 +312,8 @@ export class UserService {
           },
         },
       });
+      this.notificationGateway.updated(id);
+      return "changed";
     } catch (error) {
       return error;
     }

@@ -8,44 +8,6 @@ import { useRouter } from 'next/navigation';
 import { checkLoged } from '@/utils/localStorage';
 import Loading from '../loading';
 import ImageComponent from '../../components/Dashboard/Profile/Achievements/images';
-// const images = [
-//     [
-//         { src: 'Air.svg', alt: 'Airwa Image' },
-//         { src: 'hlock.svg', alt: 'Horrorwh Image'},
-//     ],
-//     [
-//         { src: 'Grand copy.svg', alt: 'Kingwk Image'},
-//         { src: 'Grand.svg', alt: 'GWG Image'},
-//         { src: 'Luck.svg', alt: 'BWB Image', className: 'lg:block hidden'},
-//     ],
-//     [
-//         { src: 'Unb.svg', alt: 'UNBWB Image'},
-//         { src: 'iron.svg', alt: 'Ironwr Image'},
-//     ],
-//     [
-//         { src: 'Luck.svg', alt: 'Luck Image', className: 'pb-[30px] block lg:hidden'},
-//     ],
-// ];
-
-// const images = [
-//     [
-//         { unlocked: 'ach1.svg', locked: 'ach1_locked.svg', alt: 'Ach1' },
-//         { unlocked: 'ach2.svg', locked: 'ach2_locked.svg', alt: 'Ach2'},
-//     ],
-//     [
-//         { unlocked: 'ach3.svg', locked: 'ach3_locked.svg', alt: 'Ach3'},
-//         { unlocked: 'ach4.svg', locked: 'ach4_locked.svg', alt: 'Ach4'},
-//         { unlocked: 'ach5.svg', locked: 'ach5_locked.svg', alt: 'Ach5', className: 'lg:block hidden'},
-//     ],
-//     [
-//         { unlocked: 'ach6.svg', locked: 'ach6_locked.svg', alt: 'Ach6'},
-//         { unlocked: 'ach7.svg', locked: 'ach7_locked.svg', alt: 'Ach7'},
-//     ],
-//     [
-//         { unlocked: 'ach8.svg', locked: 'ach8_locked.svg', alt: 'Ach5', className: 'pb-[30px] block lg:hidden'},
-//     ],
-// ];
-
 
 
 export default function Page() {
@@ -98,17 +60,16 @@ export default function Page() {
             console.log(err);
         });
     }
+    console.log("myProfile : ", myProfile);
+    console.log("Achivement : ", myProfile?.achievements);
     const avatarUrl = `http://${process.env.NEXT_PUBLIC_APP_URL}:3000/${myProfile?.avatar}`;
     const coverUrl = `http://${process.env.NEXT_PUBLIC_APP_URL}:3000/${myProfile?.cover}`;
     return (
         <div className='flex items-center  flex-col  gap-[80px] 3xl:gap-0 w-[100%] justify-start  3xl:px-[30px]  '>
-        {/* <div className='bg-black px-[60px] '>
-        </div> */}
             <Header/>
         <div className="flex items-center flex-col 3xl:flex-row gap-[40px] w-[100%] 3xl:justify-center h-full z-[10]">
             <div className=" flex max-w-[922px] w-11/12 xl:h-[823px] rounded-[42px] sh-d bg-white">
             <div className="mx-auto w-11/12 mt-[34px] 3xl:w-[915px] 3xl:px-[40px]">
-            {/* <div className="mx-auto w-[910px] mt-[34px]  px-[40px]"> */}
                 <div className="relative w-12/12 h-[185px] rounded-[25px] overflow-hidden">
                         <picture>
                         <img
@@ -189,19 +150,18 @@ export default function Page() {
                         My Level
                     </div>
                     <div className="text-[#95A6B9] font-[300] text-[18px] flex flex-row">
-                        1000/2000{" "}
+                        {myProfile?.xp}/{myProfile?.nextLevelXp}
                         <div className="text-[#7899BB] font-[400] text-[18px]">XP</div>{" "}
                     </div>
                     </div>
                     <div className="w-10/12 sm:w-7/12 b">
                     <div className="flex-grow  h-[16px] rounded-[8px] bg-[#C0D4E9] w-12/12">
-                        <div className="h-full sh-level rounded-[8px] w-[30%]" />
-                        {/* <div className={`h-full sh-level rounded-[8px] w-[${}]`} /> */}
+                            <div className="h-full sh-level rounded-[8px]" style={{ width: `${myProfile?.percentage}%` }} />
                     </div>
                     </div>
                     <div className=" sm:pr-[40px]">
                     <div className="w-[55px] h-[55px] border-[6px] border-[#356B9A] rounded-full flex justify-center items-center">
-                        <div className="text-[#356B9A] font-[600] text-[18px]">50</div>
+                        <div className="text-[#356B9A] font-[600] text-[18px]">{myProfile?.level}</div>
                     </div>
                     </div>
                 </div>
@@ -215,16 +175,16 @@ export default function Page() {
                         <div className="text-[#0367A6] text-[17px] font-[500]">
                             Games
                         </div>
-                        <div className="text-[20px] font-[600] text-[#007BC8]">0</div>
+                        <div className="text-[20px] font-[600] text-[#007BC8]">{myProfile?.randommatchcount + myProfile?.invitematchcount}</div>
                         </div>
                     </div>
                     <div className="w-[180px] h-[100px] bg-[#C1FFFB] hover:bg-[#9dfcf6] rounded-[24px] flex items-center pl-[20px] gap-[17px] s-sh transform hover:scale-105 transition-transform duration-300">
                         <img src="group-83.svg" alt="" className="w-[36px] h-[36px]" />
                         <div>
                         <div className="text-[#12A099] text-[17px] font-[500]">
-                            Score
+                            Reward
                         </div>
-                        <div className="text-[20px] font-[600] text-[#098982]">0</div>
+                        <div className="text-[20px] font-[600] text-[#098982]">{myProfile?.points}</div>
                         </div>
                     </div>
                     </div>
@@ -235,7 +195,7 @@ export default function Page() {
                         <div className="text-[#27B270] text-[17px] font-[500]">
                             Wins
                         </div>
-                        <div className="text-[20px] font-[600] text-[#10884F]">0</div>
+                        <div className="text-[20px] font-[600] text-[#10884F]">{myProfile?.win}</div>
                         </div>
                     </div>
                     <div className="w-[180px] h-[100px] bg-[#FFCCCC] hover:bg-[#feaeae] rounded-[24px] flex items-center pl-[20px] gap-[17px] l-sh transform hover:scale-105 transition-transform duration-300">
@@ -244,7 +204,7 @@ export default function Page() {
                         <div className="text-[#CA4E4E] text-[17px] font-[500]">
                             Loses
                         </div>
-                        <div className="text-[20px] font-[600] text-[#B02323]">0</div>
+                        <div className="text-[20px] font-[600] text-[#B02323]">{myProfile?.lose}</div>
                         </div>
                     </div>
                     </div>

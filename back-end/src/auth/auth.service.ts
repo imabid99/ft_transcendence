@@ -13,12 +13,14 @@ import { UserService } from "../user/user.service";
 import * as QRCode from "qrcode";
 import * as speakeasy from "speakeasy";
 import { v4 as uuidv4 } from "uuid";
+import { NotificationGateway } from "src/notification/gateway/notification.gateway";
 
 @Injectable()
 export class AuthService {
   constructor(
     private prisma: PrismaService,
-    private userService: UserService
+    private userService: UserService,
+    private notificationGateway : NotificationGateway,
   ) { }
 
   async login(userData: UserDataLogin): Promise<any> {
@@ -94,7 +96,7 @@ export class AuthService {
   generate2FASecret(username : string): string {
     const secret = speakeasy.generateSecret({
       length: 20,
-      name: `Pong Masters:${username}`,
+      name: `The kingdom of Pong : ${username}`,
     });
     return secret.base32;
   }
@@ -109,7 +111,7 @@ export class AuthService {
       const url = speakeasy.otpauthURL({
         secret: user.twoFASecret,
         encoding: "base32",
-        label: "Pong Masters",
+        label: `The kingdom of Pong`,
         algorithm: "sha1",
       });
       return this.generateQR(url);
@@ -132,6 +134,10 @@ export class AuthService {
         token: token,
         algorithm: "sha1"
       });
+      if (verified === true)
+        this.notificationGateway.apiSuccess(id, "Code verified");
+      else if (verified === false)
+        this.notificationGateway.apiError(id, "Code is not valid");
       return verified;
     } catch (error) {
       return error;
@@ -149,6 +155,7 @@ export class AuthService {
             twoFAActive: true,
           },
         });
+        this.notificationGateway.apiSuccess(id, "2FA enabled");
         return true;
       }else
         return false;
@@ -167,6 +174,7 @@ export class AuthService {
             twoFAActive: false,
           },
         });
+        this.notificationGateway.apiSuccess(id, "2FA disabled");
         return true;
       } else {
         return false;

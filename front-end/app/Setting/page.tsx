@@ -40,11 +40,7 @@ export default function Page() {
     confirmpassword: string;
     twofactory: string;
   };
-  // type FormValues1 = {
-    //   oldpassword: string;
-    //   newpassword: string;
-  //   confirmpassword: string;
-  // }
+
   const form = useForm<FormValues>({ mode: "all" });
   const { register, handleSubmit, formState, watch } = form;
   const { errors, isDirty } = formState;
@@ -215,15 +211,17 @@ export default function Page() {
         value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
         message: "invalid email address",
       },
-      emailAvailable: async (value: string) => {
-        console.log("emailAvailable", value);
+      validate: async (value: string) => {
+        if (value === myProfile?.email) {
+          return true;
+        }
         const response = await axios.post(
-          `http://${process.env.NEXT_PUBLIC_APP_URL}:3000/api/auth/emailAvailable`,
+          `http://${process.env.NEXT_PUBLIC_APP_URL}:3000/api/user/check-email`,
           {
             email: value,
           }
         );
-        if (response.status !== 200) return "Email already exists";
+        if (response.data !== false) return "Email already exists";
       },
     },
     newpassword: {
@@ -291,29 +289,6 @@ export default function Page() {
       },
     },
   };
-
-  // const { register : register2, handleSubmit : handleSubmit2 } = useForm();
-  // const [verificationCode, setVerificationCode] = useState(Array(6).fill(''));
-
-  // const handleInputChange = (index : any, e:any) => {
-  //   const value = e.target.value;
-  //   setVerificationCode((prevCodes) => {
-  //     const newCodes = [...prevCodes];
-  //     newCodes[index] = value;
-
-  //     // Move focus to the next input
-  //     if (index < newCodes.length - 1 && value !== '') {
-  //       document.getElementById(`code${index + 1}`)?.focus();
-  //     }
-
-  //     return newCodes;
-  //   });
-  // };
-
-  // const onSubmit2 = (data:any) => {
-  //   // Handle form submission, e.g., enable or disable two-factor authentication
-  //   console.log("haelashkf",data);
-  // };
 
   const handleEnableTwoFactory = async (e: any) => {
     e.preventDefault();
@@ -436,16 +411,15 @@ export default function Page() {
                   {...register("email", registerOptions.email)}
                 />
               </div>
-              <div className="flex flex-col sm:flex-row justify-center items-center sm:justify-end gap-[8px] w-11/12 pb-[35px] xl:pb-0">
-                <button
-                  disabled={!isDirty}
-                  className={`w-[160px] h-[50px] rounded-[12px] cursor-pointer text-[#fff] text-[13px] font-[600] b-save `}
-                >
-                  Save changes
-                </button>
+              <div className="flex flex-col sm:flex-row justify-center items-center sm:justify-end gap-[8px] w-11/12 pt-[5px] pb-[40px] xl:pb-0">
+                <input
+                  type="submit"
+                  className="w-[160px] h-[50px] rounded-[12px]  cursor-pointer text-[#fff] text-[13px] font-[600] b-save "
+                  value="Save Changes"
+                />
                 <input
                   type="reset"
-                  className="w-[160px] h-[50px] rounded-[12px] cursor-pointer text-[#02539D] text-[13px] font-[600] bg-[#F9F9F9] b-reset"
+                  className="w-[160px] h-[50px] rounded-[12px] cursor-pointer text-[#02539D] text-[13px] font-[600]  b-reset"
                   value="Discard"
                 />
               </div>
@@ -534,36 +508,6 @@ export default function Page() {
                 Enter 6-digit code from your two factor authenticator APP.
               </p>
             </div>
-            {/* <div className="flex flex-col gap-[22px] sm:flex-row justify-center items-center pt-[16px]  w-[100%]"> */}
-
-            {/* <div className="flex gap-[5px]">
-              <input
-                type="text"
-                className="border-[#7D8493] bg-[#F8F8F8] w-[48px] h-[48px] rounded-[15px] indent-[16px]"
-              />
-              <input
-                type="text"
-                className="border-[#7D8493] bg-[#F8F8F8] w-[48px] h-[48px] rounded-[15px] indent-[16px]"
-              />
-              <input
-                type="text"
-                className="border-[#7D8493] bg-[#F8F8F8] w-[48px] h-[48px] rounded-[15px] indent-[16px]"
-              />
-            </div>
-            <div className="flex gap-[5px]">
-              <input
-                type="text"
-                className="border-[#7D8493] bg-[#F8F8F8] w-[48px] h-[48px] rounded-[15px] indent-[16px]"
-              />
-              <input
-                type="text"
-                className="border-[#7D8493] bg-[#F8F8F8] w-[48px] h-[48px] rounded-[15px] indent-[16px]"
-              />
-              <input
-                type="text"
-                className="border-[#7D8493] bg-[#F8F8F8] w-[48px] h-[48px] rounded-[15px] indent-[16px]"
-              />
-            </div> */}
             <form
               action=""
               className=" flex items-center w-full flex-col"

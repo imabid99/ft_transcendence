@@ -7,7 +7,6 @@ import { OnGatewayConnection, OnGatewayDisconnect } from "@nestjs/websockets";
 import { Socket } from "socket.io";
 import * as SocketIO from "socket.io";
 import { PrismaService } from "../../prisma/prisma.service";
-import { UserService } from "../../user/user.service";
 import { UseGuards } from '@nestjs/common';
 import { AuthGuard } from "@nestjs/passport";
 import { NotificationService } from "../notification.service";
@@ -23,7 +22,6 @@ import { FriendshipService } from "../../friendship/friendship.service";
 })
 export class NotificationGateway implements OnGatewayConnection, OnGatewayDisconnect {
   constructor(
-    private prisma: PrismaService,
   ) { }
   @WebSocketServer()
   server: SocketIO.Server;
@@ -140,6 +138,10 @@ export class NotificationGateway implements OnGatewayConnection, OnGatewayDiscon
 
   apiError(userId : string , message : string) {
     this.sendNotification(userId, {type : "error", message});
+  }
+
+  apiSuccess(userId : string , message : string) {
+    this.sendNotification(userId, {type : "success", message});
   }
   updated(userId : string) {
     this.sendNotification_refresh(userId, {type : "success", message : "Updated successfully"});
