@@ -7,7 +7,6 @@ import {
   SoftShadows,
   OrbitControls,
   RoundedBox,
-  Sparkles,
   Text
 } from "@react-three/drei";
 import { useControls } from "leva";
@@ -22,33 +21,32 @@ import  Snow from "./snow"
 import { contextdata } from "../../../contextApi";
 import { io } from "socket.io-client";
 import { Physics, usePlane, useBox, useSphere, Debug} from '@react-three/cannon'
-import { is } from "@react-three/fiber/dist/declarations/src/core/utils";
-import { getLocalStorageItem } from "@/utils/localStorage";
+import { checkLoged, getLocalStorageItem } from "@/utils/localStorage";
+import { useRouter } from "next/navigation";
+import Loading from "@/app/loading";
 
 // map = snow, desert, forest; mode = friend, bot, random
 
 const InviteAFriend = () => {
+
+
+	
 	const [socket, setSocket] = useState<any>(null);
-
-	const Controls = {
-		left: "left",
-		right: "right",
+	const { user }: any = useContext(contextdata);
+	const [isLoading, setIsLoading] = useState<boolean>(true);
+	const router = useRouter();
+	
+  
+	/// SOCKET MANAGER
+useEffect(() => {
+	const token = checkLoged();
+	if (!token) {
+	router.push("/login");
+	return;
 	}
-
-	const map = useMemo(() => [
-		{ name: Controls.left, keys: ['ArrowLeft'], player: 'player1' },
-		{ name: Controls.right, keys: ['ArrowRight'], playerd: 'player1' },
-		{ name: Controls.left, keys: ['ArrowLeft'], player: 'player2' },
-		{ name: Controls.right, keys: ['ArrowRight'], player: 'player2' },
-	  ], []);
-
-
-
-	console.log("Hii invite !");
-  
-	const { profiles, user }: any = useContext(contextdata);
-	const name = `${user?.profile.firstName} ${user?.profile.lastName}`;
-  
+	if(!user) return;
+	setIsLoading(false);
+}, [user]);
   useEffect(() => {
     const headers = {
       Authorization: `Bearer ${getLocalStorageItem("Token")}`,
@@ -74,14 +72,13 @@ const InviteAFriend = () => {
 	useEffect(() => {
 	  if (!socket) return;
 	  // socket.on("connect", () => {console.log(name + " is Connected to server");});
-	//   socket.emit("createMatch");
   
 	  return () => {
 		socket.off("connect");
-		// socket.off("createMatch");
 		socket.disconnect();
 	  };
 	}, [socket]);
+
 
 	// GUI CONTROLS
 // 	const controls = useControls({});
@@ -106,7 +103,6 @@ const InviteAFriend = () => {
 	}
 
 	function Player1Paddle(props: any) {
-		// console.log("P1START");
 		const [ref, api] = useBox(() => ({ mass: 0, type: "Static", material: { restitution: 1.06, friction: 0 },args: [3, 1, 0.3], position: [0, 0.5, 9], ...props }), useRef<THREE.Mesh>(null));
 
 		useEffect(() => {
@@ -192,7 +188,7 @@ const InviteAFriend = () => {
 					}
 					const smoothingFactor = 0.4;
 					paddleposX = paddleposX + (targetPosX - paddleposX) * smoothingFactor;
-					socket.emit('paddle-pos', { x: - paddleposX, y: 0.5, z: -9, playerId: socket.id});
+					socket.emit('paddle-pos', { x: - paddleposX, y: 0.5, z: -9, playerId: user?.profile.userId});
 					// setTimeout(() => {
 						api.position.set(paddleposX, 0.5, 9);
 					// }, 5);
@@ -275,7 +271,7 @@ const InviteAFriend = () => {
 
 			// requestAnimationFrame(updatePosition);
 			socket.on('paddle-pos', (data: any) => {
-				if (data.playerId === socket.id) return;
+				if (data.playerId === user?.profile.userId) return;
 				api.position.set(data.x, data.y, data.z);
 			});
 
@@ -494,8 +490,8 @@ const InviteAFriend = () => {
 			{
 				if(p2_count === 7 )
 				{
-				  console.log(socket.id, p1_count, p2_count);
-				  const payload = {winner: socket.id, winnerscore: p2_count, loserscore: p1_count};
+				  console.log(user.userId, p1_count, p2_count);
+				  const payload = {winner: user?.profile.userId, winnerscore: p2_count, loserscore: p1_count};
 				  socket.emit('player-wins', payload)
 				}
 				// else
@@ -557,7 +553,9 @@ const InviteAFriend = () => {
 	// 	setCurrentMap('Desert');
 	//   }
 	// };
-
+	if (isLoading) {
+		return <Loading />;
+	}	
   return (
   <div className="w-full  h-full relative">
 

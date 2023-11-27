@@ -7,7 +7,6 @@ import {
   SoftShadows,
   OrbitControls,
   RoundedBox,
-  Sparkles,
   Text,
 } from "@react-three/drei";
 import { useControls } from "leva";
@@ -28,20 +27,34 @@ import {
   useSphere,
   Debug,
 } from "@react-three/cannon";
-import { is } from "@react-three/fiber/dist/declarations/src/core/utils";
-import { getLocalStorageItem } from "@/utils/localStorage";
+import Loading from "@/app/loading";
+import { checkLoged, getLocalStorageItem } from "@/utils/localStorage";
+import { useRouter } from "next/navigation";
 
 // map = snow, desert, forest; mode = friend, bot, random
 
 const Random = ({selectedMap}: any) => {
 
-	console.log("Hii random !");
+  const [matchStarted, setMatchStarted] = useState(false);
 	const [socket, setSocket] = useState<any>(null);
-	/// SOCKET MANAGER
+  const [isLoading, setIsLoading] = useState<boolean>(true);
+  const router = useRouter();
 
+
+	/// SOCKET MANAGER
   
 	const { profiles, user }: any = useContext(contextdata);
 	const name = `${user?.profile.firstName} ${user?.profile.lastName}`;
+  
+  useEffect(() => {
+		const token = checkLoged();
+		if (!token) {
+		router.push("/login");
+		return;
+		}
+		if(!user) return;
+		setIsLoading(false);
+	}, [user]);
   
   useEffect(() => {
     const headers = {
@@ -68,29 +81,19 @@ const Random = ({selectedMap}: any) => {
 	useEffect(() => {
 	  if (!socket) return;
 	  // socket.on("connect", () => {console.log(name + " is Connected to server");});
-	//   socket.emit("createMatch");
+    socket.on('match started', (data: any) => {
+      console.log('Match started:', data);
+      setMatchStarted(true);
+    });
+  
   
 	  return () => {
 		socket.off("connect");
-		// socket.off("createMatch");
 		socket.disconnect();
 	  };
 	}, [socket]);
 
-  const Controls = {
-    left: "left",
-    right: "right",
-  };
 
-  const map = useMemo(
-    () => [
-      { name: Controls.left, keys: ["ArrowLeft"], player: "player1" },
-      { name: Controls.right, keys: ["ArrowRight"], playerd: "player1" },
-      { name: Controls.left, keys: ["ArrowLeft"], player: "player2" },
-      { name: Controls.right, keys: ["ArrowRight"], player: "player2" },
-    ],
-    []
-  );
 
   // GUI CONTROLS
   // 	const controls = useControls({});
@@ -227,7 +230,7 @@ const Random = ({selectedMap}: any) => {
             x: -paddleposX,
             y: 0.5,
             z: -9,
-            playerId: socket.id,
+            playerId: user?.profile.userId,
           });
           setTimeout(() => {
             api.position.set(paddleposX, 0.5, 9);
@@ -321,7 +324,7 @@ const Random = ({selectedMap}: any) => {
 
       // requestAnimationFrame(updatePosition);
       socket.on("paddle-pos", (data: any) => {
-        if (data.playerId === socket.id) return;
+        if (data.playerId === user?.profile.userId) return;
         api.position.set(data.x, data.y, data.z);
       });
 
@@ -558,9 +561,9 @@ const Random = ({selectedMap}: any) => {
       if (!user) return;
       if (p1_count === 7 || p2_count === 7) {
         if (p2_count === 7) {
-          console.log(socket.id, p1_count, p2_count);
+          console.log(user?.profile.userId, p1_count, p2_count);
           const payload = {
-            winner: socket.id,
+            winner: user?.profile.userId,
             winnerscore: p2_count,
             loserscore: p1_count,
           };
