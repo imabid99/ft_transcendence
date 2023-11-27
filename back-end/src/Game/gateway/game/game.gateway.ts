@@ -156,6 +156,7 @@ export class GameGateway implements OnGatewayConnection, OnGatewayDisconnect {
           console.log(
             `Match started between ${creator.client.id} and ${opponent.client.id}, in match ${matchId}`
           );
+          this.server.to(matchId).emit('match started', { matchId, creator: creator.userId, opponent: opponent.userId });
         } else {
           this.waitingPlayers.unshift(opponent);
         }
@@ -200,6 +201,13 @@ export class GameGateway implements OnGatewayConnection, OnGatewayDisconnect {
   ) {
     let winnerScore : number, loserScore: number, winner: string;
     const match = await this.gameService.getMatch(client.id);
+    //Should leave the match bitch
+    this.socketMap.get(match.creatorId).forEach(socket => {
+      socket.leave(match.id);
+    });
+    this.socketMap.get(match.opponentId).forEach(socket => {
+      socket.leave(match.id);
+    });
     console.log(match.creatorId, match.opponentId, payload.winner);
     let creatorScore : any = null;
     let opponentScore : any = null;

@@ -7,7 +7,6 @@ import {
   SoftShadows,
   OrbitControls,
   RoundedBox,
-  Sparkles,
   Text
 } from "@react-three/drei";
 import { useControls } from "leva";
@@ -22,7 +21,6 @@ import  Snow from "./snow"
 import { contextdata } from "../../../contextApi";
 import { io } from "socket.io-client";
 import { Physics, usePlane, useBox, useSphere, Debug} from '@react-three/cannon'
-import { is } from "@react-three/fiber/dist/declarations/src/core/utils";
 import { checkLoged, getLocalStorageItem } from "@/utils/localStorage";
 import { useRouter } from "next/navigation";
 import Loading from "@/app/loading";
@@ -37,18 +35,18 @@ const InviteAFriend = () => {
 	const { user }: any = useContext(contextdata);
 	const [isLoading, setIsLoading] = useState<boolean>(true);
 	const router = useRouter();
-	const Controls = {
-		left: "left",
-		right: "right",
+	
+  
+	/// SOCKET MANAGER
+useEffect(() => {
+	const token = checkLoged();
+	if (!token) {
+	router.push("/login");
+	return;
 	}
-	
-	
-	
-	
-	
-
-
-
+	if(!user) return;
+	setIsLoading(false);
+}, [user]);
   useEffect(() => {
     const headers = {
       Authorization: `Bearer ${getLocalStorageItem("Token")}`,
@@ -74,23 +72,13 @@ const InviteAFriend = () => {
 	useEffect(() => {
 	  if (!socket) return;
 	  // socket.on("connect", () => {console.log(name + " is Connected to server");});
-	//   socket.emit("createMatch");
   
 	  return () => {
 		socket.off("connect");
-		// socket.off("createMatch");
 		socket.disconnect();
 	  };
 	}, [socket]);
-	useEffect(() => {
-		const token = checkLoged();
-		if (!token) {
-		router.push("/login");
-		return;
-		}
-		if(!user) return;
-		setIsLoading(false);
-	}, [user]);
+
 
 	// GUI CONTROLS
 // 	const controls = useControls({});
@@ -115,7 +103,6 @@ const InviteAFriend = () => {
 	}
 
 	function Player1Paddle(props: any) {
-		// console.log("P1START");
 		const [ref, api] = useBox(() => ({ mass: 0, type: "Static", material: { restitution: 1.06, friction: 0 },args: [3, 1, 0.3], position: [0, 0.5, 9], ...props }), useRef<THREE.Mesh>(null));
 
 		useEffect(() => {

@@ -135,9 +135,10 @@ export class GameService {
             const winnerProfile = await this.prisma.profile.findUnique({ where: { userId: winnerId } });
             const loserProfile = await this.prisma.profile.findUnique({ where: { userId: loserId } });
             
-            console.log(winnerId, " WON!");
+            console.log(winnerId, " WON! now he has ", winnerProfile.xp, " xp");
             winnerProfile.xp += 100;
-            winnerProfile.nextLevelXp = winnerProfile.level === 0 ? 500 : (winnerProfile.level + 1) * 1000;
+            // winnerProfile.nextLevelXp = winnerProfile.level === 0 ? 500 : (winnerProfile.level + 1) * 1000;
+            winnerProfile.nextLevelXp = winnerProfile.level === 0 ? 500 : 500 + winnerProfile.level * 1000;
             if (winnerProfile.xp >= winnerProfile.nextLevelXp) {
                 winnerProfile.level += 1;
                 winnerProfile.xp = winnerProfile.xp - winnerProfile.nextLevelXp;
@@ -161,7 +162,6 @@ export class GameService {
                     invitematchcount: MatchType === "FRIEND" ? { increment: 1 } : { increment: 0 },
                     randommatchcount: MatchType === "RANDOM" ? { increment: 1 } : { increment: 0 },
                     twc: Math.abs(creatorScore - opponentScore) === 1 ?{ increment: 1 } : { increment: 0 },
-                    // achievements: { set: creatorAchievements },
                 },
             });
             
@@ -176,7 +176,6 @@ export class GameService {
                     lose: { increment: 1 },
                     invitematchcount: MatchType === "FRIEND" ? { increment: 1 } : { increment: 0 },
                     randommatchcount: MatchType === "RANDOM" ? { increment: 1 } : { increment: 0 },
-                    // achievements: { set: opponentAchievements },
                 },
             });
             
