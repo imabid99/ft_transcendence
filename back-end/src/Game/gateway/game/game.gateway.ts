@@ -156,6 +156,7 @@ export class GameGateway implements OnGatewayConnection, OnGatewayDisconnect {
           console.log(
             `Match started between ${creator.client.id} and ${opponent.client.id}, in match ${matchId}`
           );
+          this.server.to(matchId).emit('match started', { matchId, creator: creator.userId, opponent: opponent.userId });
         } else {
           this.waitingPlayers.unshift(opponent);
         }
