@@ -200,6 +200,13 @@ export class GameGateway implements OnGatewayConnection, OnGatewayDisconnect {
   ) {
     let winnerScore : number, loserScore: number, winner: string;
     const match = await this.gameService.getMatch(client.id);
+    //Should leave the match bitch
+    this.socketMap.get(match.creatorId).forEach(socket => {
+      socket.leave(match.id);
+    });
+    this.socketMap.get(match.opponentId).forEach(socket => {
+      socket.leave(match.id);
+    });
     console.log(match.creatorId, match.opponentId, payload.winner);
     let creatorScore : any = null;
     let opponentScore : any = null;

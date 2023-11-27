@@ -162,7 +162,6 @@ export class GameService {
                     invitematchcount: MatchType === "FRIEND" ? { increment: 1 } : { increment: 0 },
                     randommatchcount: MatchType === "RANDOM" ? { increment: 1 } : { increment: 0 },
                     twc: Math.abs(creatorScore - opponentScore) === 1 ?{ increment: 1 } : { increment: 0 },
-                    // achievements: { set: creatorAchievements },
                 },
             });
             
@@ -177,7 +176,6 @@ export class GameService {
                     lose: { increment: 1 },
                     invitematchcount: MatchType === "FRIEND" ? { increment: 1 } : { increment: 0 },
                     randommatchcount: MatchType === "RANDOM" ? { increment: 1 } : { increment: 0 },
-                    // achievements: { set: opponentAchievements },
                 },
             });
             
