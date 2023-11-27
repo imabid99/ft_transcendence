@@ -24,7 +24,7 @@ export default function Search({setShowBody}: Props) {
     const handelClickChannel = (id:string, type:string) => {
         socket?.emit("joinGroup",{groupId: id, userId: user?.id})
         setShowBody(null)
-        router.push(`/Chat/g/${id}`)
+        router.push(`/Chat`)
     }
     const handelClickProtected = (id:string) => {
         
@@ -103,7 +103,7 @@ export default function Search({setShowBody}: Props) {
                                                 className="max-w-[64px] max-h-[64px] min-w-[64px] min-h-[64px] rounded-full object-cover border-[3px] border-[#064A85] border-opacity-25"
                                             />
                                             <div>
-                                                <p className="text-[20px] font-[300] font-[Poppins] text-[#034B8A] leading-6  max-w-[300px] truncate">
+                                                <p className="text-[20px] font-[300] font-[Poppins] text-[#034B8A] leading-6  max-w-[140px] truncate " >
                                                 {
                                                     channel.name
                                                 }
@@ -115,7 +115,7 @@ export default function Search({setShowBody}: Props) {
                                                 </span>
                                             </div>
                                         </div>
-                                        <div className="flex items-center justify-center px-[30px] py-[10px] bg-[#366996] rounded-[10px] text-[#fff] text-[14px] font-[500] font-[Poppins] cursor-pointer self-end" onClick={() => channel.type=== "Protected" ? setIsProtected(channel.id): handelClickChannel(channel.id,channel.type)}>
+                                        <div className="flex items-center justify-center px-[30px] py-[10px] bg-[#366996] rounded-[10px] text-[#fff] text-[14px] font-[500] font-[Poppins] cursor-pointer self-end" onClick={() => channel.type === "Protected" ? setIsProtected(channel.id): handelClickChannel(channel.id,channel.type)}>
                                             Join
                                         </div>
                                     </div>

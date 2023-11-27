@@ -9,7 +9,6 @@ export class ChatService {
       private prisma: PrismaService,
       private userService: UserService,
       private friendshipService: FriendshipService,
-      
       ) {}
 
     async getChannel(myId: string, channelId: string): Promise<any> {

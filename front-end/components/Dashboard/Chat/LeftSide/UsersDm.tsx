@@ -31,7 +31,7 @@ export default function UsersDm() {
     });
 
     return (
-      <div className="chat__left__bottom__groups flex flex-col  justify-center items-center">
+      <div className="chat__left__bottom__groups flex flex-col  justify-center items-center no-scrollbar">
           <span className="flex items-center justify-start gap-[10px] w-full mb-[20px]">
             <span className="flex justify-center items-center bg-[#00959C] rounded-[15px] w-[27px] h-[27px]">
               <svg

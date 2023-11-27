@@ -28,7 +28,7 @@ export default function GroupsChannels() {
     }
   });
   return (
-      <div className="chat__left__bottom__groups flex flex-col  justify-center items-center">
+      <div className="chat__left__bottom__groups flex flex-col  justify-center items-center no-scrollbar ">
         <span className="flex items-center justify-start gap-[10px] w-full mb-[20px]">
           <span className="flex justify-center items-center bg-[#0074D9] rounded-[15px] w-[27px] h-[27px]">
             <svg
@@ -60,7 +60,7 @@ export default function GroupsChannels() {
             Groups
           </p>
         </span>
-        <div className="flex flex-col gap-[20px] overflow-y-hidden max-h-[235px] min-h-[235px]rounded-[5px] w-full" ref={groupsChannelsRef}>
+        <div className="flex flex-col gap-[20px] overflow-y-hidden max-h-[235px] rounded-[5px] no-scrollbar w-full" ref={groupsChannelsRef}>
           {
             myChannels?.map((channel: any) => {
               return(

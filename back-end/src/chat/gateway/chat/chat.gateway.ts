@@ -627,6 +627,10 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
           }
         },
       });
+      const myClient = this.getSocketsByUserName(user.username);
+      myClient.map((socket) => {
+        socket.join(payload.groupId);
+      });
       this.server.to(user.username).emit("errorNotif", {message: `you are now a member of this group`, type: true});
       this.server.emit("refresh");
     }

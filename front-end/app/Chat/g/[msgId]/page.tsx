@@ -91,6 +91,21 @@ export default function Page() {
       else
         setMessages((messages:any) => [...messages, newMessage]);
     });
+
+    socket.on("refresh",()=>{
+      async function getgroup() {
+        try {
+          const res = await axiosInstance.get(`http://${process.env.NEXT_PUBLIC_APP_URL}:3000/api/chat/channel/${msgId}`);
+  
+          setGroup(res.data);
+          setMember(true);
+        } catch (err) {
+          setMember(false);
+          console.log(err);
+        }
+      }
+      getgroup();
+    })
     
     return () => {
       socket.off('message-to-group');

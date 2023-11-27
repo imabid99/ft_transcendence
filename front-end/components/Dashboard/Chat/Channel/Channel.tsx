@@ -17,7 +17,7 @@ export default function Channel({avatar, channel, lastMessage, lastMessageTime, 
             <div className="flex items-center gap-[14px]">
                 <Avatar url={avatar} status={active}/>
                 <span>
-                    <p className="text-[#034B8A] text-[20px] font-[Poppins] font-[500] max-screenscreenscreenscreen truncate lsm:max-lg:max-w-[152px]">
+                    <p className="text-[#034B8A] text-[20px] font-[Poppins] font-[500] max-w-[150px] truncate lsm:max-lg:max-w-[152px]">
                         {channel}
                     </p>
                     <p className="text-[#C0C1C5] text-[16px] font-[Poppins] font-[300] max-w-[200px] truncate lg:max-xl:max-w-[150px] lsm:max-lg:max-w-[120px]">

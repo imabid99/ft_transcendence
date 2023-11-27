@@ -57,7 +57,7 @@ export default function ChannelInfo({infoRef, handleshowInfo, group, userId}: Ch
 
                 <div className="w-full flex flex-col gap-[5px] justify-center items-center relative">
                     <img src={`http://${process.env.NEXT_PUBLIC_APP_URL}:3000/${group?.channel.avatar}`} alt="" className="rounded-full w-[250px] h-[250px] object-cover"/>
-                    <p className="text-[#024077] text-[35px] font-[Poppins] font-[700]">
+                    <p className="text-[#024077] text-[35px] font-[Poppins] font-[700] max-w-[300px] truncate ">
                         {group.channel.name}
                     </p>
                     <p className="text-[#064A85] text-[20px] font-[Poppins] font-[400]">
