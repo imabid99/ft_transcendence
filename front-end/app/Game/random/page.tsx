@@ -64,8 +64,10 @@ const Random = ({selectedMap}: any) => {
       const newSocket = io(
         `http://${process.env.NEXT_PUBLIC_APP_URL}:3000/Game`,
         {
-          auth: {
+          extraHeaders: {
             ...headers,
+          },
+          auth: {
             matchType,
           },
         }

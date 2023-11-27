@@ -127,7 +127,7 @@ export class GameGateway implements OnGatewayConnection, OnGatewayDisconnect {
   async randomMatchmaking(client: Socket) {
     try {
     const token = client.handshake.headers.authorization?.split(" ")[1];
-    console.log("tokena at matchmaking ",token);
+    console.log("token at matchmakingggg ",token);
     if (token) {
       const decoded: any = jwt_decode(token);
       console.log('decoded token:', decoded);

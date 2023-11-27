@@ -55,10 +55,12 @@ useEffect(() => {
       const newSocket = io(
         `http://${process.env.NEXT_PUBLIC_APP_URL}:3000/Game`,
         {
-          auth: {
-            ...headers,
-            matchType,
-          },
+			extraHeaders: {
+				...headers,
+			},
+			auth: {
+				matchType,
+			},
         }
       );
       if (newSocket) {
