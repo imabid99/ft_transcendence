@@ -35,7 +35,6 @@ import { useRouter } from "next/navigation";
 
 const Random = ({selectedMap}: any) => {
 
-  const [matchStarted, setMatchStarted] = useState(false);
 	const [socket, setSocket] = useState<any>(null);
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const router = useRouter();
@@ -85,7 +84,6 @@ const Random = ({selectedMap}: any) => {
 	  // socket.on("connect", () => {console.log(name + " is Connected to server");});
     socket.on('match started', (data: any) => {
       console.log('Match started:', data);
-      setMatchStarted(true);
     });
   
   
