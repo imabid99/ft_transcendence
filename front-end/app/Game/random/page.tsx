@@ -52,7 +52,7 @@ const Random = ({selectedMap}: any) => {
 		return;
 		}
 		if(!user) return;
-		setIsLoading(false);
+		// setIsLoading(false);
 	}, [user]);
   
   useEffect(() => {
@@ -84,6 +84,7 @@ const Random = ({selectedMap}: any) => {
 	  // socket.on("connect", () => {console.log(name + " is Connected to server");});
     socket.on('match started', (data: any) => {
       console.log('Match started:', data);
+      setIsLoading(false);
     });
   
   
@@ -631,6 +632,12 @@ const Random = ({selectedMap}: any) => {
   // 	setCurrentMap('Desert');
   //   }
   // };
+  if(isLoading)
+  {
+    console.log("Loading");
+    return <Loading/>
+  }
+
 
   return (
     <div className="w-full h-full relative">
@@ -639,14 +646,14 @@ const Random = ({selectedMap}: any) => {
         camera={{ fov: 75, near: 0.1, far: 300, position: [0, 10, 20] }}
       >
         {/*<Sparkles
-			count={2000}
-			speed={4}
-			opacity={1}
-			color={ 0x00ffff }
-			size={Float32Array.from(Array.from({ length: 2000 }, () => Math.random() * (80 - 5) + 10))}
-			scale={250}
-			noise={1000}
-		/>*/}
+      count={2000}
+      speed={4}
+      opacity={1}
+      color={ 0x00ffff }
+      size={Float32Array.from(Array.from({ length: 2000 }, () => Math.random() * (80 - 5) + 10))}
+      scale={250}
+      noise={1000}
+    />*/}
 
         <Perf position="bottom-right" />
         <ambientLight color={"#ffffff"} intensity={1} />
@@ -710,18 +717,18 @@ const Random = ({selectedMap}: any) => {
           <meshStandardMaterial color={"#FFFFFF"} />
         </mesh>
         {/*
-					map == "forest" && <Forest/>
-					map == "desert" && <Desert/>
-					map == "snow" && <Snow/>
-				*/}
+          map == "forest" && <Forest/>
+          map == "desert" && <Desert/>
+          map == "snow" && <Snow/>
+        */}
       {
           selectedMap === 'desert' ? <Desert /> :
           selectedMap === 'snow' ? <Snow /> :
           <Forest />
       }
-			{/* <Desert/> */}
-			{/* <Snow/> */}
-			<Scoreboard />
+      {/* <Desert/> */}
+      {/* <Snow/> */}
+      <Scoreboard />
 
         <Sky sunPosition={[-0.07, -0.03, -0.75]} />
         <OrbitControls
@@ -738,7 +745,6 @@ const Random = ({selectedMap}: any) => {
         <SoftShadows />
         {/* <fog attach="fog" color={fogcolor} near={1} far={fogfar} /> */}
       </Canvas>
-      {/* <button onClick={switchMap}>Switch Map</button> */}
     </div>
   );
 };
