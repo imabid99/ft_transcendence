@@ -10,7 +10,7 @@ type Props = {
 
 export default function Search({setShowBody}: Props) {
     const {user, myFriends,channels,socket}:any = useContext(contextdata);
-    const [isProtected, setIsProtected] = useState<string|null>(null);
+    const [isProtected, setIsProtected] = useState<string | null>(null);
     const [password, setPassword] = useState<string>("");
     const router = useRouter()
     const showUsers = myFriends?.filter((ur:any) => {
@@ -93,12 +93,15 @@ export default function Search({setShowBody}: Props) {
 
                         {
                             channels?.map((channel:any) => {
+                                if(channel.type === "Private") {
+                                    return null;
+                                }
                                 return (
                                     <div className="flex justify-between  items-center gap-[10px]" key={channel.id}
                                     >
                                         <div className="flex items-center gap-[10px] ">
                                             <img
-                                                src="/groupAvatar.jpg"
+                                                src={`http://${process.env.NEXT_PUBLIC_APP_URL}:3000/${channel.avatar}`}
                                                 alt=""
                                                 className="max-w-[64px] max-h-[64px] min-w-[64px] min-h-[64px] rounded-full object-cover border-[3px] border-[#064A85] border-opacity-25"
                                             />

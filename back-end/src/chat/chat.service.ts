@@ -109,7 +109,7 @@ export class ChatService {
         
         // delete private channels
         const publicChannels = channels.filter((channel:any) => {
-          return channel.type !== "private";
+          return channel.type !== "Private";
         }).filter((channel:any) => {
           const isMumber: boolean = channel.Members?.some((member) => {
             return member.id === id;

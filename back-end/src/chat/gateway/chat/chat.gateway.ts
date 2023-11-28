@@ -280,8 +280,8 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
           socket.join(channel.id);
         });
       })
-
-      newChannel && this.server.to(decoded.username).emit("update-groupAvatar", {groupId: channel.id});
+      console.log("channel : ", newChannel);
+      newChannel && payload.newAvatar && this.server.to(decoded.username).emit("update-groupAvatar", {groupId: channel.id});
       this.server.to(user.username).emit("errorNotif", {message: `group created`, type: true});
       this.server.emit("refresh");
     }
@@ -591,7 +591,7 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
           Admins: true,
         },
       });
-      if (group.type === "private") {
+      if (group.type === "Private") {
         this.server.to(user.username).emit("errorNotif", {message: `you are not allowed to join this group`, type: false});
         return;
       }
@@ -662,7 +662,7 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
           Admins: true,
         },
       });
-      if (group.type === "private") {
+      if (group.type === "Private") {
         this.server.to(user.username).emit("errorNotif", {message: `you are not allowed to join this group`, type: false});
         return;
       }
@@ -1256,7 +1256,7 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
         this.server.to(user.username).emit("errorNotif", {message: `you are not allowed to remove this group password`, type: false});
         return;
       }
-      if(group.type === "public")
+      if(group.type === "Public")
       {
         this.server.to(user.username).emit("errorNotif", {message: `this group already public`, type: false});
         return;
@@ -1267,7 +1267,7 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
         },
         data: {
           password: "",
-          type: "public",
+          type: "Public",
         },
       });
       this.server.to(user.username).emit("errorNotif", {message: `group password removed`, type: true});
@@ -1308,7 +1308,7 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
         },
         data: {
           password: payload.password,
-          type: "protected",
+          type: "Protected",
         },
       });
       this.server.to(user.username).emit("errorNotif", {message: `group password set`, type: true});
