@@ -40,13 +40,14 @@ export class AuthService {
             user.email
           );
         else {
-          throw new UnauthorizedException("Invalid credentials");
+          throw new UnauthorizedException("Invalid password");
         }
       } else {
-        throw new NotFoundException("User not found");
+        throw new NotFoundException("Email not found");
       }
     } catch (error) {
-      return error;
+      console.log(error.message);
+      return {message : error.message};
     }
   }
 
