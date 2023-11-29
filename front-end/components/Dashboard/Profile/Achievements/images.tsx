@@ -4,20 +4,20 @@ import Loading from '@/app/loading';
 import { Blurhash } from 'react-blurhash';
 const images = [
   [
-      { unlocked: 'ach1.svg', locked: 'ach1Lock.svg', alt: 'Ach1' },
-      { unlocked: 'ach2.svg', locked: 'ach2Lock.svg', alt: 'Ach2'},
+      { unlocked: '/ach1.svg', locked: '/ach1Lock.svg', alt: 'Ach1' },
+      { unlocked: '/ach2.svg', locked: '/ach2Lock.svg', alt: 'Ach2'},
   ],
   [
-      { unlocked: 'ach3.svg', locked: 'ach3Lock.svg', alt: 'Ach3'},
-      { unlocked: 'ach4.svg', locked: 'ach4Lock.svg', alt: 'Ach4'},
-      { unlocked: 'ach5.svg', locked: 'ach5Lock.svg', alt: 'Ach5', className: 'lg:block hidden'},
+      { unlocked: '/ach3.svg', locked: '/ach3Lock.svg', alt: 'Ach3'},
+      { unlocked: '/ach4.svg', locked: '/ach4Lock.svg', alt: 'Ach4'},
+      { unlocked: '/ach5.svg', locked: '/ach5Lock.svg', alt: 'Ach5', className: 'lg:block hidden'},
   ],
   [
-      { unlocked: 'ach6.svg', locked: 'ach6Lock.svg', alt: 'Ach6'},
-      { unlocked: 'ach7.svg', locked: 'ach7Lock.svg', alt: 'Ach7'},
+      { unlocked: '/ach6.svg', locked: '/ach6Lock.svg', alt: 'Ach6'},
+      { unlocked: '/ach7.svg', locked: '/ach7Lock.svg', alt: 'Ach7'},
   ],
   [
-      { unlocked: 'ach5.svg', locked: 'ach5Lock.svg', alt: 'Ach5', className: 'pb-[30px] block lg:hidden'},
+      { unlocked: '/ach5.svg', locked: '/ach5Lock.svg', alt: 'Ach5', className: 'pb-[30px] block lg:hidden'},
   ],
 ];
 // type ImageType = {
@@ -29,15 +29,16 @@ const images = [
 // type ImageComponentProps = {
 //   images: ImageType[][];
 // };
-images.forEach(row => {
-  row.forEach(image => {
-      console.log(image.locked);
-  });
-});
+// images.forEach(row => {
+//   row.forEach(image => {
+//       console.log(image.locked);
+//   });
+// });
 
-function ImageComponent() {
+function ImageComponent({achievements} : any) {
   const [loading, setLoading] = useState(true);
   const [showImages, setShowImages] = useState(false);
+  console.log("this is achiasdfkljasdf alsdfj :",achievements);
   // const handleImageLoad = () => {
   //   setLoading(false);
   // };

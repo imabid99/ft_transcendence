@@ -51,6 +51,7 @@ export class AuthService {
   }
 
   async addUser(userData: UserData) {
+    console.log("heeere :", userData.file);
     try {
       let exist = await this.prisma.user.findUnique({
         where: {
@@ -63,6 +64,7 @@ export class AuthService {
             username: userData.username,
           },
         });
+        
       }
       if (exist) {
         throw new BadRequestException("User already exist");

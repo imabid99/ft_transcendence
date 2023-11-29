@@ -4,4 +4,5 @@ export class UserData {
     lastName: string;
     email: string;
     password: string;
+    file?: File;
   }

@@ -30,7 +30,7 @@ import {
 import Loading from "@/app/loading";
 import { checkLoged, getLocalStorageItem } from "@/utils/localStorage";
 import { useRouter } from "next/navigation";
-
+import LoadingRandom from "@/components/Dashboard/Game/Random_Loading/loading";
 // map = snow, desert, forest; mode = friend, bot, random
 
 const Random = ({selectedMap}: any) => {
@@ -635,7 +635,7 @@ const Random = ({selectedMap}: any) => {
   if(isLoading)
   {
     console.log("Loading");
-    return <Loading/>
+    return <LoadingRandom/>
   }
 
 

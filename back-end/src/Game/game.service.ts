@@ -87,13 +87,13 @@ export class GameService {
             }
         });
 
-        achievements.ach1 = profile.twc >= 1 ? true : false;
-        achievements.ach2 = profile.win >= 1 ? true : false;
-        achievements.ach3 = profile.lose >= 1 ? true : false;
-        achievements.ach4 = profile.invitematchcount + profile.randommatchcount >= 50 ? true : false;
-        achievements.ach5 = profile.invitematchcount >= 1 ? true : false;
-        achievements.ach6 = profile.randommatchcount >= 20 ? true : false;
-        achievements.ach7 = achievements.ach1 && achievements.ach2 && achievements.ach3 && achievements.ach4 && achievements.ach5 && achievements.ach6 ? true : false;
+        achievements.ach1 = profile.randommatchcount >= 20 ? true : false;
+        achievements.ach2 = profile.twc >= 1 ? true : false;
+        achievements.ach3 = profile.invitematchcount >= 1 ? true : false;
+        achievements.ach4 = achievements.ach1 && achievements.ach2 && achievements.ach3 && achievements.ach4 && achievements.ach5 && achievements.ach6 ? true : false;
+        achievements.ach5 = profile.win >= 1 ? true : false;
+        achievements.ach6 = profile.invitematchcount + profile.randommatchcount >= 50 ? true : false;
+        achievements.ach7 = profile.lose >= 1 ? true : false;
 
         await this.prisma.achievement.update({
             where: { userId: profile.userId },
