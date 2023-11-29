@@ -46,6 +46,7 @@ export default function Page() {
     acharr[4] = myProfile?.achievements?.ach5;
     acharr[5] = myProfile?.achievements?.ach6;
     acharr[6] = myProfile?.achievements?.ach7;
+    console.log("this is my fucking profile : ", myProfile);
     // acharr[0] = false;
     // acharr[1] = false;
     // acharr[2] = false;
@@ -218,7 +219,7 @@ export default function Page() {
                         <div className="text-[#0367A6] text-[17px] font-[500]">
                             Games
                         </div>
-                        <div className="text-[20px] font-[600] text-[#007BC8]">{myProfile?.randommatchcount + myProfile?.invitematchcount}</div>
+                        <div className="text-[20px] font-[600] text-[#007BC8]">{myProfile?.totalgames}</div>
                         </div>
                     </div>
                     <div className="w-[180px] h-[100px] bg-[#C1FFFB] hover:bg-[#9dfcf6] rounded-[24px] flex items-center pl-[20px] gap-[17px] s-sh transform hover:scale-105 transition-transform duration-300">
