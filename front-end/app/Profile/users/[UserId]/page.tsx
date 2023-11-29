@@ -5,42 +5,74 @@ import axiosInstance from '@/utils/axiosInstance';
 import {useParams} from 'next/navigation';
 import Loading from '@/app/loading';
 // import ImageGrid from '../../../../../components/Dashboard/Profile/Achievements/images';
-import ImageGrid from '../../../../components/Dashboard/Profile/Achievements/images';
+// import ImageGrid from '../../../../components/Dashboard/Profile/Achievements/images';
 import NotUser from '../../NotUser';
 import Header from '@/components/Dashboard/Profile/Header/Header';
 import { Block } from '@react-three/fiber/dist/declarations/src/core/utils';
 import Link from 'next/link';
-const images = [
-    [
-        { src: '/Air.svg', alt: 'Airwa Image' },
-        { src: '/hlock.svg', alt: 'Horrorwh Image'},
-    ],
-    [
-        { src: '/Grand copy.svg', alt: 'Kingwk Image'},
-        { src: '/Grand.svg', alt: 'GWG Image'},
-        { src: '/Luck.svg', alt: 'BWB Image', className: 'lg:block hidden'},
-    ],
-    [
-        { src: '/Unb.svg', alt: 'UNBWB Image'},
-        { src: '/iron.svg', alt: 'Ironwr Image'},
-    ],
-    [
-        { src: '/Luck.svg', alt: 'Luck Image', className: 'pb-[30px] block lg:hidden'},
-    ],
-];
+import ImageComponent from '@/components/Dashboard/Profile/Achievements/images';
+// const images = [
+//     [
+//         { src: '/Air.svg', alt: 'Airwa Image' },
+//         { src: '/hlock.svg', alt: 'Horrorwh Image'},
+//     ],
+//     [
+//         { src: '/Grand copy.svg', alt: 'Kingwk Image'},
+//         { src: '/Grand.svg', alt: 'GWG Image'},
+//         { src: '/Luck.svg', alt: 'BWB Image', className: 'lg:block hidden'},
+//     ],
+//     [
+//         { src: '/Unb.svg', alt: 'UNBWB Image'},
+//         { src: '/iron.svg', alt: 'Ironwr Image'},
+//     ],
+//     [
+//         { src: '/Luck.svg', alt: 'Luck Image', className: 'pb-[30px] block lg:hidden'},
+//     ],
+// ];
 
 export default function Page() {
-
+    
     const {UserId} = useParams();
     const [profile, setProfile] = useState<any>(null);
     const name = `${profile?.firstName} ${profile?.lastName}`;
     const [isUser, setIsUser] = useState<boolean>(true);
     const [loading, setLoading] = useState<boolean>(true);
-    const {notifSocket, myFriends,profiles} :any= useContext(contextdata);
-
+    const {myFriends,profiles} :any= useContext(contextdata);
+    
     const  [isFriend, setIsFriend] = useState<boolean>(false);
     const [isBlocked, setIsBlocked] = useState(false);
+    const [achievements, setAchievements] = useState<any>(null);
+    console.log("Acheraf  is", profiles);
+    useEffect(() => {
+        // if(!profiles) return;
+        const myProfile = profiles?.find((profile : any) => profile?.userId === UserId);
+        // console.log("myProfile is imad abi:::::: ", myProfile);
+        setProfile(myProfile);
+        setLoading(false);
+        setAchievements(myProfile?.achievements);
 
+    }
+    , [profiles])
+
+    const images = [
+        [
+            { unlocked: 'ach1.svg', locked: 'ach1Lock.svg', alt: 'Ach1' },
+            { unlocked: 'ach2.svg', locked: 'ach2Lock.svg', alt: 'Ach2'},
+        ],
+        [
+            { unlocked: 'ach3.svg', locked: 'ach3Lock.svg', alt: 'Ach3'},
+            { unlocked: 'ach4.svg', locked: 'ach4Lock.svg', alt: 'Ach4'},
+            { unlocked: 'ach5.svg', locked: 'ach5Lock.svg', alt: 'Ach5', className: 'lg:block hidden'},
+        ],
+        [
+            { unlocked: 'ach6.svg', locked: 'ach6Lock.svg', alt: 'Ach6'},
+            { unlocked: 'ach7.svg', locked: 'ach7Lock.svg', alt: 'Ach7'},
+        ],
+        [
+            { unlocked: 'ach5.svg', locked: 'ach5Lock.svg', alt: 'Ach5', className: 'pb-[30px] block lg:hidden'},
+        ],
+      ];
+    
 
     const sendRequest = async () => {
         try{
@@ -100,21 +132,8 @@ export default function Page() {
 
 
     useEffect(() => {
-        const getProfile = async () => {
-            try{
-                const res = await axiosInstance.get(`http://${process.env.NEXT_PUBLIC_APP_URL}:3000/api/user/profile/${UserId}`);
-                setProfile(res.data);
-                setLoading(false);
-            }
-            catch(err){
-                console.log("user not found")
-                setIsUser(false);
-                console.log(err);
-            }
-        }
         isBlockedUser();
         checkFriendship();
-        getProfile();
         return () => {
             setProfile(null);
         }
@@ -127,6 +146,7 @@ export default function Page() {
         {
             return <Loading />
         }
+        // console.log("Achivement hahahahaha : ", profile?.achievements);
     const avatarUrl = `http://${process.env.NEXT_PUBLIC_APP_URL}:3000/${profile?.avatar}`;
     const coverUrl = `http://${process.env.NEXT_PUBLIC_APP_URL}:3000/${profile?.cover}`;
     return (
@@ -184,14 +204,14 @@ export default function Page() {
                     </div>
                     <div className=" flex items-center gap-[5px] flex-row sm:flex-col lg:flex-row">
                         {/* <div className="button-container2"> */}
-                        <Link href={`/Chat/me/${UserId}`} className="button-container2">
-    <button className="w-[91px] h-[29px] rounded-[9px] bg-[#5085AB] flex items-center justify-center gap-[5px]">
-        <svg width="10" height="10" viewBox="0 0 10 10" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path d="M3.7015 7.02355L4.0215 6.96847C4.0835 6.95745 4.1575 6.94143 4.243 6.91939C5.3 6.65399 6 5.86281 6 5.00752C6 3.93842 4.912 3.00451 3.5 3.00451C2.088 3.00451 1 3.93842 1 5.00752C1 5.61744 1.351 6.19831 1.9655 6.58489L1.9835 6.59491L2.5 6.88033V8.26391L3.7015 7.02355ZM4.1925 7.95495L2.359 9.84779C2.28971 9.91938 2.20066 9.96862 2.10325 9.98921C2.00585 10.0098 1.90453 10.0008 1.81226 9.96336C1.71999 9.92592 1.64099 9.86176 1.58536 9.77908C1.52973 9.6964 1.5 9.59897 1.5 9.49927V7.47122C1.47766 7.45913 1.45565 7.44644 1.434 7.43316C0.5645 6.88634 0 6.00352 0 5.00752C0 3.34803 1.567 2.00301 3.5 2.00301C5.433 2.00301 7 3.34803 7 5.00752C7 6.37257 5.9395 7.5253 4.487 7.89085C4.38965 7.91584 4.29142 7.93722 4.1925 7.95495ZM3.468 1.50226C4.073 0.604408 5.205 0 6.5 0C8.433 0 10 1.34502 10 3.00451C10 4.00051 9.435 4.88333 8.566 5.43016C8.54435 5.44343 8.52234 5.45612 8.5 5.46821V7.49626C8.5 7.59596 8.47027 7.69339 8.41464 7.77607C8.35901 7.85875 8.28001 7.92292 8.18774 7.96035C8.09547 7.99779 7.99415 8.00679 7.89675 7.9862C7.79934 7.96561 7.71029 7.91637 7.641 7.84478L6.7735 6.94944L7.295 6.04909L7.5 6.2609V4.87733L8.0165 4.5919L8.0345 4.58188C8.6495 4.1953 9 3.61443 9 3.00451C9 1.93541 7.912 1.0015 6.5 1.0015C5.86 1.0015 5.287 1.19329 4.8515 1.50226H3.468Z" fill="white"/>
-        </svg>
-        <p className="text-[#fff] text-[8px] font-[500] ">Message</p>
-    </button>
-</Link>
+                        <Link href={`/Chat/me/${UserId}`}  className="button-container2">
+                            <button disabled={!isFriend}  className="w-[91px] h-[29px] rounded-[9px] bg-[#5085AB] flex items-center justify-center gap-[5px]">
+                                <svg width="10" height="10" viewBox="0 0 10 10" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <path d="M3.7015 7.02355L4.0215 6.96847C4.0835 6.95745 4.1575 6.94143 4.243 6.91939C5.3 6.65399 6 5.86281 6 5.00752C6 3.93842 4.912 3.00451 3.5 3.00451C2.088 3.00451 1 3.93842 1 5.00752C1 5.61744 1.351 6.19831 1.9655 6.58489L1.9835 6.59491L2.5 6.88033V8.26391L3.7015 7.02355ZM4.1925 7.95495L2.359 9.84779C2.28971 9.91938 2.20066 9.96862 2.10325 9.98921C2.00585 10.0098 1.90453 10.0008 1.81226 9.96336C1.71999 9.92592 1.64099 9.86176 1.58536 9.77908C1.52973 9.6964 1.5 9.59897 1.5 9.49927V7.47122C1.47766 7.45913 1.45565 7.44644 1.434 7.43316C0.5645 6.88634 0 6.00352 0 5.00752C0 3.34803 1.567 2.00301 3.5 2.00301C5.433 2.00301 7 3.34803 7 5.00752C7 6.37257 5.9395 7.5253 4.487 7.89085C4.38965 7.91584 4.29142 7.93722 4.1925 7.95495ZM3.468 1.50226C4.073 0.604408 5.205 0 6.5 0C8.433 0 10 1.34502 10 3.00451C10 4.00051 9.435 4.88333 8.566 5.43016C8.54435 5.44343 8.52234 5.45612 8.5 5.46821V7.49626C8.5 7.59596 8.47027 7.69339 8.41464 7.77607C8.35901 7.85875 8.28001 7.92292 8.18774 7.96035C8.09547 7.99779 7.99415 8.00679 7.89675 7.9862C7.79934 7.96561 7.71029 7.91637 7.641 7.84478L6.7735 6.94944L7.295 6.04909L7.5 6.2609V4.87733L8.0165 4.5919L8.0345 4.58188C8.6495 4.1953 9 3.61443 9 3.00451C9 1.93541 7.912 1.0015 6.5 1.0015C5.86 1.0015 5.287 1.19329 4.8515 1.50226H3.468Z" fill="white"/>
+                                </svg>
+                                <p className="text-[#fff] text-[8px] font-[500] ">Message</p>
+                            </button>
+                        </Link>
                     {/* <button className="w-[91px] h-[29px] rounded-[9px] bg-[#5085AB] flex items-center justify-center gap-[5px]">
                     <svg width="10" height="10" viewBox="0 0 10 10" fill="none" xmlns="http://www.w3.org/2000/svg">
                     <path d="M3.7015 7.02355L4.0215 6.96847C4.0835 6.95745 4.1575 6.94143 4.243 6.91939C5.3 6.65399 6 5.86281 6 5.00752C6 3.93842 4.912 3.00451 3.5 3.00451C2.088 3.00451 1 3.93842 1 5.00752C1 5.61744 1.351 6.19831 1.9655 6.58489L1.9835 6.59491L2.5 6.88033V8.26391L3.7015 7.02355ZM4.1925 7.95495L2.359 9.84779C2.28971 9.91938 2.20066 9.96862 2.10325 9.98921C2.00585 10.0098 1.90453 10.0008 1.81226 9.96336C1.71999 9.92592 1.64099 9.86176 1.58536 9.77908C1.52973 9.6964 1.5 9.59897 1.5 9.49927V7.47122C1.47766 7.45913 1.45565 7.44644 1.434 7.43316C0.5645 6.88634 0 6.00352 0 5.00752C0 3.34803 1.567 2.00301 3.5 2.00301C5.433 2.00301 7 3.34803 7 5.00752C7 6.37257 5.9395 7.5253 4.487 7.89085C4.38965 7.91584 4.29142 7.93722 4.1925 7.95495ZM3.468 1.50226C4.073 0.604408 5.205 0 6.5 0C8.433 0 10 1.34502 10 3.00451C10 4.00051 9.435 4.88333 8.566 5.43016C8.54435 5.44343 8.52234 5.45612 8.5 5.46821V7.49626C8.5 7.59596 8.47027 7.69339 8.41464 7.77607C8.35901 7.85875 8.28001 7.92292 8.18774 7.96035C8.09547 7.99779 7.99415 8.00679 7.89675 7.9862C7.79934 7.96561 7.71029 7.91637 7.641 7.84478L6.7735 6.94944L7.295 6.04909L7.5 6.2609V4.87733L8.0165 4.5919L8.0345 4.58188C8.6495 4.1953 9 3.61443 9 3.00451C9 1.93541 7.912 1.0015 6.5 1.0015C5.86 1.0015 5.287 1.19329 4.8515 1.50226H3.468Z" fill="white"/>
@@ -259,18 +279,18 @@ export default function Page() {
                         Level
                     </div>
                     <div className="text-[#95A6B9] font-[300] text-[18px] flex flex-row">
-                        1000/2000{" "}
-                        <div className="text-[#7899BB] font-[400] text-[18px]">XP</div>{" "}
+                    {profile?.xp}/{profile?.nextLevelXp}
+                        <div className="text-[#7899BB] font-[400] text-[18px]">XP</div>
                     </div>
                     </div>
                     <div className="w-10/12 sm:w-7/12 b">
                     <div className="flex-grow  h-[16px] rounded-[8px] bg-[#C0D4E9] w-12/12">
-                        <div className="h-full sh-level rounded-[8px] w-[50%]" />
+                        <div className="h-full sh-level rounded-[8px]" style={{ width: `${profile?.percentage}%` }} />
                     </div>
                     </div>
                     <div className=" sm:pr-[40px]">
                     <div className="w-[55px] h-[55px] border-[6px] border-[#356B9A] rounded-full flex justify-center items-center">
-                        <div className="text-[#356B9A] font-[600] text-[18px]">50</div>
+                        <div className="text-[#356B9A] font-[600] text-[18px]">{profile?.level}</div>
                     </div>
                     </div>
                 </div>
@@ -284,7 +304,7 @@ export default function Page() {
                         <div className="text-[#0367A6] text-[17px] font-[500]">
                             Games
                         </div>
-                        <div className="text-[20px] font-[600] text-[#007BC8]">0</div>
+                        <div className="text-[20px] font-[600] text-[#007BC8]">{profile?.randommatchcount + profile?.invitematchcount}</div>
                         </div>
                     </div>
                     <div className="w-[180px] h-[100px] bg-[#C1FFFB] hover:bg-[#9dfcf6] rounded-[24px] flex items-center pl-[20px] gap-[17px] s-sh transform hover:scale-105 transition-transform duration-300">
@@ -293,7 +313,7 @@ export default function Page() {
                         <div className="text-[#12A099] text-[17px] font-[500]">
                             Score
                         </div>
-                        <div className="text-[20px] font-[600] text-[#098982]">0</div>
+                        <div className="text-[20px] font-[600] text-[#098982]">{profile?.points}</div>
                         </div>
                     </div>
                     </div>
@@ -304,7 +324,7 @@ export default function Page() {
                         <div className="text-[#27B270] text-[17px] font-[500]">
                             Wins
                         </div>
-                        <div className="text-[20px] font-[600] text-[#10884F]">0</div>
+                        <div className="text-[20px] font-[600] text-[#10884F]">{profile?.win}</div>
                         </div>
                     </div>
                     <div className="w-[180px] h-[100px] bg-[#FFCCCC] hover:bg-[#feaeae] rounded-[24px] flex items-center pl-[20px] gap-[17px] l-sh transform hover:scale-105 transition-transform duration-300">
@@ -313,7 +333,7 @@ export default function Page() {
                         <div className="text-[#CA4E4E] text-[17px] font-[500]">
                             Loses
                         </div>
-                        <div className="text-[20px] font-[600] text-[#B02323]">0</div>
+                        <div className="text-[20px] font-[600] text-[#B02323]">{profile?.lose}</div>
                         </div>
                     </div>
                     </div>
@@ -398,7 +418,7 @@ export default function Page() {
                     </span>
                 </div>
                 </div>
-                {/* <ImageGrid images={images} /> */}
+                <ImageComponent images={achievements} />
             </div>
             </div>
         </div>

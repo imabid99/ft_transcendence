@@ -587,7 +587,7 @@ const PlayWithAI = ({selectedMap}: any) => {
   // };
 
   return (
-    <div className="w-full relative">
+    <div className="w-full h-full relative">
       {/* {isMobileDevice && (
         <MobileControls/>
       )} */}

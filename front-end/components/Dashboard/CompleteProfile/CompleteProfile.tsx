@@ -19,12 +19,13 @@ import axiosInstance from '@/utils/axiosInstance';
 
 
 export default function CompleteProfile({info}:any) {
-  console.log("this is info : ", info);
+  // console.log("this is info : ", info);
   const {profiles, user, socket}:any = useContext(contextdata);
   const myProfile = profiles?.find((profile:any) => profile?.userId === user?.id);
   const name = `${myProfile?.firstName} ${myProfile?.lastName}`;
-  const [avatarUrl, setAvatarUrl] = useState("/groupAvatar.jpg");
-
+  const [avatarUrl, setAvatarUrl] = useState("/nouser.avif");
+  const [avatar, setUserData] = useState<File>();
+  let user_data = new FormData();
     const router = useRouter();
     const [isloading, setIsLoading] = useState(true);
     type FormValues = {
@@ -44,21 +45,30 @@ export default function CompleteProfile({info}:any) {
         email: info.email,
       }
     });
-    console.log("this is form", myProfile?.firstName);
+    // console.log("this is form", myProfile?.firstName);
     const {register, handleSubmit, formState } = form;
     const {errors, isDirty} = formState;
     const onSubmit = async (data: FormValues) => {
-      avatar?.append('firstName', data.firstName);
-      avatar?.append('lastName', data.lastName);
-      avatar?.append('username', data.userName);
-      avatar?.append('email', data.email);
-      avatar?.append('password', info.password);
-
-      console.log(data);
+      // user_data.append('firstName', data.firstName);
+      // user_data.append('lastName', data.lastName);
+      // user_data.append('username', data.userName);
+      // user_data.append('email', data.email);
+      // user_data.append('password', info.password);
+      for (let pair of user_data.entries()) {
+        console.log(pair[0]+ ', '+ pair[1]); 
+      }
+      console.log("this is user_data ahahah : ", avatar);
       try {
-        const response = await axios.post(`http://${process.env.NEXT_PUBLIC_APP_URL}:3000/api/auth/signup`, avatar);   
-         if (response.status !== 200) 
-         router.push('/login');
+          const response = await axios.post(`http://${process.env.NEXT_PUBLIC_APP_URL}:3000/api/auth/signup`,{
+            firstName: data.firstName,
+            lastName: data.lastName,
+            username: data.userName,
+            email : data.email,
+            password: info.password,
+            file: avatar,
+          });
+          if (response.status !== 200) 
+            router.push('/login');
       } catch (e:any) 
       {
         console.log("Error : ", e.response.data);
@@ -66,7 +76,6 @@ export default function CompleteProfile({info}:any) {
       }
     }
     const onError = (errors:any) => console.log(errors);
-    const [avatar, setAvatar] = useState<FormData | null>(null);
     const registerOptions = {
       firstName: { required: "First name is required",
       maxLength: {
@@ -103,6 +112,7 @@ export default function CompleteProfile({info}:any) {
         if (response.data !== false) 
           return "Username already exists";
       }
+      
       },
       email: { required: "Email is required",
       pattern: {
@@ -140,19 +150,26 @@ export default function CompleteProfile({info}:any) {
   //         console.log(err);
   //     });
   // }
-  console.log("this is my profile : ", myProfile);
+  
+  // console.log("this is my profile : ", myProfile);
   const handleUploadImage = (e: any) => {
     const file = e.target.files?.[0];
     const maxFileSize = 1024 * 1024 * 5;
-    const formData = new FormData();
-    formData.append('file', file);
-
+    console.log("this is file : ", file);
+    // formData.append('file', file);
+    
     if (!file) return;
     if (file?.size > maxFileSize) {
-        alert("File is too large. Please upload a file smaller than 5 MB.");
-        return;
+      alert("File is too large. Please upload a file smaller than 5 MB.");
+      return;
     }
-    setAvatar(formData);
+    // user_data.delete('file');
+    // user_data.append('file', file);
+    // setUserData(formData);
+    setUserData(file);
+    console.log("------> file : ", file);
+    console.log("------> setUserData : ", avatar);
+
     setAvatarUrl(URL.createObjectURL(file));
 }
   // const avatarUrl = `http://${process.env.NEXT_PUBLIC_APP_URL}:3000/${myProfile?.avatar}`;

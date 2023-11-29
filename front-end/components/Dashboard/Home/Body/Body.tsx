@@ -11,6 +11,7 @@ import 'swiper/css';
 import Lottie from "lottie-react"
 import animationData2 from   "../../../../public/ghost2.json"
 import { Toaster, toast } from 'sonner'
+import Link from 'next/link';
 
 type Props = {
     leaderRef: any,
@@ -57,9 +58,11 @@ export default function Body({ leaderRef, handelShaw }: Props) {
                         </div>
                         <div>
                         <Toaster position="top-right" richColors />
-                        <button className="bg-[#6F86D6] w-[197px] h-[50px] sm:w-[203px] sm:h-[56px] rounded-[8px] text-white font-[500] text-[20px] b-home" onClick={() => toast.success('Event has been created')}>
-                            PLAY NOW
-                        </button>
+                        <Link href={'/Game'}>
+                            <button className="bg-[#6F86D6] w-[197px] h-[50px] sm:w-[203px] sm:h-[56px] rounded-[8px] text-white font-[500] text-[20px] b-home" >
+                                PLAY NOW
+                            </button>
+                        </Link>
                         </div>
                     </div>
                     <div className="pr-[98px] xl:block hidden z-50">
