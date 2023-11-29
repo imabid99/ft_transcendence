@@ -1,7 +1,7 @@
 'use client';
 
 import { Canvas, useFrame } from "@react-three/fiber";
-import React, { useRef, useState, useEffect, useMemo, useContext } from "react";
+import React, { useRef, useState, useEffect, useMemo, useContext, use } from "react";
 import {
   Sky,
   SoftShadows,
@@ -80,6 +80,8 @@ useEffect(() => {
 		socket.disconnect();
 	  };
 	}, [socket]);
+
+
 
 
 	// GUI CONTROLS

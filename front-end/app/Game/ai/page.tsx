@@ -29,26 +29,36 @@ import {
 } from "@react-three/cannon";
 import { is } from "@react-three/fiber/dist/declarations/src/core/utils";
 import { useRouter, useSearchParams } from 'next/navigation';
+import { checkLoged, getLocalStorageItem } from "@/utils/localStorage";
 
 // map = snow, desert, forest; mode = friend, bot, random
 
 
-const PlayWithAI = ({selectedMap}: any) => {
-  const Controls = {
-    left: "left",
-    right: "right",
-  };
 
-  const map = useMemo(
-    () => [
-      { name: Controls.left, keys: ["ArrowLeft"], player: "player1" },
-      { name: Controls.right, keys: ["ArrowRight"], playerd: "player1" },
-      { name: Controls.left, keys: ["ArrowLeft"], player: "player2" },
-      { name: Controls.right, keys: ["ArrowRight"], player: "player2" },
-    ],
-    []
-  );
-    console.log("this is map lololololosdfasdfasdfasdf", selectedMap);
+const PlayWithAI = () => {
+
+  const [shosenMap, setShosenMap] = useState<string | null>(null);
+  
+  useEffect(() => {
+    if(getLocalStorageItem("Maps"))
+      setShosenMap(getLocalStorageItem("Maps"));
+  }, []);
+
+  // const Controls = {
+  //   left: "left",
+  //   right: "right",
+  // };
+
+  // const map = useMemo(
+  //   () => [
+  //     { name: Controls.left, keys: ["ArrowLeft"], player: "player1" },
+  //     { name: Controls.right, keys: ["ArrowRight"], playerd: "player1" },
+  //     { name: Controls.left, keys: ["ArrowLeft"], player: "player2" },
+  //     { name: Controls.right, keys: ["ArrowRight"], player: "player2" },
+  //   ],
+  //   []
+  // );
+
   // const router = useRouter();
   // const [searchParams, { selectedMap }] = useSearchParams();
   // const [searchParams] = useSearchParams();
@@ -586,6 +596,11 @@ const PlayWithAI = ({selectedMap}: any) => {
   //     );
   // };
 
+  if(!shosenMap)
+  {
+    console.log("Loading");
+  }
+
   return (
     <div className="w-full h-full relative">
       {/* {isMobileDevice && (
@@ -673,10 +688,10 @@ const PlayWithAI = ({selectedMap}: any) => {
 				
 
         {
-          selectedMap === 'desert' ? <Desert /> :
-          selectedMap === 'forest' ? <Forest /> :
-          selectedMap === 'snow' ? <Snow /> : null
-        }
+          shosenMap === 'desert' ? <Desert /> :
+          shosenMap === 'snow' ? <Snow /> :
+          <Forest />
+      }
         {/* <Forest/> */}
         {/* <Desert /> */}
         {/* <Snow/> */}

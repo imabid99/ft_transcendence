@@ -257,4 +257,17 @@ export class GameService {
         }
     }
 
+    async deleteMatch(matchId: string): Promise<void> {
+        try {
+            await this.prisma.match.delete({
+                where: {
+                    id: matchId,
+                },
+            });
+        } catch (error) {
+            console.log("Error deleting match:", error);
+            throw error;
+        }
+    }
+
 }

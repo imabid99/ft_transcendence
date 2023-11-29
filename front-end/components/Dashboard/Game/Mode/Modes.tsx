@@ -74,9 +74,6 @@ const Modes = ({setShow, onModeChange}:props) => {
                 else if (selected === 'AI'){
                     router.push('/Game/ai')
                 }
-                else if (selected === 'FRIEND'){
-                    router.push('/Game/invite')
-                }
                 else
                     setShow(selected)
             }} className={`w-[150px] h-[50px] lg:w-[240px] lg:h-[77px] backB rounded-[14px] text-white text-[20px] lg:text-[30px] font-[400] hover:bg-gray-400 font-['Fredoka'] ${!selected ? 'cursor-not-allowed text-[20px]' : ''}`}>
