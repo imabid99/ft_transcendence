@@ -17,7 +17,7 @@ export class GameService {
                     type: type,
                 },
             });
-            console.log("This is the match   ",match);
+            // console.log("This is the match   ",match);
             return match.id;
         } catch (error) {
             console.log("This is The ERROR  ",error);
@@ -215,8 +215,8 @@ export class GameService {
     async upateMatch(matchId, creatorSocket : string, opponentSocket : string) : Promise<void> 
     {
         try {
-            console.log("this creatorSocket in up ",creatorSocket);
-            console.log("this opponentSocket in up",opponentSocket);
+            // console.log("this creatorSocket in up ",creatorSocket);
+            // console.log("this opponentSocket in up",opponentSocket);
             await this.prisma.match.update({
                 where: {
                     id: matchId,
