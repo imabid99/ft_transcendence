@@ -81,6 +81,13 @@ useEffect(() => {
 	  };
 	}, [socket]);
 
+	useEffect(() => {
+		if (!socket) return;
+			socket.on('player-disconnected', (data: any) => {
+				router.push('/Game');
+			});
+	}, [socket]);
+
 
 
 

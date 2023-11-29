@@ -104,10 +104,9 @@ const Random = () => {
   useEffect(() => {
     if (!socket) return;
 		socket.on('player-disconnected', (data: any) => {
-			console.log("Player Disconnected...");
 			router.push('/Game');
 		});
-	}, []);
+	}, [socket]);
 
 
 

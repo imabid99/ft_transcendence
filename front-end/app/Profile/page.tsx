@@ -217,9 +217,9 @@ export default function Page() {
                         <img src="pgroup-78.svg" alt="" className="w-[36px] h-[36px]" />
                         <div>
                         <div className="text-[#0367A6] text-[17px] font-[500]">
-                            Games
+                            Games 
                         </div>
-                        <div className="text-[20px] font-[600] text-[#007BC8]">{myProfile?.totalgames}</div>
+                        <div className="text-[20px] font-[600] text-[#007BC8]">{myProfile?.totalmatches}</div>
                         </div>
                     </div>
                     <div className="w-[180px] h-[100px] bg-[#C1FFFB] hover:bg-[#9dfcf6] rounded-[24px] flex items-center pl-[20px] gap-[17px] s-sh transform hover:scale-105 transition-transform duration-300">
