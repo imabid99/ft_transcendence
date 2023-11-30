@@ -28,8 +28,8 @@ import {
   Debug,
 } from "@react-three/cannon";
 import { is } from "@react-three/fiber/dist/declarations/src/core/utils";
-import { useRouter, useSearchParams } from 'next/navigation';
 import { checkLoged, getLocalStorageItem } from "@/utils/localStorage";
+import { useRouter } from "next/navigation";
 
 // map = snow, desert, forest; mode = friend, bot, random
 
@@ -43,7 +43,7 @@ const PlayWithAI = () => {
     if(getLocalStorageItem("Maps"))
       setShosenMap(getLocalStorageItem("Maps"));
   }, []);
-
+  const router = useRouter();
   // const Controls = {
   //   left: "left",
   //   right: "right",
@@ -568,17 +568,17 @@ const PlayWithAI = () => {
     );
   };
 
-  const [currentMap, setCurrentMap] = useState('Desert');
+  // const [currentMap, setCurrentMap] = useState('Desert');
 
-  const switchMap = () => {
-    if (currentMap === 'Desert') {
-  	setCurrentMap('Forest');
-    } else if (currentMap === 'Forest') {
-  	setCurrentMap('Snow');
-    } else {
-  	setCurrentMap('Desert');
-    }
-  };
+  // const switchMap = () => {
+  //   if (currentMap === 'Desert') {
+  // 	setCurrentMap('Forest');
+  //   } else if (currentMap === 'Forest') {
+  // 	setCurrentMap('Snow');
+  //   } else {
+  // 	setCurrentMap('Desert');
+  //   }
+  // };
 
   // const MobileControls = () => {
   //     return(
@@ -603,9 +603,7 @@ const PlayWithAI = () => {
 
   return (
     <div className="w-full h-full relative">
-      {/* {isMobileDevice && (
-        <MobileControls/>
-      )} */}
+
       <Canvas
         shadows
         camera={{ fov: 75, near: 0.1, far: 300, position: [0, 10, 20] }}
