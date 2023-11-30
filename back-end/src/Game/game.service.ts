@@ -145,11 +145,11 @@ export class GameService {
             }
             winnerProfile.percentage = (winnerProfile.xp / winnerProfile.nextLevelXp) * 100;
             winnerProfile.points += 50;
-
-
-
-
-            await this.prisma.profile.update({
+            
+            
+            
+            
+            const updatedwinner = await this.prisma.profile.update({
                 where: { userId: winnerId },
                 data: {
                     xp: winnerProfile.xp,
@@ -159,13 +159,14 @@ export class GameService {
                     nextLevelXp: winnerProfile.nextLevelXp,
                     percentage: winnerProfile.percentage,
                     win: { increment: 1 },
+                    totalmatches: { increment: 1 },
                     invitematchcount: MatchType === "FRIEND" ? { increment: 1 } : { increment: 0 },
                     randommatchcount: MatchType === "RANDOM" ? { increment: 1 } : { increment: 0 },
                     twc: Math.abs(creatorScore - opponentScore) === 1 ? { increment: 1 } : { increment: 0 },
                 },
             });
-
-            await this.prisma.profile.update({
+            
+            const updatedloser = await this.prisma.profile.update({
                 where: { userId: loserId },
                 data: {
                     xp: loserProfile.xp,
@@ -174,13 +175,14 @@ export class GameService {
                     ratio: loserProfile.ratio,
                     nextLevelXp: loserProfile.nextLevelXp,
                     lose: { increment: 1 },
+                    totalmatches: { increment: 1 },
                     invitematchcount: MatchType === "FRIEND" ? { increment: 1 } : { increment: 0 },
                     randommatchcount: MatchType === "RANDOM" ? { increment: 1 } : { increment: 0 },
                 },
             });
-
-            await this.checkAchievements(winnerProfile);
-            await this.checkAchievements(loserProfile);
+            
+            await this.checkAchievements(updatedwinner);
+            await this.checkAchievements(updatedloser);
 
         } catch (error) {
             console.log("This is the ERROR  in submitScore ", error);
@@ -258,42 +260,17 @@ export class GameService {
         }
     }
 
-    async getMatchHistory(userId: string): Promise<any> {
+    async deleteMatch(matchId: string): Promise<void> {
         try {
-            const matchHistory = await this.prisma.match.findMany({
+            await this.prisma.match.delete({
                 where: {
-                    OR: [
-                        { creatorId: userId },
-                        { opponentId: userId },
-                    ],
+                    id: matchId,
                 },
-                orderBy: { createdAt: 'desc' },
-                // include profile.avatar
-                include: {
-                    creator: { select: { profile: true } }, opponent: { select: { profile: true } } }
             });
-            console.log("this is the matchHistory ", matchHistory);
-            return matchHistory;
         } catch (error) {
-            return error;
+            console.log("Error deleting match:", error);
+            throw error;
         }
     }
 
-    async getLeaderboard(): Promise<any> {
-        try {
-            const leaderboard = await this.prisma.profile.findMany({
-                orderBy: { points: 'desc' },
-                // select: {
-                //     userId: true,
-                //     firstName: true,
-                //     lastName: true,
-                //     avatar: true,
-                //     points: true,
-                // },
-            });
-            return {first : leaderboard[0] , second : leaderboard[1] , third : leaderboard[2]};
-        } catch (error) {
-            return error;
-        }
-    }
 }

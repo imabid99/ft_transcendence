@@ -304,7 +304,7 @@ export default function Page() {
                         <div className="text-[#0367A6] text-[17px] font-[500]">
                             Games
                         </div>
-                        <div className="text-[20px] font-[600] text-[#007BC8]">{profile?.randommatchcount + profile?.invitematchcount}</div>
+                        <div className="text-[20px] font-[600] text-[#007BC8]">{profile?.totalmatches}</div>
                         </div>
                     </div>
                     <div className="w-[180px] h-[100px] bg-[#C1FFFB] hover:bg-[#9dfcf6] rounded-[24px] flex items-center pl-[20px] gap-[17px] s-sh transform hover:scale-105 transition-transform duration-300">
