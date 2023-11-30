@@ -149,7 +149,7 @@ export class GameService {
             
             
             
-            await this.prisma.profile.update({
+            const updatedwinner = await this.prisma.profile.update({
                 where: { userId: winnerId },
                 data: {
                     xp: winnerProfile.xp,
@@ -159,13 +159,14 @@ export class GameService {
                     nextLevelXp: winnerProfile.nextLevelXp,
                     percentage: winnerProfile.percentage,
                     win: { increment: 1 },
+                    totalmatches: { increment: 1 },
                     invitematchcount: MatchType === "FRIEND" ? { increment: 1 } : { increment: 0 },
                     randommatchcount: MatchType === "RANDOM" ? { increment: 1 } : { increment: 0 },
                     twc: Math.abs(creatorScore - opponentScore) === 1 ?{ increment: 1 } : { increment: 0 },
                 },
             });
             
-            await this.prisma.profile.update({
+            const updatedloser = await this.prisma.profile.update({
                 where: { userId: loserId },
                 data: {
                     xp: loserProfile.xp,
@@ -174,13 +175,14 @@ export class GameService {
                     ratio: loserProfile.ratio,
                     nextLevelXp: loserProfile.nextLevelXp,
                     lose: { increment: 1 },
+                    totalmatches: { increment: 1 },
                     invitematchcount: MatchType === "FRIEND" ? { increment: 1 } : { increment: 0 },
                     randommatchcount: MatchType === "RANDOM" ? { increment: 1 } : { increment: 0 },
                 },
             });
             
-            await this.checkAchievements(winnerProfile);
-            await this.checkAchievements(loserProfile);
+            await this.checkAchievements(updatedwinner);
+            await this.checkAchievements(updatedloser);
 
         } catch (error) {
             console.log("This is the ERROR  in submitScore ",error);
@@ -254,6 +256,19 @@ export class GameService {
             this.notificationGateway.refuseMatchRequest(senderId, receiverId);
         } catch (error) {
             return error;
+        }
+    }
+
+    async deleteMatch(matchId: string): Promise<void> {
+        try {
+            await this.prisma.match.delete({
+                where: {
+                    id: matchId,
+                },
+            });
+        } catch (error) {
+            console.log("Error deleting match:", error);
+            throw error;
         }
     }
 

@@ -31,7 +31,6 @@ import Loading from "@/app/loading";
 import { checkLoged, getLocalStorageItem } from "@/utils/localStorage";
 import { useRouter } from "next/navigation";
 import LoadingRandom from "@/components/Dashboard/Game/Random_Loading/loading";
-import { get } from "http";
 // map = snow, desert, forest; mode = friend, bot, random
 
 const Random = () => {
@@ -101,6 +100,13 @@ const Random = () => {
     if(getLocalStorageItem("Maps"))
       setShosenMap(getLocalStorageItem("Maps"));
   }, []);
+
+  useEffect(() => {
+    if (!socket) return;
+		socket.on('player-disconnected', (data: any) => {
+			router.push('/Game');
+		});
+	}, [socket]);
 
 
 

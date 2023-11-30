@@ -44,10 +44,8 @@ const Game = () => {
 			:
 			Show == 'map' ? <Modes  setShow={setShow} onModeChange={handleModeChange}/>
 			:
-			Show == 'FRIEND' ? (
-			<FriendSearch setShow={setShow}/>
-			) : Show == 'AI' && (
-			<PlayWithAI selectedMap={selectedMap} />
+			Show == 'FRIEND' && (
+				<FriendSearch setShow={setShow}/>
 			) 
 			}
 		</div>
