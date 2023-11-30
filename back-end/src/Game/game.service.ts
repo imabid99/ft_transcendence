@@ -273,4 +273,43 @@ export class GameService {
         }
     }
 
+
+    async getMatchHistory(userId: string): Promise<any> {
+        try {
+            const matchHistory = await this.prisma.match.findMany({
+                where: {
+                    OR: [
+                        { creatorId: userId },
+                        { opponentId: userId },
+                    ],
+                },
+                orderBy: { createdAt: 'desc' },
+                // include profile.avatar
+                include: {
+                    creator: { select: { profile: true } }, opponent: { select: { profile: true } } }
+            });
+            console.log("this is the matchHistory ", matchHistory);
+            return matchHistory;
+        } catch (error) {
+            return error;
+        }
+    }
+
+    async getLeaderboard(): Promise<any> {
+        try {
+            const leaderboard = await this.prisma.profile.findMany({
+                orderBy: { points: 'desc' },
+                // select: {
+                //     userId: true,
+                //     firstName: true,
+                //     lastName: true,
+                //     avatar: true,
+                //     points: true,
+                // },
+            });
+            return {first : leaderboard[0] , second : leaderboard[1] , third : leaderboard[2]};
+        } catch (error) {
+            return error;
+        }
+    }
 }
