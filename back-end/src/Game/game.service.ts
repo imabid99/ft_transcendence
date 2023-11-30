@@ -6,7 +6,7 @@ import { NotificationGateway } from "src/notification/gateway/notification.gatew
 
 @Injectable()
 export class GameService {
-    constructor(private prisma: PrismaService, private notificationGateway : NotificationGateway) { }
+    constructor(private prisma: PrismaService, private notificationGateway: NotificationGateway) { }
 
     async createMatch(creatorId: any, opponentId: any, type: MatchType): Promise<string> {
         try {
@@ -20,12 +20,12 @@ export class GameService {
             // console.log("This is the match   ",match);
             return match.id;
         } catch (error) {
-            console.log("This is The ERROR  ",error);
+            console.log("This is The ERROR  ", error);
             return error;
         }
     }
 
-    async  getMatch(clientId: string): Promise<match> {
+    async getMatch(clientId: string): Promise<match> {
         try {
             const match = await this.prisma.match.findFirst({
                 where: {
@@ -42,7 +42,7 @@ export class GameService {
         }
     }
 
-    async  getMatch2(clientId: string): Promise<match> {
+    async getMatch2(clientId: string): Promise<match> {
         try {
             const match = await this.prisma.match.findFirst({
                 where: {
@@ -107,7 +107,7 @@ export class GameService {
                 ach7: achievements.ach7,
             },
         });
-    
+
         console.log("achievements : ", achievements);
         return achievements;
     }
@@ -129,12 +129,12 @@ export class GameService {
             });
 
             const MatchType = match.type;
-            
+
             const winnerId = creatorScore > opponentScore ? match.creatorId : match.opponentId;
             const loserId = creatorScore > opponentScore ? match.opponentId : match.creatorId;
             const winnerProfile = await this.prisma.profile.findUnique({ where: { userId: winnerId } });
             const loserProfile = await this.prisma.profile.findUnique({ where: { userId: loserId } });
-            
+
             console.log(winnerId, " WON! now he has ", winnerProfile.xp, " xp");
             winnerProfile.xp += 100;
             // winnerProfile.nextLevelXp = winnerProfile.level === 0 ? 500 : (winnerProfile.level + 1) * 1000;
@@ -162,7 +162,7 @@ export class GameService {
                     totalmatches: { increment: 1 },
                     invitematchcount: MatchType === "FRIEND" ? { increment: 1 } : { increment: 0 },
                     randommatchcount: MatchType === "RANDOM" ? { increment: 1 } : { increment: 0 },
-                    twc: Math.abs(creatorScore - opponentScore) === 1 ?{ increment: 1 } : { increment: 0 },
+                    twc: Math.abs(creatorScore - opponentScore) === 1 ? { increment: 1 } : { increment: 0 },
                 },
             });
             
@@ -185,13 +185,13 @@ export class GameService {
             await this.checkAchievements(updatedloser);
 
         } catch (error) {
-            console.log("This is the ERROR  in submitScore ",error);
+            console.log("This is the ERROR  in submitScore ", error);
             return error;
         }
     }
-    
-    
-    
+
+
+
     async makeRequest(senderId: string, OpponentId: string): Promise<void> {
         try {
             if (senderId === OpponentId) {
@@ -199,14 +199,14 @@ export class GameService {
             }
             const sender = await this.prisma.profile.findUnique({ where: { userId: senderId } });
             const notification = await this.prisma.notification.create({
-              data: {
-                userId: OpponentId,
-                type: "Match_Invitation",
-                message: "You have a new match request",
-                actionUserId: senderId,
-                actionUserName:  sender.firstName + " " + sender.lastName,
-                actionUserAvatar: sender.avatar,
-              },
+                data: {
+                    userId: OpponentId,
+                    type: "Match_Invitation",
+                    message: "You have a new match request",
+                    actionUserId: senderId,
+                    actionUserName: sender.firstName + " " + sender.lastName,
+                    actionUserAvatar: sender.avatar,
+                },
             });
             this.notificationGateway.inviteMatch(senderId, OpponentId);
         } catch (error) {
@@ -214,8 +214,7 @@ export class GameService {
         }
     }
 
-    async upateMatch(matchId, creatorSocket : string, opponentSocket : string) : Promise<void> 
-    {
+    async upateMatch(matchId, creatorSocket: string, opponentSocket: string): Promise<void> {
         try {
             // console.log("this creatorSocket in up ",creatorSocket);
             // console.log("this opponentSocket in up",opponentSocket);
@@ -229,17 +228,18 @@ export class GameService {
                 },
             });
         } catch (error) {
-            console.log("This is the ERROR  in updateMatch ",error);
+            console.log("This is the ERROR  in updateMatch ", error);
             return error;
         }
     }
 
-    async acceptRequest(senderId: string, receiverId: string, notId : string): Promise<void> {
+    async acceptRequest(senderId: string, receiverId: string, notId: string): Promise<void> {
         try {
             await this.prisma.notification.delete({
                 where: {
-                  id: notId,  },
-              });
+                    id: notId,
+                },
+            });
             const matchId = await this.createMatch(senderId, receiverId, MatchType.FRIEND);
             this.notificationGateway.acceptMatchRequest(senderId, receiverId, matchId);
         } catch (error) {
@@ -247,12 +247,13 @@ export class GameService {
         }
     }
 
-    async refuseRequest(senderId: string, receiverId: string, notId : string): Promise<void> {
+    async refuseRequest(senderId: string, receiverId: string, notId: string): Promise<void> {
         try {
             await this.prisma.notification.delete({
                 where: {
-                  id: notId,        },
-              });
+                    id: notId,
+                },
+            });
             this.notificationGateway.refuseMatchRequest(senderId, receiverId);
         } catch (error) {
             return error;
@@ -272,4 +273,43 @@ export class GameService {
         }
     }
 
+
+    async getMatchHistory(userId: string): Promise<any> {
+        try {
+            const matchHistory = await this.prisma.match.findMany({
+                where: {
+                    OR: [
+                        { creatorId: userId },
+                        { opponentId: userId },
+                    ],
+                },
+                orderBy: { createdAt: 'desc' },
+                // include profile.avatar
+                include: {
+                    creator: { select: { profile: true } }, opponent: { select: { profile: true } } }
+            });
+            console.log("this is the matchHistory ", matchHistory);
+            return matchHistory;
+        } catch (error) {
+            return error;
+        }
+    }
+
+    async getLeaderboard(): Promise<any> {
+        try {
+            const leaderboard = await this.prisma.profile.findMany({
+                orderBy: { points: 'desc' },
+                // select: {
+                //     userId: true,
+                //     firstName: true,
+                //     lastName: true,
+                //     avatar: true,
+                //     points: true,
+                // },
+            });
+            return {first : leaderboard[0] , second : leaderboard[1] , third : leaderboard[2]};
+        } catch (error) {
+            return error;
+        }
+    }
 }
