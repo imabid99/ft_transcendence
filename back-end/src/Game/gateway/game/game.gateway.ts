@@ -255,6 +255,7 @@ async createMatch(client: Socket) {
     try {
       const token = client.handshake.headers.authorization?.split(" ")[1];
       const match = await this.gameService.getMatch(client.id);
+      console.log("the player has disconnected", client.id);
       if (token && match) {
         const user: any = jwt_decode(token);
         this.server.to(match.id).emit('player-disconnected', { playerId: user.userId });
