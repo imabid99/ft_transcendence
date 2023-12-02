@@ -17,7 +17,6 @@ export class GameService {
                     type: type,
                 },
             });
-            // console.log("This is the match   ",match);
             return match.id;
         } catch (error) {
             console.log("This is The ERROR  ", error);
@@ -107,8 +106,6 @@ export class GameService {
                 ach7: achievements.ach7,
             },
         });
-
-        console.log("achievements : ", achievements);
         return achievements;
     }
 
@@ -135,7 +132,6 @@ export class GameService {
             const winnerProfile = await this.prisma.profile.findUnique({ where: { userId: winnerId } });
             const loserProfile = await this.prisma.profile.findUnique({ where: { userId: loserId } });
 
-            console.log(winnerId, " WON! now he has ", winnerProfile.xp, " xp");
             winnerProfile.xp += 100;
             // winnerProfile.nextLevelXp = winnerProfile.level === 0 ? 500 : (winnerProfile.level + 1) * 1000;
             winnerProfile.nextLevelXp = winnerProfile.level === 0 ? 500 : 500 + winnerProfile.level * 1000;
@@ -165,7 +161,6 @@ export class GameService {
                     twc: Math.abs(creatorScore - opponentScore) === 1 ? { increment: 1 } : { increment: 0 },
                 },
             });
-            
             const updatedloser = await this.prisma.profile.update({
                 where: { userId: loserId },
                 data: {
@@ -181,6 +176,9 @@ export class GameService {
                 },
             });
             
+            this.notificationGateway.apiInfo(winnerId,"You won the match")
+            this.notificationGateway.apiInfo(loserId,"You lost the match")
+
             await this.checkAchievements(updatedwinner);
             await this.checkAchievements(updatedloser);
 
@@ -216,8 +214,6 @@ export class GameService {
 
     async upateMatch(matchId, creatorSocket: string, opponentSocket: string): Promise<void> {
         try {
-            // console.log("this creatorSocket in up ",creatorSocket);
-            // console.log("this opponentSocket in up",opponentSocket);
             await this.prisma.match.update({
                 where: {
                     id: matchId,
