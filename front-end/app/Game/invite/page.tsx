@@ -3,6 +3,7 @@
 import React, { useRef, useState, useEffect, useMemo, useContext } from "react";
 import { contextdata } from "../../contextApi";
 import { io } from "socket.io-client";
+import Loading from "@/app/loading";
 
 const Invite = () => {
 		
@@ -11,6 +12,7 @@ const Invite = () => {
 			<div >
 				Invite Loading Screen HERE!
 			</div>
+			<Loading/>
 		</div>
 	);
 };

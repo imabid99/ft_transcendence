@@ -1,7 +1,7 @@
 'use client';
 
 import { Canvas, useFrame } from "@react-three/fiber";
-import React, { useRef, useState, useEffect, useMemo, useContext } from "react";
+import React, { useRef, useState, useEffect, useMemo, useContext, use } from "react";
 import {
   Sky,
   SoftShadows,
@@ -55,10 +55,12 @@ useEffect(() => {
       const newSocket = io(
         `http://${process.env.NEXT_PUBLIC_APP_URL}:3000/Game`,
         {
-          auth: {
-            ...headers,
-            matchType,
-          },
+			extraHeaders: {
+				...headers,
+			},
+			auth: {
+				matchType,
+			},
         }
       );
       if (newSocket) {
@@ -78,6 +80,15 @@ useEffect(() => {
 		socket.disconnect();
 	  };
 	}, [socket]);
+
+	useEffect(() => {
+		if (!socket) return;
+			socket.on('player-disconnected', (data: any) => {
+				router.push('/Game');
+			});
+	}, [socket]);
+
+
 
 
 	// GUI CONTROLS

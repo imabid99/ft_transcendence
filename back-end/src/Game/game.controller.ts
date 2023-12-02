@@ -37,4 +37,15 @@ import {
       return this.gameService.refuseRequest(params.id, req.user.id, req.body.notId);
     }
   
+    @Get("match/history")
+    @UseGuards(AuthGuard("jwt"))
+    async getMatchHistory(@Req() req): Promise<any> {
+      return this.gameService.getMatchHistory(req.user.id);
+    }
+
+    @Get("leaderboard")
+    @UseGuards(AuthGuard("jwt"))
+    async getLeaderboard(): Promise<any> {
+      return this.gameService.getLeaderboard();
+    }
   }
