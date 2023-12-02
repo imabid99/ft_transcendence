@@ -11,24 +11,7 @@ import Header from '@/components/Dashboard/Profile/Header/Header';
 import { Block } from '@react-three/fiber/dist/declarations/src/core/utils';
 import Link from 'next/link';
 import ImageComponent from '@/components/Dashboard/Profile/Achievements/images';
-// const images = [
-//     [
-//         { src: '/Air.svg', alt: 'Airwa Image' },
-//         { src: '/hlock.svg', alt: 'Horrorwh Image'},
-//     ],
-//     [
-//         { src: '/Grand copy.svg', alt: 'Kingwk Image'},
-//         { src: '/Grand.svg', alt: 'GWG Image'},
-//         { src: '/Luck.svg', alt: 'BWB Image', className: 'lg:block hidden'},
-//     ],
-//     [
-//         { src: '/Unb.svg', alt: 'UNBWB Image'},
-//         { src: '/iron.svg', alt: 'Ironwr Image'},
-//     ],
-//     [
-//         { src: '/Luck.svg', alt: 'Luck Image', className: 'pb-[30px] block lg:hidden'},
-//     ],
-// ];
+import Image from 'next/image';
 
 export default function Page() {
     
@@ -418,7 +401,56 @@ export default function Page() {
                     </span>
                 </div>
                 </div>
-                <ImageComponent images={achievements} />
+                <div className="flex items-center flex-col w-12/12 gap-[30px] lg:gap-0 pb-[30px]">
+                {/* {loading && <Loading />} */}
+                
+                
+                
+                {/* {images.map((imageRow, rowIndex) => (
+                    <div key={rowIndex} className="flex items-center justify-center gap-[30px] flex-col sm:flex-row">
+                        {imageRow.map((img, imgIndex) => (
+                            <div key={imgIndex} className="transform hover:scale-110 transition-transform duration-300 relative">
+                                <Image src={acharr[imgIndex] ? img.unlocked : img.locked}  alt={img.alt} className={img.className} width={197} height={220} loading="lazy"/>
+                            </div>
+                        ))}
+                    </div>
+                ))} */}
+
+                <div className="flex items-center  flex-col w-12/12 gap-[30px] lg:gap-0 pb-[30px]">
+                <div className="flex items-center justify-center  gap-[30px] flex-col sm:flex-row">
+                        <div className="transform hover:scale-110 transition-transform duration-300">
+                        <Image src={profile?.achievements?.ach1 ? "/ach1.svg" : "/ach1Lock.svg"}  alt="ach1"  width={197} height={220} loading="lazy"/>
+                        </div>
+                        <div className="transform hover:scale-110 transition-transform duration-300">
+                        <Image src={profile?.achievements?.ach2 ? "/ach2.svg" : "/ach2Lock.svg"}  alt="ach2"  width={197} height={220} loading="lazy"/>
+                        </div>
+                </div>
+                <div className="flex items-center justify-center gap-[30px] flex-col sm:flex-row">
+                        <div className="transform hover:scale-110 transition-transform duration-300">
+                        <Image src={profile?.achievements?.ach3 ? "/ach3.svg" : "/ach3Lock.svg"}  alt="ach3"  width={197} height={220} loading="lazy"/>
+                        </div>
+                        <div className="transform hover:scale-110 transition-transform duration-300">
+                        <Image src={profile?.achievements?.ach4 ? "/ach4.svg" : "/ach4Lock.svg"}  alt="ach4"  width={197} height={220} loading="lazy"/>
+                        </div>
+                        <div className="lg:block hidden transform hover:scale-110 transition-transform duration-300">
+                        <Image src={profile?.achievements?.ach5 ? "/ach5.svg" : "/ach5Lock.svg"}  alt="ach5"  width={197} height={220} loading="lazy"/>
+                        </div>
+                    </div>
+                    <div className="flex items-center justify-center gap-[30px] flex-col sm:flex-row">
+                        <div className="transform hover:scale-110 transition-transform duration-300">
+                        <Image src={profile?.achievements?.ach6 ? "/ach6.svg" : "/ach6Lock.svg"}  alt="ach6"  width={197} height={220} loading="lazy"/>
+                        </div>
+                        <div className="transform hover:scale-110 transition-transform duration-300">
+                        <Image src={profile?.achievements?.ach7 ? "/ach7.svg" : "/ach7Lock.svg"}  alt="ach7"  width={197} height={220} loading="lazy"/>
+                        </div>
+                    </div>
+                    <div>
+                        <div className="pb-[30px] block lg:hidden transform hover:scale-110 transition-transform duration-300">
+                        <Image src={profile?.achievements?.ach5 ? "/ach5.svg" : "/ach5Lock.svg"}  alt="ach5"  width={197} height={220} loading="lazy"/>
+                        </div>
+                    </div>
+                    </div>
+            </div>
             </div>
             </div>
         </div>

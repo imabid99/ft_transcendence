@@ -10,24 +10,6 @@ import Loading from '../loading';
 import ImageComponent from '../../components/Dashboard/Profile/Achievements/images';
 import Image from 'next/image';
 
-const images = [
-  [
-      { unlocked: '/ach1.svg', locked: '/ach1Lock.svg', alt: 'Ach1' },
-      { unlocked: '/ach2.svg', locked: '/ach2Lock.svg', alt: 'Ach2'},
-  ],
-  [
-      { unlocked: '/ach3.svg', locked: '/ach3Lock.svg', alt: 'Ach3'},
-      { unlocked: '/ach4.svg', locked: '/ach4Lock.svg', alt: 'Ach4'},
-      { unlocked: '/ach5.svg', locked: '/ach5Lock.svg', alt: 'Ach5', className: 'lg:block hidden'},
-  ],
-  [
-      { unlocked: '/ach6.svg', locked: '/ach6Lock.svg', alt: 'Ach6'},
-      { unlocked: '/ach7.svg', locked: '/ach7Lock.svg', alt: 'Ach7'},
-  ],
-  [
-      { unlocked: '/ach5.svg', locked: '/ach5Lock.svg', alt: 'Ach5', className: 'pb-[30px] block lg:hidden'},
-  ],
-];
 export default function Page() {
     
     const {profiles, user, socket}:any = useContext(contextdata);
@@ -36,26 +18,7 @@ export default function Page() {
     const router = useRouter();
     const [isloading, setIsLoading] = useState(true);
     const [achievements, setAchievements] = useState<any>(null);
-    console.log("achievements : ", myProfile?.achievements);
-    // const achievements = myProfile?.achievements;
-    let acharr = new Array(7).fill(false);
-    acharr[0] = myProfile?.achievements?.ach1;
-    acharr[1] = myProfile?.achievements?.ach2;
-    acharr[2] = myProfile?.achievements?.ach3;
-    acharr[3] = myProfile?.achievements?.ach4;
-    acharr[4] = myProfile?.achievements?.ach5;
-    acharr[5] = myProfile?.achievements?.ach6;
-    acharr[6] = myProfile?.achievements?.ach7;
-    // acharr[0] = false;
-    // acharr[1] = false;
-    // acharr[2] = false;
-    // acharr[3] = false;
-    // acharr[4] = false;
-    // acharr[5] = false;
-    // acharr[6] = false;
 
-
-    console.log("acharr : ", acharr);
     useEffect(() => {
         setAchievements(achievements);
         }
@@ -351,9 +314,6 @@ export default function Page() {
                 <div className="flex items-center justify-center  gap-[30px] flex-col sm:flex-row">
                         <div className="transform hover:scale-110 transition-transform duration-300">
                         <Image src={myProfile?.achievements?.ach1 ? "/ach1.svg" : "/ach1Lock.svg"}  alt="ach1"  width={197} height={220} loading="lazy"/>
-
-                        {/* <img src="airwa.svg" alt="" className="" /> */}
-                        {/* <img src="Airplanetest.svg" alt="" className="absolute top-[60px] left-0" /> */}
                         </div>
                         <div className="transform hover:scale-110 transition-transform duration-300">
                         <Image src={myProfile?.achievements?.ach2 ? "/ach2.svg" : "/ach2Lock.svg"}  alt="ach2"  width={197} height={220} loading="lazy"/>
