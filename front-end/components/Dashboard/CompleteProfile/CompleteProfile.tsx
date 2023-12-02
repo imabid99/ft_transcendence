@@ -18,7 +18,7 @@ import axiosInstance from '@/utils/axiosInstance';
 
 
 
-export default function CompleteProfile({info}:any) {
+export default function CompleteProfile({info, setInfo}:any) {
   // console.log("this is info : ", info);
   const {profiles, user, socket}:any = useContext(contextdata);
   const myProfile = profiles?.find((profile:any) => profile?.userId === user?.id);

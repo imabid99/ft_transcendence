@@ -4,6 +4,7 @@ import axios from 'axios';
 import Link from 'next/link';
 import {set, useForm} from 'react-hook-form';
 import ErrorMessage from '@/components/Dashboard/signUp/Error_Message';
+import { Toaster, toast } from 'sonner'
 import {
   useState,
   useEffect,
@@ -41,7 +42,11 @@ export default function Home() {
         email: data.email,
         password: data.password,
       });
-      console.log("setJwtToken : ", response.data);
+      <Toaster position="top-right" richColors />
+
+        toast.error(response.data.message);
+
+      console.log("hello world : ", response.data);
       setJwtToken(response.data);
       } catch (e:any) 
       {
@@ -78,71 +83,71 @@ export default function Home() {
     getUser();
   }, [jwtToken]);
   const onError = (errors:any) => console.log(errors);
-  const registerOptions = {
-    firstName: { required: "First name is required",
-    maxLength: {
-      value: 20,
-      message: "should not exceed 20 characters",
-    },
-    pattern: {
-      value: /^[a-zA-Z\u00C0-\u017F]+(?:\s[a-zA-Z\u00C0-\u017F]+)*$/,
-      message: 'Please enter valid name',
-    },
-    minLength: {
-      value: 2,
-      message: "at least 3 characters",
-    },
-   },
-    lastName: { required: "Last name is required",
-    maxLength: {
-      value: 20,
-      message: "should not exceed 20 characters",
-    },
-    minLength: {
-      value: 2,
-      message: "at least 3 characters",
-    },
-   },
-    userName: { required: "Name is required",
-    usernameAvailable: async (value:string) => {
-      console.log("usernameAvailable", value);
-      const response = await axios.post(`http://${process.env.NEXT_PUBLIC_APP_URL}:3000/api/auth/usernameAvailable`, {
-        username: value,
-      });
-      if (response.status !== 200) 
-        return "Username already exists";
-    }
-    },
-    email: { required: "Email is required",
-    pattern: {
-      value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
-      message: "invalid email address"
-    },
-    emailAvailable: async (value:string) => {
-      console.log("emailAvailable", value);
-      const response = await axios.post(`http://${process.env.NEXT_PUBLIC_APP_URL}:3000/api/auth/emailAvailable`, {
-        email: value,
-      });
-      if (response.status !== 200) 
-        return "Email already exists";
-    },
-  },
-    password: {
-      required: "Password is required",
-      minLength: {
-        value: 8,
-        message: "Password must have at least 8 characters"
-      },
-      validate: (value:string) => {
-        return (
-          [/[a-z]/, /[A-Z]/, /[0-9]/, /[^a-zA-Z0-9]/].every((pattern) =>
-            pattern.test(value)
-          ) || "must include lower, upper, number, and special chars"
-        );
-      },
+  // const registerOptions = {
+  //   firstName: { required: "First name is required",
+  //   maxLength: {
+  //     value: 20,
+  //     message: "should not exceed 20 characters",
+  //   },
+  //   pattern: {
+  //     value: /^[a-zA-Z\u00C0-\u017F]+(?:\s[a-zA-Z\u00C0-\u017F]+)*$/,
+  //     message: 'Please enter valid name',
+  //   },
+  //   minLength: {
+  //     value: 2,
+  //     message: "at least 3 characters",
+  //   },
+  //  },
+  //   lastName: { required: "Last name is required",
+  //   maxLength: {
+  //     value: 20,
+  //     message: "should not exceed 20 characters",
+  //   },
+  //   minLength: {
+  //     value: 2,
+  //     message: "at least 3 characters",
+  //   },
+  //  },
+  //   userName: { required: "Name is required",
+  //   usernameAvailable: async (value:string) => {
+  //     console.log("usernameAvailable", value);
+  //     const response = await axios.post(`http://${process.env.NEXT_PUBLIC_APP_URL}:3000/api/auth/usernameAvailable`, {
+  //       username: value,
+  //     });
+  //     if (response.status !== 200) 
+  //       return "Username already exists";
+  //   }
+  //   },
+  //   email: { required: "Email is required",
+  //   pattern: {
+  //     value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
+  //     message: "invalid email address"
+  //   },
+  //   emailAvailable: async (value:string) => {
+  //     console.log("emailAvailable", value);
+  //     const response = await axios.post(`http://${process.env.NEXT_PUBLIC_APP_URL}:3000/api/auth/emailAvailable`, {
+  //       email: value,
+  //     });
+  //     if (response.status !== 200) 
+  //       return "Email already exists";
+  //   },
+  // },
+  //   password: {
+  //     required: "Password is required",
+  //     minLength: {
+  //       value: 8,
+  //       message: "Password must have at least 8 characters"
+  //     },
+  //     validate: (value:string) => {
+  //       return (
+  //         [/[a-z]/, /[A-Z]/, /[0-9]/, /[^a-zA-Z0-9]/].every((pattern) =>
+  //           pattern.test(value)
+  //         ) || "must include lower, upper, number, and special chars"
+  //       );
+  //     },
 
-    }
-  };
+  //   }
+  // };
   return (
     
     <>
@@ -163,7 +168,14 @@ export default function Home() {
               Log in with google 
             </p>
           </button>
-          <button className="flex justify-evenly items-center w-[170px] h-[52px] border-[0.1px] rounded-[11px] border-white cursor-pointer">
+          <button className="flex justify-evenly items-center w-[170px] h-[52px] border-[0.1px] rounded-[11px] border-white cursor-pointer"
+          onClick={() => {
+            // setLogInAnimation(true);
+            // signIn('42');
+              router.push('http://localhost:3000/api/auth/oauth2/42');
+          }
+          }
+          >
             <img
               src="423918.logowik 1.png"
               alt=""
@@ -190,7 +202,7 @@ export default function Home() {
               <div className="flex flex-col gap-[10px] justify-between  w-full ">
                 <div className=''>
                 <input
-                  {...register("email", registerOptions.email)}
+                  {...register("email")}
                   type="email"
                   className={`text-white h-[70px] rounded-[11px] border-[0.1px]   p-[27px] w-full  bg-white bg-opacity-10 backdrop-blur-lg  ${errors.email ? 'border-[2px] border-red-400 placeholder:text-red-400' : 'placeholder:text-white'}` }                  
                   placeholder="Your email"
@@ -198,7 +210,7 @@ export default function Home() {
                 </div>
                 <div className=''>
                 <input
-                  {...register("password", registerOptions.password)}
+                  {...register("password")}
                   type="password"
                   className={`text-white h-[70px] rounded-[11px] border-[0.1px]   p-[27px] w-full   bg-white bg-opacity-10 backdrop-blur-lg  ${errors.password ? 'border-[2px] border-red-400 placeholder:text-red-400' : 'placeholder:text-white'}` }
                   placeholder="Password"
@@ -209,7 +221,7 @@ export default function Home() {
         {errors.email || errors.password ? (
         <p className="text-red-500">There's an error in the email or password.</p>
         ) : null}
-            <button disabled={!isDirty} className="w-[217px] h-[53px] bg-gradient-to-r from-cyan-500 to-blue-500 rounded-[11px] text-[#FFF] text-[20px] font-[500] md:h-[68.345px] l-inp">Login</button>
+            <button  className="w-[217px] h-[53px] bg-gradient-to-r from-cyan-500 to-blue-500 rounded-[11px] text-[#FFF] text-[20px] font-[500] md:h-[68.345px] l-inp">Login</button>
           </form>
         </div>
         <div className="flex flex-row items-center gap-[2px] pt-[24px]">

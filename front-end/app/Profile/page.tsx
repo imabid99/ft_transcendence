@@ -18,6 +18,8 @@ export default function Page() {
     const router = useRouter();
     const [isloading, setIsLoading] = useState(true);
     const [achievements, setAchievements] = useState<any>(null);
+    console.log("achievements : ", myProfile?.achievements);
+    // const achievements = myProfile?.achievements;
 
     useEffect(() => {
         setAchievements(achievements);
@@ -179,9 +181,9 @@ export default function Page() {
                         <img src="pgroup-78.svg" alt="" className="w-[36px] h-[36px]" />
                         <div>
                         <div className="text-[#0367A6] text-[17px] font-[500]">
-                            Games
+                            Games 
                         </div>
-                        <div className="text-[20px] font-[600] text-[#007BC8]">{myProfile?.randommatchcount + myProfile?.invitematchcount}</div>
+                        <div className="text-[20px] font-[600] text-[#007BC8]">{myProfile?.totalmatches}</div>
                         </div>
                     </div>
                     <div className="w-[180px] h-[100px] bg-[#C1FFFB] hover:bg-[#9dfcf6] rounded-[24px] flex items-center pl-[20px] gap-[17px] s-sh transform hover:scale-105 transition-transform duration-300">

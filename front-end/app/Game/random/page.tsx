@@ -1,7 +1,7 @@
 "use client";
 
 import { Canvas, useFrame } from "@react-three/fiber";
-import React, { useRef, useState, useEffect, useMemo, useContext } from "react";
+import React, { useRef, useState, useEffect, useMemo, useContext, use } from "react";
 import {
   Sky,
   SoftShadows,
@@ -33,11 +33,13 @@ import { useRouter } from "next/navigation";
 import LoadingRandom from "@/components/Dashboard/Game/Random_Loading/loading";
 // map = snow, desert, forest; mode = friend, bot, random
 
-const Random = ({selectedMap}: any) => {
+const Random = () => {
 
 	const [socket, setSocket] = useState<any>(null);
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const router = useRouter();
+
+  const [shosenMap, setShosenMap] = useState<string | null>(null);
 
 
 	/// SOCKET MANAGER
@@ -92,6 +94,18 @@ const Random = ({selectedMap}: any) => {
 		socket.off("connect");
 		socket.disconnect();
 	  };
+	}, [socket]);
+
+  useEffect(() => {
+    if(getLocalStorageItem("Maps"))
+      setShosenMap(getLocalStorageItem("Maps"));
+  }, []);
+
+  useEffect(() => {
+    if (!socket) return;
+		socket.on('player-disconnected', (data: any) => {
+			router.push('/Game');
+		});
 	}, [socket]);
 
 
@@ -632,7 +646,7 @@ const Random = ({selectedMap}: any) => {
   // 	setCurrentMap('Desert');
   //   }
   // };
-  if(isLoading)
+  if(isLoading || !shosenMap)
   {
     console.log("Loading");
     return <LoadingRandom/>
@@ -722,8 +736,8 @@ const Random = ({selectedMap}: any) => {
           map == "snow" && <Snow/>
         */}
       {
-          selectedMap === 'desert' ? <Desert /> :
-          selectedMap === 'snow' ? <Snow /> :
+          shosenMap === 'desert' ? <Desert /> :
+          shosenMap === 'snow' ? <Snow /> :
           <Forest />
       }
       {/* <Desert/> */}

@@ -37,24 +37,7 @@ export default function Page() {
     }
     , [profiles])
 
-    const images = [
-        [
-            { unlocked: 'ach1.svg', locked: 'ach1Lock.svg', alt: 'Ach1' },
-            { unlocked: 'ach2.svg', locked: 'ach2Lock.svg', alt: 'Ach2'},
-        ],
-        [
-            { unlocked: 'ach3.svg', locked: 'ach3Lock.svg', alt: 'Ach3'},
-            { unlocked: 'ach4.svg', locked: 'ach4Lock.svg', alt: 'Ach4'},
-            { unlocked: 'ach5.svg', locked: 'ach5Lock.svg', alt: 'Ach5', className: 'lg:block hidden'},
-        ],
-        [
-            { unlocked: 'ach6.svg', locked: 'ach6Lock.svg', alt: 'Ach6'},
-            { unlocked: 'ach7.svg', locked: 'ach7Lock.svg', alt: 'Ach7'},
-        ],
-        [
-            { unlocked: 'ach5.svg', locked: 'ach5Lock.svg', alt: 'Ach5', className: 'pb-[30px] block lg:hidden'},
-        ],
-      ];
+
     
 
     const sendRequest = async () => {
@@ -287,7 +270,7 @@ export default function Page() {
                         <div className="text-[#0367A6] text-[17px] font-[500]">
                             Games
                         </div>
-                        <div className="text-[20px] font-[600] text-[#007BC8]">{profile?.randommatchcount + profile?.invitematchcount}</div>
+                        <div className="text-[20px] font-[600] text-[#007BC8]">{profile?.totalmatches}</div>
                         </div>
                     </div>
                     <div className="w-[180px] h-[100px] bg-[#C1FFFB] hover:bg-[#9dfcf6] rounded-[24px] flex items-center pl-[20px] gap-[17px] s-sh transform hover:scale-105 transition-transform duration-300">

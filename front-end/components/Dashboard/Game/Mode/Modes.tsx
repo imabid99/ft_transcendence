@@ -1,12 +1,14 @@
 import Link from "next/link";
 import Maps from "../Map/Maps";
 import {useState} from 'react';
+import { useRouter } from "next/navigation";
 type props  = {
     setShow: any,
     onModeChange: any
 
 }
 const Modes = ({setShow, onModeChange}:props) => {
+    const router = useRouter();
     const [selected, setSelected] = useState('');
     const handleClick = (mode:string) => {
     setSelected(mode);
@@ -65,7 +67,16 @@ const Modes = ({setShow, onModeChange}:props) => {
             <button onClick={()=>{setShow(null)}} className="w-[150px] h-[50px] lg:w-[240px] lg:h-[77px] retB rounded-[14px] text-white text-[20px] lg:text-[30px] font-[400] hover:bg-gray-400 font-['Fredoka']">
                 Back
             </button>
-            <button disabled={!selected} onClick={()=>setShow(selected)} className={`w-[150px] h-[50px] lg:w-[240px] lg:h-[77px] backB rounded-[14px] text-white text-[20px] lg:text-[30px] font-[400] hover:bg-gray-400 font-['Fredoka'] ${!selected ? 'cursor-not-allowed text-[20px]' : ''}`}>
+            <button disabled={!selected} onClick={()=>{
+                if(selected === 'RANDOM'){
+                    router.push('/Game/random')
+                }
+                else if (selected === 'AI'){
+                    router.push('/Game/ai')
+                }
+                else
+                    setShow(selected)
+            }} className={`w-[150px] h-[50px] lg:w-[240px] lg:h-[77px] backB rounded-[14px] text-white text-[20px] lg:text-[30px] font-[400] hover:bg-gray-400 font-['Fredoka'] ${!selected ? 'cursor-not-allowed text-[20px]' : ''}`}>
                 {selected ? 'Next' : 'Choose Mode'}
             </button>
             </div>

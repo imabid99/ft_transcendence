@@ -7,7 +7,11 @@ type props  = {
     loserScore: string
 }
 
+
 const MatchHistory = ({ winnerAvatar, winnerName, winnerScore, loserAvatar, loserName, loserScore }:props) => {
+
+    const avatarwinnerUrl = `http://${process.env.NEXT_PUBLIC_APP_URL}:3000/${winnerAvatar}`;
+    const avatarloserUrl = `http://${process.env.NEXT_PUBLIC_APP_URL}:3000/${loserAvatar}`;
     return (
     <div className="3xl:w-[90%] md:w-11/12 lg:w-[96%] w-[89%] h-[100px] bg-[#f7fbfde9] flex items-center justify-center rounded-[17px]">
         <div className="flex items-center w-[100%] justify-around">
@@ -17,8 +21,8 @@ const MatchHistory = ({ winnerAvatar, winnerName, winnerScore, loserAvatar, lose
                     <p className="text-[#00539D] text-[12px] font-[700] lg:text-[16px] 3xl:text-[12px] md:font-[500] 3xl:font-[700]">{winnerScore}</p>
                 </div>
                 <div className="py-4 md:pl-[20px] 3xl:pl-0">
-                    <div className="rounded-full w-[46px] h-[46px] border-2 border-[#B1ECCA] lg:h-[60px] lg:w-[60px] 3xl:w-[46px] 3xl:h-[46px]">
-                        <img src={winnerAvatar} alt="" className="object-cover rounded-full w-full h-full"/>
+                    <div className="rounded-full w-[46px] h-[46px] border-2 border-[#00539D] lg:h-[60px] lg:w-[60px] 3xl:w-[46px] 3xl:h-[46px]">
+                        <img src={avatarwinnerUrl} alt="" className="object-cover rounded-full w-full h-full"/>
                     </div>
                 </div>
                 </div>
@@ -27,8 +31,8 @@ const MatchHistory = ({ winnerAvatar, winnerName, winnerScore, loserAvatar, lose
             </div>
             <div className="flex items-center gap-[8px]">
                 <div className="md:pr-[20px] 3xl:pr-0">
-                    <div className="rounded-full w-[46px] h-[46px] border-2 border-[#ECBAB5] lg:h-[60px] lg:w-[60px] 3xl:w-[46px] 3xl:h-[46px]">
-                        <img src={loserAvatar} alt="" className="object-cover rounded-full w-full h-full"/>
+                    <div className="rounded-full w-[46px] h-[46px] border-2 border-[#71a0c9] lg:h-[60px] lg:w-[60px] 3xl:w-[46px] 3xl:h-[46px]">
+                        <img src={avatarloserUrl} alt="" className="object-cover rounded-full w-full h-full"/>
                     </div>
                 </div>
                 <div className="flex items-center justify-center flex-col">

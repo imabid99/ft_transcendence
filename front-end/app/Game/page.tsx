@@ -6,9 +6,11 @@ import { useRouter } from 'next/navigation';
 import FriendSearch from "@/components/Dashboard/Game/Friend_Search/Friend_Search";
 import PlayWithAI from "./ai/page";
 import Random from "./random/page";
+import {setLocalStorageItem } from "@/utils/localStorage";
+
 const Game = () => {
     const [Show, setShow] = useState<string | null>(null);
-    const [selectedMap, setSelectedMap] = useState<string | null>(null);
+    const [selectedMap, setSelectedMap] = useState<string>("forest");
     const [selectedMode, setSelectedMode] = useState<string | null>(null);
     const router = useRouter();
 
@@ -19,6 +21,9 @@ const Game = () => {
     const handleModeChange = (mode: string) => {
         setSelectedMode(mode);
     }
+	useEffect(() => {
+		setLocalStorageItem('Maps', selectedMap);
+	}, [selectedMap]);
 		
 	return (
 		<div className="w-full h-full flex justify-center items-center">
@@ -39,13 +44,9 @@ const Game = () => {
 			:
 			Show == 'map' ? <Modes  setShow={setShow} onModeChange={handleModeChange}/>
 			:
-			Show == 'FRIEND' ? (
-			<FriendSearch setShow={setShow}/>
-			) : Show == 'AI' ? (
-			<PlayWithAI selectedMap={selectedMap} />
-			) : (
-			<Random selectedMap={selectedMap} />
-			)
+			Show == 'FRIEND' && (
+				<FriendSearch setShow={setShow}/>
+			) 
 			}
 		</div>
 	);
