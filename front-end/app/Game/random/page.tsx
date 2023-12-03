@@ -71,6 +71,7 @@ const Random = () => {
           auth: {
             matchType,
           },
+          // upgrade: false
         }
       );
       if (newSocket) {
@@ -597,11 +598,13 @@ const Random = () => {
 
     useEffect(() => {
       socket.on("player-wins", (data: any) => {
-        console.log(
-          "on ",
-          data.winner,
-          " Wins! with " + data.winnerScore + " - " + data.loserScore
-        );
+        // console.log(
+        //   "on ",
+        //   data.winner,
+        //   " Wins! with " + data.winnerScore + " - " + data.loserScore
+        // );
+        console.log("match ended")
+        router.push('/Game');
       });
     }, []);
 

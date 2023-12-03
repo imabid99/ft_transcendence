@@ -16,6 +16,7 @@ import {
 } from "@/utils/localStorage";
 import { on } from "events";
 import Email from "next-auth/providers/email";
+import { type } from "os";
 
 
 export default function Home() {
@@ -27,7 +28,10 @@ export default function Home() {
     lastName: "",
     userName: "",
     email: "",
+    avatar: "/nouser.avif",
+    type: "default"
   });
+
 
 
   type FormValues = {
@@ -36,6 +40,8 @@ export default function Home() {
     userName: string;
     email: string;
     password: string;
+    avatar: string;
+    type: string;
   };
 
   const form = useForm<FormValues>({ mode: "all" });
@@ -49,6 +55,8 @@ export default function Home() {
           userName: data.userName,
           email: data.email,
           password: data.password,
+          avatar: "/nouser.avif",
+          type: "default"
         });
   }
 
@@ -127,7 +135,7 @@ export default function Home() {
   };
   return (
     <>
-      {showCompleteProfile && <CompleteProfile info={info} />}
+      {showCompleteProfile && <CompleteProfile info={info} setInfo={setInfo}/>}
       <div
         className="h-[100vh] w-[100%] flex justify-around items-center bgImg bg-no-repeat bg-cover bg-center "
         style={{ backgroundImage: 'url("backfilter.svg")' }}

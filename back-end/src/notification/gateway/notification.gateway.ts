@@ -29,7 +29,6 @@ export class NotificationGateway implements OnGatewayConnection, OnGatewayDiscon
   private socketMap: Map<string, Socket[]> = new Map<string, Socket[]>();
 
   async handleConnection(socket: Socket) {
-    // console.log(`Client connected notif : ${socket.id}`);
     const token = socket.handshake.headers.authorization?.split(" ")[1];
     const user: any = jwt_decode(token);
     if (user && user.userId) {
@@ -41,6 +40,7 @@ export class NotificationGateway implements OnGatewayConnection, OnGatewayDiscon
   }
 
   async handleDisconnect(socket: Socket) {
+
     const token = socket.handshake.headers.authorization?.split(" ")[1];
     const user: any = jwt_decode(token);
     if (user && user.userId && this.socketMap.has(user.userId)) {
@@ -138,6 +138,10 @@ export class NotificationGateway implements OnGatewayConnection, OnGatewayDiscon
 
   apiError(userId : string , message : string) {
     this.sendNotification(userId, {type : "error", message});
+  }
+
+  apiInfo(userId : string , message : string) {
+    this.sendNotification(userId, {type : "info", message});
   }
 
   apiSuccess(userId : string , message : string) {

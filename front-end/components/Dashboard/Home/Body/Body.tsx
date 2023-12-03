@@ -12,6 +12,7 @@ import Lottie from "lottie-react"
 import animationData2 from   "../../../../public/ghost2.json"
 import { Toaster, toast } from 'sonner'
 import Link from 'next/link';
+import { set } from 'react-hook-form';
 
 type Props = {
     leaderRef: any,
@@ -20,6 +21,8 @@ type Props = {
 export default function Body({ leaderRef, handelShaw }: Props) {
     const {profiles, user, socket}:any = useContext(contextdata);
     const [Friends, setFriends] = useState<any>([]);
+    const [matchHistoryy, setmatchHistoryy] = useState<any>([]);
+    const [leaderboard, setleaderBoard] = useState<any>([]);
 
     useEffect(() => {
         try{
@@ -40,7 +43,51 @@ export default function Body({ leaderRef, handelShaw }: Props) {
             console.log(error)
         }
     }, [profiles])
-    
+
+    useEffect(() => {
+        try{
+            const getMatchHistorty = async () => {
+                try{
+                    const res = await axiosInstance.get(`http://${process.env.NEXT_PUBLIC_APP_URL}:3000/api/game/match/history`);
+                    // console.log("this is match history",res.data[0].creator.profile.avatar);
+                    setmatchHistoryy(res.data);
+                }
+                catch(err){
+                    console.log(err);
+                }
+            }
+            getMatchHistorty();
+        }
+        catch(error)
+        {
+            console.log(error)
+        }
+    }, [profiles])
+
+    useEffect(() => {
+        try{
+            const getLeaderBoard = async () => {
+                try{
+                    const res = await axiosInstance.get(`http://${process.env.NEXT_PUBLIC_APP_URL}:3000/api/game/leaderboard`);
+                    console.log("this is the leaderboard",res.data);
+                    setleaderBoard(res.data);
+                }
+                catch(err){
+                    console.log(err);
+                }
+            }
+            getLeaderBoard();
+        }
+        catch(error)
+        {
+            console.log(error)
+        }
+    }, [profiles])
+    console.log("this is the hahahahahahahah ",matchHistoryy)
+    const firstavatar = `http://${process.env.NEXT_PUBLIC_APP_URL}:3000/${leaderboard?.first?.avatar}`;
+    const secondavatar = `http://${process.env.NEXT_PUBLIC_APP_URL}:3000/${leaderboard?.second?.avatar}`;
+    const thirdavatar = `http://${process.env.NEXT_PUBLIC_APP_URL}:3000/${leaderboard?.third?.avatar}`;
+    console.log("this is the avatar hahahahahaha ",thirdavatar);
     return (
         <div className="flex flex-col 3xl:flex-row items-center w-[100%]  h-screen">
             <div className="flex items-center flex-col 3xl:flex-row gap-[40px] 3xl:gap-[150px] w-[100%]  justify-center ">
@@ -184,7 +231,7 @@ export default function Body({ leaderRef, handelShaw }: Props) {
             lg:max-2xl:gap-[50px] lg:max-2xl:justify-start lg:max-2xl:items-start  min-w-[371px] w-full 3xl:w-fit max-w-[1224px]
             '>
                 {/* <RightSide> */}
-                <div className="leaderboard w-full 3xl:w-[371px] h-[396px] bg-white">
+                <div className="leaderboard w-full 3xl:w-[371px] h-[396px] bg-white z-20">
 
                     <div className=" flex  items-center justify-between pt-[35px] px-[30px]">
                         <span className="flex items-center gap-[10px]">
@@ -193,53 +240,60 @@ export default function Body({ leaderRef, handelShaw }: Props) {
                             </svg> 
                             <p className="text-[14px] font-[700] text-[#02539D]">LEADERBOARD</p>
                         </span>
-                        <button className=" border-none outline-none text-[#00539D] font-[Poppins] text-[10px] font-[300]"
+                        {/* <button className=" border-none outline-none text-[#00539D] font-[Poppins] text-[10px] font-[300]"
                         onClick={() => handelShaw(leaderRef)}
-                        >See All</button>
+                        >See All</button> */}
                     </div>
                     <div className="flex justify-center items-end gap-[2px]  h-[calc(100%-56px)] overflow-hidden">
                         <div className="flex flex-col items-center justify-center gap-[10px]">
+                        {leaderboard?.second?.avatar && (
                             <span className="flex flex-col items-center justify-center gap-[10px] relative">
-                                <img src="/userProfile.jpg" alt="" className=" w-[80px] h-[80px] rounded-full object-cover shadow-4xl" />
+                                <img src={secondavatar} alt="" className=" w-[80px] h-[80px] rounded-full object-cover shadow-4xl" />
                                 <p className="text-[10px] font-[700] font-[Poppins] text-[#6C8BD8]">
-                                    Asabbar
+                                    {leaderboard?.second?.username}
                                 </p>
                                 <span className="absolute top-[0px] right-[0px] w-[18px] h-[18px] rounded-full bg-[#6C8BD8] text-[10px] font-[400] font-[Poppins] text-[#FFF] flex justify-center items-center
                                 outline outline-[2px] outline-[#FFF]
                                 "
                                 >2</span>
                             </span>
+                            )}
                             <div className="min-w-[90px] h-[151px] rounded-t-[20px] bg-[#338AC8]" />
                         </div>
                         <div className="flex flex-col items-center justify-center">
                             <img src="/crown.svg" alt="" className="w-[25px]" />
                             <div className="flex flex-col items-center justify-center gap-[10px]">
+                            {leaderboard?.first?.avatar && (
                                 <span className="flex flex-col items-center justify-center gap-[10px] relative">
-                                    <img src="/userProfile.jpg" alt="" className=" w-[80px] h-[80px] rounded-full object-cover shadow-4xl" />
+                                    <img src={firstavatar} alt="" className=" w-[80px] h-[80px] rounded-full object-cover shadow-4xl" />
                                     <p className="text-[10px] font-[700] font-[Poppins] text-[#6C8BD8]">
-                                        Asabbar
+                                        {leaderboard?.first?.username}
                                     </p>
                                 <span className="absolute top-[0px] right-[0px] w-[18px] h-[18px] rounded-full bg-[#03539D] text-[10px] font-[400] font-[Poppins] text-[#FFF] flex justify-center items-center
                                 outline outline-[2px] outline-[#FFF]
                                 "
                                 >1</span>
                                 </span>
+                                )}
                                 <div className="min-w-[90px] h-[198px] rounded-t-[20px] bg-[#004A8B] opacity-[0.8] shadow-5xl" />
                             </div>
                         </div>
                         <div className="flex flex-col items-center justify-center gap-[10px]">
+                        {leaderboard?.third?.avatar && (
                             <span className="flex flex-col items-center justify-center gap-[10px] relative">
-                                <img src="/userProfile.jpg" alt="" className=" w-[80px] h-[80px] rounded-full object-cover shadow-4xl" />
+                                <img src={thirdavatar} alt="" className=" w-[80px] h-[80px] rounded-full object-cover shadow-4xl" />
                                 <p className="text-[10px] font-[700] font-[Poppins] text-[#6C8BD8]">
-                                    Asabbar
+                                    {leaderboard?.third?.username}
                                 </p>
                                 <span className="absolute top-[0px] right-[0px] w-[18px] h-[18px] rounded-full bg-[#4CC0ED] text-[10px] font-[400] font-[Poppins] text-[#FFF] flex justify-center items-center
                                 outline outline-[2px] outline-[#FFF]
                                 "
                                 >3</span>
                             </span>
+                            )}
                             <div className="min-w-[90px] h-[124px] rounded-t-[20px] bg-[#4cc0edb8] shadow-6xl" />
                         </div>
+                          
                     </div>
                 </div>
                 {/* </RightSide> */}
@@ -254,44 +308,27 @@ export default function Body({ leaderRef, handelShaw }: Props) {
                         </span>
                     </div>
                     <div className="flex flex-col  gap-[10px]   overflow-y-scroll max-h-[calc(100%-67px)] items-center py-[5px] no-scrollbar overflow-hidden rounded-b-[40px] ">
-                            {/* <MatchHistory
-                                    winnerAvatar="mittoushaha.png" winnerName="Ismail Mittous" winnerScore="20" loserAvatar="jlemhaha.png" loserName="Mustapha jlem" loserScore="20"
-                                />
-                                <MatchHistory
-                                    winnerAvatar="mittoushaha.png" winnerName="Ismail Mittous" winnerScore="20" loserAvatar="jlemhaha.png" loserName="Mustapha jlem" loserScore="20"
-                                />
-                                <MatchHistory
-                                    winnerAvatar="mittoushaha.png" winnerName="Ismail Mittous" winnerScore="20" loserAvatar="jlemhaha.png" loserName="Mustapha jlem" loserScore="20"
-                                />
-                                <MatchHistory
-                                    winnerAvatar="mittoushaha.png" winnerName="Ismail Mittous" winnerScore="20" loserAvatar="jlemhaha.png" loserName="Mustapha jlem" loserScore="20"
-                                />
-                                <MatchHistory
-                                    winnerAvatar="mittoushaha.png" winnerName="Ismail Mittous" winnerScore="20" loserAvatar="jlemhaha.png" loserName="Mustapha jlem" loserScore="20"
-                                />
-                                <MatchHistory
-                                    winnerAvatar="mittoushaha.png" winnerName="Ismail Mittous" winnerScore="20" loserAvatar="jlemhaha.png" loserName="Mustapha jlem" loserScore="20"
-                                />
-                                <MatchHistory
-                                    winnerAvatar="mittoushaha.png" winnerName="Ismail Mittous" winnerScore="20" loserAvatar="jlemhaha.png" loserName="Mustapha jlem" loserScore="20"
-                                />
-                                <MatchHistory
-                                    winnerAvatar="mittoushaha.png" winnerName="Ismail Mittous" winnerScore="20" loserAvatar="jlemhaha.png" loserName="Mustapha jlem" loserScore="20"
-                                />
-                                <MatchHistory
-                                    winnerAvatar="mittoushaha.png" winnerName="Ismail Mittous" winnerScore="20" loserAvatar="jlemhaha.png" loserName="Mustapha jlem" loserScore="20"
-                                />
-                                <MatchHistory
-                                    winnerAvatar="mittoushaha.png" winnerName="Ismail Mittous" winnerScore="20" loserAvatar="jlemhaha.png" loserName="Mustapha jlem" loserScore="20"
-                                />
-                                <MatchHistory
-                                    winnerAvatar="mittoushaha.png" winnerName="Ismail Mittous" winnerScore="20" loserAvatar="jlemhaha.png" loserName="Mustapha jlem" loserScore="20"
-                                /> */}
-                            <div className='w-full  h-full flex  justify-center items-center'>
-                            <div className=" w-[300px]  ">
-                                <Lottie animationData={animationData2}/>
-                             </div>
-                            </div>
+                                {
+                                    matchHistoryy && matchHistoryy.length > 0 ? (
+                                        matchHistoryy.map((match: any) => (
+                                        <MatchHistory
+                                            winnerAvatar={match?.creator?.profile?.avatar}
+                                            winnerName={`${match?.creator?.profile?.firstName} ${match?.creator?.profile?.lastName}`}
+                                            winnerScore={match?.creatorScore}
+                                            loserAvatar={match?.opponent?.profile?.avatar}
+                                            loserName={`${match?.opponent?.profile?.firstName} ${match?.opponent?.profile?.lastName}`}
+                                            loserScore={match?.opponentScore}
+                                        />
+                                        ))
+                                    ) : (
+                                        <div className='w-full  h-full flex  justify-center'>
+                                        <div className=" w-[300px]  ">
+                                            <Lottie animationData={animationData2}/>
+                                        </div>
+                                        </div>
+                                    )
+                                }
+                                                    
                     </div>
                 </RightSide>
             </div>

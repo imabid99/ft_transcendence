@@ -52,21 +52,25 @@ export default function GroupInfo({setShowBody,setGroupUsers,groupUsers}:GroupIn
                 groupUsers: groupUsers,
                 protectedPassword: protectedPassword,
                 username: user?.username,
+                newAvatar: avatar ? true : false,
             }
             socket.emit('create-group', payload);
             socket.on('update-groupAvatar', async (data: any) => {
                 try{
-                    if(!avatar){
+                    if(avatar === null){
                         setShowAnimationLoading(false)
                         setAvatar(null);
-                        router.push(`/Chat`)
-                        return;
+                        router.push(`/Chat`);
+                        console.log("avatar ==null update-groupAvatar : ", avatar);
                     }
-                    const res = await axiosInstance.post(`http://${process.env.NEXT_PUBLIC_APP_URL}:3000/api/upload/channelAvatar/${data.groupId}`,avatar)
-                    res && setShowAnimationLoading(false)
-                    res && setAvatar(null);
-                    res && socket.emit('refresh-event');
-                    res && router.push(`/Chat`)
+                    else{
+                        const res = await axiosInstance.post(`http://${process.env.NEXT_PUBLIC_APP_URL}:3000/api/upload/channelAvatar/${data.groupId}`,avatar)
+                        res && setShowAnimationLoading(false)
+                        res && setAvatar(null);
+                        res && socket.emit('refresh-event');
+                        res && router.push(`/Chat`)
+                        res && avatar?.delete('file');
+                    }
                 }
                 catch(err){
                     console.log("update-groupAvatar : ",err);
@@ -85,8 +89,10 @@ export default function GroupInfo({setShowBody,setGroupUsers,groupUsers}:GroupIn
             alert("File is too large. Please upload a file smaller than 5 MB.");
             return;
         }
+        setAvatar(null);
         setAvatar(formData);
         setAvatarUrl(URL.createObjectURL(file));
+        avatar?.delete('file');
     }
     return (
         <div className="flex flex-col  overflow-y-scroll  max-h-[calc(100%-270px)] min-h-[calc(100%-135px)] no-scrollbar">
@@ -176,7 +182,7 @@ export default function GroupInfo({setShowBody,setGroupUsers,groupUsers}:GroupIn
                             <p className="text-[15px] font-[500] font-[Poppins] text-[#00539D]">
                                 Group password
                             </p>
-                            <input onChange={(e) => setProtectedPassword(e.target.value)} autoFocus type="password" id="protected" className="w-full h-[50px]  px-[20px]   bg-[#F9FCFE] pr-[20px] text-[15px] font-[300] font-[Poppins] text-[#A5BFD6] outline-none rounded-[11px]" placeholder="Password" />
+                            <input onChange={(e) => setProtectedPassword(e.target.value)} autoFocus type="password" id="Protected" className="w-full h-[50px]  px-[20px]   bg-[#F9FCFE] pr-[20px] text-[15px] font-[300] font-[Poppins] text-[#A5BFD6] outline-none rounded-[11px]" placeholder="Password" />
                         </label>
                     )
                 }

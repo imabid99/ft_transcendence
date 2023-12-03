@@ -61,12 +61,9 @@ export class GameGateway implements OnGatewayConnection, OnGatewayDisconnect {
   
   handleConnection(client: Socket) {
     const token = client.handshake.headers.authorization?.split(" ")[1];
-    console.log("tokena at con ",token);
     try {
 
       if (token) {
-        console.log("this is the header in con",client.handshake.headers.authorization);
-        // console.log("this is the header in con",client.handshake.headers.authorization);
         const user: any = jwt_decode(token);
         if (user && user.userId) {
           if (!this.socketMap.has(user.userId)) {
@@ -75,7 +72,6 @@ export class GameGateway implements OnGatewayConnection, OnGatewayDisconnect {
           this.socketMap.get(user.userId).push(client);
         }
         const matchtype_ = client.handshake.auth.matchType;
-        console.log(matchtype_);
         if(matchtype_ === 'Random')
         {
           this.randomMatchmaking(client);
@@ -92,22 +88,17 @@ export class GameGateway implements OnGatewayConnection, OnGatewayDisconnect {
 
   //RANDOM GAME
 
-
   @SubscribeMessage("matchmaking")
   async randomMatchmaking(client: Socket) {
     try {
     const token = client.handshake.headers.authorization?.split(" ")[1];
-    console.log("token at matchmakingggg ",token);
     if (token) {
       const decoded: any = jwt_decode(token);
-      console.log('decoded token:', decoded);
       if (!decoded || !decoded.userId || !decoded.username) {
         throw new Error('Invalid token');
       }
       const userId = decoded.userId;
       const username = decoded.username;
-      console.log(`Client ${decoded.username} connected`);
-      console.log(`User ${username} started matchmaking`);
       const newObject = {
         userId : userId,
         username: username,
@@ -172,31 +163,31 @@ export class GameGateway implements OnGatewayConnection, OnGatewayDisconnect {
     let winnerScore : number, loserScore: number, winner: string;
     const match = await this.gameService.getMatch(client.id);
     //Should leave the match bitch
-    this.socketMap.get(match.creatorId).forEach(socket => {
-      socket.leave(match.id);
-    });
-    this.socketMap.get(match.opponentId).forEach(socket => {
-      socket.leave(match.id);
-    });
-    console.log(match.creatorId, match.opponentId, payload.winner);
+    this.server.to(match.id).emit('player-wins', { winner, winnerScore, loserScore });
+    
     let creatorScore : any = null;
     let opponentScore : any = null;
     if (match) {
       if (match.creatorId === payload.winner) {
-        console.log('player 1 wins');
         winner = match.creatorId;
         creatorScore = payload.winnerscore;
         opponentScore = payload.loserscore; 
       } else {
-        console.log('player 2 wins');
         winner = match.opponentId;
         opponentScore = payload.winnerscore;
         creatorScore = payload.loserscore;
       }
       winnerScore = payload.winnerscore;
       loserScore = payload.loserscore;
+
       await this.gameService.submitScore(match.id, creatorScore, opponentScore);
-      this.server.to(match.id).emit('player-wins', { winner, winnerScore, loserScore });
+
+      this.socketMap.get(match.creatorId).forEach(socket => {
+        socket.leave(match.id);
+      });
+      this.socketMap.get(match.opponentId).forEach(socket => {
+        socket.leave(match.id);
+      });
     }
   }
 
@@ -207,16 +198,13 @@ export class GameGateway implements OnGatewayConnection, OnGatewayDisconnect {
 async createMatch(client: Socket) {
   try {
     const token = client.handshake.headers.authorization?.split(" ")[1];
-    console.log("tokena at createMatch ",token);
     if (token) {
       const decoded: any = jwt_decode(token);
-      console.log('decoded token:', decoded);
       if (!decoded || !decoded.userId || !decoded.username) {
         throw new Error('Invalid token');
       }
       const userId = decoded.userId;
       const username = decoded.username;
-      console.log(`Client ${decoded.username} connected`);
       const newObject = {
         userId : userId,
         username: username,
