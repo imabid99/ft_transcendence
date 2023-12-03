@@ -30,11 +30,11 @@ const ContextProvider = ({ children }: { children: React.ReactNode; }) => {
   const dashboardRef = React.useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
+    if (getLocalStorageItem("Token")) {
+      setLoged(true);
+    }
+    if(loged === false) return;
     const getUser = async () => {
-      if (!getLocalStorageItem("Token")) {
-        router.push("/login");
-        return;
-      }
       try
       {
         const resp = await axiosInstance.get(`http://${process.env.NEXT_PUBLIC_APP_URL}:3000/api/user/userinfo`);

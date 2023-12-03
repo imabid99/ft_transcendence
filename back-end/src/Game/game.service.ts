@@ -284,9 +284,20 @@ export class GameService {
                     ],
                 },
                 orderBy: { createdAt: 'desc' },
-                // include profile.avatar
                 include: {
-                    creator: { select: { profile: true } }, opponent: { select: { profile: true } } }
+                    creator: { select: { profile: {
+                        select: {
+                            firstName: true,
+                            lastName: true,
+                            avatar: true,
+                        }
+                    }} }, opponent: { select: { profile: {
+                        select: {
+                            firstName: true,
+                            lastName: true,
+                            avatar: true,
+                        }
+                    } } } }
             });
             console.log("this is the matchHistory ", matchHistory);
             return matchHistory;
