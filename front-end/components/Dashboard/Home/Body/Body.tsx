@@ -87,7 +87,7 @@ export default function Body({ leaderRef, handelShaw }: Props) {
     const firstavatar = `http://${process.env.NEXT_PUBLIC_APP_URL}:3000/${leaderboard?.first?.avatar}`;
     const secondavatar = `http://${process.env.NEXT_PUBLIC_APP_URL}:3000/${leaderboard?.second?.avatar}`;
     const thirdavatar = `http://${process.env.NEXT_PUBLIC_APP_URL}:3000/${leaderboard?.third?.avatar}`;
-    console.log("this is the avatar",thirdavatar);
+    console.log("this is the avatar hahahahahaha ",thirdavatar);
     return (
         <div className="flex flex-col 3xl:flex-row items-center w-[100%]  h-screen">
             <div className="flex items-center flex-col 3xl:flex-row gap-[40px] 3xl:gap-[150px] w-[100%]  justify-center ">
@@ -231,7 +231,7 @@ export default function Body({ leaderRef, handelShaw }: Props) {
             lg:max-2xl:gap-[50px] lg:max-2xl:justify-start lg:max-2xl:items-start  min-w-[371px] w-full 3xl:w-fit max-w-[1224px]
             '>
                 {/* <RightSide> */}
-                <div className="leaderboard w-full 3xl:w-[371px] h-[396px] bg-white">
+                <div className="leaderboard w-full 3xl:w-[371px] h-[396px] bg-white z-20">
 
                     <div className=" flex  items-center justify-between pt-[35px] px-[30px]">
                         <span className="flex items-center gap-[10px]">
@@ -246,21 +246,24 @@ export default function Body({ leaderRef, handelShaw }: Props) {
                     </div>
                     <div className="flex justify-center items-end gap-[2px]  h-[calc(100%-56px)] overflow-hidden">
                         <div className="flex flex-col items-center justify-center gap-[10px]">
+                        {leaderboard?.second?.avatar && (
                             <span className="flex flex-col items-center justify-center gap-[10px] relative">
                                 <img src={secondavatar} alt="" className=" w-[80px] h-[80px] rounded-full object-cover shadow-4xl" />
                                 <p className="text-[10px] font-[700] font-[Poppins] text-[#6C8BD8]">
-                                   {leaderboard?.second?.username}
+                                    {leaderboard?.second?.username}
                                 </p>
                                 <span className="absolute top-[0px] right-[0px] w-[18px] h-[18px] rounded-full bg-[#6C8BD8] text-[10px] font-[400] font-[Poppins] text-[#FFF] flex justify-center items-center
                                 outline outline-[2px] outline-[#FFF]
                                 "
                                 >2</span>
                             </span>
+                            )}
                             <div className="min-w-[90px] h-[151px] rounded-t-[20px] bg-[#338AC8]" />
                         </div>
                         <div className="flex flex-col items-center justify-center">
                             <img src="/crown.svg" alt="" className="w-[25px]" />
                             <div className="flex flex-col items-center justify-center gap-[10px]">
+                            {leaderboard?.first?.avatar && (
                                 <span className="flex flex-col items-center justify-center gap-[10px] relative">
                                     <img src={firstavatar} alt="" className=" w-[80px] h-[80px] rounded-full object-cover shadow-4xl" />
                                     <p className="text-[10px] font-[700] font-[Poppins] text-[#6C8BD8]">
@@ -271,10 +274,12 @@ export default function Body({ leaderRef, handelShaw }: Props) {
                                 "
                                 >1</span>
                                 </span>
+                                )}
                                 <div className="min-w-[90px] h-[198px] rounded-t-[20px] bg-[#004A8B] opacity-[0.8] shadow-5xl" />
                             </div>
                         </div>
                         <div className="flex flex-col items-center justify-center gap-[10px]">
+                        {leaderboard?.third?.avatar && (
                             <span className="flex flex-col items-center justify-center gap-[10px] relative">
                                 <img src={thirdavatar} alt="" className=" w-[80px] h-[80px] rounded-full object-cover shadow-4xl" />
                                 <p className="text-[10px] font-[700] font-[Poppins] text-[#6C8BD8]">
@@ -285,8 +290,10 @@ export default function Body({ leaderRef, handelShaw }: Props) {
                                 "
                                 >3</span>
                             </span>
+                            )}
                             <div className="min-w-[90px] h-[124px] rounded-t-[20px] bg-[#4cc0edb8] shadow-6xl" />
                         </div>
+                          
                     </div>
                 </div>
                 {/* </RightSide> */}

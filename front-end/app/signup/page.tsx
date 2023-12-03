@@ -27,6 +27,7 @@ export default function Home() {
     lastName: "",
     userName: "",
     email: "",
+    avatar: "/nouser.avif",
   });
 
 
@@ -36,6 +37,7 @@ export default function Home() {
     userName: string;
     email: string;
     password: string;
+    avatar: string;
   };
 
   const form = useForm<FormValues>({ mode: "all" });
@@ -49,6 +51,7 @@ export default function Home() {
           userName: data.userName,
           email: data.email,
           password: data.password,
+          avatar: "/nouser.avif",
         });
   }
 

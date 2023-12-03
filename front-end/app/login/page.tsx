@@ -44,9 +44,11 @@ export default function Home() {
       });
       <Toaster position="top-right" richColors />
 
-        toast.error(response.data.message);
-
-      console.log("hello world : ", response.data);
+        // toast.error(response?.data?.message);
+        if (response?.data?.message) {
+          toast.error(response.data.message);
+        }
+      console.log("hello world : ", response.data.message);
       setJwtToken(response.data);
       } catch (e:any) 
       {
@@ -152,7 +154,7 @@ export default function Home() {
     
     <>
     {showTwoFa && <TwoFa jwtToken={jwtToken}/>}
-    {<div className="h-[100vh] w-[100%] flex justify-around items-center bgImg bg-no-repeat bg-cover bg-center " style={{backgroundImage: 'url("backfilter.svg")'}}> 
+    {<div className="h-[100vh] w-[100%] flex justify-around items-center bgImg bg-no-repeat bg-cover bg-center " style={{backgroundImage: 'url("/backfilter.svg")'}}> 
     <div className=" w-[100vw]  h-full bg-blue-200 bg-opacity-0 backdrop-blur-[7px] flex flex-row items-center justify-center md:w-11/12 md:max-h-[735px] md:rounded-[61px] xl:max-w-[1404px] xl:mx-auto">
       <div className="w-[100%] flex flex-col items-center justify-center xl:w-[30%] py-[50px]">
       <div className="font-[600] text-[40px] text-white sm:text-[66px]">
@@ -162,13 +164,13 @@ export default function Home() {
           Let The Fun Begin.
         </div>
         <div className="flex flex-col pt-[20px] gap-[16px] sm:flex-row w-full items-center justify-center">
-          <button className="flex justify-evenly items-center w-[170px] h-[52px] border-[0.1px] rounded-[11px] border-white cursor-pointer">
+          <button className="flex justify-evenly items-center w-[170px] h-[52px] border-[0.1px] rounded-[11px] border-white cursor-pointer hover:bg-white hover:bg-opacity-10">
             <img src="goog.svg" alt="" className="w-[20.153px] h-[20.56px]" />
             <p className="text-white text-[10px] font-[400] cursor-pointer">
               Log in with google 
             </p>
           </button>
-          <button className="flex justify-evenly items-center w-[170px] h-[52px] border-[0.1px] rounded-[11px] border-white cursor-pointer"
+          <button className="flex justify-evenly items-center w-[170px] h-[52px] border-[0.1px] rounded-[11px] border-white cursor-pointer hover:bg-white hover:bg-opacity-10"
           onClick={() => {
             // setLogInAnimation(true);
             // signIn('42');
@@ -227,7 +229,7 @@ export default function Home() {
         <div className="flex flex-row items-center gap-[2px] pt-[24px]">
         <p className="text-white text-[14px] font-[300] sm:text-[18.963px]">
         Don’t have an account?
-              <Link href="/signup" className='text-[#eee] text-[14px] font-[400] sm:text-[18.963px] pl-[2px]' >
+          <Link href="/signup" className='text-[#eee] text-[14px] font-[400] sm:text-[18.963px] pl-[2px]' >
             Sign Up
           </Link>
         </p>
