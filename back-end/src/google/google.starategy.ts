@@ -24,15 +24,13 @@ export class GoogleStrategy extends PassportStrategy(Strategy, "google") {
   ): Promise<any> {
     const { id, username, emails, name } = profile;
     const userData = {
-      googleId: id,
+      oauthid : id.toString(),
       username,
       email: emails[0].value,
       firstName: name.givenName,
       lastName: name.familyName,
       avatar: profile.photos[0].value,
     };
-    console.log("this is profile :", profile);
-    // const user = await this.authService.validateGoogleUser(userData);
-    return done(null, userData);
+    return await this.authService.logicAuth(userData);
   }
 }

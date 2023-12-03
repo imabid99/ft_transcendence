@@ -23,18 +23,15 @@ export class FortyTwoStrategy extends PassportStrategy(Strategy, "42") {
     profile: any,
     done: any
   ): Promise<any> {
-    const { username, emails, name , _json} = profile;
+    const {id , username, emails, name , _json} = profile;
     const userData = {
+      oauthid: id.toString(),
       username,
       email: emails[0].value,
       firstName: name.givenName,
       lastName: name.familyName,
       avatar: _json.image.link,
     };
-
-    const id = await this.authService.createTempUser(userData);
-    return id;
+    return await this.authService.logicAuth(userData);
   }
-
-  
 }

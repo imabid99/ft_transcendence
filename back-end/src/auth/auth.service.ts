@@ -14,6 +14,7 @@ import * as QRCode from "qrcode";
 import * as speakeasy from "speakeasy";
 import { v4 as uuidv4 } from "uuid";
 import { NotificationGateway } from "src/notification/gateway/notification.gateway";
+import { User } from "@prisma/client";
 
 @Injectable()
 export class AuthService {
@@ -191,19 +192,15 @@ export class AuthService {
     }
   }
 
-  async validateIntraUser(user: any): Promise<any> {
+  async validateOauthUser(user: any): Promise<any> {
     try {
-      const exist = await this.prisma.user.findUnique({
-        where: { email: user.email },
-      });
-      if (!exist) {
-        await this.prisma.user.create({
+        const usr = await this.prisma.user.create({
           data: {
             username: user.username,
             email: user.email,
-            id42: user.fortyTwoId,
+            oauthid: user.oauthid,
             twoFASecret: await this.generate2FASecret(user.username),
-            password: "42",
+            password: uuidv4(),
             profile: {
               create: {
                 firstName: user.firstName,
@@ -214,10 +211,10 @@ export class AuthService {
             },
           },
         });
-      }
-      return user;
+      this.deleteTempUser(user.oauthid);
+      return {token : this.userService.generateToken(usr.id, usr.username, usr.email)};
     } catch (error) {
-      console.log(error);
+      console.log("val oauth",error);
       throw error;
     }
   }
@@ -232,7 +229,7 @@ export class AuthService {
           data: {
             username: "user.username",
             email: user.email,
-            idGoogle: user.googleId,
+            oauthid: user.googleId,
             twoFASecret: await this.generate2FASecret(user.email),
             password: "google",
             profile: {
@@ -253,7 +250,7 @@ export class AuthService {
   }
 
   async createTempUser(data: any): Promise<string> {
-    const { email, firstName, lastName, username , avatar } = data;  
+    const { oauthid ,email, firstName, lastName, username , avatar } = data;  
     try {
       const exist = await this.prisma.tempUser.findUnique({ where: { email } });
       if (exist) {
@@ -261,10 +258,11 @@ export class AuthService {
       }
       const tempUser = await this.prisma.tempUser.create({
         data: {
-          email: email,
-          username: username,
-          firstName: firstName,
-          lastName: lastName,
+          oauthid,
+          email,
+          username,
+          firstName,
+          lastName,
           avatar,
         },
       });
@@ -291,7 +289,7 @@ export class AuthService {
     try {
       await this.prisma.tempUser.delete({
         where: {
-          id,
+          oauthid: id,
         },
       });
     } catch (error) {
@@ -299,5 +297,31 @@ export class AuthService {
     }
   }
 
+  async getUserByOauthId(id : string) : Promise<User>
+  {
+    try {
+
+      const user = await this.prisma.user.findUnique({
+        where: {
+          oauthid : id,
+        },
+      });
+      return user;
+    } catch (error) {
+      return error;
+    }
+  }
   
+  async logicAuth(usr :  any): Promise<any> {
+    try {
+      const user = await this.getUserByOauthId(usr.oauthid);
+      if (user)
+        return {type : "login" , token : await this.userService.generateToken(user.id, user.username, user.email)};
+      else
+        return {type : "signup" , token : await this.createTempUser(usr)}
+    } catch (error) {
+      return error;
+    }
+  }
 }
+

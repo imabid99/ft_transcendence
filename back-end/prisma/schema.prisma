@@ -25,8 +25,7 @@ enum MatchType {
 
 model User {
   id             String         @id @default(uuid())
-  id42           String?
-  idGoogle       String?
+  oauthid        String         @unique  @default("")
   email          String         @unique
   username       String         @unique @default("")
   password       String
@@ -54,6 +53,7 @@ model User {
 
 model tempUser {
   id        String @id @default(uuid())
+  oauthid   String @unique
   email     String @unique
   username  String?
   firstName String

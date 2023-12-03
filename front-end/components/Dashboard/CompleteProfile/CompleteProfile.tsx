@@ -15,6 +15,7 @@ import {
   use,
 } from 'react';
 import axiosInstance from '@/utils/axiosInstance';
+import { setLocalStorageItem } from '@/utils/localStorage';
 
 
 
@@ -61,15 +62,18 @@ export default function CompleteProfile({info, setInfo}:any) {
       try {
             if(info.type === "Oauth")
             {
-              const response = await axios.post(`http://${process.env.NEXT_PUBLIC_APP_URL}:3000/api/auth/signup`,{
+              console.log("this is info in oauth: ", info);
+              const response = await axios.post(`http://${process.env.NEXT_PUBLIC_APP_URL}:3000/api/auth/oauth2/createUser`,{
                 firstName: data.firstName,
                 lastName: data.lastName,
                 username: data.userName,
                 email : data.email,
                 avatar: info.avatar,
+                oauthid: info.oauthid,
               });
-              if (response.status !== 200) 
-                router.push('/login');
+              if (response.status !== 200)
+                setLocalStorageItem("Token", response.data.token);
+                router.push('/');
             }
             else{
               const response = await axios.post(`http://${process.env.NEXT_PUBLIC_APP_URL}:3000/api/auth/signup`,{
