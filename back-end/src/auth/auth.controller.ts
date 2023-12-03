@@ -43,14 +43,21 @@ export class authController {
   @Get("oauth2/42/callback")
   @UseGuards(AuthGuard("42"))
   Callback42(@Req() req, @Res() res) {
-    // console.log(req.user);
-    // return req.user;
-    res.redirect("http://localhost:1337/signup/validate/?token=" + req.user);
+    if (req.user.type === "login")
+      res.redirect("http://localhost:1337/login/validate/?token=" + req.user.token);
+    else
+      res.redirect("http://localhost:1337/signup/validate/?token=" + req.user.token);
   }
 
   @Get("oauth2/tempUser/:id")
   async tempUser(@Param("id") id:string): Promise<any> {
     return await this.authService.getTempUser(id);
+  }
+
+  @Post("oauth2/createUser")
+  async userCreate(@Req() req): Promise<any> {
+    // console.log(req.body);
+    return await this.authService.validateOauthUser(req.body);
   }
 
 
@@ -62,8 +69,11 @@ export class authController {
 
   @Get("oauth2/google/callback")
   @UseGuards(AuthGuard("google"))
-  CallbackGoogle(@Req() req,@Res() res): Promise<string> {
-    return this.userService.googleJWT(req.user.email);
+  CallbackGoogle(@Req() req,@Res() res) {
+    if (req.user.type === "login")
+      res.redirect("http://localhost:1337/login/validate/?token=" + req.user.token);
+    else
+      res.redirect("http://localhost:1337/signup/validate/?token=" + req.user.token);
   }
 
   @Get("2fa_qr")
