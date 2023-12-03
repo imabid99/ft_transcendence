@@ -15,16 +15,16 @@ import {
   use,
 } from 'react';
 import axiosInstance from '@/utils/axiosInstance';
+import { setLocalStorageItem } from '@/utils/localStorage';
 
 
 
 export default function CompleteProfile({info, setInfo}:any) {
   console.log("this is info ---------> : ", info);
-  const {profiles, user, socket}:any = useContext(contextdata);
-  const myProfile = profiles?.find((profile:any) => profile?.userId === user?.id);
-  const name = `${myProfile?.firstName} ${myProfile?.lastName}`;
-  const [avatarUrl, setAvatarUrl] = useState(info.avatar);
-  const [avatar, setUserData] = useState<File>();
+  const {setLoged}:any = useContext(contextdata);
+
+  const [avatarUrl, setAvatarUrl] = useState(`http://${process.env.NEXT_PUBLIC_APP_URL}:3000/${info?.avatar}`);
+  const [avatar, setUserData] = useState<any>();
   let user_data = new FormData();
     const router = useRouter();
     const [isloading, setIsLoading] = useState(true);
@@ -49,11 +49,6 @@ export default function CompleteProfile({info, setInfo}:any) {
     const {register, handleSubmit, formState } = form;
     const {errors, isDirty} = formState;
     const onSubmit = async (data: FormValues) => {
-      // user_data.append('firstName', data.firstName);
-      // user_data.append('lastName', data.lastName);
-      // user_data.append('username', data.userName);
-      // user_data.append('email', data.email);
-      // user_data.append('password', info.password);
       for (let pair of user_data.entries()) {
         console.log(pair[0]+ ', '+ pair[1]); 
       }
@@ -62,25 +57,31 @@ export default function CompleteProfile({info, setInfo}:any) {
         
             if(info.type === "Oauth")
             {
-              const response = await axios.post(`http://${process.env.NEXT_PUBLIC_APP_URL}:3000/api/auth/signup`,{
-                firstName: data.firstName,
-                lastName: data.lastName,
-                username: data.userName,
-                email : data.email,
-                avatar: info.avatar,
-              });
-              if (response.status !== 200) 
-                router.push('/login');
+              const formData = new FormData();
+              formData.append('file', avatar);
+              formData.append('firstName', data.firstName);
+              formData.append('lastName', data.lastName);
+              formData.append('username', data.userName);
+              formData.append('email', data.email);
+              formData.append('oauthid', info.oauthid);
+              formData.append('avatar', info.avatar);
+              console.log("this is info in oauth: ", info);
+              const response = await axios.post(`http://${process.env.NEXT_PUBLIC_APP_URL}:3000/api/auth/oauth2/createUser`,formData);
+              if (response.status !== 200)
+                setLocalStorageItem("Token", response.data.token);
+                setLoged(true);
+                router.push('/');
             }
             else{
-              const response = await axios.post(`http://${process.env.NEXT_PUBLIC_APP_URL}:3000/api/auth/signup`,{
-                firstName: data.firstName,
-                lastName: data.lastName,
-                username: data.userName,
-                email : data.email,
-                password: info.password,
-                file: avatar,
-              });
+              const formData = new FormData();
+              formData.append('file', avatar);
+              formData.append('firstName', data.firstName);
+              formData.append('lastName', data.lastName);
+              formData.append('username', data.userName);
+              formData.append('email', data.email);
+              formData.append('password', info.password);
+              console.log("this is formData : ", formData);
+              const response = await axios.post(`http://${process.env.NEXT_PUBLIC_APP_URL}:3000/api/auth/signup`,formData);
               if (response.status !== 200) 
                 router.push('/login');
             }
@@ -181,13 +182,13 @@ export default function CompleteProfile({info, setInfo}:any) {
     // user_data.delete('file');
     // user_data.append('file', file);
     // setUserData(formData);
-    setUserData(file);
     console.log("------> file : ", file);
+    setUserData(file);
     console.log("------> setUserData : ", avatar);
 
     setAvatarUrl(URL.createObjectURL(file));
 }
-  // const avatarUrl = `http://${process.env.NEXT_PUBLIC_APP_URL}:3000/${myProfile?.avatar}`;
+  // const avatarUrl = `http://${process.env.NEXT_PUBLIC_APP_URL}:3000/${info?.avatar}`;
 
     return (
         
