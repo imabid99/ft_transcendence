@@ -59,6 +59,7 @@ export default function CompleteProfile({info, setInfo}:any) {
       }
       console.log("this is user_data ahahah : ", avatar);
       try {
+        
             if(info.type === "Oauth")
             {
               const response = await axios.post(`http://${process.env.NEXT_PUBLIC_APP_URL}:3000/api/auth/signup`,{
