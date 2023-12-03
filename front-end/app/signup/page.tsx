@@ -28,7 +28,7 @@ export default function Home() {
     lastName: "",
     userName: "",
     email: "",
-    avatar: "/nouser.avif",
+    avatar: "uploads/default/nouser.avif",
     type: "default"
   });
 
@@ -55,7 +55,7 @@ export default function Home() {
           userName: data.userName,
           email: data.email,
           password: data.password,
-          avatar: "/nouser.avif",
+          avatar: "uploads/default/nouser.avif",
           type: "default"
         });
   }

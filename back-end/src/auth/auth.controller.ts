@@ -8,7 +8,9 @@ import {
   Redirect,
   Req,
   Res,
+  UploadedFile,
   UseGuards,
+  UseInterceptors,
 } from "@nestjs/common";
 import { AuthService } from "./auth.service";
 import { UserService } from "../user/user.service";
@@ -16,6 +18,8 @@ import { UserData } from "../dtos/user.dto";
 import { UserDataLogin } from "../dtos/user-login.dto";
 import { AuthGuard } from "@nestjs/passport";
 import { Response } from "express";
+import { FileInterceptor } from "@nestjs/platform-express";
+import { customStorage } from "./../upload/multer-config";
 
 @Controller("auth")
 export class authController {
@@ -28,9 +32,13 @@ export class authController {
   signin(@Body() userData: UserDataLogin) : Promise<any> {
     return this.authService.login(userData);
   }
+
   @Post("signup")
-  signup(@Body() userData: UserData) : Promise<any>{
-    return this.authService.addUser(userData);
+  @UseInterceptors(FileInterceptor("file", { storage: customStorage }))
+  signup(@Body() userData: UserData,   
+    @UploadedFile() file: Express.Multer.File,
+  ) : Promise<any>{
+    return this.authService.addUser(userData, file);
   }
 
   @Get("oauth2/42")
@@ -55,9 +63,10 @@ export class authController {
   }
 
   @Post("oauth2/createUser")
-  async userCreate(@Req() req): Promise<any> {
+  @UseInterceptors(FileInterceptor("file", { storage: customStorage }))
+  async userCreate(@Req() req,@UploadedFile() file: Express.Multer.File,): Promise<any> {
     // console.log(req.body);
-    return await this.authService.validateOauthUser(req.body);
+    return await this.authService.validateOauthUser(req.body,file);
   }
 
 
