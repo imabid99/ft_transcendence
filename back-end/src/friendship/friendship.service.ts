@@ -193,8 +193,9 @@ export class FriendshipService {
     // Deduplicate the friends by their id
     friends = friends.filter((friend, index, self) =>
       index === self.findIndex((t) => (t.userId === friend.userId)));
-
-    return friends;
+    const allUsersnames = friends.map(friend => friend.username);
+    console.log("allUsersnames is ", allUsersnames);
+    return allUsersnames;
   }
 
   async getRequests(userId: string) {
