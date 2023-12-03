@@ -37,6 +37,7 @@ export class GameGateway implements OnGatewayConnection, OnGatewayDisconnect {
   server: SocketIO.Server;
 
   private waitingPlayers: { username: string; userId : string ;client: Socket }[] = [];
+  private invite_waitingPlayers: { username: string; userId : string ;client: Socket }[] = [];
   private socketMap: Map<string, Socket[]> = new Map<string, Socket[]>();
 
   
@@ -210,10 +211,10 @@ async createMatch(client: Socket) {
         username: username,
         client: client,
       };
-      this.waitingPlayers.push(newObject);
-      if (this.waitingPlayers.length >= 2) {
-        const creator = this.waitingPlayers.shift();
-        const opponent = this.waitingPlayers.shift();
+      this.invite_waitingPlayers.push(newObject);
+      if (this.invite_waitingPlayers.length >= 2) {
+        const creator = this.invite_waitingPlayers.shift();
+        const opponent = this.invite_waitingPlayers.shift();
         if (creator.username !== opponent.username) {
           console.log(
             `Match started between ${creator.client.id} and ${opponent.client.id}`
@@ -228,7 +229,7 @@ async createMatch(client: Socket) {
             console.log('No match found for user: ', creator.userId);
           }
         } else {
-          this.waitingPlayers.unshift(opponent);
+          this.invite_waitingPlayers.unshift(opponent);
         }
       }
     } else {
@@ -243,22 +244,33 @@ async createMatch(client: Socket) {
     try {
       const token = client.handshake.headers.authorization?.split(" ")[1];
       const match = await this.gameService.getMatch(client.id);
-      console.log("the player has disconnected", client.id);
-      if (token && match) {
+      // console.log("the player has disconnected", client.id);
+      if(token)
+      {
         const user: any = jwt_decode(token);
-        this.server.to(match.id).emit('player-disconnected', { playerId: user.userId });
-        if (user && user.userId && this.socketMap.has(user.userId)) {
-          const sockets = this.socketMap.get(user.userId);
-          const index = sockets.indexOf(client);
-          if (index !== -1) {
-            sockets.splice(index, 1);
+
+        //Remove inactive players from waiting list
+        if (this.waitingPlayers.some(player => player.userId === user.userId)) {
+          this.waitingPlayers = this.waitingPlayers.filter(player => player.userId !== user.userId);}
+        if (this.invite_waitingPlayers.some(player => player.userId === user.userId)) {
+          this.invite_waitingPlayers = this.invite_waitingPlayers.filter(player => player.userId !== user.userId);}
+
+        if (match) {
+          this.server.to(match.id).emit('player-disconnected', { playerId: user.userId });
+          console.log("thethe ", user.userId);
+          if (user && user.userId && this.socketMap.has(user.userId)) {
+            const sockets = this.socketMap.get(user.userId);
+            const index = sockets.indexOf(client);
+            if (index !== -1) {
+              sockets.splice(index, 1);
+            }
+            if (sockets.length === 0) {
+              this.socketMap.delete(user.userId);
+            }
           }
-          if (sockets.length === 0) {
-            this.socketMap.delete(user.userId);
-          }
+          if(match.creatorScore !== 7 && match.opponentScore !== 7)
+            await this.gameService.deleteMatch(match.id);
         }
-        if(match.creatorScore !== 7 && match.opponentScore !== 7)
-          await this.gameService.deleteMatch(match.id);
       }
       } catch (e) {
         console.log("Error at descon", e);
