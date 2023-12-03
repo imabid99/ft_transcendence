@@ -31,9 +31,9 @@ export default function validateForm() {
                 lastName: response.data.lastName,
                 userName: response.data.username,
                 email: response.data.email,
-                password: response.data.password,
                 avatar: response.data.avatar,
-                token: token
+                token: token,
+                type: "Oauth",
             });
             // setAvatarUrl(`${response.data.avatar}`);
             setIsLoading(false);

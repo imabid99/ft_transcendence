@@ -16,6 +16,7 @@ import {
 } from "@/utils/localStorage";
 import { on } from "events";
 import Email from "next-auth/providers/email";
+import { type } from "os";
 
 
 export default function Home() {
@@ -28,7 +29,9 @@ export default function Home() {
     userName: "",
     email: "",
     avatar: "/nouser.avif",
+    type: "default"
   });
+
 
 
   type FormValues = {
@@ -38,6 +41,7 @@ export default function Home() {
     email: string;
     password: string;
     avatar: string;
+    type: string;
   };
 
   const form = useForm<FormValues>({ mode: "all" });
@@ -52,6 +56,7 @@ export default function Home() {
           email: data.email,
           password: data.password,
           avatar: "/nouser.avif",
+          type: "default"
         });
   }
 

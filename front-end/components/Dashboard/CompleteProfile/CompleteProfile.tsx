@@ -59,16 +59,30 @@ export default function CompleteProfile({info, setInfo}:any) {
       }
       console.log("this is user_data ahahah : ", avatar);
       try {
-          const response = await axios.post(`http://${process.env.NEXT_PUBLIC_APP_URL}:3000/api/auth/signup`,{
-            firstName: data.firstName,
-            lastName: data.lastName,
-            username: data.userName,
-            email : data.email,
-            password: info.password,
-            file: avatar,
-          });
-          if (response.status !== 200) 
-            router.push('/login');
+            if(info.type === "Oauth")
+            {
+              const response = await axios.post(`http://${process.env.NEXT_PUBLIC_APP_URL}:3000/api/auth/signup`,{
+                firstName: data.firstName,
+                lastName: data.lastName,
+                username: data.userName,
+                email : data.email,
+                avatar: info.avatar,
+              });
+              if (response.status !== 200) 
+                router.push('/login');
+            }
+            else{
+              const response = await axios.post(`http://${process.env.NEXT_PUBLIC_APP_URL}:3000/api/auth/signup`,{
+                firstName: data.firstName,
+                lastName: data.lastName,
+                username: data.userName,
+                email : data.email,
+                password: info.password,
+                file: avatar,
+              });
+              if (response.status !== 200) 
+                router.push('/login');
+            }
       } catch (e:any) 
       {
         console.log("Error : ", e.response.data);
