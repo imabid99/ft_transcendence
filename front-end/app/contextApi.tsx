@@ -30,11 +30,11 @@ const ContextProvider = ({ children }: { children: React.ReactNode; }) => {
   const dashboardRef = React.useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
+    if (getLocalStorageItem("Token")) {
+      setLoged(true);
+    }
+    if(loged === false) return;
     const getUser = async () => {
-      if (!getLocalStorageItem("Token")) {
-        router.push("/login");
-        return;
-      }
       try
       {
         const resp = await axiosInstance.get(`http://${process.env.NEXT_PUBLIC_APP_URL}:3000/api/user/userinfo`);
@@ -60,7 +60,7 @@ const ContextProvider = ({ children }: { children: React.ReactNode; }) => {
   }, [loged]);
 
   useEffect(() => {
-    if (!user ) {
+    if (!user || newSocket || notificationsocket) {
       return;
     }
     newSocket = io(`http://${process.env.NEXT_PUBLIC_APP_URL}:3000/chat`, {
@@ -73,8 +73,6 @@ const ContextProvider = ({ children }: { children: React.ReactNode; }) => {
         Authorization: `Bearer ${getLocalStorageItem("Token")}`,
       }
     });
-    console.log("newSocket : ", newSocket);
-    console.log("notificationsocket : ", notificationsocket);
     if (newSocket) {
       setSocket(newSocket);
     }
@@ -191,10 +189,7 @@ const ContextProvider = ({ children }: { children: React.ReactNode; }) => {
 	}, [user]);
 	useEffect(() => {
 	  if (!notifSocket) return;
-
-		console.log("notifSocket : ", notifSocket);
 		notifSocket.on('notification', (payload:any) => {
-			console.log("payload : ", payload);
 			setMyNotif((prev:any) => [...prev, payload]);
 			setTimeout(() => {
 			setMyNotif([]);
@@ -207,7 +202,8 @@ const ContextProvider = ({ children }: { children: React.ReactNode; }) => {
 		return () => {
 			setMyNotif([]);
 			notifSocket.off('notification');
-      notifSocket.disconnect();  
+      notifSocket.off('redirect');
+      notifSocket?.disconnect();
 		}
 	}
 	, [notifSocket]);

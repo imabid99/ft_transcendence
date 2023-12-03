@@ -2,6 +2,7 @@ import {
   Body,
   Controller,
   Get,
+  Param,
   Patch,
   Post,
   Redirect,
@@ -38,11 +39,20 @@ export class authController {
     return;
   }
 
+
   @Get("oauth2/42/callback")
   @UseGuards(AuthGuard("42"))
-  Callback42(@Req() req): Promise<string> {
-    return this.userService.intraJWT(req.user.email);
+  Callback42(@Req() req, @Res() res) {
+    // console.log(req.user);
+    // return req.user;
+    res.redirect("http://localhost:1337/signup/validate/?token=" + req.user);
   }
+
+  @Get("oauth2/tempUser/:id")
+  async tempUser(@Param("id") id:string): Promise<any> {
+    return await this.authService.getTempUser(id);
+  }
+
 
   @Get("oauth2/google")
   @UseGuards(AuthGuard("google"))

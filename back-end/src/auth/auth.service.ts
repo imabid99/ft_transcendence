@@ -217,7 +217,8 @@ export class AuthService {
       }
       return user;
     } catch (error) {
-      throw new InternalServerErrorException("Internal server error");
+      console.log(error);
+      throw error;
     }
   }
 
@@ -250,4 +251,53 @@ export class AuthService {
       throw new InternalServerErrorException("Internal server error");
     }
   }
+
+  async createTempUser(data: any): Promise<string> {
+    const { email, firstName, lastName, username , avatar } = data;  
+    try {
+      const exist = await this.prisma.tempUser.findUnique({ where: { email } });
+      if (exist) {
+        return exist.id;
+      }
+      const tempUser = await this.prisma.tempUser.create({
+        data: {
+          email: email,
+          username: username,
+          firstName: firstName,
+          lastName: lastName,
+          avatar,
+        },
+      });
+      return tempUser.id;
+    } catch (error) {
+      return error;
+    }
+  }
+
+  async getTempUser(id: string): Promise<any> {
+    try {
+      const tempUser = await this.prisma.tempUser.findUnique({
+        where: {
+          id,
+        },
+      });
+      return tempUser;
+    } catch (error) {
+      return error;
+    }
+  }
+
+  async deleteTempUser(id: string): Promise<any> {
+    try {
+      await this.prisma.tempUser.delete({
+        where: {
+          id,
+        },
+      });
+    } catch (error) {
+      return error;
+    }
+  }
+
+  
 }

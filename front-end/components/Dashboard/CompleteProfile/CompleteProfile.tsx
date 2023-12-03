@@ -18,12 +18,12 @@ import axiosInstance from '@/utils/axiosInstance';
 
 
 
-export default function CompleteProfile({info}:any) {
-  // console.log("this is info : ", info);
+export default function CompleteProfile({info, setInfo}:any) {
+  console.log("this is info ---------> : ", info);
   const {profiles, user, socket}:any = useContext(contextdata);
   const myProfile = profiles?.find((profile:any) => profile?.userId === user?.id);
   const name = `${myProfile?.firstName} ${myProfile?.lastName}`;
-  const [avatarUrl, setAvatarUrl] = useState("/nouser.avif");
+  const [avatarUrl, setAvatarUrl] = useState(info.avatar);
   const [avatar, setUserData] = useState<File>();
   let user_data = new FormData();
     const router = useRouter();
@@ -59,16 +59,30 @@ export default function CompleteProfile({info}:any) {
       }
       console.log("this is user_data ahahah : ", avatar);
       try {
-          const response = await axios.post(`http://${process.env.NEXT_PUBLIC_APP_URL}:3000/api/auth/signup`,{
-            firstName: data.firstName,
-            lastName: data.lastName,
-            username: data.userName,
-            email : data.email,
-            password: info.password,
-            file: avatar,
-          });
-          if (response.status !== 200) 
-            router.push('/login');
+            if(info.type === "Oauth")
+            {
+              const response = await axios.post(`http://${process.env.NEXT_PUBLIC_APP_URL}:3000/api/auth/signup`,{
+                firstName: data.firstName,
+                lastName: data.lastName,
+                username: data.userName,
+                email : data.email,
+                avatar: info.avatar,
+              });
+              if (response.status !== 200) 
+                router.push('/login');
+            }
+            else{
+              const response = await axios.post(`http://${process.env.NEXT_PUBLIC_APP_URL}:3000/api/auth/signup`,{
+                firstName: data.firstName,
+                lastName: data.lastName,
+                username: data.userName,
+                email : data.email,
+                password: info.password,
+                file: avatar,
+              });
+              if (response.status !== 200) 
+                router.push('/login');
+            }
       } catch (e:any) 
       {
         console.log("Error : ", e.response.data);
@@ -177,7 +191,7 @@ export default function CompleteProfile({info}:any) {
     return (
         
         <>
-  <div className="h-[100vh] w-[100%] flex justify-around items-center bgImg bg-no-repeat bg-cover bg-center " style={{backgroundImage: 'url("backfilter.svg")'}}> 
+  <div className="h-[100vh] w-[100%] flex justify-around items-center bgImg bg-no-repeat bg-cover bg-center " style={{backgroundImage: 'url("/backfilter.svg")'}}> 
     <div className=" w-[100vw]  h-full bg-blue-200 bg-opacity-0 backdrop-blur-[7px] flex flex-row items-center justify-center md:w-11/12 md:max-h-[735px] md:rounded-[61px] xl:max-w-[1404px] xl:mx-auto">
       <div className="w-[100%] flex flex-col items-center justify-center xl:w-[30%] py-[50px]">
         <div className='relative pb-[30px]'>
@@ -194,7 +208,7 @@ export default function CompleteProfile({info}:any) {
                     htmlFor="upload"
                     className="absolute top-[20px] cursor-pointer "
                     >
-                    <img id="imageUpload" src="group-70.svg" className="transform hover:scale-125 transition-transform duration-300" />
+                    <img id="imageUpload" src="/group-70.svg" className="transform hover:scale-125 transition-transform duration-300" />
                     </label>
                     <input
                     name="avatar"
@@ -258,8 +272,8 @@ export default function CompleteProfile({info}:any) {
     
       </div>
       <div className="xl:block hidden relative">
-        <img src="Frame 101-PhotoRoom.png" alt="" className=" relative mt-[-112px] ml-[60px]" />
-        <img src="heroball.png" alt="" className="mt-[-200px] ml-[60px]  top-[440px] left-[45px] animateball absolute" />
+        <img src="/Frame 101-PhotoRoom.png" alt="" className=" relative mt-[-112px] ml-[60px]" />
+        <img src="/heroball.png" alt="" className="mt-[-200px] ml-[60px]  top-[440px] left-[45px] animateball absolute" />
       </div>
     </div>
   </div>

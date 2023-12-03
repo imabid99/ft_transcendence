@@ -25,7 +25,7 @@ export default function  LeftSide() {
 	}
 	return (
 		<>	
-			<div className="chat__left w-[450px]  bg-[#FFF] border-r-[1px] relative overflow-hidden lg:max-xl:w-[350px] lsm:max-lg:w-full"
+			<div className="chat__left w-[450px]  bg-[#FFF] border-r-[1px] relative overflow-hidden lg:max-xl:w-[350px] lsm:max-lg:w-full no-scrollbar"
 				onMouseLeave={() => {
 					setShowModal(false)
 				}}

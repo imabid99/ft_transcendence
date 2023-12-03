@@ -28,10 +28,11 @@ export default function Page() {
   const [group, setGroup] = useState<any>(null);
   const infoRef = useRef<HTMLInputElement | null>(null);
   const inputRef = useRef<HTMLInputElement | null>(null);;
+  const [myBlockList, setMyBlockList] = useState<any>();
   const {user, profiles, socket} :any= useContext(contextdata);
   
   const getAvatar = (id: number) => {
-    const profile = profiles.find((profile:any) => profile.userId === id);
+    const profile = profiles?.find((profile:any) => profile.userId === id);
     if (profile) {
       return profile.avatar;
     }
@@ -39,9 +40,26 @@ export default function Page() {
   }
 
   useEffect(() => {
+    if (!user) return;
+    async function getBlockList() {
+      try {
+        const res = await axiosInstance.get(`http://${process.env.NEXT_PUBLIC_APP_URL}:3000/api/friendship/blocked`);
+        setMyBlockList(res.data);
+        console.log("myBlockList : ", res.data);
+      } catch (err) {
+        console.log(err);
+      }
+    }
+    getBlockList();
+  }
+  , [user]);
+
+  useEffect(() => {
+    if(myBlockList === null) return;
     async function getgroup() {
       try {
         const res = await axiosInstance.get(`http://${process.env.NEXT_PUBLIC_APP_URL}:3000/api/chat/channel/${msgId}`);
+
         setGroup(res.data);
         setMessages(res.data.channel.Messages);
         setMember(true);
@@ -54,30 +72,45 @@ export default function Page() {
     return () => {
       setGroup(null);
     }
-  }, []);
+  }, [myBlockList]);
+
 
   useEffect(() => {
-    if( !socket) return;
+    if( !socket || myBlockList == null) return;
     socket.on('message-to-group', (payload:any) => {
       if (payload.groupId !== msgId) return;
+      if (myBlockList?.includes(payload.fromName))  return;
       const newMessage: Message = {
         fromName: payload.fromName,
         content: payload.content,
         createdAt: payload.createdAt,
         Avatar: payload.Avatar,
       };
-      console.log("newMessage: ", newMessage)
       if(messages?.length === 0)
         setMessages([newMessage])
       else
         setMessages((messages:any) => [...messages, newMessage]);
-      console.log(messages)
     });
+
+    socket.on("refresh",()=>{
+      async function getgroup() {
+        try {
+          const res = await axiosInstance.get(`http://${process.env.NEXT_PUBLIC_APP_URL}:3000/api/chat/channel/${msgId}`);
+  
+          setGroup(res.data);
+          setMember(true);
+        } catch (err) {
+          setMember(false);
+          console.log(err);
+        }
+      }
+      getgroup();
+    })
     
     return () => {
       socket.off('message-to-group');
     }
-  }, [socket]);
+  }, [socket,myBlockList]);
 
   const handleSubmit = (e: { preventDefault: () => void; }) => {
 		e.preventDefault();
@@ -130,6 +163,20 @@ export default function Page() {
   messages?.sort((a, b) => {
     return new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime()
   })
+  /*
+    filter messages from blocked users
+  */
+
+    // messages?.filter((message:Message) => {
+    //   if (myBlockList?.includes(message.fromName)) {
+    //     console.log("message from blocked user");
+    //     return false;
+    //   }
+    //   return true;
+    // }
+    // )
+
+
   return (
       <div className='message w-[calc(100%-450px)] min-h-full flex flex-col min-w-[490px] lg:max-xl:w-[calc(100%-350px)] lsm:max-lg:min-w-full '>
         {show && <div className='message__header__bg w-full h-full absolute top-0 left-0 z-[1]' onClick={() => setShow(false)}></div>}

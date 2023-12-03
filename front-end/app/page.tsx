@@ -25,9 +25,6 @@ export default function Page() {
   if (isloading) {
     return <Loading />;
   }
-  
-
-
   return (
     <Reload>
         <Dashboard path='Home'/>

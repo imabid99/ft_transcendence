@@ -29,7 +29,7 @@ const Game = () => {
 		<div className="w-full h-full flex justify-center items-center">
 			<div className="absolute top-0 left-0 w-full h-full  overflow-hidden">
 				<video
-						src="Europa Official Game Reveal Trailer.mp4"
+						src="/Europa Official Game Reveal Trailer.mp4"
 						autoPlay={true}
 						muted={true}
 						loop={true}  
