@@ -56,17 +56,22 @@ export class NotificationGateway implements OnGatewayConnection, OnGatewayDiscon
   }
 
   sendNotification(id: string, data: any) {
-    this.socketMap.get(id).forEach(socket => {
-      socket.emit('notification', {
-        type: data.type,
-        message: data.message,
+    try {
+      this.socketMap.get(id).forEach(socket => {
+        socket.emit('notification', {
+          type: data.type,
+          message: data.message,
+        });
+        socket.emit("reload");
       });
-      socket.emit("reload");
-    });
+    } catch (error) {
+      // console.log("error is ", error);
+    }
   }
 
 
   sendNotification_redirect(id: string, data: any) {
+    try {
     this.socketMap.get(id).forEach(socket => {
       socket.emit('notification', {
         type: data.type,
@@ -74,29 +79,41 @@ export class NotificationGateway implements OnGatewayConnection, OnGatewayDiscon
       });
       socket.emit("redirect", { link : data.link });
     });
+  } catch (error) {
+    // console.log("error is ", error);
+  }
   }
   
   sendNotification_refresh(id: string, data: any) {
-    this.socketMap.get(id).forEach(socket => {
-      this.sendRefresh();
-      socket.emit('notification', {
-        type: data.type,
-        message: data.message,
+    try {
+      this.socketMap.get(id).forEach(socket => {
+        this.sendRefresh();
+        socket.emit('notification', {
+          type: data.type,
+          message: data.message,
+        });
       });
-    });
+    } catch (error) {
+      // console.log("error is ", error);
+    }
   }
 
   sendNotification_v2(id: string, data: any) {
-    this.socketMap.get(id).forEach(socket => {
-      socket.emit('notification', {
-        type: data.type,
-        message: data.message,
+    try {
+
+      this.socketMap.get(id).forEach(socket => {
+        socket.emit('notification', {
+          type: data.type,
+          message: data.message,
+        });
+        socket.emit("reload");
+        setTimeout(() => {
+          socket.emit("refresh");
+        } , 500);
       });
-      socket.emit("reload");
-      setTimeout(() => {
-        socket.emit("refresh");
-      } , 500);
-    });
+    } catch (error) {
+      // console.log("error is ", error);
+    }
   }
 
   sendRefresh() {

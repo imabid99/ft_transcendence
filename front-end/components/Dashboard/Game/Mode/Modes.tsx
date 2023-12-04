@@ -18,7 +18,7 @@ const Modes = ({setShow, onModeChange}:props) => {
     return (
         <>
 
-        <div className=" w-full h-full lg:w-[100%] max-w-[1370px] xl:h-[830px] xl:rounded-[100px] backdrop-blur-[10px] backSh flex gap-[15px] lg:gap-[72px] flex-col items-center justify-center">
+        <div className=" w-full h-full backdrop-blur-[10px] backSh flex gap-[15px] lg:gap-[72px] flex-col items-center justify-center">
             <div className="w-full flex justify-center pt-[2px] lg:pt-[24px]">
             <img src="king.svg" alt="" className="h-[155px] lg:h-[255px]"/>
             </div>

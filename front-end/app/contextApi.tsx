@@ -160,7 +160,7 @@ const ContextProvider = ({ children }: { children: React.ReactNode; }) => {
         const getFriends = async () => {
             try{
                 const res = await axiosInstance.get(`http://${process.env.NEXT_PUBLIC_APP_URL}:3000/api/friendship/show`);
-                console.log("myFrinds : ", res.data);
+                // console.log("myFrinds : ", res.data);
                 setMyFriends(res.data);
             }
             catch(err){

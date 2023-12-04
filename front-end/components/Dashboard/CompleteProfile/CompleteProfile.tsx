@@ -54,6 +54,7 @@ export default function CompleteProfile({info, setInfo}:any) {
       }
       console.log("this is user_data ahahah : ", avatar);
       try {
+        
             if(info.type === "Oauth")
             {
               const formData = new FormData();

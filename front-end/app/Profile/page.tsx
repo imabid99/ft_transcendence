@@ -74,7 +74,7 @@ export default function Page() {
     const coverUrl = `http://${process.env.NEXT_PUBLIC_APP_URL}:3000/${myProfile?.cover}`;
     return (
         <div className='flex items-center  flex-col  gap-[80px] 3xl:gap-0 w-[100%] justify-start  3xl:px-[30px]  '>
-            <Header/>
+        <Header/>
         <div className="flex items-center flex-col 3xl:flex-row gap-[40px] w-[100%] 3xl:justify-center h-full z-[10]">
             <div className=" flex max-w-[922px] w-11/12 xl:h-[823px] rounded-[42px] sh-d bg-white">
             <div className="mx-auto w-11/12 mt-[34px] 3xl:w-[915px] 3xl:px-[40px]">
@@ -313,39 +313,39 @@ export default function Page() {
                 ))} */}
 
                 <div className="flex items-center  flex-col w-12/12 gap-[30px] lg:gap-0 pb-[30px]">
-                <div className="flex items-center justify-center  gap-[30px] flex-col sm:flex-row">
-                        <div className="transform hover:scale-110 transition-transform duration-300">
-                        <Image src={myProfile?.achievements?.ach1 ? "/ach1.svg" : "/ach1Lock.svg"}  alt="ach1"  width={197} height={220} loading="lazy"/>
+                        <div className="flex items-center justify-center  gap-[30px] flex-col sm:flex-row">
+                                <div className="transform hover:scale-110 transition-transform duration-300">
+                                <Image src={myProfile?.achievements?.ach1 ? "/ach1.svg" : "/ach1Lock.svg"}  alt="ach1"  width={197} height={220} loading="lazy"/>
+                                </div>
+                                <div className="transform hover:scale-110 transition-transform duration-300">
+                                <Image src={myProfile?.achievements?.ach2 ? "/ach2.svg" : "/ach2Lock.svg"}  alt="ach2"  width={197} height={220} loading="lazy"/>
+                                </div>
                         </div>
-                        <div className="transform hover:scale-110 transition-transform duration-300">
-                        <Image src={myProfile?.achievements?.ach2 ? "/ach2.svg" : "/ach2Lock.svg"}  alt="ach2"  width={197} height={220} loading="lazy"/>
+                        <div className="flex items-center justify-center gap-[30px] flex-col sm:flex-row">
+                            <div className="transform hover:scale-110 transition-transform duration-300">
+                            <Image src={myProfile?.achievements?.ach3 ? "/ach3.svg" : "/ach3Lock.svg"}  alt="ach3"  width={197} height={220} loading="lazy"/>
+                            </div>
+                            <div className="transform hover:scale-110 transition-transform duration-300">
+                            <Image src={myProfile?.achievements?.ach4 ? "/ach4.svg" : "/ach4Lock.svg"}  alt="ach4"  width={197} height={220} loading="lazy"/>
+                            </div>
+                            <div className="lg:block hidden transform hover:scale-110 transition-transform duration-300">
+                            <Image src={myProfile?.achievements?.ach5 ? "/ach5.svg" : "/ach5Lock.svg"}  alt="ach5"  width={197} height={220} loading="lazy"/>
+                            </div>
+                        </div>
+                        <div className="flex items-center justify-center gap-[30px] flex-col sm:flex-row">
+                            <div className="transform hover:scale-110 transition-transform duration-300">
+                            <Image src={myProfile?.achievements?.ach6 ? "/ach6.svg" : "/ach6Lock.svg"}  alt="ach6"  width={197} height={220} loading="lazy"/>
+                            </div>
+                            <div className="transform hover:scale-110 transition-transform duration-300">
+                            <Image src={myProfile?.achievements?.ach7 ? "/ach7.svg" : "/ach7Lock.svg"}  alt="ach7"  width={197} height={220} loading="lazy"/>
+                            </div>
+                        </div>
+                        <div>
+                            <div className="pb-[30px] block lg:hidden transform hover:scale-110 transition-transform duration-300">
+                            <Image src={myProfile?.achievements?.ach5 ? "/ach5.svg" : "/ach5Lock.svg"}  alt="ach5"  width={197} height={220} loading="lazy"/>
+                            </div>
                         </div>
                 </div>
-                <div className="flex items-center justify-center gap-[30px] flex-col sm:flex-row">
-                        <div className="transform hover:scale-110 transition-transform duration-300">
-                        <Image src={myProfile?.achievements?.ach3 ? "/ach3.svg" : "/ach3Lock.svg"}  alt="ach3"  width={197} height={220} loading="lazy"/>
-                        </div>
-                        <div className="transform hover:scale-110 transition-transform duration-300">
-                        <Image src={myProfile?.achievements?.ach4 ? "/ach4.svg" : "/ach4Lock.svg"}  alt="ach4"  width={197} height={220} loading="lazy"/>
-                        </div>
-                        <div className="lg:block hidden transform hover:scale-110 transition-transform duration-300">
-                        <Image src={myProfile?.achievements?.ach5 ? "/ach5.svg" : "/ach5Lock.svg"}  alt="ach5"  width={197} height={220} loading="lazy"/>
-                        </div>
-                    </div>
-                    <div className="flex items-center justify-center gap-[30px] flex-col sm:flex-row">
-                        <div className="transform hover:scale-110 transition-transform duration-300">
-                        <Image src={myProfile?.achievements?.ach6 ? "/ach6.svg" : "/ach6Lock.svg"}  alt="ach6"  width={197} height={220} loading="lazy"/>
-                        </div>
-                        <div className="transform hover:scale-110 transition-transform duration-300">
-                        <Image src={myProfile?.achievements?.ach7 ? "/ach7.svg" : "/ach7Lock.svg"}  alt="ach7"  width={197} height={220} loading="lazy"/>
-                        </div>
-                    </div>
-                    <div>
-                        <div className="pb-[30px] block lg:hidden transform hover:scale-110 transition-transform duration-300">
-                        <Image src={myProfile?.achievements?.ach5 ? "/ach5.svg" : "/ach5Lock.svg"}  alt="ach5"  width={197} height={220} loading="lazy"/>
-                        </div>
-                    </div>
-                    </div>
             </div>
             </div>
             </div>

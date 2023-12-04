@@ -112,7 +112,7 @@ export default function Body({ leaderRef, handelShaw }: Props) {
                         </Link>
                         </div>
                     </div>
-                    <div className="pr-[98px] xl:block hidden z-50">
+                    <div className="pr-[98px] xl:block hidden z-10">
                         <img
                             src="Frame 127.svg"
                             alt=""
