@@ -106,6 +106,23 @@ export class GameService {
                 ach7: achievements.ach7,
             },
         });
+        
+        let count = 0;
+        if (achievements.ach1) count++;
+        if (achievements.ach2) count++;
+        if (achievements.ach3) count++;
+        if (achievements.ach4) count++;
+        if (achievements.ach5) count++;
+        if (achievements.ach6) count++;
+        if (achievements.ach7) count++;
+
+        await this.prisma.profile.update({
+            where: { userId: profile.userId },
+            data: {
+                achcount: count,
+            },
+        });
+        
         return achievements;
     }
 
