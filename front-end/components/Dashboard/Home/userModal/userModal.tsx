@@ -6,11 +6,13 @@ type ModalRef = {
     name: string,
     username: string,
     avatar: string,
-    cover: string
+    cover: string,
+    wins: string,
+    rewards: string,
 }
 
 
-export default function UserModal ({modalRef, name, username, avatar, cover}: ModalRef) {
+export default function UserModal ({modalRef, name, username, avatar, cover, wins, rewards}: ModalRef) {
     return (
         <div className='modal-user absolute w-[270px] h-[292px]  bg-[#FFF] bottom-[0px] left-[75px] z-[55] rounded-[37px] translate-y-[300px] -translate-x-[85px] overflow-hidden  flex-col items-end justify-center hidden'
             ref={modalRef}>
@@ -36,9 +38,9 @@ export default function UserModal ({modalRef, name, username, avatar, cover}: Mo
                     </div>
                     <div className='flex gap-[20px] pb-[15px]'>
                         <span className='felx flex-col items-center justify-center'>
-                                <span className='flex items-center gap-[5px]'>
+                                <span className='flex items-center justify-center gap-[5px]'>
                                 <p className='text-[20px] font-[700] text-[#064A85]'>
-                                    25
+                                    {rewards}
                                 </p>  
                                 <span>
                                     <svg width="18" height="16" viewBox="0 0 18 16" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -51,10 +53,10 @@ export default function UserModal ({modalRef, name, username, avatar, cover}: Mo
                             </p>
                         </span>
                         <div className='line w-[1px] h-[52px] bg-[#537DA3]'></div>
-                        <span className='felx flex-col items-center justify-center'>
-                                <span className='flex items-center gap-[5px]'>
+                        <span className='felx flex-col items-center justify-center '>
+                                <span className='flex items-center justify-center gap-[5px]'>
                                 <p className='text-[20px] font-[700] text-[#064A85]'>
-                                    20
+                                    {wins}
                                 </p>  
                                 <span>
                                     <svg width="18" height="16" viewBox="0 0 18 16" fill="none" xmlns="http://www.w3.org/2000/svg">
