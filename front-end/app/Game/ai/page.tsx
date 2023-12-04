@@ -449,7 +449,7 @@ const PlayWithAI = () => {
         }
         setTimeout(() => {
           animationFrameId = requestAnimationFrame(goalCheck);
-        }, 20);
+        }, 30);
       };
 
       goalCheck();

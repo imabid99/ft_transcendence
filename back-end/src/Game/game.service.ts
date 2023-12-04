@@ -192,23 +192,24 @@ export class GameService {
                     randommatchcount: MatchType === "RANDOM" ? { increment: 1 } : { increment: 0 },
                 },
             });
+            
+            this.notificationGateway.apiInfo(winnerId,"You won the match")
+            this.notificationGateway.apiInfo(loserId,"You lost the match")
 
             let winner_prevcount = winnerProfile.achcount;
-            this.notificationGateway.apiInfo(winnerId,"You won the match")
+            await this.checkAchievements(updatedwinner);
             let winner_count = winnerProfile.achcount;
+            console.log(winner_count ,winner_prevcount)
             if(winner_count > winner_prevcount){
                 this.notificationGateway.apiInfo(winnerId,"You got a new achievement")
             }
 
             let loser_prevcount = loserProfile.achcount;
-            this.notificationGateway.apiInfo(loserId,"You lost the match")
+            await this.checkAchievements(updatedloser);
             let loser_count = loserProfile.achcount;
             if(loser_count > loser_prevcount){
                 this.notificationGateway.apiInfo(loserId,"You got a new achievement")
             }
-
-            await this.checkAchievements(updatedwinner);
-            await this.checkAchievements(updatedloser);
 
         } catch (error) {
             console.log("This is the ERROR  in submitScore ", error);
@@ -333,6 +334,11 @@ export class GameService {
     async getLeaderboard(): Promise<any> {
         try {
             const leaderboard = await this.prisma.profile.findMany({
+                where: {
+                    user : {
+                        deleted : false,
+                    }
+                },
                 orderBy: { points: 'desc' },
                 // select: {
                 //     userId: true,

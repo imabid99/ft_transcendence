@@ -29,7 +29,6 @@ import { v4 as uuidv4 } from 'uuid';
 })
 export class GameGateway implements OnGatewayConnection, OnGatewayDisconnect {
   constructor(
-    private prisma: PrismaService,
     private gameService: GameService
   ) {}
 
@@ -73,6 +72,7 @@ export class GameGateway implements OnGatewayConnection, OnGatewayDisconnect {
           this.socketMap.get(user.userId).push(client);
         }
         const matchtype_ = client.handshake.auth.matchType;
+        // console.log("HEYHEYHEY", client);
         if(matchtype_ === 'Random')
         {
           this.randomMatchmaking(client);
@@ -81,6 +81,7 @@ export class GameGateway implements OnGatewayConnection, OnGatewayDisconnect {
         {
           this.createMatch(client);
         }
+        // user.profile.status = 'ingame';
       }
     } catch (e) {
       console.log("error at con ", e);

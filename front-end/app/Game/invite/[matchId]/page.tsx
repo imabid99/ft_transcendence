@@ -467,58 +467,64 @@ useEffect(() => {
 	const Scoreboard = () => {
 		const [p1_count, setP1Count] = useState<number>(0);
 		const [p2_count, setP2Count] = useState<number>(0);
-
-		let animationFrameId: number | null = null;
-
+	
 		useEffect(() => {
+		  let animationFrameId: number | null = null;
+		  let lastPositionZ = 0;
+		
 		  const goalCheck = () => {
-			if (position.current.z > 10) {
+			const currentZ = position.current.z;
+		
+			if (currentZ > 10 && lastPositionZ <= 10) {
 			  setP1Count((prevCount) => prevCount + 1);
 			  position.current.z = 0;
-
 			}
-			if (position.current.z < -10) {
-				setP2Count((prevCount) => prevCount + 1);
-				position.current.z = 0;
+			if (currentZ < -10 && lastPositionZ >= -10) {
+			  setP2Count((prevCount) => prevCount + 1);
+			  position.current.z = 0;
 			}
-			setTimeout(() => {
-				animationFrameId = requestAnimationFrame(goalCheck);
-			}, 20);
+	
+			lastPositionZ = currentZ;
+		
+			animationFrameId = requestAnimationFrame(goalCheck);
 		  };
-
-		  goalCheck();
-
+		
+		  animationFrameId = requestAnimationFrame(goalCheck);
+		
 		  return () => {
 			if (animationFrameId !== null) {
 			  cancelAnimationFrame(animationFrameId);
 			}
 		  };
 		}, []);
-
+	
+	   
+	
 		useEffect(() => {
-			if(!user) return;
-			if(p1_count === 7 || p2_count === 7)
-			{
-				if(p2_count === 7 )
-				{
-				  console.log(user.userId, p1_count, p2_count);
-				  const payload = {winner: user?.profile.userId, winnerscore: p2_count, loserscore: p1_count};
-				  socket.emit('player-wins', payload)
-				}
-		
-				setP1Count(0);
-				setP2Count(0);
+		  // TODO CHANGE THE SCORE TO 5
+		  if (!user) return;
+		  if (p1_count === 7 || p2_count === 7) {
+			if (p2_count === 7) {
+			  // console.log(user?.profile.userId, p1_count, p2_count);
+			  const payload = {
+				winner: user?.profile.userId,
+				winnerscore: p2_count,
+				loserscore: p1_count,
+			  };
+			  socket.emit("player-wins", payload);
 			}
-
+	
+			setP1Count(0);
+			setP2Count(0);
+		  }
 		}, [p1_count, p2_count, user]);
-
+	
 		useEffect(() => {
-			socket.on("player-wins", (data: any) => {
-			  router.push('/Game');
-			});
+		  socket.on("player-wins", (data: any) => {
+			router.push('/Game');
+		  });
 		}, []);
-
-
+	
 		return (
 		  <>
 			<group>
@@ -547,7 +553,8 @@ useEffect(() => {
 			</group>
 		  </>
 		);
-	};
+	  };
+	  
 
 	// const [currentMap, setCurrentMap] = useState('Desert');
 
