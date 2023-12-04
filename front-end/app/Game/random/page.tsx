@@ -574,10 +574,11 @@ const Random = () => {
     }, []);
 
     useEffect(() => {
+      // TODO CHANGE THE SCORE TO 5
       if (!user) return;
       if (p1_count === 7 || p2_count === 7) {
         if (p2_count === 7) {
-          console.log(user?.profile.userId, p1_count, p2_count);
+          // console.log(user?.profile.userId, p1_count, p2_count);
           const payload = {
             winner: user?.profile.userId,
             winnerscore: p2_count,
@@ -585,12 +586,7 @@ const Random = () => {
           };
           socket.emit("player-wins", payload);
         }
-        // else
-        // {
-        //   console.log("Opponent Wins!", p1_count, p2_count);
-        //   const payload = {winner: "Opponent", winnerscore: p1_count, loserscore: p2_count};
-        //   socket.emit('player-wins', payload)
-        // }
+
         setP1Count(0);
         setP2Count(0);
       }
@@ -598,12 +594,6 @@ const Random = () => {
 
     useEffect(() => {
       socket.on("player-wins", (data: any) => {
-        // console.log(
-        //   "on ",
-        //   data.winner,
-        //   " Wins! with " + data.winnerScore + " - " + data.loserScore
-        // );
-        console.log("match ended")
         router.push('/Game');
       });
     }, []);

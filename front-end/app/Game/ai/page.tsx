@@ -7,10 +7,8 @@ import {
   SoftShadows,
   OrbitControls,
   RoundedBox,
-  Sparkles,
   Text,
 } from "@react-three/drei";
-import { useControls } from "leva";
 import { Perf } from "r3f-perf";
 import * as THREE from "three";
 import "../../globals.css";
@@ -19,7 +17,6 @@ import Model3 from "./model3";
 import Forest from "./forest";
 import Desert from "./desert";
 import Snow from "./snow";
-import { contextdata } from "../../contextApi";
 import {
   Physics,
   usePlane,
@@ -27,11 +24,10 @@ import {
   useSphere,
   Debug,
 } from "@react-three/cannon";
-import { is } from "@react-three/fiber/dist/declarations/src/core/utils";
-import { checkLoged, getLocalStorageItem } from "@/utils/localStorage";
+import { getLocalStorageItem } from "@/utils/localStorage";
 import { useRouter } from "next/navigation";
+import { Toaster, toast } from 'sonner';
 
-// map = snow, desert, forest; mode = friend, bot, random
 
 
 
@@ -44,39 +40,8 @@ const PlayWithAI = () => {
       setShosenMap(getLocalStorageItem("Maps"));
   }, []);
   const router = useRouter();
-  // const Controls = {
-  //   left: "left",
-  //   right: "right",
-  // };
-
-  // const map = useMemo(
-  //   () => [
-  //     { name: Controls.left, keys: ["ArrowLeft"], player: "player1" },
-  //     { name: Controls.right, keys: ["ArrowRight"], playerd: "player1" },
-  //     { name: Controls.left, keys: ["ArrowLeft"], player: "player2" },
-  //     { name: Controls.right, keys: ["ArrowRight"], player: "player2" },
-  //   ],
-  //   []
-  // );
-
-  // const router = useRouter();
-  // const [searchParams, { selectedMap }] = useSearchParams();
-  // const [searchParams] = useSearchParams();
-  // const params = new URLSearchParams(searchParams);
-  // const selectedMap = params.get('selectedMap');
-
-
-  // console.log("this is map lololololo", selectedMap);
-  // GUI CONTROLS
-  // 	const controls = useControls({});
-  //   const { sunPosition } = useControls("sky", {
-  // 	sunPosition: [-0.07, -0.03, -0.75],
-  //   });
-  // const { planecolor } = useControls("color", { planecolor: "#51b151" });
-  // const { floorcolor } = useControls("color", { floorcolor: "#1572ff" });
-  // const { paddlecolor } = useControls("color", { paddlecolor: "#abebff" });
-  // const { fogcolor } = useControls("color", { fogcolor: "#382f21" });
-  // const { fogfar } = useControls("color", { fogfar: 180 });
+  
+  
 
   function Plane(props: any) {
     const [ref, api] = usePlane(
@@ -103,11 +68,8 @@ const PlayWithAI = () => {
     );
   }
 
-  // const [MobileLeft, setMobileLeft] = useState(false);
-  // const [MobileRight, setMobileRight] = useState(false);
 
   function Player1Paddle(props: any) {
-    // console.log("P1START");
     const [ref, api] = useBox(
       () => ({
         mass: 0,
@@ -203,9 +165,7 @@ const PlayWithAI = () => {
           }
           const smoothingFactor = 0.4;
           paddleposX = paddleposX + (targetPosX - paddleposX) * smoothingFactor;
-          // setTimeout(() => {
           api.position.set(paddleposX, 0.5, 9);
-          // }, 5);
         }
         animationFrameId = requestAnimationFrame(updatePosition);
       };
@@ -239,7 +199,6 @@ const PlayWithAI = () => {
   }
 
   function Player2Paddle(props: any) {
-    // console.log("P2START");
     const [ref, api] = useBox(
       () => ({
         mass: 0,
@@ -276,24 +235,7 @@ const PlayWithAI = () => {
 
       window.addEventListener("keydown", handleKeyDown);
       window.addEventListener("keyup", handleKeyUp);
-      // api.position.set(position.current.x, 0.5, -9);
 
-      // const updatePosition = () => {
-      // 	// if (ref.current) {
-      // 	// 	// if (isMovingLeft) {
-      // 	// 	// 	targetPosX = Math.max(targetPosX - 0.5, -5);
-      // 	// 	// 	} else if (isMovingRight) {
-      // 	// 	// 		targetPosX = Math.min(targetPosX + 0.5, 5);
-      // 	// 	// 	}
-      // 	// 	// 	const smoothingFactor = 0.5;
-      // 	// 	// 	paddleposX = paddleposX + (targetPosX - paddleposX) * smoothingFactor;
-      // 	// 	// 	// api.position.set(paddleposX, 0.5, -9);
-      // 	// 	}
-
-      // 	requestAnimationFrame(updatePosition);
-      // };
-
-      // requestAnimationFrame(updatePosition);
 
       return () => {
         window.removeEventListener("keydown", handleKeyDown);
@@ -408,9 +350,7 @@ const PlayWithAI = () => {
       window.addEventListener("keyup", ServeUp);
       window.addEventListener("touchstart", handleTouchStart);
       window.addEventListener("touchend", handleTouchEnd);
-      // let khrjat = false;
       const serveball = () => {
-        // const value = Math.random() < 0.5 ? -10 : 10;
         const value = -5;
         if ((isServing || isServingmobile) && !hasServed) {
           api.applyImpulse([value * direction, 0, -10 * direction], [0, 0, 0]);
@@ -420,7 +360,6 @@ const PlayWithAI = () => {
           api.position.set(0, 0.35, 0);
           api.velocity.set(0, 0, 0);
           hasServed = false;
-          // khrjat = true;
         }
         if (speed.current.x < -10)
           api.velocity.set(-10, speed.current.y, speed.current.z);
@@ -430,8 +369,6 @@ const PlayWithAI = () => {
           api.velocity.set(speed.current.x, speed.current.y, 24);
         if (speed.current.z < -25)
           api.velocity.set(speed.current.x, speed.current.y, -24);
-        // if (!khrjat)
-        // 	console.log(speed.current);
         requestAnimationFrame(serveball);
       };
       requestAnimationFrame(serveball);
@@ -441,7 +378,6 @@ const PlayWithAI = () => {
         window.removeEventListener("keyup", ServeUp);
         window.removeEventListener("touchstart", handleTouchStart);
         window.removeEventListener("touchend", handleTouchEnd);
-        // socket.off('ballPosition');
       };
     }, []);
 
@@ -526,13 +462,15 @@ const PlayWithAI = () => {
     }, []);
 
     useEffect(() => {
+      <Toaster position="top-right"  richColors/>
       if (p1_count === 7 || p2_count === 7) {
-        // else
-        // {
-        //   console.log("Opponent Wins!", p1_count, p2_count);
-        //   const payload = {winner: "Opponent", winnerscore: p1_count, loserscore: p2_count};
-        //   socket.emit('player-wins', payload)
-        // }
+
+        if(p2_count === 7)
+          toast.info("You Win!");
+        else if(p1_count === 7)
+          toast.info("You Lose!");
+
+        router.push("/Game");
         setP1Count(0);
         setP2Count(0);
       }
@@ -568,33 +506,6 @@ const PlayWithAI = () => {
     );
   };
 
-  // const [currentMap, setCurrentMap] = useState('Desert');
-
-  // const switchMap = () => {
-  //   if (currentMap === 'Desert') {
-  // 	setCurrentMap('Forest');
-  //   } else if (currentMap === 'Forest') {
-  // 	setCurrentMap('Snow');
-  //   } else {
-  // 	setCurrentMap('Desert');
-  //   }
-  // };
-
-  // const MobileControls = () => {
-  //     return(
-  //       <div className="flex justify-between w-full absolute bottom-6 z-[10] ">
-  //         <button onClick={() => setMobileLeft(true)} className="bg-transparent border border-grey-500 hover:bg-blue-700 text-white font-bold py-5 px-5 rounded-full w-[140px] h-[140px] backdrop-blur-3xl opacity-50 text-6xl ml-3">
-  //           L
-  //         </button>
-  //         <button className="bg-transparent border border-grey-500 hover:bg-blue-700 text-white font-bold py-5 px-5 rounded-lg w-[70px] h-[50px] backdrop-blur-3xl opacity-50 flex items-center justify-center">
-  //           Serve
-  //         </button>
-  //         <button onClick={() => setMobileRight(true)} className="bg-transparent border border-grey-500 hover:bg-blue-700 text-white font-bold py-5 px-5 rounded-full w-[140px] h-[140px] backdrop-blur-3xl opacity-50 text-6xl mr-3">
-  //           R
-  //         </button>
-  //       </div>
-  //     );
-  // };
 
   if(!shosenMap)
   {
@@ -608,17 +519,8 @@ const PlayWithAI = () => {
         shadows
         camera={{ fov: 75, near: 0.1, far: 300, position: [0, 10, 20] }}
       >
-        {/*<Sparkles
-			count={2000}
-			speed={4}
-			opacity={1} 
-			color={ 0x00ffff }
-			size={Float32Array.from(Array.from({ length: 2000 }, () => Math.random() * (80 - 5) + 10))}
-			scale={250}
-			noise={1000}
-		/>*/}
 
-        {/* <Perf position="bottom-right" /> */}
+        <Perf position="bottom-right" />
         <ambientLight color={"#ffffff"} intensity={1} />
         <directionalLight
           position={[-0.04, 4.5, -4]}
@@ -643,11 +545,6 @@ const PlayWithAI = () => {
           <SideRock2 />
           {/* </Debug> */}
         </Physics>
-        {/* <mesh rotation-x={-Math.PI * 0.5} scale={[10, 10, 10]} position={[0, -0.1, 0]} receiveShadow> */}
-        {/* <planeGeometry args={[20, 20]} /> */}
-        {/* <circleGeometry args={[16, 50]} /> */}
-        {/* <meshStandardMaterial color={planecolor} /> */}
-        {/* </mesh> */}
         <mesh receiveShadow rotation-x={-Math.PI * 0.5} position-y={0.02}>
           <planeGeometry args={[20, 0.2]} />
           <meshStandardMaterial color={"#FFFFFF"} />
@@ -679,20 +576,12 @@ const PlayWithAI = () => {
           <planeGeometry args={[20, 0.1]} />
           <meshStandardMaterial color={"#FFFFFF"} />
         </mesh>
-        
-					{/* map == "forest" && <Forest/> 
-					map == "desert" && <Desert/>
-					map == "snow" && <Snow/> */}
-				
 
         {
           shosenMap === 'desert' ? <Desert /> :
           shosenMap === 'snow' ? <Snow /> :
           <Forest />
-      }
-        {/* <Forest/> */}
-        {/* <Desert /> */}
-        {/* <Snow/> */}
+        }
         <Scoreboard />
 
         <Sky sunPosition={[-0.07, -0.03, -0.75]} />
@@ -708,9 +597,7 @@ const PlayWithAI = () => {
           enablePan={false}
         />
         <SoftShadows />
-        {/* <fog attach="fog" color={fogcolor} near={1} far={fogfar} /> */}
       </Canvas>
-      {/* <button onClick={switchMap}>Switch Map</button> */}
     </div>
   );
 };

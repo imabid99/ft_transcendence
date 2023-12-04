@@ -505,12 +505,7 @@ useEffect(() => {
 				  const payload = {winner: user?.profile.userId, winnerscore: p2_count, loserscore: p1_count};
 				  socket.emit('player-wins', payload)
 				}
-				// else
-				// {
-				//   console.log("Opponent Wins!", p1_count, p2_count);
-				//   const payload = {winner: "Opponent", winnerscore: p1_count, loserscore: p2_count};
-				//   socket.emit('player-wins', payload)
-				// }
+		
 				setP1Count(0);
 				setP2Count(0);
 			}
@@ -518,9 +513,7 @@ useEffect(() => {
 		}, [p1_count, p2_count, user]);
 
 		useEffect(() => {
-			socket.on('player-wins', (data: any) => {
-				console.log("on ",data.winner, " Wins! with " + data.winnerScore + " - " + data.loserScore);
-			});
+			router.push('/Game');
 		}, []);
 
 		return (
