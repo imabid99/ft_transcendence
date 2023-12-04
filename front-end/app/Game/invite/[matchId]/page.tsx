@@ -83,9 +83,9 @@ useEffect(() => {
 
 	useEffect(() => {
 		if (!socket) return;
-			socket.on('player-disconnected', (data: any) => {
-				router.push('/Game');
-			});
+		socket.on('player-disconnected', (data: any) => {
+			router.push('/Game');
+		});
 	}, [socket]);
 
 
@@ -513,8 +513,11 @@ useEffect(() => {
 		}, [p1_count, p2_count, user]);
 
 		useEffect(() => {
-			router.push('/Game');
+			socket.on("player-wins", (data: any) => {
+			  router.push('/Game');
+			});
 		}, []);
+
 
 		return (
 		  <>

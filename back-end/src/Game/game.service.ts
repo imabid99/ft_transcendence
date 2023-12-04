@@ -192,9 +192,20 @@ export class GameService {
                     randommatchcount: MatchType === "RANDOM" ? { increment: 1 } : { increment: 0 },
                 },
             });
-            
+
+            let winner_prevcount = winnerProfile.achcount;
             this.notificationGateway.apiInfo(winnerId,"You won the match")
+            let winner_count = winnerProfile.achcount;
+            if(winner_count > winner_prevcount){
+                this.notificationGateway.apiInfo(winnerId,"You got a new achievement")
+            }
+
+            let loser_prevcount = loserProfile.achcount;
             this.notificationGateway.apiInfo(loserId,"You lost the match")
+            let loser_count = loserProfile.achcount;
+            if(loser_count > loser_prevcount){
+                this.notificationGateway.apiInfo(loserId,"You got a new achievement")
+            }
 
             await this.checkAchievements(updatedwinner);
             await this.checkAchievements(updatedloser);
