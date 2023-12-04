@@ -116,14 +116,14 @@ export class GameService {
         if (achievements.ach6) count++;
         if (achievements.ach7) count++;
 
-        await this.prisma.profile.update({
+        const updated = await this.prisma.profile.update({
             where: { userId: profile.userId },
             data: {
                 achcount: count,
             },
         });
         
-        return achievements;
+        return updated;
     }
 
     async submitScore(matchId: string, creatorScore: number, opponentScore: number): Promise<void> {
@@ -196,18 +196,13 @@ export class GameService {
             this.notificationGateway.apiInfo(winnerId,"You won the match")
             this.notificationGateway.apiInfo(loserId,"You lost the match")
 
-            let winner_prevcount = winnerProfile.achcount;
-            await this.checkAchievements(updatedwinner);
-            let winner_count = winnerProfile.achcount;
-            console.log(winner_count ,winner_prevcount)
-            if(winner_count > winner_prevcount){
+            let updated_winner = await this.checkAchievements(updatedwinner);
+            if(updated_winner.achcount > winnerProfile.achcount){
                 this.notificationGateway.apiInfo(winnerId,"You got a new achievement")
             }
 
-            let loser_prevcount = loserProfile.achcount;
-            await this.checkAchievements(updatedloser);
-            let loser_count = loserProfile.achcount;
-            if(loser_count > loser_prevcount){
+            let updated_loser = await this.checkAchievements(updatedloser);
+            if(updated_loser.achcount > loserProfile.achcount){
                 this.notificationGateway.apiInfo(loserId,"You got a new achievement")
             }
 
