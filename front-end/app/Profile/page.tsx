@@ -313,7 +313,7 @@ export default function Page() {
                 ))} */}
 
                 <div className="flex items-center  flex-col w-12/12 gap-[30px] lg:gap-0 pb-[30px]">
-                        {/* <div className="flex items-center justify-center  gap-[30px] flex-col sm:flex-row">
+                        <div className="flex items-center justify-center  gap-[30px] flex-col sm:flex-row">
                                 <div className="transform hover:scale-110 transition-transform duration-300">
                                 <Image src={myProfile?.achievements?.ach1 ? "/ach1.svg" : "/ach1Lock.svg"}  alt="ach1"  width={197} height={220} loading="lazy"/>
                                 </div>
@@ -343,38 +343,6 @@ export default function Page() {
                         <div>
                             <div className="pb-[30px] block lg:hidden transform hover:scale-110 transition-transform duration-300">
                             <Image src={myProfile?.achievements?.ach5 ? "/ach5.svg" : "/ach5Lock.svg"}  alt="ach5"  width={197} height={220} loading="lazy"/>
-                            </div>
-                        </div> */}
-                        <div className="flex items-center justify-center  gap-[30px] flex-col sm:flex-row">
-                                <div className="transform hover:scale-110 transition-transform duration-300">
-                                <Image src={true ? "/ach1.svg" : "/ach1Lock.svg"}  alt="ach1"  width={197} height={220} loading="lazy"/>
-                                </div>
-                                <div className="transform hover:scale-110 transition-transform duration-300">
-                                <Image src={true ? "/ach2.svg" : "/ach2Lock.svg"}  alt="ach2"  width={197} height={220} loading="lazy"/>
-                                </div>
-                        </div>
-                        <div className="flex items-center justify-center gap-[30px] flex-col sm:flex-row">
-                            <div className="transform hover:scale-110 transition-transform duration-300">
-                            <Image src={true ? "/ach3.svg" : "/ach3Lock.svg"}  alt="ach3"  width={197} height={220} loading="lazy"/>
-                            </div>
-                            <div className="transform hover:scale-110 transition-transform duration-300">
-                            <Image src={true ? "/ach4.svg" : "/ach4Lock.svg"}  alt="ach4"  width={197} height={220} loading="lazy"/>
-                            </div>
-                            <div className="lg:block hidden transform hover:scale-110 transition-transform duration-300">
-                            <Image src={true ? "/ach5.svg" : "/ach5Lock.svg"}  alt="ach5"  width={197} height={220} loading="lazy"/>
-                            </div>
-                        </div>
-                        <div className="flex items-center justify-center gap-[30px] flex-col sm:flex-row">
-                            <div className="transform hover:scale-110 transition-transform duration-300">
-                            <Image src={true ? "/ach6.svg" : "/ach6Lock.svg"}  alt="ach6"  width={197} height={220} loading="lazy"/>
-                            </div>
-                            <div className="transform hover:scale-110 transition-transform duration-300">
-                            <Image src={true ? "/ach7.svg" : "/ach7Lock.svg"}  alt="ach7"  width={197} height={220} loading="lazy"/>
-                            </div>
-                        </div>
-                        <div>
-                            <div className="pb-[30px] block lg:hidden transform hover:scale-110 transition-transform duration-300">
-                            <Image src={true ? "/ach5.svg" : "/ach5Lock.svg"}  alt="ach5"  width={197} height={220} loading="lazy"/>
                             </div>
                         </div>
                 </div>

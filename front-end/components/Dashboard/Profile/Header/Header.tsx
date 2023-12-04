@@ -120,7 +120,7 @@ export default function Header({show, modalRef,handelShaw,notifRef,notifIconRef}
                                 }
                             </div>
                             <input ref={inputRef} onChange={handleSearch} className="w-full h-[90px] bg-[#FFF]  rounded-[10px] outline-none border-none text-[20px] text-gray-400 font-[500] font-[Poppins] pr-[20px] placeholder:font-[400] placeholder:text-gray-300 " type="text" placeholder="Search for friends to play" />
-                            {
+                                {
                                     showBody && (
                                         <div className=" z-[500] absolute top-[100px] w-full rounded-[15px] h-[280px] bg-[#FFF] py-[25px] px-[25px] flex flex-col gap-[20px] overflow-y-scroll no-scrollbar p-inf">
                                             {

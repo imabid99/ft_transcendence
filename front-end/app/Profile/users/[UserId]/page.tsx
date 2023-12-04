@@ -16,8 +16,7 @@ import Image from 'next/image';
 export default function Page() {
     
     const {UserId} = useParams();
-    const [profile, setProfile] = useState<any>(null);
-    const name = `${profile?.firstName} ${profile?.lastName}`;
+    // const [profile, setProfile] = useState<any>(null);
     const [isUser, setIsUser] = useState<boolean>(true);
     const [loading, setLoading] = useState<boolean>(true);
     const {myFriends,profiles} :any= useContext(contextdata);
@@ -25,20 +24,20 @@ export default function Page() {
     const  [isFriend, setIsFriend] = useState<boolean>(false);
     const [isBlocked, setIsBlocked] = useState(false);
     const [achievements, setAchievements] = useState<any>(null);
-    console.log("Acheraf  is", profiles);
+    const myProfile = profiles?.find((profile : any) => profile?.userId === UserId);
+    const name = `${myProfile?.firstName} ${myProfile?.lastName}`;
     useEffect(() => {
         // if(!profiles) return;
-        const myProfile = profiles?.find((profile : any) => profile?.userId === UserId);
-        // console.log("myProfile is imad abi:::::: ", myProfile);
-        setProfile(myProfile);
+        // setProfile(myProfile);
+        // console.log("Acheraf  is", profiles);
         setLoading(false);
         setAchievements(myProfile?.achievements);
-
+        
     }
     , [profiles])
 
 
-    
+    // console.log("Acheraf  is-------------->>>>>>>", myProfile);
 
     const sendRequest = async () => {
         try{
@@ -46,7 +45,7 @@ export default function Page() {
             // console.log("res is", res);
         }
         catch(err){
-            console.log(err);
+            // console.log(err);
         }
     }
     const blockUser = async () => {
@@ -54,7 +53,7 @@ export default function Page() {
             const res = await axiosInstance.patch(`http://${process.env.NEXT_PUBLIC_APP_URL}:3000/api/friendship/block/${UserId}`);
         }
         catch(err){
-            console.log(err);
+            // console.log(err);
         }
     }
     const unblockUser = async () => {
@@ -63,20 +62,20 @@ export default function Page() {
             console.log("res is hhhhhh blockuser", res); 
         }
         catch(err){
-            console.log(err);
+            // console.log(err);
         }
     }
     const isBlockedUser = async () => {
         try{
             const res = await axiosInstance.get(`http://${process.env.NEXT_PUBLIC_APP_URL}:3000/api/friendship/isBlocked/${UserId}`);
-            console.log("res is isblocked", res);
+            console.log("res is isblocked ------------------->", res);
             if(res.data)
             {
                 setIsBlocked(true);
             }
         }
         catch(err){
-            console.log(err);
+            // console.log(err);
         }
     }
 
@@ -91,7 +90,7 @@ export default function Page() {
             }
         }
         catch(err){
-            console.log(err);
+            // console.log(err);
         }
     
     }
@@ -100,9 +99,9 @@ export default function Page() {
     useEffect(() => {
         isBlockedUser();
         checkFriendship();
-        return () => {
-            setProfile(null);
-        }
+        // return () => {
+        //     setProfile(null);
+        // }
         }, [profiles,myFriends])
         if(!isUser)
         {   
@@ -113,8 +112,9 @@ export default function Page() {
             return <Loading />
         }
         // console.log("Achivement hahahahaha : ", profile?.achievements);
-    const avatarUrl = `http://${process.env.NEXT_PUBLIC_APP_URL}:3000/${profile?.avatar}`;
-    const coverUrl = `http://${process.env.NEXT_PUBLIC_APP_URL}:3000/${profile?.cover}`;
+
+    const avatarUrl = `http://${process.env.NEXT_PUBLIC_APP_URL}:3000/${myProfile?.avatar}`;
+    const coverUrl = `http://${process.env.NEXT_PUBLIC_APP_URL}:3000/${myProfile?.cover}`;
     return (
         <div className='flex items-center  flex-col  gap-[80px] 3xl:gap-0 w-[100%] justify-start  3xl:px-[30px]  '>
         {/* <div className='bg-black px-[60px] '>
@@ -147,11 +147,11 @@ export default function Page() {
                 <div className="pt-[100px] gap-[15px] sm:pt-[5px] flex flex-col sm:flex-row pl-[40px]  sm:pl-[200px] sm:justify-between pb-[10px] sm:pb-0 ">
                     <div className=" ">
                         {
-                            profile ?
+                            myProfile ?
                             (
                                 <>
                                     <p className="text-[25px] font-[600] text-[#020025] t">{name}</p>
-                                    <p className="text-[15px] text-[#6E869B] font-[600]">{profile?.username}</p>
+                                    <p className="text-[15px] text-[#6E869B] font-[600]">{myProfile?.username}</p>
                                 </>
 
                             )
@@ -169,7 +169,6 @@ export default function Page() {
                         }
                     </div>
                     <div className=" flex items-center gap-[5px] flex-row sm:flex-col lg:flex-row">
-                        {/* <div className="button-container2"> */}
                         <Link href={`/Chat/me/${UserId}`}  className="button-container2">
                             <button disabled={!isFriend}  className="w-[91px] h-[29px] rounded-[9px] bg-[#5085AB] flex items-center justify-center gap-[5px]">
                                 <svg width="10" height="10" viewBox="0 0 10 10" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -178,15 +177,7 @@ export default function Page() {
                                 <p className="text-[#fff] text-[8px] font-[500] ">Message</p>
                             </button>
                         </Link>
-                    {/* <button className="w-[91px] h-[29px] rounded-[9px] bg-[#5085AB] flex items-center justify-center gap-[5px]">
-                    <svg width="10" height="10" viewBox="0 0 10 10" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M3.7015 7.02355L4.0215 6.96847C4.0835 6.95745 4.1575 6.94143 4.243 6.91939C5.3 6.65399 6 5.86281 6 5.00752C6 3.93842 4.912 3.00451 3.5 3.00451C2.088 3.00451 1 3.93842 1 5.00752C1 5.61744 1.351 6.19831 1.9655 6.58489L1.9835 6.59491L2.5 6.88033V8.26391L3.7015 7.02355ZM4.1925 7.95495L2.359 9.84779C2.28971 9.91938 2.20066 9.96862 2.10325 9.98921C2.00585 10.0098 1.90453 10.0008 1.81226 9.96336C1.71999 9.92592 1.64099 9.86176 1.58536 9.77908C1.52973 9.6964 1.5 9.59897 1.5 9.49927V7.47122C1.47766 7.45913 1.45565 7.44644 1.434 7.43316C0.5645 6.88634 0 6.00352 0 5.00752C0 3.34803 1.567 2.00301 3.5 2.00301C5.433 2.00301 7 3.34803 7 5.00752C7 6.37257 5.9395 7.5253 4.487 7.89085C4.38965 7.91584 4.29142 7.93722 4.1925 7.95495ZM3.468 1.50226C4.073 0.604408 5.205 0 6.5 0C8.433 0 10 1.34502 10 3.00451C10 4.00051 9.435 4.88333 8.566 5.43016C8.54435 5.44343 8.52234 5.45612 8.5 5.46821V7.49626C8.5 7.59596 8.47027 7.69339 8.41464 7.77607C8.35901 7.85875 8.28001 7.92292 8.18774 7.96035C8.09547 7.99779 7.99415 8.00679 7.89675 7.9862C7.79934 7.96561 7.71029 7.91637 7.641 7.84478L6.7735 6.94944L7.295 6.04909L7.5 6.2609V4.87733L8.0165 4.5919L8.0345 4.58188C8.6495 4.1953 9 3.61443 9 3.00451C9 1.93541 7.912 1.0015 6.5 1.0015C5.86 1.0015 5.287 1.19329 4.8515 1.50226H3.468Z" fill="white"/>
-                    </svg>
-                        <p className="text-[#fff] text-[8px] font-[500] ">Message</p>
-                    </button>
-                        </div> */}
                     <div className="button-container2">
-                    {/* <button onClick={handleClick} disabled={isClicked} className="w-[30px] h-[29px] rounded-[9px] bg-[#5085AB] flex items-center justify-center gap-[5px]" > */}
                     <button onClick={sendRequest} disabled={isFriend} className={`w-[80px] sm:w-[91px] h-[29px] rounded-[9px] bg-[#5085AB] flex items-center justify-center gap-[5px]  ${!isFriend ? 'bg-[#5085AB]' : 'backC cursor-not-allowed '}`} >
                     <svg width="10" height="10" viewBox="0 0 10 10" fill="none" xmlns="http://www.w3.org/2000/svg">
                     <path d="M3.75 6.58694C5.7834 6.58694 7.5 6.93914 7.5 8.29934C7.5 9.65955 5.77239 10 3.75 10C1.7166 10 0 9.64727 0 8.2876C0 6.9274 1.72711 6.58694 3.75 6.58694ZM8.49949 2.63158C8.7476 2.63158 8.94897 2.84708 8.94897 3.11138V3.73045H9.55051C9.79812 3.73045 10 3.94595 10 4.21025C10 4.47455 9.79812 4.69005 9.55051 4.69005H8.94897V5.30968C8.94897 5.57398 8.7476 5.78947 8.49949 5.78947C8.25188 5.78947 8.05 5.57398 8.05 5.30968V4.69005H7.44949C7.20137 4.69005 7 4.47455 7 4.21025C7 3.94595 7.20137 3.73045 7.44949 3.73045H8.05V3.11138C8.05 2.84708 8.25188 2.63158 8.49949 2.63158ZM3.75 0C5.12729 0 6.23132 1.17717 6.23132 2.64571C6.23132 4.11424 5.12729 5.29141 3.75 5.29141C2.37271 5.29141 1.26868 4.11424 1.26868 2.64571C1.26868 1.17717 2.37271 0 3.75 0Z" fill="white"/>
@@ -200,18 +191,18 @@ export default function Page() {
                         onClick={isBlocked ? unblockUser : blockUser}
                     >
                         {isBlocked ? (
-                          <>
-                            <svg width="11" height="10" viewBox="0 0 11 10" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <path d="M3.75 6.58694C5.7834 6.58694 7.5 6.93914 7.5 8.29934C7.5 9.65955 5.77239 10 3.75 10C1.7166 10 0 9.64728 0 8.2876C0 6.9274 1.72711 6.58694 3.75 6.58694ZM3.75 0C5.12729 0 6.23132 1.17717 6.23132 2.64571C6.23132 4.11424 5.12729 5.29141 3.75 5.29141C2.37271 5.29141 1.26868 4.11424 1.26868 2.64571C1.26868 1.17717 2.37271 0 3.75 0Z" fill="white"/>
-                            <path fill-rule="evenodd" clip-rule="evenodd" d="M9 3.70588C8.77292 3.70586 8.54982 3.76559 8.35313 3.87908C8.15644 3.99256 7.99307 4.15581 7.87944 4.35241C7.7658 4.54902 7.7059 4.77207 7.70575 4.99915C7.7056 5.22624 7.76521 5.44936 7.87859 5.64612L9.64612 3.87859C9.44973 3.76509 9.22683 3.70551 9 3.70588ZM10.1388 4.38447L8.38447 6.13882C8.62968 6.27169 8.91125 6.32179 9.18725 6.28166C9.46324 6.24152 9.71888 6.1133 9.91609 5.91609C10.1133 5.71888 10.2415 5.46324 10.2817 5.18725C10.3218 4.91125 10.2717 4.62968 10.1388 4.38447ZM7 5C7 4.73736 7.05173 4.47728 7.15224 4.23463C7.25275 3.99198 7.40007 3.7715 7.58579 3.58579C7.7715 3.40007 7.99198 3.25275 8.23463 3.15224C8.47728 3.05173 8.73736 3 9 3C9.26264 3 9.52272 3.05173 9.76537 3.15224C10.008 3.25275 10.2285 3.40007 10.4142 3.58579C10.5999 3.7715 10.7473 3.99198 10.8478 4.23463C10.9483 4.47728 11 4.73736 11 5C11 5.53043 10.7893 6.03914 10.4142 6.41421C10.0391 6.78929 9.53043 7 9 7C8.46957 7 7.96086 6.78929 7.58579 6.41421C7.21071 6.03914 7 5.53043 7 5Z" fill="white"/>
-                            </svg>
-                            <p className="text-[#fff] text-[8px] font-[500] ">Unblock</p>
-                          </>
+                            <>
+                                <svg width="11" height="10" viewBox="0 0 11 10" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M3.75 6.58694C5.7834 6.58694 7.5 6.93914 7.5 8.29934C7.5 9.65955 5.77239 10 3.75 10C1.7166 10 0 9.64728 0 8.2876C0 6.9274 1.72711 6.58694 3.75 6.58694ZM3.75 0C5.12729 0 6.23132 1.17717 6.23132 2.64571C6.23132 4.11424 5.12729 5.29141 3.75 5.29141C2.37271 5.29141 1.26868 4.11424 1.26868 2.64571C1.26868 1.17717 2.37271 0 3.75 0Z" fill="white"/>
+                                <path fillRule="evenodd" clipRule="evenodd" d="M9 3.70588C8.77292 3.70586 8.54982 3.76559 8.35313 3.87908C8.15644 3.99256 7.99307 4.15581 7.87944 4.35241C7.7658 4.54902 7.7059 4.77207 7.70575 4.99915C7.7056 5.22624 7.76521 5.44936 7.87859 5.64612L9.64612 3.87859C9.44973 3.76509 9.22683 3.70551 9 3.70588ZM10.1388 4.38447L8.38447 6.13882C8.62968 6.27169 8.91125 6.32179 9.18725 6.28166C9.46324 6.24152 9.71888 6.1133 9.91609 5.91609C10.1133 5.71888 10.2415 5.46324 10.2817 5.18725C10.3218 4.91125 10.2717 4.62968 10.1388 4.38447ZM7 5C7 4.73736 7.05173 4.47728 7.15224 4.23463C7.25275 3.99198 7.40007 3.7715 7.58579 3.58579C7.7715 3.40007 7.99198 3.25275 8.23463 3.15224C8.47728 3.05173 8.73736 3 9 3C9.26264 3 9.52272 3.05173 9.76537 3.15224C10.008 3.25275 10.2285 3.40007 10.4142 3.58579C10.5999 3.7715 10.7473 3.99198 10.8478 4.23463C10.9483 4.47728 11 4.73736 11 5C11 5.53043 10.7893 6.03914 10.4142 6.41421C10.0391 6.78929 9.53043 7 9 7C8.46957 7 7.96086 6.78929 7.58579 6.41421C7.21071 6.03914 7 5.53043 7 5Z" fill="white"/>
+                                </svg>
+                                <p className="text-[#fff] text-[8px] font-[500] ">Unblock</p>
+                            </>
                         ) : (
                             <>
                                 <svg width="11" height="10" viewBox="0 0 11 10" fill="none" xmlns="http://www.w3.org/2000/svg">
                                 <path d="M3.75 6.58694C5.7834 6.58694 7.5 6.93914 7.5 8.29934C7.5 9.65955 5.77239 10 3.75 10C1.7166 10 0 9.64728 0 8.2876C0 6.9274 1.72711 6.58694 3.75 6.58694ZM3.75 0C5.12729 0 6.23132 1.17717 6.23132 2.64571C6.23132 4.11424 5.12729 5.29141 3.75 5.29141C2.37271 5.29141 1.26868 4.11424 1.26868 2.64571C1.26868 1.17717 2.37271 0 3.75 0Z" fill="white"/>
-                                <path fill-rule="evenodd" clip-rule="evenodd" d="M9 3.70588C8.77292 3.70586 8.54982 3.76559 8.35313 3.87908C8.15644 3.99256 7.99307 4.15581 7.87944 4.35241C7.7658 4.54902 7.7059 4.77207 7.70575 4.99915C7.7056 5.22624 7.76521 5.44936 7.87859 5.64612L9.64612 3.87859C9.44973 3.76509 9.22683 3.70551 9 3.70588ZM10.1388 4.38447L8.38447 6.13882C8.62968 6.27169 8.91125 6.32179 9.18725 6.28166C9.46324 6.24152 9.71888 6.1133 9.91609 5.91609C10.1133 5.71888 10.2415 5.46324 10.2817 5.18725C10.3218 4.91125 10.2717 4.62968 10.1388 4.38447ZM7 5C7 4.73736 7.05173 4.47728 7.15224 4.23463C7.25275 3.99198 7.40007 3.7715 7.58579 3.58579C7.7715 3.40007 7.99198 3.25275 8.23463 3.15224C8.47728 3.05173 8.73736 3 9 3C9.26264 3 9.52272 3.05173 9.76537 3.15224C10.008 3.25275 10.2285 3.40007 10.4142 3.58579C10.5999 3.7715 10.7473 3.99198 10.8478 4.23463C10.9483 4.47728 11 4.73736 11 5C11 5.53043 10.7893 6.03914 10.4142 6.41421C10.0391 6.78929 9.53043 7 9 7C8.46957 7 7.96086 6.78929 7.58579 6.41421C7.21071 6.03914 7 5.53043 7 5Z" fill="white"/>
+                                <path fillRule="evenodd" clipRule="evenodd" d="M9 3.70588C8.77292 3.70586 8.54982 3.76559 8.35313 3.87908C8.15644 3.99256 7.99307 4.15581 7.87944 4.35241C7.7658 4.54902 7.7059 4.77207 7.70575 4.99915C7.7056 5.22624 7.76521 5.44936 7.87859 5.64612L9.64612 3.87859C9.44973 3.76509 9.22683 3.70551 9 3.70588ZM10.1388 4.38447L8.38447 6.13882C8.62968 6.27169 8.91125 6.32179 9.18725 6.28166C9.46324 6.24152 9.71888 6.1133 9.91609 5.91609C10.1133 5.71888 10.2415 5.46324 10.2817 5.18725C10.3218 4.91125 10.2717 4.62968 10.1388 4.38447ZM7 5C7 4.73736 7.05173 4.47728 7.15224 4.23463C7.25275 3.99198 7.40007 3.7715 7.58579 3.58579C7.7715 3.40007 7.99198 3.25275 8.23463 3.15224C8.47728 3.05173 8.73736 3 9 3C9.26264 3 9.52272 3.05173 9.76537 3.15224C10.008 3.25275 10.2285 3.40007 10.4142 3.58579C10.5999 3.7715 10.7473 3.99198 10.8478 4.23463C10.9483 4.47728 11 4.73736 11 5C11 5.53043 10.7893 6.03914 10.4142 6.41421C10.0391 6.78929 9.53043 7 9 7C8.46957 7 7.96086 6.78929 7.58579 6.41421C7.21071 6.03914 7 5.53043 7 5Z" fill="white"/>
                                 </svg>
                                 <p className="text-[#fff] text-[8px] font-[500] ">Block</p>
                             </>
@@ -219,21 +210,6 @@ export default function Page() {
 
 
                     </button>
-                    {/* <button
-                    className="w-[30px] h-[29px] rounded-[9px] bg-[#5085AB] flex items-center justify-center gap-[5px]"
-                    onClick={blockUser}
-                        >
-                        {isBlocked ? (
-                          // SVG for unblock button
-                            <svg width="11" height="10" viewBox="0 0 11 10" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <path d="M3.75 6.58694C5.7834 6.58694 7.5 6.93914 7.5 8.29934C7.5 9.65955 5.77239 10 3.75 10C1.7166 10 0 9.64728 0 8.2876C0 6.9274 1.72711 6.58694 3.75 6.58694ZM3.75 0C5.12729 0 6.23132 1.17717 6.23132 2.64571C6.23132 4.11424 5.12729 5.29141 3.75 5.29141C2.37271 5.29141 1.26868 4.11424 1.26868 2.64571C1.26868 1.17717 2.37271 0 3.75 0Z" fill="white"/>
-                            <path fill-rule="evenodd" clip-rule="evenodd" d="M9 3.70588C8.77292 3.70586 8.54982 3.76559 8.35313 3.87908C8.15644 3.99256 7.99307 4.15581 7.87944 4.35241C7.7658 4.54902 7.7059 4.77207 7.70575 4.99915C7.7056 5.22624 7.76521 5.44936 7.87859 5.64612L9.64612 3.87859C9.44973 3.76509 9.22683 3.70551 9 3.70588ZM10.1388 4.38447L8.38447 6.13882C8.62968 6.27169 8.91125 6.32179 9.18725 6.28166C9.46324 6.24152 9.71888 6.1133 9.91609 5.91609C10.1133 5.71888 10.2415 5.46324 10.2817 5.18725C10.3218 4.91125 10.2717 4.62968 10.1388 4.38447ZM7 5C7 4.73736 7.05173 4.47728 7.15224 4.23463C7.25275 3.99198 7.40007 3.7715 7.58579 3.58579C7.7715 3.40007 7.99198 3.25275 8.23463 3.15224C8.47728 3.05173 8.73736 3 9 3C9.26264 3 9.52272 3.05173 9.76537 3.15224C10.008 3.25275 10.2285 3.40007 10.4142 3.58579C10.5999 3.7715 10.7473 3.99198 10.8478 4.23463C10.9483 4.47728 11 4.73736 11 5C11 5.53043 10.7893 6.03914 10.4142 6.41421C10.0391 6.78929 9.53043 7 9 7C8.46957 7 7.96086 6.78929 7.58579 6.41421C7.21071 6.03914 7 5.53043 7 5Z" fill="white"/>
-                            </svg>
-                        ) : (
-                          // SVG for block button
-                            <svg>...</svg>
-                        )}
-                        </button> */}
                     </div>
                     </div>
                 </div>
@@ -245,18 +221,18 @@ export default function Page() {
                         Level
                     </div>
                     <div className="text-[#95A6B9] font-[300] text-[18px] flex flex-row">
-                    {profile?.xp}/{profile?.nextLevelXp}
+                    {myProfile?.xp}/{myProfile?.nextLevelXp}
                         <div className="text-[#7899BB] font-[400] text-[18px]">XP</div>
                     </div>
                     </div>
                     <div className="w-10/12 sm:w-7/12 b">
                     <div className="flex-grow  h-[16px] rounded-[8px] bg-[#C0D4E9] w-12/12">
-                        <div className="h-full sh-level rounded-[8px]" style={{ width: `${profile?.percentage}%` }} />
+                        <div className="h-full sh-level rounded-[8px]" style={{ width: `${myProfile?.percentage}%` }} />
                     </div>
                     </div>
                     <div className=" sm:pr-[40px]">
                     <div className="w-[55px] h-[55px] border-[6px] border-[#356B9A] rounded-full flex justify-center items-center">
-                        <div className="text-[#356B9A] font-[600] text-[18px]">{profile?.level}</div>
+                        <div className="text-[#356B9A] font-[600] text-[18px]">{myProfile?.level}</div>
                     </div>
                     </div>
                 </div>
@@ -270,7 +246,7 @@ export default function Page() {
                         <div className="text-[#0367A6] text-[17px] font-[500]">
                             Games
                         </div>
-                        <div className="text-[20px] font-[600] text-[#007BC8]">{profile?.totalmatches}</div>
+                        <div className="text-[20px] font-[600] text-[#007BC8]">{myProfile?.totalmatches}</div>
                         </div>
                     </div>
                     <div className="w-[180px] h-[100px] bg-[#C1FFFB] hover:bg-[#9dfcf6] rounded-[24px] flex items-center pl-[20px] gap-[17px] s-sh transform hover:scale-105 transition-transform duration-300">
@@ -279,7 +255,7 @@ export default function Page() {
                         <div className="text-[#12A099] text-[17px] font-[500]">
                             Score
                         </div>
-                        <div className="text-[20px] font-[600] text-[#098982]">{profile?.points}</div>
+                        <div className="text-[20px] font-[600] text-[#098982]">{myProfile?.points}</div>
                         </div>
                     </div>
                     </div>
@@ -290,7 +266,7 @@ export default function Page() {
                         <div className="text-[#27B270] text-[17px] font-[500]">
                             Wins
                         </div>
-                        <div className="text-[20px] font-[600] text-[#10884F]">{profile?.win}</div>
+                        <div className="text-[20px] font-[600] text-[#10884F]">{myProfile?.win}</div>
                         </div>
                     </div>
                     <div className="w-[180px] h-[100px] bg-[#FFCCCC] hover:bg-[#feaeae] rounded-[24px] flex items-center pl-[20px] gap-[17px] l-sh transform hover:scale-105 transition-transform duration-300">
@@ -299,7 +275,7 @@ export default function Page() {
                         <div className="text-[#CA4E4E] text-[17px] font-[500]">
                             Loses
                         </div>
-                        <div className="text-[20px] font-[600] text-[#B02323]">{profile?.lose}</div>
+                        <div className="text-[20px] font-[600] text-[#B02323]">{myProfile?.lose}</div>
                         </div>
                     </div>
                     </div>
@@ -385,51 +361,37 @@ export default function Page() {
                 </div>
                 </div>
                 <div className="flex items-center flex-col w-12/12 gap-[30px] lg:gap-0 pb-[30px]">
-                {/* {loading && <Loading />} */}
-                
-                
-                
-                {/* {images.map((imageRow, rowIndex) => (
-                    <div key={rowIndex} className="flex items-center justify-center gap-[30px] flex-col sm:flex-row">
-                        {imageRow.map((img, imgIndex) => (
-                            <div key={imgIndex} className="transform hover:scale-110 transition-transform duration-300 relative">
-                                <Image src={acharr[imgIndex] ? img.unlocked : img.locked}  alt={img.alt} className={img.className} width={197} height={220} loading="lazy"/>
-                            </div>
-                        ))}
-                    </div>
-                ))} */}
-
                 <div className="flex items-center  flex-col w-12/12 gap-[30px] lg:gap-0 pb-[30px]">
                 <div className="flex items-center justify-center  gap-[30px] flex-col sm:flex-row">
                         <div className="transform hover:scale-110 transition-transform duration-300">
-                        <Image src={profile?.achievements?.ach1 ? "/ach1.svg" : "/ach1Lock.svg"}  alt="ach1"  width={197} height={220} loading="lazy"/>
+                        <Image src={myProfile?.achievements?.ach1 ? "/ach1.svg" : "/ach1Lock.svg"}  alt="ach1"  width={197} height={220} loading="lazy"/>
                         </div>
                         <div className="transform hover:scale-110 transition-transform duration-300">
-                        <Image src={profile?.achievements?.ach2 ? "/ach2.svg" : "/ach2Lock.svg"}  alt="ach2"  width={197} height={220} loading="lazy"/>
+                        <Image src={myProfile?.achievements?.ach2 ? "/ach2.svg" : "/ach2Lock.svg"}  alt="ach2"  width={197} height={220} loading="lazy"/>
                         </div>
                 </div>
                 <div className="flex items-center justify-center gap-[30px] flex-col sm:flex-row">
                         <div className="transform hover:scale-110 transition-transform duration-300">
-                        <Image src={profile?.achievements?.ach3 ? "/ach3.svg" : "/ach3Lock.svg"}  alt="ach3"  width={197} height={220} loading="lazy"/>
+                        <Image src={myProfile?.achievements?.ach3 ? "/ach3.svg" : "/ach3Lock.svg"}  alt="ach3"  width={197} height={220} loading="lazy"/>
                         </div>
                         <div className="transform hover:scale-110 transition-transform duration-300">
-                        <Image src={profile?.achievements?.ach4 ? "/ach4.svg" : "/ach4Lock.svg"}  alt="ach4"  width={197} height={220} loading="lazy"/>
+                        <Image src={myProfile?.achievements?.ach4 ? "/ach4.svg" : "/ach4Lock.svg"}  alt="ach4"  width={197} height={220} loading="lazy"/>
                         </div>
                         <div className="lg:block hidden transform hover:scale-110 transition-transform duration-300">
-                        <Image src={profile?.achievements?.ach5 ? "/ach5.svg" : "/ach5Lock.svg"}  alt="ach5"  width={197} height={220} loading="lazy"/>
+                        <Image src={myProfile?.achievements?.ach5 ? "/ach5.svg" : "/ach5Lock.svg"}  alt="ach5"  width={197} height={220} loading="lazy"/>
                         </div>
                     </div>
                     <div className="flex items-center justify-center gap-[30px] flex-col sm:flex-row">
                         <div className="transform hover:scale-110 transition-transform duration-300">
-                        <Image src={profile?.achievements?.ach6 ? "/ach6.svg" : "/ach6Lock.svg"}  alt="ach6"  width={197} height={220} loading="lazy"/>
+                        <Image src={myProfile?.achievements?.ach6 ? "/ach6.svg" : "/ach6Lock.svg"}  alt="ach6"  width={197} height={220} loading="lazy"/>
                         </div>
                         <div className="transform hover:scale-110 transition-transform duration-300">
-                        <Image src={profile?.achievements?.ach7 ? "/ach7.svg" : "/ach7Lock.svg"}  alt="ach7"  width={197} height={220} loading="lazy"/>
+                        <Image src={myProfile?.achievements?.ach7 ? "/ach7.svg" : "/ach7Lock.svg"}  alt="ach7"  width={197} height={220} loading="lazy"/>
                         </div>
                     </div>
                     <div>
                         <div className="pb-[30px] block lg:hidden transform hover:scale-110 transition-transform duration-300">
-                        <Image src={profile?.achievements?.ach5 ? "/ach5.svg" : "/ach5Lock.svg"}  alt="ach5"  width={197} height={220} loading="lazy"/>
+                        <Image src={myProfile?.achievements?.ach5 ? "/ach5.svg" : "/ach5Lock.svg"}  alt="ach5"  width={197} height={220} loading="lazy"/>
                         </div>
                     </div>
                     </div>

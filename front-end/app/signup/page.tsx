@@ -87,8 +87,8 @@ export default function Home() {
         message: "at least 3 characters",
       },
       validate: (val: any) =>
-        val?.match(/\p{L}/gu)?.join("") === val ||
-        "must contain only characters",
+      val?.match(/[\p{L}\s]/gu)?.join("") === val ||
+      "only characters and spaces",
     },
     userName: {
       required: "Name is required",
