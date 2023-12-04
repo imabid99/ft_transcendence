@@ -1,12 +1,13 @@
 "use client";
 
-import { Canvas, useFrame } from "@react-three/fiber";
-import React, { useRef, useState, useEffect, useMemo, useContext, use } from "react";
+import { Canvas, useFrame, useThree } from "@react-three/fiber";
+import React, { useRef, useState, useEffect, useMemo, useContext } from "react";
 import {
   Sky,
   SoftShadows,
   OrbitControls,
   RoundedBox,
+  Sparkles,
   Text,
 } from "@react-three/drei";
 import { useControls } from "leva";
@@ -19,7 +20,6 @@ import Forest from "./forest";
 import Desert from "./desert";
 import Snow from "./snow";
 import { contextdata } from "../../contextApi";
-import { io } from "socket.io-client";
 import {
   Physics,
   usePlane,
@@ -27,90 +27,47 @@ import {
   useSphere,
   Debug,
 } from "@react-three/cannon";
-import Loading from "@/app/loading";
+import { is } from "@react-three/fiber/dist/declarations/src/core/utils";
 import { checkLoged, getLocalStorageItem } from "@/utils/localStorage";
 import { useRouter } from "next/navigation";
-import LoadingRandom from "@/components/Dashboard/Game/Random_Loading/loading";
+import gsap from "gsap";
+
 // map = snow, desert, forest; mode = friend, bot, random
 
-const Random = () => {
 
-	const [socket, setSocket] = useState<any>(null);
-  const [isLoading, setIsLoading] = useState<boolean>(true);
-  const router = useRouter();
+
+const PlayWithAI = () => {
 
   const [shosenMap, setShosenMap] = useState<string | null>(null);
-
-
-	/// SOCKET MANAGER
   
-	const { profiles, user }: any = useContext(contextdata);
-	const name = `${user?.profile.firstName} ${user?.profile.lastName}`;
-  
-  useEffect(() => {
-		const token = checkLoged();
-		if (!token) {
-		router.push("/login");
-		return;
-		}
-		if(!user) return;
-		// setIsLoading(false);
-	}, [user]);
-  
-  useEffect(() => {
-    const headers = {
-      Authorization: `Bearer ${getLocalStorageItem("Token")}`,
-    };
-    const matchType = 'Random';
-      const newSocket = io(
-        `http://${process.env.NEXT_PUBLIC_APP_URL}:3000/Game`,
-        {
-          extraHeaders: {
-            ...headers,
-          },
-          auth: {
-            matchType,
-          },
-          // upgrade: false
-        }
-      );
-      if (newSocket) {
-        setSocket(newSocket);
-      }
-      return () => {
-        newSocket.disconnect();
-      };
-  }, []);
-  
-	useEffect(() => {
-	  if (!socket) return;
-	  // socket.on("connect", () => {console.log(name + " is Connected to server");});
-    socket.on('match started', (data: any) => {
-      console.log('Match started:', data);
-      setIsLoading(false);
-    });
-  
-  
-	  return () => {
-		socket.off("connect");
-		socket.disconnect();
-	  };
-	}, [socket]);
-
   useEffect(() => {
     if(getLocalStorageItem("Maps"))
       setShosenMap(getLocalStorageItem("Maps"));
   }, []);
+  const router = useRouter();
+  // const Controls = {
+  //   left: "left",
+  //   right: "right",
+  // };
 
-  useEffect(() => {
-    if (!socket) return;
-		socket.on('player-disconnected', (data: any) => {
-			router.push('/Game');
-		});
-	}, [socket]);
+  // const map = useMemo(
+  //   () => [
+  //     { name: Controls.left, keys: ["ArrowLeft"], player: "player1" },
+  //     { name: Controls.right, keys: ["ArrowRight"], playerd: "player1" },
+  //     { name: Controls.left, keys: ["ArrowLeft"], player: "player2" },
+  //     { name: Controls.right, keys: ["ArrowRight"], player: "player2" },
+  //   ],
+  //   []
+  // );
+
+  // const router = useRouter();
+  // const [searchParams, { selectedMap }] = useSearchParams();
+  // const [searchParams] = useSearchParams();
+  // const params = new URLSearchParams(searchParams);
+  // const selectedMap = params.get('selectedMap');
 
 
-
+  // console.log("this is map lololololo", selectedMap);
   // GUI CONTROLS
   // 	const controls = useControls({});
   //   const { sunPosition } = useControls("sky", {
@@ -147,6 +104,9 @@ const Random = () => {
     );
   }
 
+  // const [MobileLeft, setMobileLeft] = useState(false);
+  // const [MobileRight, setMobileRight] = useState(false);
+
   function Player1Paddle(props: any) {
     // console.log("P1START");
     const [ref, api] = useBox(
@@ -162,7 +122,6 @@ const Random = () => {
     );
 
     useEffect(() => {
-      if (!user) return;
       let isMovingLeft = false;
       let isMovingRight = false;
       let touchleft = false;
@@ -200,6 +159,7 @@ const Random = () => {
       window.addEventListener("keydown", handleKeyDown);
       window.addEventListener("keyup", handleKeyUp);
 
+
       // Touch
 
       const handleTouchStart = (event: TouchEvent) => {
@@ -214,7 +174,7 @@ const Random = () => {
           animationFrameId = requestAnimationFrame(updatePosition);
         }
       };
-
+    
       const handleTouchEnd = (event: TouchEvent) => {
         event.preventDefault();
         if (event.changedTouches[0].clientX < window.innerWidth / 2) {
@@ -222,16 +182,18 @@ const Random = () => {
         } else {
           touchright = false;
         }
-
+    
         if (!isMovingLeft && !isMovingRight && animationFrameId !== null) {
           cancelAnimationFrame(animationFrameId);
           animationFrameId = null;
           isUpdating = false;
         }
       };
+    
+      window.addEventListener('touchstart', handleTouchStart);
+      window.addEventListener('touchend', handleTouchEnd);
 
-      window.addEventListener("touchstart", handleTouchStart);
-      window.addEventListener("touchend", handleTouchEnd);
+
 
       const updatePosition = () => {
         if (ref.current) {
@@ -242,15 +204,9 @@ const Random = () => {
           }
           const smoothingFactor = 0.4;
           paddleposX = paddleposX + (targetPosX - paddleposX) * smoothingFactor;
-          socket.emit("paddle-pos", {
-            x: -paddleposX,
-            y: 0.5,
-            z: -9,
-            playerId: user?.profile.userId,
-          });
-          setTimeout(() => {
-            api.position.set(paddleposX, 0.5, 9);
-          }, 5);
+          // setTimeout(() => {
+          api.position.set(paddleposX, 0.5, 9);
+          // }, 5);
         }
         animationFrameId = requestAnimationFrame(updatePosition);
       };
@@ -258,14 +214,13 @@ const Random = () => {
       return () => {
         window.removeEventListener("keydown", handleKeyDown);
         window.removeEventListener("keyup", handleKeyUp);
-        window.removeEventListener("touchstart", handleTouchStart);
-        window.removeEventListener("touchend", handleTouchEnd);
-        socket.off("paddle-pos");
+        window.removeEventListener('touchstart', handleTouchStart);
+        window.removeEventListener('touchend', handleTouchEnd);
         if (animationFrameId !== null) {
           cancelAnimationFrame(animationFrameId);
         }
       };
-    }, [user]);
+    }, []);
 
     return (
       <RoundedBox
@@ -322,6 +277,7 @@ const Random = () => {
 
       window.addEventListener("keydown", handleKeyDown);
       window.addEventListener("keyup", handleKeyUp);
+      // api.position.set(position.current.x, 0.5, -9);
 
       // const updatePosition = () => {
       // 	// if (ref.current) {
@@ -339,19 +295,39 @@ const Random = () => {
       // };
 
       // requestAnimationFrame(updatePosition);
-      socket.on("paddle-pos", (data: any) => {
-        if (data.playerId === user?.profile.userId) return;
-        api.position.set(data.x, data.y, data.z);
-      });
 
       return () => {
         window.removeEventListener("keydown", handleKeyDown);
         window.removeEventListener("keyup", handleKeyUp);
-        // socket.off('paddle-move');
-        socket.off("paddle-pos");
       };
     }, []);
 
+    const reactionTime = 0.01;
+    let lastUpdateTime = Date.now();
+    let targetPosX = position.current.x;
+    let paddlePosX = position.current.x;
+
+    useFrame(() => {
+      const currentTime = Date.now();
+      const deltaTime = (currentTime - lastUpdateTime) / 1000;
+      if (hasServed) {
+        if (deltaTime >= reactionTime) {
+          const randomOffset = Math.random() * 1 - 0.5;
+          targetPosX = position.current.x + randomOffset;
+
+          const diff = targetPosX - paddlePosX;
+          if (Math.abs(diff) < 0.01) {
+            paddlePosX = targetPosX;
+          } else {
+            const smoothingFactor = 0.1;
+            paddlePosX += diff * smoothingFactor;
+          }
+          if (paddlePosX < 5 && paddlePosX > -5)
+            api.position.set(paddlePosX, 0.5, -9);
+          lastUpdateTime = currentTime;
+        }
+      }
+    });
     return (
       <RoundedBox
         ref={ref}
@@ -368,6 +344,8 @@ const Random = () => {
       </RoundedBox>
     );
   }
+
+
 
   let hasServed = false;
 
@@ -396,41 +374,21 @@ const Random = () => {
       const ServeDown = (event: KeyboardEvent) => {
         if (event.code === "Space") {
           isServing = true;
-          socket.emit("ball-serve", {
-            isServing: true,
-            isServingmobile: false,
-            direction: -1,
-          });
         }
       };
 
       const ServeUp = (event: KeyboardEvent) => {
         if (event.code === "Space") {
           isServing = false;
-          socket.emit("ball-serve", {
-            isServing: false,
-            isServingmobile: false,
-            direction: 1,
-          });
         }
       };
 
       const handleTouchStart = (event: TouchEvent) => {
         isServingmobile = true;
-        socket.emit("ball-serve", {
-          isServing: false,
-          isServingmobile: true,
-          direction: -1,
-        });
       };
-
+  
       const handleTouchEnd = (event: TouchEvent) => {
         isServingmobile = false;
-        socket.emit("ball-serve", {
-          isServing: false,
-          isServingmobile: false,
-          direction: 1,
-        });
       };
 
       const subpos = () => {
@@ -451,7 +409,7 @@ const Random = () => {
       window.addEventListener("keyup", ServeUp);
       window.addEventListener("touchstart", handleTouchStart);
       window.addEventListener("touchend", handleTouchEnd);
-
+      // let khrjat = false;
       const serveball = () => {
         // const value = Math.random() < 0.5 ? -10 : 10;
         const value = -5;
@@ -463,6 +421,7 @@ const Random = () => {
           api.position.set(0, 0.35, 0);
           api.velocity.set(0, 0, 0);
           hasServed = false;
+          // khrjat = true;
         }
         if (speed.current.x < -10)
           api.velocity.set(-10, speed.current.y, speed.current.z);
@@ -472,16 +431,11 @@ const Random = () => {
           api.velocity.set(speed.current.x, speed.current.y, 24);
         if (speed.current.z < -25)
           api.velocity.set(speed.current.x, speed.current.y, -24);
-
+        // if (!khrjat)
+        // 	console.log(speed.current);
         requestAnimationFrame(serveball);
       };
       requestAnimationFrame(serveball);
-
-      socket.on("ball-serve", (data: any) => {
-        isServing = data.isServing;
-        isServingmobile = data.isServingmobile;
-        direction = data.direction;
-      });
 
       return () => {
         window.removeEventListener("keydown", ServeDown);
@@ -489,7 +443,6 @@ const Random = () => {
         window.removeEventListener("touchstart", handleTouchStart);
         window.removeEventListener("touchend", handleTouchEnd);
         // socket.off('ballPosition');
-        socket.off("ball-serve");
       };
     }, []);
 
@@ -547,29 +500,25 @@ const Random = () => {
     const [p1_count, setP1Count] = useState<number>(0);
     const [p2_count, setP2Count] = useState<number>(0);
 
+    let animationFrameId: number | null = null;
+
     useEffect(() => {
-      let animationFrameId: number | null = null;
-      let lastPositionZ = 0;
-    
       const goalCheck = () => {
-        const currentZ = position.current.z;
-    
-        if (currentZ > 10 && lastPositionZ <= 10) {
+        if (position.current.z > 10) {
           setP1Count((prevCount) => prevCount + 1);
           position.current.z = 0;
         }
-        if (currentZ < -10 && lastPositionZ >= -10) {
+        if (position.current.z < -10) {
           setP2Count((prevCount) => prevCount + 1);
           position.current.z = 0;
         }
-
-        lastPositionZ = currentZ;
-    
-        animationFrameId = requestAnimationFrame(goalCheck);
+        setTimeout(() => {
+          animationFrameId = requestAnimationFrame(goalCheck);
+        }, 20);
       };
-    
-      animationFrameId = requestAnimationFrame(goalCheck);
-    
+
+      goalCheck();
+
       return () => {
         if (animationFrameId !== null) {
           cancelAnimationFrame(animationFrameId);
@@ -577,32 +526,18 @@ const Random = () => {
       };
     }, []);
 
-   
-
     useEffect(() => {
-      // TODO CHANGE THE SCORE TO 5
-      if (!user) return;
       if (p1_count === 7 || p2_count === 7) {
-        if (p2_count === 7) {
-          // console.log(user?.profile.userId, p1_count, p2_count);
-          const payload = {
-            winner: user?.profile.userId,
-            winnerscore: p2_count,
-            loserscore: p1_count,
-          };
-          socket.emit("player-wins", payload);
-        }
-
+        // else
+        // {
+        //   console.log("Opponent Wins!", p1_count, p2_count);
+        //   const payload = {winner: "Opponent", winnerscore: p1_count, loserscore: p2_count};
+        //   socket.emit('player-wins', payload)
+        // }
         setP1Count(0);
         setP2Count(0);
       }
-    }, [p1_count, p2_count, user]);
-
-    useEffect(() => {
-      socket.on("player-wins", (data: any) => {
-        router.push('/Game');
-      });
-    }, []);
+    }, [p1_count, p2_count]);
 
     return (
       <>
@@ -633,7 +568,6 @@ const Random = () => {
       </>
     );
   };
-  
 
   // const [currentMap, setCurrentMap] = useState('Desert');
 
@@ -646,33 +580,60 @@ const Random = () => {
   // 	setCurrentMap('Desert');
   //   }
   // };
-  if(isLoading || !shosenMap)
-  {
-    console.log("Loading");
-    return <LoadingRandom/>
-  }
 
-
-  return (
-    <div className="w-full h-full relative">
-      <Canvas
-        shadows
-        camera={{ fov: 75, near: 0.1, far: 300, position: [0, 10, 20] }}
-      >
-        {/*<Sparkles
-      count={2000}
-      speed={4}
-      opacity={1}
-      color={ 0x00ffff }
-      size={Float32Array.from(Array.from({ length: 2000 }, () => Math.random() * (80 - 5) + 10))}
-      scale={250}
-      noise={1000}
-    />*/}
-
-        <Perf position="bottom-right" />
-        <ambientLight color={"#ffffff"} intensity={1} />
+  // const MobileControls = () => {
+  //     return(
+  //       <div className="flex justify-between w-full absolute bottom-6 z-[10] ">
+  //         <button onClick={() => setMobileLeft(true)} className="bg-transparent border border-grey-500 hover:bg-blue-700 text-white font-bold py-5 px-5 rounded-full w-[140px] h-[140px] backdrop-blur-3xl opacity-50 text-6xl ml-3">
+  //           L
+  //         </button>
+  //         <button className="bg-transparent border border-grey-500 hover:bg-blue-700 text-white font-bold py-5 px-5 rounded-lg w-[70px] h-[50px] backdrop-blur-3xl opacity-50 flex items-center justify-center">
+  //           Serve
+  //         </button>
+  //         <button onClick={() => setMobileRight(true)} className="bg-transparent border border-grey-500 hover:bg-blue-700 text-white font-bold py-5 px-5 rounded-full w-[140px] h-[140px] backdrop-blur-3xl opacity-50 text-6xl mr-3">
+  //           R
+  //         </button>
+  //       </div>
+  //     );
+  // };
+  function AnimatedCamera() {
+    const ref = useRef<THREE.PerspectiveCamera>(null);
+    const [sunPosition, setSunPosition] = useState<[number, number, number]>([-0.07, -0.03, -0.75]);
+    
+    const { camera } = useThree();
+    const CameraProps = {
+      near: camera.near,
+      far: camera.far,
+    };
+    useEffect(() => {
+      const t1 = gsap.timeline();
+      t1.to(camera.position, {
+        duration: 1,
+        x: 0,
+        y: 20,
+        z: 50,
+        ease: "power3.inOut",
+      });
+    }, []);
+    
+    let speed = 0.2; 
+    
+    useFrame(({ clock }) => {
+      let t = clock.getElapsedTime() * speed;
+      let sunT = clock.getElapsedTime() * speed / 0.6;
+      camera.position.x = 20 * Math.cos(t);
+      camera.position.z = 40 * Math.sin(t) - 18;
+      camera.position.y = 30 * Math.sin(t * 2) + 35;
+      camera.lookAt(0, 0, 0);
+      setSunPosition([-0.07, Math.cos(sunT) - 0.06, -0.75] as [number, number, number]);
+    });
+    return(
+      <>
+        <perspectiveCamera ref={ref} {...CameraProps} />
+        <Sky sunPosition={sunPosition} />
         <directionalLight
-          position={[-0.04, 4.5, -4]}
+          // position={[-0.04, 4.5, -4]}
+          position={[-0.04, Math.abs(sunPosition[1] * 10 + 10), -4]}
           color={"#ffffff"}
           intensity={1}
           castShadow
@@ -684,6 +645,35 @@ const Random = () => {
           shadow-camera-near={-50}
           shadow-camera-far={60}
         />
+      </>
+    )
+  };
+
+  if(!shosenMap)
+  {
+    console.log("Loading");
+  }
+
+  return (
+    <div className="w-full h-full relative">
+
+      <Canvas
+        shadows
+        // camera={{ fov: 75, near: 0.1, far: 300, position: [0, 10, 20] }}
+      >
+        <AnimatedCamera />
+        {/*<Sparkles
+			count={2000}
+			speed={4}
+			opacity={1} 
+			color={ 0x00ffff }
+			size={Float32Array.from(Array.from({ length: 2000 }, () => Math.random() * (80 - 5) + 10))}
+			scale={250}
+			noise={1000}
+		/>*/}
+
+        {/* <Perf position="bottom-right" /> */}
+        <ambientLight color={"#ffffff"} intensity={1} />
         <Physics>
           {/* <Debug color="black" scale={1.1}> */}
           <Plane />
@@ -730,19 +720,23 @@ const Random = () => {
           <planeGeometry args={[20, 0.1]} />
           <meshStandardMaterial color={"#FFFFFF"} />
         </mesh>
-        {/*
-          map == "forest" && <Forest/>
-          map == "desert" && <Desert/>
-          map == "snow" && <Snow/>
-        */}
-      {
+        
+					{/* map == "forest" && <Forest/> 
+					map == "desert" && <Desert/>
+					map == "snow" && <Snow/> */}
+				
+
+        {
           shosenMap === 'desert' ? <Desert /> :
           shosenMap === 'snow' ? <Snow /> :
-          <Forest />
+          // <Forest />
+          // <Snow />
+          <Desert />
       }
-      {/* <Desert/> */}
-      {/* <Snow/> */}
-      <Scoreboard />
+        {/* <Forest/> */}
+        {/* <Desert /> */}
+        {/* <Snow/> */}
+        <Scoreboard />
 
         <Sky sunPosition={[-0.07, -0.03, -0.75]} />
         <OrbitControls
@@ -759,8 +753,9 @@ const Random = () => {
         <SoftShadows />
         {/* <fog attach="fog" color={fogcolor} near={1} far={fogfar} /> */}
       </Canvas>
+      {/* <button onClick={switchMap}>Switch Map</button> */}
     </div>
   );
 };
 
-export default Random;
+export default PlayWithAI;

@@ -69,6 +69,7 @@ export class NotificationGateway implements OnGatewayConnection, OnGatewayDiscon
     }
   }
 
+
   sendNotification_redirect(id: string, data: any) {
     try {
     this.socketMap.get(id).forEach(socket => {

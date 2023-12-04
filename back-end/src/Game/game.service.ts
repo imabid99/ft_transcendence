@@ -106,7 +106,24 @@ export class GameService {
                 ach7: achievements.ach7,
             },
         });
-        return achievements;
+        
+        let count = 0;
+        if (achievements.ach1) count++;
+        if (achievements.ach2) count++;
+        if (achievements.ach3) count++;
+        if (achievements.ach4) count++;
+        if (achievements.ach5) count++;
+        if (achievements.ach6) count++;
+        if (achievements.ach7) count++;
+
+        const updated = await this.prisma.profile.update({
+            where: { userId: profile.userId },
+            data: {
+                achcount: count,
+            },
+        });
+        
+        return updated;
     }
 
     async submitScore(matchId: string, creatorScore: number, opponentScore: number): Promise<void> {
@@ -179,8 +196,15 @@ export class GameService {
             this.notificationGateway.apiInfo(winnerId,"You won the match")
             this.notificationGateway.apiInfo(loserId,"You lost the match")
 
-            await this.checkAchievements(updatedwinner);
-            await this.checkAchievements(updatedloser);
+            let updated_winner = await this.checkAchievements(updatedwinner);
+            if(updated_winner.achcount > winnerProfile.achcount){
+                this.notificationGateway.apiInfo(winnerId,"You got a new achievement")
+            }
+
+            let updated_loser = await this.checkAchievements(updatedloser);
+            if(updated_loser.achcount > loserProfile.achcount){
+                this.notificationGateway.apiInfo(loserId,"You got a new achievement")
+            }
 
         } catch (error) {
             console.log("This is the ERROR  in submitScore ", error);
@@ -305,6 +329,11 @@ export class GameService {
     async getLeaderboard(): Promise<any> {
         try {
             const leaderboard = await this.prisma.profile.findMany({
+                where: {
+                    user : {
+                        deleted : false,
+                    }
+                },
                 orderBy: { points: 'desc' },
                 // select: {
                 //     userId: true,

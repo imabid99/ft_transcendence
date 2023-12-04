@@ -126,6 +126,7 @@ model Profile {
   percentage      Float     @default(0.0)
   totalmatches    Int       @default(0)
   achievements    Achievement?
+  achcount        Int     @default(0)
 }
 
 model Achievement {
