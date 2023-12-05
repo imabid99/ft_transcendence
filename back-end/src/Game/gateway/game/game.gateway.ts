@@ -249,7 +249,7 @@ async match_invite(client: Socket) : Promise<void>  {
               this.socketMap.delete(user.userId);
             }
           }
-          if(match.creatorScore !== 7 && match.opponentScore !== 7)
+          if(match.creatorScore !== 5 && match.opponentScore !== 5)
             await this.gameService.deleteMatch(match.id);
         }
       }

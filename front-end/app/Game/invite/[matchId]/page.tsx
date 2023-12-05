@@ -497,8 +497,8 @@ const InviteAFriend = () => {
 		useEffect(() => {
 		  // TODO CHANGE THE SCORE TO 5
 		  if (!user) return;
-		  if (p1_count === 7 || p2_count === 7) {
-			if (p2_count === 7) {
+		  if (p1_count === 5 || p2_count === 5) {
+			if (p2_count === 5) {
 			  // console.log(user?.profile.userId, p1_count, p2_count);
 			  const payload = {
 				winner: user?.profile.userId,
