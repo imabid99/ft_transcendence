@@ -220,6 +220,28 @@ export class GameService {
                 throw new BadRequestException("You can't send an invite to yourself");
             }
             const sender = await this.prisma.profile.findUnique({ where: { userId: senderId } });
+            const opponent = await this.prisma.profile.findUnique({ where: { userId: OpponentId } });
+            if (opponent.status === "in-game") {
+                throw new BadRequestException("Player is already in a game");
+            }
+            const old = await this.prisma.notification.findFirst({
+                where: {
+                    userId: OpponentId,
+                    type: "Match_Invitation",
+                    actionUserId: senderId,
+                },
+            });
+            if (old && old.createdAt > new Date(Date.now() - 30000)) {
+                this.notificationGateway.apiError(senderId, "You already sent an invite to this player");
+                throw new BadRequestException("You already sent an invite to this player");
+            }
+            else if (old && old.createdAt < new Date(Date.now() - 30000)) {
+                await this.prisma.notification.delete({
+                    where: {
+                        id: old.id,
+                    },
+                });
+            }
             const notification = await this.prisma.notification.create({
                 data: {
                     userId: OpponentId,
@@ -232,7 +254,8 @@ export class GameService {
             });
             this.notificationGateway.inviteMatch(senderId, OpponentId);
         } catch (error) {
-            return error;
+            console.log("This is the ERROR  in makeRequest ", error);
+            // return error;
         }
     }
 
@@ -255,13 +278,27 @@ export class GameService {
 
     async acceptRequest(senderId: string, receiverId: string, notId: string): Promise<void> {
         try {
-            await this.prisma.notification.delete({
+            const old = await this.prisma.notification.findFirst({
                 where: {
-                    id: notId,
+                    userId: receiverId,
+                    type: "Match_Invitation",
+                    actionUserId: senderId,
                 },
             });
-            const matchId = await this.createMatch(senderId, receiverId, MatchType.FRIEND);
-            this.notificationGateway.acceptMatchRequest(senderId, receiverId, matchId);
+            if (old && old.createdAt < new Date(Date.now() - 30000)) {
+                this.notificationGateway.apiError(receiverId, "This request is no longer valid");
+                this.notificationGateway.sendRefresh();
+                throw new BadRequestException("This request is no longer valid");
+            }
+            else if (old && old.createdAt > new Date(Date.now() - 30000)) {
+                const matchId = await this.createMatch(senderId, receiverId, MatchType.FRIEND);
+                this.notificationGateway.acceptMatchRequest(senderId, receiverId, matchId);
+            }
+            await this.prisma.notification.delete({
+                where: {
+                    id: old.id,
+                },
+            });
         } catch (error) {
             return error;
         }
@@ -269,12 +306,25 @@ export class GameService {
 
     async refuseRequest(senderId: string, receiverId: string, notId: string): Promise<void> {
         try {
-            await this.prisma.notification.delete({
+            const old = await this.prisma.notification.findFirst({
                 where: {
-                    id: notId,
+                    userId: receiverId,
+                    type: "Match_Invitation",
+                    actionUserId: senderId,
                 },
             });
-            this.notificationGateway.refuseMatchRequest(senderId, receiverId);
+            if (old && old.createdAt < new Date(Date.now() - 30000)) {
+                this.notificationGateway.apiError(receiverId, "This request is no longer valid");
+                throw new BadRequestException("This request is no longer valid");
+            }
+            else if (old && old.createdAt > new Date(Date.now() - 30000)) {
+                this.notificationGateway.refuseMatchRequest(senderId, receiverId);
+            }
+            await this.prisma.notification.delete({
+                where: {
+                    id: old.id,
+                },
+            });
         } catch (error) {
             return error;
         }
@@ -346,6 +396,38 @@ export class GameService {
             return {first : leaderboard[0] , second : leaderboard[1] , third : leaderboard[2]};
         } catch (error) {
             return error;
+        }
+    }
+
+    async setInGame(userId: string): Promise<void> {
+        try {
+            await this.prisma.profile.update({
+                where: { userId: userId },
+                data: {
+                    status: "in-game",
+                },
+            });
+            this.notificationGateway.sendRefresh();
+        } catch (error) {
+            // return error;
+        }
+    }
+    async setOnline(userId: string): Promise<void> {
+        try {
+            const user = await this.prisma.profile.findUnique({ where: { userId} });
+            if (user.status === "offline") {
+                return;
+            }
+            await this.prisma.profile.update({
+                where: { userId: userId},
+                data: {
+                    status: "online",
+                },
+            });
+            this.notificationGateway.sendRefresh();
+        } catch (error) { 
+            console.log("setOnline error", error);
+            // return error;
         }
     }
 }

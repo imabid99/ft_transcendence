@@ -25,9 +25,9 @@ export default function Reload({children,}: {children: React.ReactNode}) {
 		notifSocket,
 		setUser,
 	} :any= useContext(contextdata);
-	const [refresh, setRefresh] = useState<string>("");
 	// const [myNotif, setMyNotif] = useState<any>([]);
 	const router = useRouter();
+	const [refresh, setRefresh] = useState<string>("");
 
 	useEffect(() => {
 		if (!socket)  return;

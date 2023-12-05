@@ -114,8 +114,9 @@ export default function CompleteProfile({info, setInfo}:any) {
         value: 3,
         message: "at least 3 characters",
       },
-      validate: (val:any) =>
-          val?.match(/\p{L}/gu)?.join('') === val || 'must contain only characters'
+      validate: (val: any) =>
+      val?.match(/[\p{L}\s]/gu)?.join("") === val ||
+      "only characters and spaces",
      },
       userName: { required: "Name is required",
       validate: async (value:string) => {

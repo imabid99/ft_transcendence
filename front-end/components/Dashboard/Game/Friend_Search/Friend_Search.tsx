@@ -29,8 +29,9 @@ const FriendSearch = ({setShow}: any) => {
         console.log(error)
     }
 }, [profiles])
-    return (
-        <>
+
+  return (
+      <>
 
   <div className="w-full h-full backdrop-blur-[20px] backSh flex gap-[30px] flex-col items-center">
     <div className="flex flex-col gap-[16px] w-10/12 ">
@@ -49,7 +50,7 @@ const FriendSearch = ({setShow}: any) => {
         </div>
         <div className="pt-[20px] w-10/12 flex flex-col gap-[20px] overflow-y-scroll scrollbar-hide">
           {Friends.map((friend: any) => (
-              <FriendCard avatar={friend?.avatar} name={`${friend?.firstName} ${friend?.lastName}`} online={friend?.status}/>
+              <FriendCard id={friend?.userId} avatar={friend?.avatar} name={`${friend?.firstName} ${friend?.lastName}`} online={friend?.status}/>
           ))}
         </div>
       </div>

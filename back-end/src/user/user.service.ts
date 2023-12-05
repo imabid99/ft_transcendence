@@ -31,6 +31,11 @@ export class UserService {
 
   async getProfiles() {
     const profiles = await this.prisma.profile.findMany({
+      where: {
+        user : {
+          deleted : false
+        }
+      },
       include: { achievements: true },
     });
     return profiles;
