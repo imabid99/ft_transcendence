@@ -69,6 +69,24 @@ export class FriendshipService {
           receiverId,
         },
       });
+      if (!friendship)
+        throw new BadRequestException("You have no friend request from this user");
+      else if (friendship.status === FriendshipStatus.BLOCKED && friendship.actionUserId === receiverId)
+      {
+        await this.prisma.notification.delete({where: { id: notid },});
+        this.notificationGateway.apiError(receiverId, "You've blocked this user");
+        this.notificationGateway.sendRefresh();
+        throw new ConflictException("You've blocked this user");
+      }
+      else if (friendship.status === FriendshipStatus.BLOCKED && friendship.actionUserId === senderId)
+      {
+        this.notificationGateway.apiError(receiverId, "This user has blocked you");
+        await this.prisma.notification.delete({where: { id: notid },});
+        this.notificationGateway.sendRefresh();
+        throw new ConflictException("This user has blocked you");
+      }
+      else if (friendship.status === FriendshipStatus.ACCEPTED)
+        throw new ConflictException("You're already friends with this user");
       await this.prisma.friendship.update({
         where: {
             id: friendship.id,
@@ -78,13 +96,11 @@ export class FriendshipService {
           actionUserId: receiverId,
         },
       });
-      await this.prisma.notification.delete({
-        where: {
-          id: notid,        },
-      });
+      await this.prisma.notification.delete({where: { id: notid },});
       this.notificationGateway.acceptFriendRequest(senderId, receiverId);
     } catch (error) {
-        return  error;
+        console.log("error is at accept req", error);
+        // return  error;
     }
   }
 
@@ -100,6 +116,18 @@ export class FriendshipService {
         throw new BadRequestException("You have no friend request from this user");
       else if (friendship.status === FriendshipStatus.ACCEPTED)
         throw new ConflictException("You're already friends with this user");
+      else if (friendship.status === FriendshipStatus.BLOCKED && friendship.actionUserId === receiverId)
+      {
+        this.notificationGateway.apiError(receiverId, "You've blocked this user");
+        this.notificationGateway.sendRefresh();
+        throw new ConflictException("You've blocked this user");
+      }
+      else if (friendship.status === FriendshipStatus.BLOCKED && friendship.actionUserId === senderId)
+      {
+        this.notificationGateway.apiError(receiverId, "This user has blocked you");
+        this.notificationGateway.sendRefresh();
+        throw new ConflictException("This user has blocked you");
+      }
       await this.prisma.friendship.delete({
         where: {
           id: friendship.id,
@@ -310,4 +338,23 @@ export class FriendshipService {
         return false;
     }
 
+    async amIBlocked(userId: string, potentialBlockerId: string) : Promise<boolean> {
+      try {
+        const blockedRelationship = await this.prisma.friendship.findFirst({
+          where: {
+            OR: [
+              { senderId: potentialBlockerId, receiverId: userId },
+              { senderId: userId, receiverId: potentialBlockerId },
+            ],
+            status: FriendshipStatus.BLOCKED,
+          },
+        });
+        if (blockedRelationship && blockedRelationship.actionUserId === potentialBlockerId)
+          return true;
+        else
+          return false;
+      } catch (error) {
+          console.log(error.message);
+      }
+    }
 }

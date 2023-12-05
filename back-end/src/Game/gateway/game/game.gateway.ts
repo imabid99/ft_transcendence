@@ -66,6 +66,7 @@ export class GameGateway implements OnGatewayConnection, OnGatewayDisconnect {
       if (token) {
         const user: any = jwt_decode(token);
         if (user && user.userId) {
+          this.gameService.setInGame(user.userId);
           if (!this.socketMap.has(user.userId)) {
             this.socketMap.set(user.userId, []);
           }
@@ -249,13 +250,12 @@ async createMatch(client: Socket) {
       if(token)
       {
         const user: any = jwt_decode(token);
-
+        this.gameService.setOnline(user.userId);
         //Remove inactive players from waiting list
         if (this.waitingPlayers.some(player => player.userId === user.userId)) {
           this.waitingPlayers = this.waitingPlayers.filter(player => player.userId !== user.userId);}
         if (this.invite_waitingPlayers.some(player => player.userId === user.userId)) {
           this.invite_waitingPlayers = this.invite_waitingPlayers.filter(player => player.userId !== user.userId);}
-
         if (match) {
           this.server.to(match.id).emit('player-disconnected', { playerId: user.userId });
           console.log("thethe ", user.userId);
