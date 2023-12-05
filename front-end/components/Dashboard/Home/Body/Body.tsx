@@ -29,18 +29,18 @@ export default function Body({ leaderRef, handelShaw }: Props) {
             const getFriends = async () => {
                 try{
                     const res = await axiosInstance.get(`http://${process.env.NEXT_PUBLIC_APP_URL}:3000/api/friendship/show`);
-                    console.log(res.data);
+                    // console.log(res.data);
                     setFriends(res.data);
                 }
                 catch(err){
-                    console.log(err);
+                    // console.log(err);
                 }
             }
             getFriends();
         }
         catch(error)
         {
-            console.log(error)
+            // console.log(error)
         }
     }, [profiles])
 
@@ -49,18 +49,18 @@ export default function Body({ leaderRef, handelShaw }: Props) {
             const getMatchHistorty = async () => {
                 try{
                     const res = await axiosInstance.get(`http://${process.env.NEXT_PUBLIC_APP_URL}:3000/api/game/match/history`);
-                    // console.log("this is match history",res.data[0].creator.profile.avatar);
+                    console.log("this is match history",res.data[0].creator.profile.avatar);
                     setmatchHistoryy(res.data);
                 }
                 catch(err){
-                    console.log(err);
+                    // console.log(err);
                 }
             }
             getMatchHistorty();
         }
         catch(error)
         {
-            console.log(error)
+            // console.log(error)
         }
     }, [profiles])
 
@@ -69,25 +69,25 @@ export default function Body({ leaderRef, handelShaw }: Props) {
             const getLeaderBoard = async () => {
                 try{
                     const res = await axiosInstance.get(`http://${process.env.NEXT_PUBLIC_APP_URL}:3000/api/game/leaderboard`);
-                    console.log("this is the leaderboard",res.data);
+                    // console.log("this is the leaderboard",res.data);
                     setleaderBoard(res.data);
                 }
                 catch(err){
-                    console.log(err);
+                    // console.log(err);
                 }
             }
             getLeaderBoard();
         }
         catch(error)
         {
-            console.log(error)
+            // console.log(error)
         }
     }, [profiles])
-    console.log("this is the hahahahahahahah ",matchHistoryy)
+    // console.log("this is the hahahahahahahah ",matchHistoryy)
     const firstavatar = `http://${process.env.NEXT_PUBLIC_APP_URL}:3000/${leaderboard?.first?.avatar}`;
     const secondavatar = `http://${process.env.NEXT_PUBLIC_APP_URL}:3000/${leaderboard?.second?.avatar}`;
     const thirdavatar = `http://${process.env.NEXT_PUBLIC_APP_URL}:3000/${leaderboard?.third?.avatar}`;
-    console.log("this is the avatar hahahahahaha ",thirdavatar);
+    // console.log("this is the avatar hahahahahaha ",thirdavatar);
     return (
         <div className="flex flex-col 3xl:flex-row items-center w-[100%]  h-screen">
             <div className="flex items-center flex-col 3xl:flex-row gap-[40px] 3xl:gap-[150px] w-[100%]  justify-center ">

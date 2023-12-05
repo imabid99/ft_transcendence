@@ -27,14 +27,14 @@ import {
   useSphere,
   Debug,
 } from "@react-three/cannon";
-import Loading from "@/app/loading";
+// import Loading from "@/app/loading";
 import { checkLoged, getLocalStorageItem } from "@/utils/localStorage";
 import { useRouter } from "next/navigation";
 import LoadingRandom from "@/components/Dashboard/Game/Random_Loading/loading";
-// map = snow, desert, forest; mode = friend, bot, random
+
 
 const Random = () => {
-
+ console.log("Random");
 	const [socket, setSocket] = useState<any>(null);
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const router = useRouter();
@@ -47,15 +47,6 @@ const Random = () => {
 	const { profiles, user }: any = useContext(contextdata);
 	const name = `${user?.profile.firstName} ${user?.profile.lastName}`;
   
-  useEffect(() => {
-		const token = checkLoged();
-		if (!token) {
-		router.push("/login");
-		return;
-		}
-		if(!user) return;
-		// setIsLoading(false);
-	}, [user]);
   
   useEffect(() => {
     const headers = {
@@ -730,18 +721,11 @@ const Random = () => {
           <planeGeometry args={[20, 0.1]} />
           <meshStandardMaterial color={"#FFFFFF"} />
         </mesh>
-        {/*
-          map == "forest" && <Forest/>
-          map == "desert" && <Desert/>
-          map == "snow" && <Snow/>
-        */}
       {
           shosenMap === 'desert' ? <Desert /> :
           shosenMap === 'snow' ? <Snow /> :
           <Forest />
       }
-      {/* <Desert/> */}
-      {/* <Snow/> */}
       <Scoreboard />
 
         <Sky sunPosition={[-0.07, -0.03, -0.75]} />
@@ -757,7 +741,6 @@ const Random = () => {
           enablePan={false}
         />
         <SoftShadows />
-        {/* <fog attach="fog" color={fogcolor} near={1} far={fogfar} /> */}
       </Canvas>
     </div>
   );

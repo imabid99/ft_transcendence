@@ -259,7 +259,7 @@ export class GameService {
         }
     }
 
-    async upateMatch(matchId, creatorSocket: string, opponentSocket: string): Promise<void> {
+    async updateMatch(matchId, creatorSocket: string, opponentSocket: string): Promise<void> {
         try {
             await this.prisma.match.update({
                 where: {
@@ -276,27 +276,53 @@ export class GameService {
         }
     }
 
-    async acceptRequest(senderId: string, receiverId: string, notId: string): Promise<void> {
+    async setOpponentSocket(matchId : string , opponentSocket: string): Promise<void> {
         try {
-            const old = await this.prisma.notification.findFirst({
+            const update =await this.prisma.match.update({
                 where: {
-                    userId: receiverId,
-                    type: "Match_Invitation",
-                    actionUserId: senderId,
+                    id: matchId,
+                },
+                data: {
+                    opponentSocket: opponentSocket,
                 },
             });
-            if (old && old.createdAt < new Date(Date.now() - 30000)) {
+        } catch (error) {
+            console.log("error at set op so", error)
+            return error;
+        }
+    }
+
+    async setCreatorSocket(matchId, creatorSocket: string): Promise<void> {
+        try {
+            await this.prisma.match.update({
+                where: {
+                    id: matchId,
+                },
+                data: {
+                    creatorSocket: creatorSocket,
+                },
+            });
+        } catch (error) {
+            console.log("error at set cr so", error)
+            return error;
+        }
+    }
+
+    async acceptRequest(senderId: string, receiverId: string, notId: string): Promise<void> {
+        try {
+            const notification = await this.prisma.notification.findUnique({ where: { id : notId,},});
+            if (notification && notification.createdAt < new Date(Date.now() - 30000)) {
                 this.notificationGateway.apiError(receiverId, "This request is no longer valid");
                 this.notificationGateway.sendRefresh();
                 throw new BadRequestException("This request is no longer valid");
             }
-            else if (old && old.createdAt > new Date(Date.now() - 30000)) {
+            else {
                 const matchId = await this.createMatch(senderId, receiverId, MatchType.FRIEND);
                 this.notificationGateway.acceptMatchRequest(senderId, receiverId, matchId);
             }
             await this.prisma.notification.delete({
                 where: {
-                    id: old.id,
+                    id: notification.id,
                 },
             });
         } catch (error) {
@@ -306,23 +332,18 @@ export class GameService {
 
     async refuseRequest(senderId: string, receiverId: string, notId: string): Promise<void> {
         try {
-            const old = await this.prisma.notification.findFirst({
-                where: {
-                    userId: receiverId,
-                    type: "Match_Invitation",
-                    actionUserId: senderId,
-                },
-            });
-            if (old && old.createdAt < new Date(Date.now() - 30000)) {
+            const notification = await this.prisma.notification.findUnique({ where: { id : notId,},});
+
+            if (notification && notification.createdAt < new Date(Date.now() - 30000)) {
                 this.notificationGateway.apiError(receiverId, "This request is no longer valid");
                 throw new BadRequestException("This request is no longer valid");
             }
-            else if (old && old.createdAt > new Date(Date.now() - 30000)) {
+            else {
                 this.notificationGateway.refuseMatchRequest(senderId, receiverId);
             }
             await this.prisma.notification.delete({
                 where: {
-                    id: old.id,
+                    id: notification.id,
                 },
             });
         } catch (error) {
@@ -369,7 +390,6 @@ export class GameService {
                         }
                     } } } }
             });
-            console.log("this is the matchHistory ", matchHistory);
             return matchHistory;
         } catch (error) {
             return error;
