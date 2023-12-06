@@ -35,8 +35,8 @@ const FriendCard = ({avatar, name, online, id, level }:props) => {
             <p className="text-[20px] md:text-[30px] text-[#3271A8] font-['Fredoka'] font-[400]">
                 {name}
             </p>
-            <p className="text-[10px] md:text-[20px] text-[#064A85] font-['Fredoka'] font-[600]">
-                {level}
+            <p className="text-[10px] md:text-[20px] text-[#064A85] font-['Fredoka'] font-[600] text-center md:text-left">
+               <span className="pr-1">LVL</span>     {level}
             </p>
             </div>
         </div>

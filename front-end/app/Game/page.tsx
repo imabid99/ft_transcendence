@@ -7,6 +7,8 @@ import FriendSearch from "@/components/Dashboard/Game/Friend_Search/Friend_Searc
 import PlayWithAI from "./ai/page";
 import Random from "./random/page";
 import {setLocalStorageItem } from "@/utils/localStorage";
+import { Rule } from "postcss";
+import Rules from "@/components/Dashboard/Game/Rules/Rules";
 
 const Game = () => {
     const [Show, setShow] = useState<string | null>(null);
@@ -40,7 +42,9 @@ const Game = () => {
 					/>
 			</div>
 			{
-			Show == null ? <Maps setShow={setShow} onMapChange={handleMapChange} />
+			Show == null ? <Rules setShow={setShow}/>
+			:
+			Show == 'map1' ? <Maps setShow={setShow} onMapChange={handleMapChange} />
 			:
 			Show == 'map' ? <Modes  setShow={setShow} onModeChange={handleModeChange}/>
 			:
