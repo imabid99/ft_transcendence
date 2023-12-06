@@ -71,6 +71,20 @@ export class GameService {
         }
     }
 
+    async updateServingPlayer(matchId: string, servingPlayer: string): Promise<void> {
+        try {
+            await this.prisma.match.update({
+                where: { id: matchId },
+                data: {
+                    servingplayer: servingPlayer,
+                },
+            });
+        } catch (error) {
+            console.log("This is the ERROR  in updateServingPlayer ", error);
+            return error;
+        }
+    }
+
     // expectedScore(rating1: number, rating2: number): number {
     //     return 1 / (1 + Math.pow(10, (rating2 - rating1) / 400));
     // }

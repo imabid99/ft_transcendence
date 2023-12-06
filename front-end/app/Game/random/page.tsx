@@ -389,9 +389,8 @@ const Random = () => {
         if (event.code === "Space") {
           isServing = true;
           socket.emit("ball-serve", {
+            hasServed: true,
             isServing: true,
-            isServingmobile: false,
-            direction: -1,
           });
         }
       };
@@ -400,9 +399,8 @@ const Random = () => {
         if (event.code === "Space") {
           isServing = false;
           socket.emit("ball-serve", {
+            hasServed: true,
             isServing: false,
-            isServingmobile: false,
-            direction: 1,
           });
         }
       };
@@ -410,18 +408,16 @@ const Random = () => {
       const handleTouchStart = (event: TouchEvent) => {
         isServingmobile = true;
         socket.emit("ball-serve", {
-          isServing: false,
+          hasServed: true,
           isServingmobile: true,
-          direction: -1,
         });
       };
 
       const handleTouchEnd = (event: TouchEvent) => {
         isServingmobile = false;
         socket.emit("ball-serve", {
-          isServing: false,
+          hasServed: true,
           isServingmobile: false,
-          direction: 1,
         });
       };
 
@@ -433,6 +429,11 @@ const Random = () => {
         });
       };
       subpos();
+      
+      socket.on("ball-position", (data: any) => {
+        console.log("here");
+        api.position.set(data.x, data.y, data.z);
+      });
 
       const subspeed = () => {
         api.velocity.subscribe((v) => {
@@ -449,6 +450,8 @@ const Random = () => {
       const serveball = () => {
         // const value = Math.random() < 0.5 ? -10 : 10;
         const value = -5;
+        
+
         if ((isServing || isServingmobile) && !hasServed) {
           api.applyImpulse([value * direction, 0, -10 * direction], [0, 0, 0]);
           hasServed = true;
@@ -472,15 +475,9 @@ const Random = () => {
       requestAnimationFrame(serveball);
 
       socket.on("ball-serve", (data: any) => {
-        isServing = data.isServing;
-        isServingmobile = data.isServingmobile;
-        direction = data.direction;
+        hasServed = data.hasServed;
       });
 
-      socket.on("ball-position", (data: any) => {
-        // Update the ball's position with the received data
-        api.position.set(data.x, data.y, data.z);
-      });
 
       return () => {
         window.removeEventListener("keydown", ServeDown);
@@ -556,11 +553,17 @@ const Random = () => {
         if (currentZ > 10 && lastPositionZ <= 10) {
           setP1Count((prevCount) => prevCount + 1);
           position.current.z = 0;
+          socket.emit("current-score", { score: p1_count});
         }
         if (currentZ < -10 && lastPositionZ >= -10) {
           setP2Count((prevCount) => prevCount + 1);
           position.current.z = 0;
         }
+
+        socket.on("current-score", (data: any) => {
+          console.log("hahahahahahahahahahah");
+          setP1Count(data.score);
+        }, []);
 
         lastPositionZ = currentZ;
     
