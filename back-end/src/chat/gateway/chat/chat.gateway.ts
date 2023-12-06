@@ -11,7 +11,7 @@ import * as jwt from "jsonwebtoken";
 import jwt_decode from "jwt-decode";
 import { PrismaService } from "../../../prisma/prisma.service";
 import { UserService } from "../../../user/user.service";
-
+import * as bcrypt from "bcrypt";
 
 @WebSocketGateway({
   cors: {
@@ -249,11 +249,13 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
         return;
       }
       payload.groupUsers.push(user.id);
+      const salt = await bcrypt.genSalt();
+      const hash = await bcrypt.hash(payload.protectedPassword, salt);
       const newChannel = await this.prisma.channels.create({
         data: {
           type: payload.groupType,
           name: payload.groupName,
-          password: payload.protectedPassword,
+          password: hash,
           userId: user.id,
           Members: {
             connect: payload.groupUsers.map((id) => ({ id })),
@@ -681,30 +683,37 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
         this.server.to(user.username).emit("errorNotif", {message: `you are banned from this group`, type: false});
         return;
       }
-      if (group.password !== payload.password) {
+      const valid = await bcrypt.compare(payload.password, group.password);
+      if (!valid) {
         this.server.to(user.username).emit("errorNotif", {message: `wrong password`, type: false});
         return;
       }
-
-      await this.prisma.user.update({
-        where: {
-          id: user.id,
-        },
-        data: {
-          channels: {
-            connect: {
-              id: payload.groupId,
-            },
+      else
+      {
+        await this.prisma.user.update({
+          where: {
+            id: user.id,
           },
-          channelsMember:{
-            connect: {
-              id: payload.groupId,
+          data: {
+            channels: {
+              connect: {
+                id: payload.groupId,
+              },
             },
-          }
-        },
-      });
-      this.server.to(user.username).emit("errorNotif", {message: `you are now a member of this group`, type: true});
-      this.server.emit("refresh");
+            channelsMember:{
+              connect: {
+                id: payload.groupId,
+              },
+            }
+          },
+        });
+        const myClient = this.getSocketsByUserName(user.username);
+        myClient.map((socket) => {
+          socket.join(payload.groupId);
+        });
+        this.server.to(user.username).emit("errorNotif", {message: `you are now a member of this group`, type: true});
+        this.server.emit("refresh");
+      }
     }
   }
 
@@ -1302,12 +1311,14 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
         this.server.to(user.username).emit("errorNotif", {message: `you are not allowed to set this group password`, type: false});
         return;
       }
+      const salt = await bcrypt.genSalt();
+      const hash = await bcrypt.hash(payload.password, salt);
       await this.prisma.channels.update({
         where: {
           id: payload.groupId,
         },
         data: {
-          password: payload.password,
+          password: hash,
           type: "Protected",
         },
       });

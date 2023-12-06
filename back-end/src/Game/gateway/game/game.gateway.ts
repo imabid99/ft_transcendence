@@ -80,9 +80,8 @@ export class GameGateway implements OnGatewayConnection, OnGatewayDisconnect {
         }
         else if(matchtype_ === 'Invite')
         {
-          this.createMatch(client);
+          this.match_invite(client);
         }
-        // user.profile.status = 'ingame';
       }
     } catch (e) {
       console.log("error at con ", e);
@@ -114,7 +113,7 @@ export class GameGateway implements OnGatewayConnection, OnGatewayDisconnect {
 
         if (creator.userId !== opponent.userId) {
           const matchId = await this.gameService.createMatch(creator.userId, opponent.userId, MatchType.RANDOM);
-          await this.gameService.upateMatch(matchId, creator.client.id, opponent.client.id);
+          await this.gameService.updateMatch(matchId, creator.client.id, opponent.client.id);
           creator.client.join(matchId);
           opponent.client.join(matchId);
           console.log(
@@ -162,43 +161,45 @@ export class GameGateway implements OnGatewayConnection, OnGatewayDisconnect {
   async handleScoreUpdate(
     client: Socket,
     payload: { winner: string, winnerscore: number, loserscore: number }
-  ) {
-    let winnerScore : number, loserScore: number, winner: string;
-    const match = await this.gameService.getMatch(client.id);
-    //Should leave the match bitch
-    this.server.to(match.id).emit('player-wins', { winner, winnerScore, loserScore });
-    
-    let creatorScore : any = null;
-    let opponentScore : any = null;
-    if (match) {
-      if (match.creatorId === payload.winner) {
-        winner = match.creatorId;
-        creatorScore = payload.winnerscore;
-        opponentScore = payload.loserscore; 
-      } else {
-        winner = match.opponentId;
-        opponentScore = payload.winnerscore;
-        creatorScore = payload.loserscore;
-      }
-      winnerScore = payload.winnerscore;
-      loserScore = payload.loserscore;
-
-      await this.gameService.submitScore(match.id, creatorScore, opponentScore);
-
-      this.socketMap.get(match.creatorId).forEach(socket => {
-        socket.leave(match.id);
-      });
-      this.socketMap.get(match.opponentId).forEach(socket => {
-        socket.leave(match.id);
-      });
+    ) {
+        try {
+        let winnerScore : number, loserScore: number, winner: string;
+        const match = await this.gameService.getMatch(client.id);
+        //Should leave the match bitch
+        this.server.to(match.id).emit('player-wins', { winner, winnerScore, loserScore });
+        
+        let creatorScore : any = null;
+        let opponentScore : any = null;
+        if (match) {
+          if (match.creatorId === payload.winner) {
+            winner = match.creatorId;
+            creatorScore = payload.winnerscore;
+            opponentScore = payload.loserscore; 
+          } else {
+            winner = match.opponentId;
+            opponentScore = payload.winnerscore;
+            creatorScore = payload.loserscore;
+          }
+          winnerScore = payload.winnerscore;
+          loserScore = payload.loserscore;
+          
+          await this.gameService.submitScore(match.id, creatorScore, opponentScore);
+          
+          this.socketMap.get(match.creatorId).forEach(socket => {
+            socket.leave(match.id);
+          });
+          this.socketMap.get(match.opponentId).forEach(socket => {
+            socket.leave(match.id);
+          });
+        }
+        } catch (e){ console.log("error at player-wins", e)}
     }
-  }
 
   //INVITE GAME
 
 
 @SubscribeMessage("createMatch")
-async createMatch(client: Socket) {
+async match_invite(client: Socket) : Promise<void>  {
   try {
     const token = client.handshake.headers.authorization?.split(" ")[1];
     if (token) {
@@ -206,46 +207,28 @@ async createMatch(client: Socket) {
       if (!decoded || !decoded.userId || !decoded.username) {
         throw new Error('Invalid token');
       }
-      const userId = decoded.userId;
-      const username = decoded.username;
-      const newObject = {
-        userId : userId,
-        username: username,
-        client: client,
-      };
-      this.invite_waitingPlayers.push(newObject);
-      if (this.invite_waitingPlayers.length >= 2) {
-        const creator = this.invite_waitingPlayers.shift();
-        const opponent = this.invite_waitingPlayers.shift();
-        if (creator.username !== opponent.username) {
-          console.log(
-            `Match started between ${creator.client.id} and ${opponent.client.id}`
-          );
-          const match = await this.gameService.getMatch2(creator.userId);
-          if (match) {
-            console.log(match);
-            await this.gameService.upateMatch(match.id, creator.client.id, opponent.client.id);
-            creator.client.join(match.id);
-            opponent.client.join(match.id);
-          } else {
-            console.log('No match found for user: ', creator.userId);
-          }
-        } else {
-          this.invite_waitingPlayers.unshift(opponent);
-        }
+      const match = await this.gameService.getMatch2(decoded.userId);
+      if (match && match.creatorId === decoded.userId)
+      {
+        await this.gameService.setCreatorSocket(match.id, client.id);
+        client.join(match.id);
       }
-    } else {
-      throw new Error('No token provided');
+      else if (match && match.opponentId === decoded.userId)
+      {
+        await this.gameService.setOpponentSocket(match.id, client.id);
+        client.join(match.id);
+      }
     }
-  } catch (error) {
-    console.error('An error occurred:', error);
+  } catch (e) {
+    console.log("error at invite ", e);
   }
-}
+} 
 
   async handleDisconnect(client: Socket) {
     try {
       const token = client.handshake.headers.authorization?.split(" ")[1];
       const match = await this.gameService.getMatch(client.id);
+      console.log("match at disconnect ", match);
       // console.log("the player has disconnected", client.id);
       if(token)
       {
@@ -254,11 +237,8 @@ async createMatch(client: Socket) {
         //Remove inactive players from waiting list
         if (this.waitingPlayers.some(player => player.userId === user.userId)) {
           this.waitingPlayers = this.waitingPlayers.filter(player => player.userId !== user.userId);}
-        if (this.invite_waitingPlayers.some(player => player.userId === user.userId)) {
-          this.invite_waitingPlayers = this.invite_waitingPlayers.filter(player => player.userId !== user.userId);}
         if (match) {
           this.server.to(match.id).emit('player-disconnected', { playerId: user.userId });
-          console.log("thethe ", user.userId);
           if (user && user.userId && this.socketMap.has(user.userId)) {
             const sockets = this.socketMap.get(user.userId);
             const index = sockets.indexOf(client);
@@ -269,7 +249,7 @@ async createMatch(client: Socket) {
               this.socketMap.delete(user.userId);
             }
           }
-          if(match.creatorScore !== 7 && match.opponentScore !== 7)
+          if(match.creatorScore !== 5 && match.opponentScore !== 5)
             await this.gameService.deleteMatch(match.id);
         }
       }

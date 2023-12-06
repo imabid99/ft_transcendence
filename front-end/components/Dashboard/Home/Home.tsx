@@ -25,7 +25,6 @@ export default function Home() {
     useEffect(() => {
         if(!notifSocket)
             return;
-        console.log("reload");
         notifSocket.on("reload", () => {
             // setReload(!reload);
             setReload(new Date().getTime().toString());
@@ -43,14 +42,14 @@ export default function Home() {
                     setAllNotifications(res.data);
                 }
                 catch(err){
-                    console.log(err);
+                    // console.log(err);
                 }
             }
             getNotificatons();
         }
         catch(error)
         {
-            console.log(error)
+            // console.log(error)
         }
     }
     ,[reload])
@@ -87,7 +86,7 @@ export default function Home() {
             setShow(true)
         }
     }
-    console.log(allNotifications);
+    // console.log(allNotifications);
     return (
         <div className="flex flex-col px-[10px] sm:px-[62px] py-[60px] w-full bg-[#FAFDFF]  h-[100vh] overflow-y-scroll overflow-x-hidden gap-[52px] relative no-scrollbar ">
             {!show && <div className='w-full h-full fixed top-0 left-0 z-[51]' onClick={() => handelClose(HeadermodalRef)}></div>}

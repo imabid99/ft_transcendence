@@ -23,7 +23,6 @@ export default function ChatLayout({
         <link rel="icon" href="/favicon.ico" />
       </Head>
         <div className="h-[100vh] w-[100vw] flex bg-[#FAFDFF]">
-          <Dashboard path='Game'/>
           <ExitGame/>
           {children}
         </div>
