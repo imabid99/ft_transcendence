@@ -31,6 +31,7 @@ import {
 import { checkLoged, getLocalStorageItem } from "@/utils/localStorage";
 import { useRouter } from "next/navigation";
 import LoadingRandom from "@/components/Dashboard/Game/Random_Loading/loading";
+import { set } from "react-hook-form";
 
 
 const Random = () => {
@@ -239,9 +240,9 @@ const Random = () => {
             z: -9,
             playerId: user?.profile.userId,
           });
-          setTimeout(() => {
+          // setTimeout(() => {
             api.position.set(paddleposX, 0.5, 9);
-          }, 5);
+          // }, 5);
         }
         animationFrameId = requestAnimationFrame(updatePosition);
       };
@@ -426,7 +427,9 @@ const Random = () => {
 
       const subpos = () => {
         api.position.subscribe((v) => {
-          return (position.current = new THREE.Vector3(v[0], v[1], v[2]));
+          position.current = new THREE.Vector3(v[0], v[1], v[2]);
+          socket.emit("ball-position", { x: -v[0], y: v[1], z: -v[2] });
+          return (position.current);
         });
       };
       subpos();
@@ -474,13 +477,18 @@ const Random = () => {
         direction = data.direction;
       });
 
+      socket.on("ball-position", (data: any) => {
+        // Update the ball's position with the received data
+        api.position.set(data.x, data.y, data.z);
+      });
+
       return () => {
         window.removeEventListener("keydown", ServeDown);
         window.removeEventListener("keyup", ServeUp);
         window.removeEventListener("touchstart", handleTouchStart);
         window.removeEventListener("touchend", handleTouchEnd);
-        // socket.off('ballPosition');
-        socket.off("ball-serve");
+        socket.off('ball-position');
+        // socket.off("ball-serve");
       };
     }, []);
 

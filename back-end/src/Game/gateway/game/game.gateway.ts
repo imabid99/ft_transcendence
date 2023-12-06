@@ -133,7 +133,6 @@ export class GameGateway implements OnGatewayConnection, OnGatewayDisconnect {
   }
   }
 
-  
 
   @SubscribeMessage("paddle-pos")
   async handlePaddlePos(
@@ -153,7 +152,30 @@ export class GameGateway implements OnGatewayConnection, OnGatewayDisconnect {
   ) {
     const match = await this.gameService.getMatch(client.id);
     if (match) {
+      match.servingplayer = client.id;
       client.broadcast.to(match.id).emit("ball-serve", payload);
+    }
+  }
+
+  @SubscribeMessage("ball-position")
+  async handleBallPosition(
+    client: Socket,
+    payload: { x: number, y: number, z: number }
+  ) {
+    try {
+      const token = client.handshake.headers.authorization?.split(" ")[1];
+      if (token) {
+        const decoded: any = jwt_decode(token);
+        if (!decoded || !decoded.userId || !decoded.username) {
+          throw new Error('Invalid token');
+        }
+        const match = await this.gameService.getMatch(client.id);
+        if (match && match.servingplayer === client.id) {
+          client.broadcast.to(match.id).emit('ball-position', payload);
+        }
+      }
+    } catch (e) {
+      console.log("error at invite ", e);
     }
   }
 

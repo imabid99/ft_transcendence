@@ -94,6 +94,7 @@ model match {
   creator        User      @relation("matches_created", fields: [creatorId], references: [id])
   opponentId     String
   opponent       User      @relation("matches_invited", fields: [opponentId], references: [id])
+  servingplayer  String?
   creatorScore   Int?
   opponentScore  Int?
   creatorSocket  String?
