@@ -14,10 +14,10 @@ const FriendCard = ({avatar, name, online, id, level }:props) => {
     const handleInvite = async (id:string) => {
         try{
           const res = await axiosInstance.post(`http://${process.env.NEXT_PUBLIC_APP_URL}:3000/api/game/request/${id}`);
-          console.log(res.data);
+        //   console.log(res.data);
         }
         catch(err){
-          console.log(err);
+        //   console.log(err);
         }
       }
     return (

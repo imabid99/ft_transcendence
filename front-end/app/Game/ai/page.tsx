@@ -435,25 +435,30 @@ const PlayWithAI = () => {
     const [p1_count, setP1Count] = useState<number>(0);
     const [p2_count, setP2Count] = useState<number>(0);
 
-    let animationFrameId: number | null = null;
 
     useEffect(() => {
+      let animationFrameId: number | null = null;
+      let lastPositionZ = 0;
+    
       const goalCheck = () => {
-        if (position.current.z > 10) {
+        const currentZ = position.current.z;
+    
+        if (currentZ > 10 && lastPositionZ <= 10) {
           setP1Count((prevCount) => prevCount + 1);
           position.current.z = 0;
         }
-        if (position.current.z < -10) {
+        if (currentZ < -10 && lastPositionZ >= -10) {
           setP2Count((prevCount) => prevCount + 1);
           position.current.z = 0;
         }
-        setTimeout(() => {
-          animationFrameId = requestAnimationFrame(goalCheck);
-        }, 30);
+
+        lastPositionZ = currentZ;
+    
+        animationFrameId = requestAnimationFrame(goalCheck);
       };
-
-      goalCheck();
-
+    
+      animationFrameId = requestAnimationFrame(goalCheck);
+    
       return () => {
         if (animationFrameId !== null) {
           cancelAnimationFrame(animationFrameId);

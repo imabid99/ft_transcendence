@@ -29,47 +29,52 @@ import Loading from "@/app/loading";
 
 const InviteAFriend = () => {
 
-
+	console.log("InviteAFriend");
+	const currentRoute = typeof window !== 'undefined' ? window.location.pathname : '';
+	const matchId = currentRoute.substring(13);
+	console.log(matchId);
 	
 	const [socket, setSocket] = useState<any>(null);
 	const { user }: any = useContext(contextdata);
-	const [isLoading, setIsLoading] = useState<boolean>(true);
+	// const [isLoading, setIsLoading] = useState<boolean>(true);
 	const router = useRouter();
-	
-  
+
+	const [shosenMap, setShosenMap] = useState<string | null>(null);
+
 	/// SOCKET MANAGER
-useEffect(() => {
-	const token = checkLoged();
-	if (!token) {
-	router.push("/login");
-	return;
-	}
-	if(!user) return;
-	setIsLoading(false);
-}, [user]);
-  useEffect(() => {
-    const headers = {
-      Authorization: `Bearer ${getLocalStorageItem("Token")}`,
-    };
-    const matchType = 'Invite';
-      const newSocket = io(
-        `http://${process.env.NEXT_PUBLIC_APP_URL}:3000/Game`,
-        {
-			extraHeaders: {
-				...headers,
-			},
-			auth: {
-				matchType,
-			},
-        }
-      );
-      if (newSocket) {
-        setSocket(newSocket);
-      }
-      return () => {
-        newSocket.disconnect();
-      };
-  }, []);
+	// useEffect(() => {
+	// 	const token = checkLoged();
+	// 	if (!token) {
+	// 	router.push("/login");
+	// 	return;
+	// 	}
+	// 	if(!user) return;
+	// 	setIsLoading(false);
+	// }, [user]);
+
+	useEffect(() => {
+		const headers = {
+		Authorization: `Bearer ${getLocalStorageItem("Token")}`,
+		};
+		const matchType = 'Invite';
+		const newSocket = io(
+			`http://${process.env.NEXT_PUBLIC_APP_URL}:3000/Game`,
+			{
+				extraHeaders: {
+					...headers,
+				},
+				auth: {
+					matchType,
+				},
+			}
+		);
+		if (newSocket) {
+			setSocket(newSocket);
+		}
+		return () => {
+			newSocket.disconnect();
+		};
+	}, []);
   
 	useEffect(() => {
 	  if (!socket) return;
@@ -80,6 +85,11 @@ useEffect(() => {
 		socket.disconnect();
 	  };
 	}, [socket]);
+
+	useEffect(() => {
+		if(getLocalStorageItem("Maps"))
+		  setShosenMap(getLocalStorageItem("Maps"));
+	  }, []);
 
 	useEffect(() => {
 		if (!socket) return;
@@ -265,22 +275,6 @@ useEffect(() => {
 			window.addEventListener("keydown", handleKeyDown);
 			window.addEventListener("keyup", handleKeyUp);
 
-			// const updatePosition = () => {
-			// 	// if (ref.current) {
-			// 	// 	// if (isMovingLeft) {
-			// 	// 	// 	targetPosX = Math.max(targetPosX - 0.5, -5);
-			// 	// 	// 	} else if (isMovingRight) {
-			// 	// 	// 		targetPosX = Math.min(targetPosX + 0.5, 5);
-			// 	// 	// 	}
-			// 	// 	// 	const smoothingFactor = 0.5;
-			// 	// 	// 	paddleposX = paddleposX + (targetPosX - paddleposX) * smoothingFactor;
-			// 	// 	// 	// api.position.set(paddleposX, 0.5, -9);
-			// 	// 	}
-
-			// 	requestAnimationFrame(updatePosition);
-			// };
-
-			// requestAnimationFrame(updatePosition);
 			socket.on('paddle-pos', (data: any) => {
 				if (data.playerId === user?.profile.userId) return;
 				api.position.set(data.x, data.y, data.z);
@@ -503,8 +497,8 @@ useEffect(() => {
 		useEffect(() => {
 		  // TODO CHANGE THE SCORE TO 5
 		  if (!user) return;
-		  if (p1_count === 7 || p2_count === 7) {
-			if (p2_count === 7) {
+		  if (p1_count === 5 || p2_count === 5) {
+			if (p2_count === 5) {
 			  // console.log(user?.profile.userId, p1_count, p2_count);
 			  const payload = {
 				winner: user?.profile.userId,
@@ -556,20 +550,9 @@ useEffect(() => {
 	  };
 	  
 
-	// const [currentMap, setCurrentMap] = useState('Desert');
-
-	// const switchMap = () => {
-	//   if (currentMap === 'Desert') {
-	// 	setCurrentMap('Forest');
-	//   } else if (currentMap === 'Forest') {
-	// 	setCurrentMap('Snow');
-	//   } else {
-	// 	setCurrentMap('Desert');
-	//   }
-	// };
-	if (isLoading) {
-		return <Loading />;
-	}	
+	// if (isLoading) {
+	// 	return <Loading />;
+	// }	
   return (
   <div className="w-full  h-full relative">
 
@@ -577,15 +560,6 @@ useEffect(() => {
 		shadows
 		camera={{ fov: 75, near: 0.1, far: 300, position: [0, 10, 20] }}
 	  >
-		{/*<Sparkles
-			count={2000}
-			speed={4}
-			opacity={1}
-			color={ 0x00ffff }
-			size={Float32Array.from(Array.from({ length: 2000 }, () => Math.random() * (80 - 5) + 10))}
-			scale={250}
-			noise={1000}
-		/>*/}
 
 		<Perf position="bottom-right" />
 		<ambientLight color={"#ffffff"} intensity={1} />
@@ -612,11 +586,6 @@ useEffect(() => {
 					<SideRock2/>
 				{/* </Debug> */}
 			</Physics>
-			{/* <mesh rotation-x={-Math.PI * 0.5} scale={[10, 10, 10]} position={[0, -0.1, 0]} receiveShadow> */}
-				{/* <planeGeometry args={[20, 20]} /> */}
-				{/* <circleGeometry args={[16, 50]} /> */}
-				{/* <meshStandardMaterial color={planecolor} /> */}
-			{/* </mesh> */}
 			<mesh receiveShadow rotation-x={- Math.PI * 0.5} position-y={0.02}>
 				<planeGeometry args={[20, 0.2]}/>
 				<meshStandardMaterial color={'#FFFFFF'}/>
@@ -633,20 +602,12 @@ useEffect(() => {
 				<planeGeometry args={[20, 0.1]}/>
 				<meshStandardMaterial color={'#FFFFFF'}/>
 			</mesh>
-			{
-				/*
-					map == "forest" && <Forest/>
-					map == "desert" && <Desert/>
-					map == "snow" && <Snow/>
-				*/
-			}
 
-				{/* {currentMap === 'Desert' && <Desert />}
-				{currentMap === 'Forest' && <Forest />}
-				{currentMap === 'Snow' && <Snow />} */}
-			{/* <Forest/> */}
-			<Desert/>
-			{/* <Snow/> */}
+			{
+				shosenMap === 'desert' ? <Desert /> :
+				shosenMap === 'snow' ? <Snow /> :
+				<Forest />
+      		}
 			<Scoreboard />
 
 		<Sky sunPosition={[-0.07, -0.03, -0.75]} />
@@ -662,9 +623,7 @@ useEffect(() => {
 			enablePan={false}
 		/>
 		<SoftShadows />
-		{/* <fog attach="fog" color={fogcolor} near={1} far={fogfar} /> */}
 	  </Canvas>
-	  {/* <button onClick={switchMap}>Switch Map</button> */}
   </div>
   );
 };

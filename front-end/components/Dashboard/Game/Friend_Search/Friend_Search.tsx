@@ -15,18 +15,18 @@ const FriendSearch = ({setShow}: any) => {
         const getFriends = async () => {
             try{
                 const res = await axiosInstance.get(`http://${process.env.NEXT_PUBLIC_APP_URL}:3000/api/friendship/show`);
-                console.log(res.data);
+                // console.log(res.data);
                 setFriends(res.data);
             }
             catch(err){
-                console.log(err);
+                // console.log(err);
             }
         }
         getFriends();
     }
     catch(error)
     {
-        console.log(error)
+        // console.log(error)
     }
 }, [profiles])
 
