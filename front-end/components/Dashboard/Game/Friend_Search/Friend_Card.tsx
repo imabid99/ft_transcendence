@@ -6,9 +6,10 @@ type props  = {
     avatar: string,
     online: string,
     id: string
+    level: string
 }
 
-const FriendCard = ({avatar, name, online, id }:props) => {
+const FriendCard = ({avatar, name, online, id, level }:props) => {
     const avatarUrl = `http://${process.env.NEXT_PUBLIC_APP_URL}:3000/${avatar}`;
     const handleInvite = async (id:string) => {
         try{
@@ -34,8 +35,8 @@ const FriendCard = ({avatar, name, online, id }:props) => {
             <p className="text-[20px] md:text-[30px] text-[#3271A8] font-['Fredoka'] font-[400]">
                 {name}
             </p>
-            <p className="text-[10px] md:text-[20px] text-[#064A85] font-['Fredoka'] font-[600]">
-                LVL 5
+            <p className="text-[10px] md:text-[20px] text-[#064A85] font-['Fredoka'] font-[600] text-center md:text-left">
+               <span className="pr-1">LVL</span>     {level}
             </p>
             </div>
         </div>
