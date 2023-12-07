@@ -22,7 +22,7 @@ export default function UsersOnline() {
             className="w-full cursor-grab"
             >
                 {user && myFriends?.map((profile: any) => (
-                    profile.status === "online" && profile.userId !== user.id &&
+                    profile.status !== "offline" && profile.userId !== user.id &&
                     <SwiperSlide key={profile.userId}>
                         <Link href={`/Chat/me/${profile.userId}`}>
                             <Avatars url={`http://${process.env.NEXT_PUBLIC_APP_URL}:3000/${profile.avatar}`} status={true} />

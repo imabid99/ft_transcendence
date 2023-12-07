@@ -36,26 +36,13 @@ export default function validateForm() {
                 token: token,
                 type: "Oauth",
             });
-            // setAvatarUrl(`${response.data.avatar}`);
             setIsLoading(false);
             } catch (e: any) {
             console.log("Error : ", e);
             return;
             }
         };
-        // const getJWT = async () => {
-        //     try {
-        //         const response = await axios.get(`http://${process.env.NEXT_PUBLIC_APP_URL}:3000/api/auth/oauth2/tempUser/${token}`);
-        //         setLocalStorageItem("Token", response.data);
-        //         router.push("/");
-        //         setIsLoading(false);
-        //         } catch (e: any) {
-        //         console.log("Error : ", e);
-        //         return;
-        //         }
-        // }
         fetchMyProfile();
-        // getJWT();
     }, [token]);
   if (isloading) {
     return <Loading/>;

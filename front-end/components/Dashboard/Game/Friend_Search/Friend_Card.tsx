@@ -6,17 +6,16 @@ type props  = {
     avatar: string,
     online: string,
     id: string
+    level: string
 }
 
-const FriendCard = ({avatar, name, online, id }:props) => {
+const FriendCard = ({avatar, name, online, id, level }:props) => {
     const avatarUrl = `http://${process.env.NEXT_PUBLIC_APP_URL}:3000/${avatar}`;
     const handleInvite = async (id:string) => {
         try{
           const res = await axiosInstance.post(`http://${process.env.NEXT_PUBLIC_APP_URL}:3000/api/game/request/${id}`);
-        //   console.log(res.data);
         }
         catch(err){
-        //   console.log(err);
         }
       }
     return (
@@ -34,18 +33,22 @@ const FriendCard = ({avatar, name, online, id }:props) => {
             <p className="text-[20px] md:text-[30px] text-[#3271A8] font-['Fredoka'] font-[400]">
                 {name}
             </p>
-            <p className="text-[10px] md:text-[20px] text-[#064A85] font-['Fredoka'] font-[600]">
-                LVL 5
+            <p className="text-[10px] md:text-[20px] text-[#064A85] font-['Fredoka'] font-[600] text-center md:text-left">
+               <span className="pr-1">LVL</span>     {level}
             </p>
             </div>
         </div>
         <div className="pb-[15px] md:pb-0">
-            <button disabled={online === 'online' ? false : true} className={`w-[144px] h-[46px] rounded-[8px] bg-[#3271A8] flex items-center justify-center gap-[5px]   ${online === 'online' ? 'bg-[#62AAE7] hover:bg-[#3e8acdcb] playButt' : 'bg-[#D0D0D0] cursor-not-allowed playButt1 '}`}>
+            {/* <button disabled={online === 'online' ? false : true} className={`w-[144px] h-[46px] rounded-[8px] bg-[#3271A8] flex items-center justify-center gap-[5px]   ${online === 'online' ? 'bg-[#62AAE7] hover:bg-[#3e8acdcb] playButt' : 'bg-[#D0D0D0] cursor-not-allowed playButt1 '}`}>
             <img src="pong-icon.svg" alt="" className="w-[15px]" />
             <p  className="text-[#fff] text-[13px] font-[400] font-['Fredoka']" onClick={()=> handleInvite(id)}>
                 Invite To Play
             </p>
-            </button>
+            </button> */}
+            <button onClick={()=> handleInvite(id)} disabled={online === 'online' ? false : true} className={`w-[144px] h-[46px] rounded-[8px] bg-[#3271A8] flex items-center justify-center gap-[5px]  ${online === 'online' ? 'bg-[#62AAE7] hover:bg-[#3e8acdcb] playButt cursor-pointer' : online === 'in-game' ? 'bg-[#F2C571] cursor-not-allowed playButt1 ' : 'bg-[#D0D0D0] cursor-not-allowed playButt1 '}`}>
+            <img src="pong-icon.svg" alt="" className="w-[15px]" />
+            <p className="text-[#fff] text-[13px] font-[400] font-['Fredoka']">{online === 'in-game' ? 'In Game' : 'Invite To Play'}</p>
+        </button>
         </div>
         </div>
     </div>

@@ -92,6 +92,9 @@ const Maps = ({setShow, onMapChange}:props) => {
             </div>
             </div>
             <div className="w-full  flex justify-center gap-[10px] pb-[40px] flex-col items-center lg:flex-row">
+            <button onClick={()=>{setShow(null)}} className="w-[150px] h-[50px] lg:w-[240px] lg:h-[77px] retB rounded-[14px] text-white text-[20px] lg:text-[30px] font-[400] hover:bg-gray-400 font-['Fredoka']">
+                Back
+            </button>
             <button disabled={!selected} onClick={()=>setShow("map")} className={`w-[150px] h-[50px] lg:w-[240px] lg:h-[77px] backB rounded-[14px] text-white text-[20px] lg:text-[30px] font-[400] hover:bg-gray-400 font-['Fredoka'] ${!selected ? 'cursor-not-allowed text-[20px]' : ''}`}>
                 {selected ? 'Next' : 'Choose Map'}
             </button>

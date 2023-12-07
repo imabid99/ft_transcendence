@@ -22,7 +22,7 @@ const Modes = ({setShow, onModeChange}:props) => {
             <div className="w-full flex justify-center pt-[2px] lg:pt-[24px]">
             <img src="king.svg" alt="" className="h-[155px] lg:h-[255px]"/>
             </div>
-            <div className="flex gap-[20px] justify-center flex-col xl:flex-row items-center">
+            <div className="flex gap-[20px] justify-center flex-col 2xl:flex-row items-center">
             <div className="flex gap-[20px] flex-col lg:flex-row items-center">
                 <div className={`w-[290px] lg:w-[372px] h-[150px] lg:h-[201px] rounded-[14px] aiSh relative overflow-hidden cursor-pointer ${selected === 'FRIEND' ? 'border-4 border-white backdrop-blur-[20px] bg-black' : ''}`} onClick={() => handleClick('FRIEND')}>
                 <img
@@ -64,7 +64,7 @@ const Modes = ({setShow, onModeChange}:props) => {
             </div>
             </div>
             <div className="w-full  flex justify-center gap-[10px] pb-[40px] flex-col items-center md:flex-row">
-            <button onClick={()=>{setShow(null)}} className="w-[150px] h-[50px] lg:w-[240px] lg:h-[77px] retB rounded-[14px] text-white text-[20px] lg:text-[30px] font-[400] hover:bg-gray-400 font-['Fredoka']">
+            <button onClick={()=>{setShow("map1")}} className="w-[150px] h-[50px] lg:w-[240px] lg:h-[77px] retB rounded-[14px] text-white text-[20px] lg:text-[30px] font-[400] hover:bg-gray-400 font-['Fredoka']">
                 Back
             </button>
             <button disabled={!selected} onClick={()=>{

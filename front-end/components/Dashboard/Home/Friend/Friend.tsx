@@ -10,15 +10,13 @@ type props  = {
     online: string
     userId: string
 }
-// getNotificatons();
+
 const Friend = ({ cover, avatar, name, username, online,userId }:props) => {
     const avatarUrl = `http://${process.env.NEXT_PUBLIC_APP_URL}:3000/${avatar}`;
     const coverUrl = `http://${process.env.NEXT_PUBLIC_APP_URL}:3000/${cover}`;
     const matchInvite = async () => {
         try{
             const res = await axiosInstance.post(`http://${process.env.NEXT_PUBLIC_APP_URL}:3000/api/game/request/${userId}`);
-            // console.log(res.data);
-            // setAllNotifications(res.data);
         }
         catch(err){
             console.log(err);
@@ -41,12 +39,11 @@ const Friend = ({ cover, avatar, name, username, online,userId }:props) => {
         <Link href={`/Profile/users/${userId}`}>
         <div className="relative z-[10]">
             <div className="rounded-full w-[76px] h-[76px] absolute -top-[38px] right-[83px] cursor-pointer">
-               
                     <img src={avatarUrl} alt="" className="object-cover rounded-full w-full h-full"/>
             </div>
             <div>
                 <img
-                src={online === 'online' ? "pellipse-179.svg" : "not_online.svg"}
+                src={online === 'online' ? "pellipse-179.svg" : online === 'in-game' ? "ingame.svg" : "not_online.svg"}
                 alt=""
                 className="absolute -top-[47px] right-[75px]"
                 />
@@ -65,9 +62,9 @@ const Friend = ({ cover, avatar, name, username, online,userId }:props) => {
             <img src="send.svg" alt="" />
             <p className="text-[#fff] text-[10px] font-[400]">Message</p>
         </Link>
-        <button onClick={matchInvite} disabled={online === 'online' ? false : true} className={`w-[90px] h-[34px] rounded-[8px] flex items-center justify-center gap-[5px]  ${online === 'online' ? 'bg-[#62AAE7] hover:bg-[#3e8acdcb] playButt cursor-pointer' : 'bg-[#D0D0D0] cursor-not-allowed playButt1'}`}>
+        <button onClick={matchInvite} disabled={online === 'online' ? false : true} className={`w-[90px] h-[34px] rounded-[8px] flex items-center justify-center gap-[5px]  ${online === 'online' ? 'bg-[#62AAE7] hover:bg-[#3e8acdcb] playButt cursor-pointer' : online === 'in-game' ? 'bg-[#F2C571] cursor-not-allowed playButt1 ' : 'bg-[#D0D0D0] cursor-not-allowed playButt1 '}`}>
             <img src="pong-icon.svg" alt="" />
-            <p className="text-[#fff] text-[10px] font-[400]">Play With</p>
+            <p className="text-[#fff] text-[10px] font-[400]">{online === 'in-game' ? 'In Game' : 'Play With'}</p>
         </button>
         </div>
     </div>

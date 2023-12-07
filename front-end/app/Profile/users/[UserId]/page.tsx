@@ -298,7 +298,7 @@ export default function Page() {
                       </>
                     )
                     : (
-                        <p>
+                        <p className='text-[#b13d48]'>
                             You Are blocked
                         </p>
                     )}

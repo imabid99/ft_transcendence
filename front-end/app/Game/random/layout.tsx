@@ -4,7 +4,7 @@ import Dashboard from '@/components/Dashboard/Dashboard/Dashboard'
 import ExitGame from "@/components/Dashboard/Game/Exit_game/exit_game";
 
 export const metadata = {
-  title: "Inbox",
+  title: "Random",
   description: "ft_transcendence",
 };
 

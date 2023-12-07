@@ -4,7 +4,8 @@ import { useContext, useEffect, useState } from 'react';
 import axiosInstance from "@/utils/axiosInstance";
 import { contextdata } from '@/app/contextApi';
 import FriendCard from "./Friend_Card";
-
+import Lottie from "lottie-react"
+import animationData2 from   "../../../../public/ghost2.json"
 
 
 const FriendSearch = ({setShow}: any) => {
@@ -33,15 +34,8 @@ const FriendSearch = ({setShow}: any) => {
   return (
       <>
 
-  <div className="w-full h-full backdrop-blur-[20px] backSh flex gap-[30px] flex-col items-center">
+  <div className="w-full h-full backdrop-blur-[20px] backSh flex gap-[30px] flex-col items-center justify-center">
     <div className="flex flex-col gap-[16px] w-10/12 ">
-      <div className="w-full  pt-[49px]">
-        <input
-          type="search"
-          className="w-full h-[110px] md:h-[100px] rounded-[25px] backdrop-blur-[20px] inpShad placeholder:text-white text-white placeholder:font-['Fredoka'] font-['Fredoka'] placeholder:text-[25px] placeholder:font-[500] font-[500] text-[25px] indent-[62px] "
-          placeholder="Search To Play"
-        />
-      </div>
       <div className="w-full h-[491px] rounded-[34px] backdrop-blur-[20px] inpShad flex items-center flex-col  ">
         <div className=" pt-[20px] w-10/12">
           <p className="text-[#fff] text-[20px] font-[400] font-['Fredoka']">
@@ -49,9 +43,19 @@ const FriendSearch = ({setShow}: any) => {
           </p>
         </div>
         <div className="pt-[20px] w-10/12 flex flex-col gap-[20px] overflow-y-scroll scrollbar-hide">
-          {Friends.map((friend: any) => (
-              <FriendCard id={friend?.userId} avatar={friend?.avatar} name={`${friend?.firstName} ${friend?.lastName}`} online={friend?.status}/>
-          ))}
+        {
+            Friends && Friends.length > 0 ? (
+                Friends.map((friend: any) => (
+                    <FriendCard id={friend?.userId} avatar={friend?.avatar} name={`${friend?.firstName} ${friend?.lastName}`} online={friend?.status} level={friend?.level}/>
+                ))
+            ) : (
+                <div className='w-full h-full flex justify-center'>
+                    <div className="w-[300px]">
+                        <Lottie animationData={animationData2}/>
+                    </div>
+                </div>
+            )
+        }
         </div>
       </div>
     </div>
