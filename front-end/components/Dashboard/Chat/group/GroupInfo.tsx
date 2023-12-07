@@ -127,7 +127,7 @@ export default function GroupInfo({setShowBody,setGroupUsers,groupUsers}:GroupIn
                     <input onChange={handleUploadImage} type="file" id="img" name="img" accept=".jpg,.jpeg,.png,.gif"  className="absolute top-[0px] left-[0px] w-full h-full opacity-0 cursor-pointer z-[1]" />
                 </div>
             </div>
-            <form className="min-h-[500px] px-[39px] flex flex-col gap-[30px] py-[25px]">
+            <div className="min-h-[500px] px-[39px] flex flex-col gap-[30px] py-[25px]">
                 {
                     showError === 'badGroupName' ? (
                         <label htmlFor="GroupName" className=" groupInfo flex items-center border-[1px] border-[#FF0000]  ">
@@ -186,7 +186,7 @@ export default function GroupInfo({setShowBody,setGroupUsers,groupUsers}:GroupIn
                         </label>
                     )
                 }
-            </form>
+            </div>
             <div  onClick={createGroup} className="  bg-[#025063] min-h-[70px] min-w-[70px] rounded-full absolute bottom-[54px] right-[50px] z-[10] flex justify-center items-center cursor-pointer" >
                 <div className="flex justify-center items-center relative">
                     <svg  fill="#FFF"  viewBox="0 0 24 24" height="40px" width="40px" xmlns="http://www.w3.org/2000/svg"><path fill="none" stroke="#FFF" d="M6,12.4 L18,12.4 M12.6,7 L18,12.4 L12.6,17.8"></path>

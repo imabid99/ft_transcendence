@@ -382,7 +382,7 @@ export default function Page() {
                       : ""
                   }`}
                   type="firstName"
-                  id=""
+                  id="First name"
                   placeholder="First name"
                   {...register("firstName", registerOptions.firstName)}
                 />
@@ -393,7 +393,7 @@ export default function Page() {
                       : ""
                   }`}
                   type="lastName"
-                  id=""
+                  id="Last name"
                   placeholder="Last name"
                   {...register("lastName", registerOptions.lastName)}
                 />
@@ -406,7 +406,7 @@ export default function Page() {
                       : ""
                   }`}
                   type="email"
-                  id=""
+                  id="Email"
                   placeholder="Email"
                   {...register("email", registerOptions.email)}
                 />
@@ -442,7 +442,7 @@ export default function Page() {
                       : ""
                   }`}
                   type="password"
-                  id=""
+                  id="Old password"
                   placeholder="Old password"
                   {...register1("oldpassword", registerOptions.oldpassword)}
                 />
@@ -455,7 +455,7 @@ export default function Page() {
                       : ""
                   }`}
                   type="password"
-                  id=""
+                  id="New password"
                   placeholder="New password"
                   {...register1("newpassword", registerOptions.newpassword)}
                 />
@@ -466,7 +466,7 @@ export default function Page() {
                       : ""
                   }`}
                   type="password"
-                  id=""
+                  id="Confirm password"
                   placeholder="Confirm password"
                   {...register1(
                     "confirmpassword",
