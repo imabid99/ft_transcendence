@@ -95,5 +95,4 @@ export class userController {
   async changeData(@Req() req): Promise<void> {
     return this.userService.changeData(req.user.id, req.body);
   }
-
 }

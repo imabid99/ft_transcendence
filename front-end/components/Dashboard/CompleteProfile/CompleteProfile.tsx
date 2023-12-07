@@ -15,16 +15,16 @@ import {
   use,
 } from 'react';
 import axiosInstance from '@/utils/axiosInstance';
+import { setLocalStorageItem } from '@/utils/localStorage';
 
 
 
-export default function CompleteProfile({info}:any) {
-  // console.log("this is info : ", info);
-  const {profiles, user, socket}:any = useContext(contextdata);
-  const myProfile = profiles?.find((profile:any) => profile?.userId === user?.id);
-  const name = `${myProfile?.firstName} ${myProfile?.lastName}`;
-  const [avatarUrl, setAvatarUrl] = useState("/nouser.avif");
-  const [avatar, setUserData] = useState<File>();
+export default function CompleteProfile({info, setInfo}:any) {
+  console.log("this is info ---------> : ", info);
+  const {setLoged}:any = useContext(contextdata);
+
+  const [avatarUrl, setAvatarUrl] = useState(`http://${process.env.NEXT_PUBLIC_APP_URL}:3000/${info?.avatar}`);
+  const [avatar, setUserData] = useState<any>();
   let user_data = new FormData();
     const router = useRouter();
     const [isloading, setIsLoading] = useState(true);
@@ -49,26 +49,42 @@ export default function CompleteProfile({info}:any) {
     const {register, handleSubmit, formState } = form;
     const {errors, isDirty} = formState;
     const onSubmit = async (data: FormValues) => {
-      // user_data.append('firstName', data.firstName);
-      // user_data.append('lastName', data.lastName);
-      // user_data.append('username', data.userName);
-      // user_data.append('email', data.email);
-      // user_data.append('password', info.password);
       for (let pair of user_data.entries()) {
         console.log(pair[0]+ ', '+ pair[1]); 
       }
       console.log("this is user_data ahahah : ", avatar);
       try {
-          const response = await axios.post(`http://${process.env.NEXT_PUBLIC_APP_URL}:3000/api/auth/signup`,{
-            firstName: data.firstName,
-            lastName: data.lastName,
-            username: data.userName,
-            email : data.email,
-            password: info.password,
-            file: avatar,
-          });
-          if (response.status !== 200) 
-            router.push('/login');
+        
+            if(info.type === "Oauth")
+            {
+              const formData = new FormData();
+              formData.append('file', avatar);
+              formData.append('firstName', data.firstName);
+              formData.append('lastName', data.lastName);
+              formData.append('username', data.userName);
+              formData.append('email', data.email);
+              formData.append('oauthid', info.oauthid);
+              formData.append('avatar', info.avatar);
+              console.log("this is info in oauth: ", info);
+              const response = await axios.post(`http://${process.env.NEXT_PUBLIC_APP_URL}:3000/api/auth/oauth2/createUser`,formData);
+              if (response.status !== 200)
+                setLocalStorageItem("Token", response.data.token);
+                setLoged(true);
+                router.push('/');
+            }
+            else{
+              const formData = new FormData();
+              formData.append('file', avatar);
+              formData.append('firstName', data.firstName);
+              formData.append('lastName', data.lastName);
+              formData.append('username', data.userName);
+              formData.append('email', data.email);
+              formData.append('password', info.password);
+              console.log("this is formData : ", formData);
+              const response = await axios.post(`http://${process.env.NEXT_PUBLIC_APP_URL}:3000/api/auth/signup`,formData);
+              if (response.status !== 200) 
+                router.push('/login');
+            }
       } catch (e:any) 
       {
         console.log("Error : ", e.response.data);
@@ -98,8 +114,9 @@ export default function CompleteProfile({info}:any) {
         value: 3,
         message: "at least 3 characters",
       },
-      validate: (val:any) =>
-          val?.match(/\p{L}/gu)?.join('') === val || 'must contain only characters'
+      validate: (val: any) =>
+      val?.match(/[\p{L}\s]/gu)?.join("") === val ||
+      "only characters and spaces",
      },
       userName: { required: "Name is required",
       validate: async (value:string) => {
@@ -166,18 +183,18 @@ export default function CompleteProfile({info}:any) {
     // user_data.delete('file');
     // user_data.append('file', file);
     // setUserData(formData);
-    setUserData(file);
     console.log("------> file : ", file);
+    setUserData(file);
     console.log("------> setUserData : ", avatar);
 
     setAvatarUrl(URL.createObjectURL(file));
 }
-  // const avatarUrl = `http://${process.env.NEXT_PUBLIC_APP_URL}:3000/${myProfile?.avatar}`;
+  // const avatarUrl = `http://${process.env.NEXT_PUBLIC_APP_URL}:3000/${info?.avatar}`;
 
     return (
         
         <>
-  <div className="h-[100vh] w-[100%] flex justify-around items-center bgImg bg-no-repeat bg-cover bg-center " style={{backgroundImage: 'url("backfilter.svg")'}}> 
+  <div className="h-[100vh] w-[100%] flex justify-around items-center bgImg bg-no-repeat bg-cover bg-center " style={{backgroundImage: 'url("/backfilter.svg")'}}> 
     <div className=" w-[100vw]  h-full bg-blue-200 bg-opacity-0 backdrop-blur-[7px] flex flex-row items-center justify-center md:w-11/12 md:max-h-[735px] md:rounded-[61px] xl:max-w-[1404px] xl:mx-auto">
       <div className="w-[100%] flex flex-col items-center justify-center xl:w-[30%] py-[50px]">
         <div className='relative pb-[30px]'>
@@ -194,7 +211,7 @@ export default function CompleteProfile({info}:any) {
                     htmlFor="upload"
                     className="absolute top-[20px] cursor-pointer "
                     >
-                    <img id="imageUpload" src="group-70.svg" className="transform hover:scale-125 transition-transform duration-300" />
+                    <img id="imageUpload" src="/group-70.svg" className="transform hover:scale-125 transition-transform duration-300" />
                     </label>
                     <input
                     name="avatar"
@@ -258,8 +275,8 @@ export default function CompleteProfile({info}:any) {
     
       </div>
       <div className="xl:block hidden relative">
-        <img src="Frame 101-PhotoRoom.png" alt="" className=" relative mt-[-112px] ml-[60px]" />
-        <img src="heroball.png" alt="" className="mt-[-200px] ml-[60px]  top-[440px] left-[45px] animateball absolute" />
+        <img src="/Frame 101-PhotoRoom.png" alt="" className=" relative mt-[-112px] ml-[60px]" />
+        <img src="/heroball.png" alt="" className="mt-[-200px] ml-[60px]  top-[440px] left-[45px] animateball absolute" />
       </div>
     </div>
   </div>

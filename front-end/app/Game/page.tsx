@@ -7,6 +7,8 @@ import FriendSearch from "@/components/Dashboard/Game/Friend_Search/Friend_Searc
 import PlayWithAI from "./ai/page";
 import Random from "./random/page";
 import {setLocalStorageItem } from "@/utils/localStorage";
+import { Rule } from "postcss";
+import Rules from "@/components/Dashboard/Game/Rules/Rules";
 
 const Game = () => {
     const [Show, setShow] = useState<string | null>(null);
@@ -29,7 +31,7 @@ const Game = () => {
 		<div className="w-full h-full flex justify-center items-center">
 			<div className="absolute top-0 left-0 w-full h-full  overflow-hidden">
 				<video
-						src="Europa Official Game Reveal Trailer.mp4"
+						src="/Europa Official Game Reveal Trailer.mp4"
 						autoPlay={true}
 						muted={true}
 						loop={true}  
@@ -40,7 +42,9 @@ const Game = () => {
 					/>
 			</div>
 			{
-			Show == null ? <Maps setShow={setShow} onMapChange={handleMapChange} />
+			Show == null ? <Rules setShow={setShow}/>
+			:
+			Show == 'map1' ? <Maps setShow={setShow} onMapChange={handleMapChange} />
 			:
 			Show == 'map' ? <Modes  setShow={setShow} onModeChange={handleModeChange}/>
 			:

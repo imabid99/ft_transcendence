@@ -18,11 +18,11 @@ const Modes = ({setShow, onModeChange}:props) => {
     return (
         <>
 
-        <div className=" w-full h-full lg:w-[100%] max-w-[1370px] xl:h-[830px] xl:rounded-[100px] backdrop-blur-[10px] backSh flex gap-[15px] lg:gap-[72px] flex-col items-center justify-center">
+        <div className=" w-full h-full backdrop-blur-[10px] backSh flex gap-[15px] lg:gap-[72px] flex-col items-center justify-center">
             <div className="w-full flex justify-center pt-[2px] lg:pt-[24px]">
             <img src="king.svg" alt="" className="h-[155px] lg:h-[255px]"/>
             </div>
-            <div className="flex gap-[20px] justify-center flex-col xl:flex-row items-center">
+            <div className="flex gap-[20px] justify-center flex-col 2xl:flex-row items-center">
             <div className="flex gap-[20px] flex-col lg:flex-row items-center">
                 <div className={`w-[290px] lg:w-[372px] h-[150px] lg:h-[201px] rounded-[14px] aiSh relative overflow-hidden cursor-pointer ${selected === 'FRIEND' ? 'border-4 border-white backdrop-blur-[20px] bg-black' : ''}`} onClick={() => handleClick('FRIEND')}>
                 <img

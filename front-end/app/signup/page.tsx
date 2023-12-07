@@ -16,6 +16,7 @@ import {
 } from "@/utils/localStorage";
 import { on } from "events";
 import Email from "next-auth/providers/email";
+import { type } from "os";
 
 
 export default function Home() {
@@ -27,7 +28,10 @@ export default function Home() {
     lastName: "",
     userName: "",
     email: "",
+    avatar: "uploads/default/nouser.avif",
+    type: "default"
   });
+
 
 
   type FormValues = {
@@ -36,6 +40,8 @@ export default function Home() {
     userName: string;
     email: string;
     password: string;
+    avatar: string;
+    type: string;
   };
 
   const form = useForm<FormValues>({ mode: "all" });
@@ -49,6 +55,8 @@ export default function Home() {
           userName: data.userName,
           email: data.email,
           password: data.password,
+          avatar: "uploads/default/nouser.avif",
+          type: "default"
         });
   }
 
@@ -65,8 +73,8 @@ export default function Home() {
         message: "at least 3 characters",
       },
       validate: (val: any) =>
-        val?.match(/\p{L}/gu)?.join("") === val ||
-        "must contain only characters",
+      val?.match(/[\p{L}\s]/gu)?.join("") === val ||
+      "only characters and spaces",
     },
     lastName: {
       required: "Last name is required",
@@ -79,8 +87,8 @@ export default function Home() {
         message: "at least 3 characters",
       },
       validate: (val: any) =>
-        val?.match(/\p{L}/gu)?.join("") === val ||
-        "must contain only characters",
+      val?.match(/[\p{L}\s]/gu)?.join("") === val ||
+      "only characters and spaces",
     },
     userName: {
       required: "Name is required",
@@ -127,7 +135,7 @@ export default function Home() {
   };
   return (
     <>
-      {showCompleteProfile && <CompleteProfile info={info} />}
+      {showCompleteProfile && <CompleteProfile info={info} setInfo={setInfo}/>}
       <div
         className="h-[100vh] w-[100%] flex justify-around items-center bgImg bg-no-repeat bg-cover bg-center "
         style={{ backgroundImage: 'url("backfilter.svg")' }}
@@ -135,24 +143,30 @@ export default function Home() {
         <div className=" w-[100vw]  h-full bg-blue-200 bg-opacity-0 backdrop-blur-[7px] flex flex-row items-center justify-center md:w-11/12 md:max-h-[735px] md:rounded-[61px] xl:max-w-[1404px] xl:mx-auto">
           <div className="w-[100%] flex flex-col items-center justify-center xl:w-[30%] py-[50px]">
             <div className="flex flex-col pt-[20px] gap-[16px] sm:flex-row w-full items-center justify-center">
-              <button className="flex justify-evenly items-center w-[170px] h-[52px] border-[0.1px] rounded-[11px] border-white cursor-pointer">
+              <button           onClick={() => {
+            router.push('http://localhost:3000/api/auth/oauth2/google');
+          }}
+          className="flex justify-evenly items-center w-[170px] h-[52px] border-[0.1px] rounded-[11px] border-white cursor-pointer hover:bg-white hover:bg-opacity-10">
                 <img
                   src="goog.svg"
                   alt=""
                   className="w-[20.153px] h-[20.56px]"
                 />
                 <p className="text-white text-[10px] font-[400] cursor-pointer">
-                  Log in with google
+                  Sing Up with google
                 </p>
               </button>
-              <button className="flex justify-evenly items-center w-[170px] h-[52px] border-[0.1px] rounded-[11px] border-white cursor-pointer">
+              <button           onClick={() => {
+            router.push('http://localhost:3000/api/auth/oauth2/42');
+          }} 
+          className="flex justify-evenly items-center w-[170px] h-[52px] border-[0.1px] rounded-[11px] border-white cursor-pointer hover:bg-white hover:bg-opacity-10">
                 <img
                   src="423918.logowik 1.png"
                   alt=""
                   className="w-[25px] h-[21px]"
                 />
                 <p className="text-white text-[10px] font-[400] cursor-pointer">
-                  Log in with intra
+                  Sign Up with intra
                 </p>
               </button>
             </div>

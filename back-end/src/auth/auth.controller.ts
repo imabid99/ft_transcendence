@@ -2,12 +2,15 @@ import {
   Body,
   Controller,
   Get,
+  Param,
   Patch,
   Post,
   Redirect,
   Req,
   Res,
+  UploadedFile,
   UseGuards,
+  UseInterceptors,
 } from "@nestjs/common";
 import { AuthService } from "./auth.service";
 import { UserService } from "../user/user.service";
@@ -15,6 +18,8 @@ import { UserData } from "../dtos/user.dto";
 import { UserDataLogin } from "../dtos/user-login.dto";
 import { AuthGuard } from "@nestjs/passport";
 import { Response } from "express";
+import { FileInterceptor } from "@nestjs/platform-express";
+import { customStorage } from "./../upload/multer-config";
 
 @Controller("auth")
 export class authController {
@@ -27,9 +32,13 @@ export class authController {
   signin(@Body() userData: UserDataLogin) : Promise<any> {
     return this.authService.login(userData);
   }
+
   @Post("signup")
-  signup(@Body() userData: UserData) : Promise<any>{
-    return this.authService.addUser(userData);
+  @UseInterceptors(FileInterceptor("file", { storage: customStorage }))
+  signup(@Body() userData: UserData,   
+    @UploadedFile() file: Express.Multer.File,
+  ) : Promise<any>{
+    return this.authService.addUser(userData, file);
   }
 
   @Get("oauth2/42")
@@ -38,11 +47,28 @@ export class authController {
     return;
   }
 
+
   @Get("oauth2/42/callback")
   @UseGuards(AuthGuard("42"))
-  Callback42(@Req() req): Promise<string> {
-    return this.userService.intraJWT(req.user.email);
+  Callback42(@Req() req, @Res() res) {
+    if (req.user.type === "login")
+      res.redirect("http://localhost:1337/login/validate/?token=" + req.user.token);
+    else
+      res.redirect("http://localhost:1337/signup/validate/?token=" + req.user.token);
   }
+
+  @Get("oauth2/tempUser/:id")
+  async tempUser(@Param("id") id:string): Promise<any> {
+    return await this.authService.getTempUser(id);
+  }
+
+  @Post("oauth2/createUser")
+  @UseInterceptors(FileInterceptor("file", { storage: customStorage }))
+  async userCreate(@Req() req,@UploadedFile() file: Express.Multer.File,): Promise<any> {
+    // console.log(req.body);
+    return await this.authService.validateOauthUser(req.body,file);
+  }
+
 
   @Get("oauth2/google")
   @UseGuards(AuthGuard("google"))
@@ -52,8 +78,11 @@ export class authController {
 
   @Get("oauth2/google/callback")
   @UseGuards(AuthGuard("google"))
-  CallbackGoogle(@Req() req,@Res() res): Promise<string> {
-    return this.userService.googleJWT(req.user.email);
+  CallbackGoogle(@Req() req,@Res() res) {
+    if (req.user.type === "login")
+      res.redirect("http://localhost:1337/login/validate/?token=" + req.user.token);
+    else
+      res.redirect("http://localhost:1337/signup/validate/?token=" + req.user.token);
   }
 
   @Get("2fa_qr")

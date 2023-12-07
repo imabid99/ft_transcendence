@@ -14,6 +14,13 @@ import * as QRCode from "qrcode";
 import * as speakeasy from "speakeasy";
 import { v4 as uuidv4 } from "uuid";
 import { NotificationGateway } from "src/notification/gateway/notification.gateway";
+import { User } from "@prisma/client";
+import axios from 'axios';
+import { writeFile } from 'fs';
+import { promisify } from 'util';
+import * as mime from 'mime-types';
+
+const writeFileAsync = promisify(writeFile);
 
 @Injectable()
 export class AuthService {
@@ -51,9 +58,14 @@ export class AuthService {
     }
   }
 
-  async addUser(userData: UserData) {
-    console.log("heeere :", userData.file);
+  async addUser(userData: UserData, file: any) {
     try {
+      console.log(userData);
+      let av : string = "uploads/default/nouser.avif";
+      if (file && file.path) {
+        av = file.path;
+        console.log("avatar", av);
+      }
       let exist = await this.prisma.user.findUnique({
         where: {
           email: userData.email,
@@ -65,7 +77,6 @@ export class AuthService {
             username: userData.username,
           },
         });
-        
       }
       if (exist) {
         throw new BadRequestException("User already exist");
@@ -77,6 +88,7 @@ export class AuthService {
           username: userData.username,
           email: userData.email,
           password: hash,
+          oauthid: uuidv4(),
           twoFASecret: await this.generate2FASecret(userData.username),
           profile: {
             create: {
@@ -84,6 +96,7 @@ export class AuthService {
               lastName: userData.lastName,
               email: userData.email,
               username: userData.username,
+              avatar: av,
               achievements : {
                 create : {
                 }
@@ -93,6 +106,7 @@ export class AuthService {
         },
       });
     } catch (error) {
+      console.log(error);
       return error;
     }
   }
@@ -191,63 +205,143 @@ export class AuthService {
     }
   }
 
-  async validateIntraUser(user: any): Promise<any> {
+  async validateOauthUser(user: any, file : any): Promise<any> {
     try {
-      const exist = await this.prisma.user.findUnique({
-        where: { email: user.email },
-      });
-      if (!exist) {
-        await this.prisma.user.create({
+      let av : string = user.avatar;
+      if (file && file.path) {
+        av = file.path;
+        console.log("avatar", av);
+      }
+        const usr = await this.prisma.user.create({
           data: {
             username: user.username,
             email: user.email,
-            id42: user.fortyTwoId,
+            oauthid: user.oauthid,
             twoFASecret: await this.generate2FASecret(user.username),
-            password: "42",
+            password: uuidv4(),
             profile: {
               create: {
                 firstName: user.firstName,
                 lastName: user.lastName,
                 email: user.email,
                 username: user.username,
+                avatar: av,
+                achievements : {
+                  create : {
+                  }
+                }
               },
             },
           },
         });
-      }
-      return user;
+      this.deleteTempUser(user.oauthid);
+      return {token : this.userService.generateToken(usr.id, usr.username, usr.email)};
     } catch (error) {
-      throw new InternalServerErrorException("Internal server error");
+      console.log("val oauth",error);
+      throw error;
     }
   }
 
-  async validateGoogleUser(user: any): Promise<any> {
+  async createTempUser(data: any): Promise<string> {
+    const { oauthid ,email, firstName, lastName, username , avatar } = data;  
     try {
-      const exist = await this.prisma.user.findUnique({
-        where: { email: user.email },
-      });
-      if (!exist) {
-        await this.prisma.user.create({
-          data: {
-            username: "user.username",
-            email: user.email,
-            idGoogle: user.googleId,
-            twoFASecret: await this.generate2FASecret(user.email),
-            password: "google",
-            profile: {
-              create: {
-                firstName: user.firstName,
-                lastName: user.lastName,
-                email: user.email,
-                username: "user.username",
-              },
-            },
-          },
-        });
+      const exist = await this.prisma.tempUser.findUnique({ where: { email } });
+      if (exist) {
+        return exist.id;
       }
+      const newAvatar = await this.downloadImage(avatar);
+      const tempUser = await this.prisma.tempUser.create({
+        data: {
+          oauthid,
+          email,
+          username,
+          firstName,
+          lastName,
+          avatar: newAvatar,
+        },
+      });
+      return tempUser.id;
+    } catch (error) {
+      return error;
+    }
+  }
+
+  async getTempUser(id: string): Promise<any> {
+    try {
+      const tempUser = await this.prisma.tempUser.findUnique({
+        where: {
+          id,
+        },
+      });
+      return tempUser;
+    } catch (error) {
+      return error;
+    }
+  }
+
+  async deleteTempUser(id: string): Promise<any> {
+    try {
+      await this.prisma.tempUser.delete({
+        where: {
+          oauthid: id,
+        },
+      });
+    } catch (error) {
+      return error;
+    }
+  }
+
+  async getUserByOauthId(id : string) : Promise<User>
+  {
+    try {
+
+      const user = await this.prisma.user.findUnique({
+        where: {
+          oauthid : id,
+        },
+      });
       return user;
     } catch (error) {
-      throw new InternalServerErrorException("Internal server error");
+      return error;
+    }
+  }
+  
+  async logicAuth(usr :  any): Promise<any> {
+    try {
+      const user = await this.getUserByOauthId(usr.oauthid);
+      if (user)
+        return {type : "login" , token : await this.userService.generateToken(user.id, user.username, user.email)};
+      else
+        return {type : "signup" , token : await this.createTempUser(usr)}
+    } catch (error) {
+      return error;
+    }
+  }
+
+  async downloadImage(url: string): Promise<string> {
+    try {
+      const response = await axios.get(url, {
+        responseType: 'arraybuffer',
+      });
+
+      // Determine the file extension
+      let extension = mime.extension(response.headers['content-type']) || '';
+      if (!extension) {
+        // Fallback: Extract extension from URL if possible
+        const match = url.match(/\.(jpeg|jpg|gif|png|svg)$/);
+        extension = match ? match[0] : '';
+      }
+
+      if (!extension) {
+        throw new Error('Unable to determine file extension');
+      }
+
+      const filename = `image_${uuidv4()}.${extension}`;
+      await writeFileAsync(`./uploads/all/${filename}`, response.data);
+      return `./uploads/all/${filename}`;
+    } catch (error) {
+      throw new Error('Failed to download and save image: ' + error.message);
     }
   }
 }
+

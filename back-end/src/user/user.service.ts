@@ -31,6 +31,11 @@ export class UserService {
 
   async getProfiles() {
     const profiles = await this.prisma.profile.findMany({
+      where: {
+        user : {
+          deleted : false
+        }
+      },
       include: { achievements: true },
     });
     return profiles;
@@ -145,6 +150,9 @@ export class UserService {
         data: {
           deleted: true,
           password: hash,
+          oauthid: `deleted_${uniqueSuffix}`,
+          email: `username_deleted_${uniqueSuffix}`,
+          username: `email_deleted_${uniqueSuffix}`,
         },
       });
       const oldAvatar: string = user.profile.avatar;
@@ -176,7 +184,8 @@ export class UserService {
       });
       return;
     } catch (error) {
-      return error;
+      console.log(error);
+      // return error;
     }
   }
 

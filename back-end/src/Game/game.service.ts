@@ -17,7 +17,6 @@ export class GameService {
                     type: type,
                 },
             });
-            // console.log("This is the match   ",match);
             return match.id;
         } catch (error) {
             console.log("This is The ERROR  ", error);
@@ -107,9 +106,24 @@ export class GameService {
                 ach7: achievements.ach7,
             },
         });
+        
+        let count = 0;
+        if (achievements.ach1) count++;
+        if (achievements.ach2) count++;
+        if (achievements.ach3) count++;
+        if (achievements.ach4) count++;
+        if (achievements.ach5) count++;
+        if (achievements.ach6) count++;
+        if (achievements.ach7) count++;
 
-        console.log("achievements : ", achievements);
-        return achievements;
+        const updated = await this.prisma.profile.update({
+            where: { userId: profile.userId },
+            data: {
+                achcount: count,
+            },
+        });
+        
+        return updated;
     }
 
     async submitScore(matchId: string, creatorScore: number, opponentScore: number): Promise<void> {
@@ -135,7 +149,6 @@ export class GameService {
             const winnerProfile = await this.prisma.profile.findUnique({ where: { userId: winnerId } });
             const loserProfile = await this.prisma.profile.findUnique({ where: { userId: loserId } });
 
-            console.log(winnerId, " WON! now he has ", winnerProfile.xp, " xp");
             winnerProfile.xp += 100;
             // winnerProfile.nextLevelXp = winnerProfile.level === 0 ? 500 : (winnerProfile.level + 1) * 1000;
             winnerProfile.nextLevelXp = winnerProfile.level === 0 ? 500 : 500 + winnerProfile.level * 1000;
@@ -165,7 +178,6 @@ export class GameService {
                     twc: Math.abs(creatorScore - opponentScore) === 1 ? { increment: 1 } : { increment: 0 },
                 },
             });
-            
             const updatedloser = await this.prisma.profile.update({
                 where: { userId: loserId },
                 data: {
@@ -181,8 +193,18 @@ export class GameService {
                 },
             });
             
-            await this.checkAchievements(updatedwinner);
-            await this.checkAchievements(updatedloser);
+            this.notificationGateway.apiInfo(winnerId,"You won the match")
+            this.notificationGateway.apiInfo(loserId,"You lost the match")
+
+            let updated_winner = await this.checkAchievements(updatedwinner);
+            if(updated_winner.achcount > winnerProfile.achcount){
+                this.notificationGateway.apiInfo(winnerId,"You got a new achievement")
+            }
+
+            let updated_loser = await this.checkAchievements(updatedloser);
+            if(updated_loser.achcount > loserProfile.achcount){
+                this.notificationGateway.apiInfo(loserId,"You got a new achievement")
+            }
 
         } catch (error) {
             console.log("This is the ERROR  in submitScore ", error);
@@ -198,6 +220,28 @@ export class GameService {
                 throw new BadRequestException("You can't send an invite to yourself");
             }
             const sender = await this.prisma.profile.findUnique({ where: { userId: senderId } });
+            const opponent = await this.prisma.profile.findUnique({ where: { userId: OpponentId } });
+            if (opponent.status === "in-game") {
+                throw new BadRequestException("Player is already in a game");
+            }
+            const old = await this.prisma.notification.findFirst({
+                where: {
+                    userId: OpponentId,
+                    type: "Match_Invitation",
+                    actionUserId: senderId,
+                },
+            });
+            if (old && old.createdAt > new Date(Date.now() - 30000)) {
+                this.notificationGateway.apiError(senderId, "You already sent an invite to this player");
+                throw new BadRequestException("You already sent an invite to this player");
+            }
+            else if (old && old.createdAt < new Date(Date.now() - 30000)) {
+                await this.prisma.notification.delete({
+                    where: {
+                        id: old.id,
+                    },
+                });
+            }
             const notification = await this.prisma.notification.create({
                 data: {
                     userId: OpponentId,
@@ -210,14 +254,13 @@ export class GameService {
             });
             this.notificationGateway.inviteMatch(senderId, OpponentId);
         } catch (error) {
-            return error;
+            console.log("This is the ERROR  in makeRequest ", error);
+            // return error;
         }
     }
 
-    async upateMatch(matchId, creatorSocket: string, opponentSocket: string): Promise<void> {
+    async updateMatch(matchId, creatorSocket: string, opponentSocket: string): Promise<void> {
         try {
-            // console.log("this creatorSocket in up ",creatorSocket);
-            // console.log("this opponentSocket in up",opponentSocket);
             await this.prisma.match.update({
                 where: {
                     id: matchId,
@@ -233,15 +276,55 @@ export class GameService {
         }
     }
 
-    async acceptRequest(senderId: string, receiverId: string, notId: string): Promise<void> {
+    async setOpponentSocket(matchId : string , opponentSocket: string): Promise<void> {
         try {
-            await this.prisma.notification.delete({
+            const update =await this.prisma.match.update({
                 where: {
-                    id: notId,
+                    id: matchId,
+                },
+                data: {
+                    opponentSocket: opponentSocket,
                 },
             });
-            const matchId = await this.createMatch(senderId, receiverId, MatchType.FRIEND);
-            this.notificationGateway.acceptMatchRequest(senderId, receiverId, matchId);
+        } catch (error) {
+            console.log("error at set op so", error)
+            return error;
+        }
+    }
+
+    async setCreatorSocket(matchId, creatorSocket: string): Promise<void> {
+        try {
+            await this.prisma.match.update({
+                where: {
+                    id: matchId,
+                },
+                data: {
+                    creatorSocket: creatorSocket,
+                },
+            });
+        } catch (error) {
+            console.log("error at set cr so", error)
+            return error;
+        }
+    }
+
+    async acceptRequest(senderId: string, receiverId: string, notId: string): Promise<void> {
+        try {
+            const notification = await this.prisma.notification.findUnique({ where: { id : notId,},});
+            if (notification && notification.createdAt < new Date(Date.now() - 30000)) {
+                this.notificationGateway.apiError(receiverId, "This request is no longer valid");
+                this.notificationGateway.sendRefresh();
+                throw new BadRequestException("This request is no longer valid");
+            }
+            else {
+                const matchId = await this.createMatch(senderId, receiverId, MatchType.FRIEND);
+                this.notificationGateway.acceptMatchRequest(senderId, receiverId, matchId);
+            }
+            await this.prisma.notification.delete({
+                where: {
+                    id: notification.id,
+                },
+            });
         } catch (error) {
             return error;
         }
@@ -249,12 +332,20 @@ export class GameService {
 
     async refuseRequest(senderId: string, receiverId: string, notId: string): Promise<void> {
         try {
+            const notification = await this.prisma.notification.findUnique({ where: { id : notId,},});
+
+            if (notification && notification.createdAt < new Date(Date.now() - 30000)) {
+                this.notificationGateway.apiError(receiverId, "This request is no longer valid");
+                throw new BadRequestException("This request is no longer valid");
+            }
+            else {
+                this.notificationGateway.refuseMatchRequest(senderId, receiverId);
+            }
             await this.prisma.notification.delete({
                 where: {
-                    id: notId,
+                    id: notification.id,
                 },
             });
-            this.notificationGateway.refuseMatchRequest(senderId, receiverId);
         } catch (error) {
             return error;
         }
@@ -284,11 +375,21 @@ export class GameService {
                     ],
                 },
                 orderBy: { createdAt: 'desc' },
-                // include profile.avatar
                 include: {
-                    creator: { select: { profile: true } }, opponent: { select: { profile: true } } }
+                    creator: { select: { profile: {
+                        select: {
+                            firstName: true,
+                            lastName: true,
+                            avatar: true,
+                        }
+                    }} }, opponent: { select: { profile: {
+                        select: {
+                            firstName: true,
+                            lastName: true,
+                            avatar: true,
+                        }
+                    } } } }
             });
-            console.log("this is the matchHistory ", matchHistory);
             return matchHistory;
         } catch (error) {
             return error;
@@ -298,6 +399,11 @@ export class GameService {
     async getLeaderboard(): Promise<any> {
         try {
             const leaderboard = await this.prisma.profile.findMany({
+                where: {
+                    user : {
+                        deleted : false,
+                    }
+                },
                 orderBy: { points: 'desc' },
                 // select: {
                 //     userId: true,
@@ -310,6 +416,38 @@ export class GameService {
             return {first : leaderboard[0] , second : leaderboard[1] , third : leaderboard[2]};
         } catch (error) {
             return error;
+        }
+    }
+
+    async setInGame(userId: string): Promise<void> {
+        try {
+            await this.prisma.profile.update({
+                where: { userId: userId },
+                data: {
+                    status: "in-game",
+                },
+            });
+            this.notificationGateway.sendRefresh();
+        } catch (error) {
+            // return error;
+        }
+    }
+    async setOnline(userId: string): Promise<void> {
+        try {
+            const user = await this.prisma.profile.findUnique({ where: { userId} });
+            if (user.status === "offline") {
+                return;
+            }
+            await this.prisma.profile.update({
+                where: { userId: userId},
+                data: {
+                    status: "online",
+                },
+            });
+            this.notificationGateway.sendRefresh();
+        } catch (error) { 
+            console.log("setOnline error", error);
+            // return error;
         }
     }
 }

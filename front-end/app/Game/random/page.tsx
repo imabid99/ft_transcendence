@@ -27,14 +27,14 @@ import {
   useSphere,
   Debug,
 } from "@react-three/cannon";
-import Loading from "@/app/loading";
+// import Loading from "@/app/loading";
 import { checkLoged, getLocalStorageItem } from "@/utils/localStorage";
 import { useRouter } from "next/navigation";
 import LoadingRandom from "@/components/Dashboard/Game/Random_Loading/loading";
-// map = snow, desert, forest; mode = friend, bot, random
+
 
 const Random = () => {
-
+ console.log("Random");
 	const [socket, setSocket] = useState<any>(null);
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const router = useRouter();
@@ -47,15 +47,6 @@ const Random = () => {
 	const { profiles, user }: any = useContext(contextdata);
 	const name = `${user?.profile.firstName} ${user?.profile.lastName}`;
   
-  useEffect(() => {
-		const token = checkLoged();
-		if (!token) {
-		router.push("/login");
-		return;
-		}
-		if(!user) return;
-		// setIsLoading(false);
-	}, [user]);
   
   useEffect(() => {
     const headers = {
@@ -71,6 +62,7 @@ const Random = () => {
           auth: {
             matchType,
           },
+          // upgrade: false
         }
       );
       if (newSocket) {
@@ -546,25 +538,29 @@ const Random = () => {
     const [p1_count, setP1Count] = useState<number>(0);
     const [p2_count, setP2Count] = useState<number>(0);
 
-    let animationFrameId: number | null = null;
-
     useEffect(() => {
+      let animationFrameId: number | null = null;
+      let lastPositionZ = 0;
+    
       const goalCheck = () => {
-        if (position.current.z > 10) {
+        const currentZ = position.current.z;
+    
+        if (currentZ > 10 && lastPositionZ <= 10) {
           setP1Count((prevCount) => prevCount + 1);
           position.current.z = 0;
         }
-        if (position.current.z < -10) {
+        if (currentZ < -10 && lastPositionZ >= -10) {
           setP2Count((prevCount) => prevCount + 1);
           position.current.z = 0;
         }
-        setTimeout(() => {
-          animationFrameId = requestAnimationFrame(goalCheck);
-        }, 20);
+
+        lastPositionZ = currentZ;
+    
+        animationFrameId = requestAnimationFrame(goalCheck);
       };
-
-      goalCheck();
-
+    
+      animationFrameId = requestAnimationFrame(goalCheck);
+    
       return () => {
         if (animationFrameId !== null) {
           cancelAnimationFrame(animationFrameId);
@@ -572,11 +568,14 @@ const Random = () => {
       };
     }, []);
 
+   
+
     useEffect(() => {
+      // TODO CHANGE THE SCORE TO 5
       if (!user) return;
-      if (p1_count === 7 || p2_count === 7) {
-        if (p2_count === 7) {
-          console.log(user?.profile.userId, p1_count, p2_count);
+      if (p1_count === 5 || p2_count === 5) {
+        if (p2_count === 5) {
+          // console.log(user?.profile.userId, p1_count, p2_count);
           const payload = {
             winner: user?.profile.userId,
             winnerscore: p2_count,
@@ -584,12 +583,7 @@ const Random = () => {
           };
           socket.emit("player-wins", payload);
         }
-        // else
-        // {
-        //   console.log("Opponent Wins!", p1_count, p2_count);
-        //   const payload = {winner: "Opponent", winnerscore: p1_count, loserscore: p2_count};
-        //   socket.emit('player-wins', payload)
-        // }
+
         setP1Count(0);
         setP2Count(0);
       }
@@ -597,11 +591,7 @@ const Random = () => {
 
     useEffect(() => {
       socket.on("player-wins", (data: any) => {
-        console.log(
-          "on ",
-          data.winner,
-          " Wins! with " + data.winnerScore + " - " + data.loserScore
-        );
+        router.push('/Game');
       });
     }, []);
 
@@ -634,6 +624,7 @@ const Random = () => {
       </>
     );
   };
+  
 
   // const [currentMap, setCurrentMap] = useState('Desert');
 
@@ -730,18 +721,11 @@ const Random = () => {
           <planeGeometry args={[20, 0.1]} />
           <meshStandardMaterial color={"#FFFFFF"} />
         </mesh>
-        {/*
-          map == "forest" && <Forest/>
-          map == "desert" && <Desert/>
-          map == "snow" && <Snow/>
-        */}
       {
           shosenMap === 'desert' ? <Desert /> :
           shosenMap === 'snow' ? <Snow /> :
           <Forest />
       }
-      {/* <Desert/> */}
-      {/* <Snow/> */}
       <Scoreboard />
 
         <Sky sunPosition={[-0.07, -0.03, -0.75]} />
@@ -757,7 +741,6 @@ const Random = () => {
           enablePan={false}
         />
         <SoftShadows />
-        {/* <fog attach="fog" color={fogcolor} near={1} far={fogfar} /> */}
       </Canvas>
     </div>
   );

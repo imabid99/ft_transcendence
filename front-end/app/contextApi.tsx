@@ -8,6 +8,7 @@ import io, { Socket } from 'socket.io-client';
 import { Toaster, toast } from 'sonner';
 let newSocket: Socket | null = null;
 let notificationsocket: Socket | null = null;
+import MyNotif from '@/components/Dashboard/Notifications/allNotifications';
 
 export const contextdata = createContext({});
 
@@ -30,11 +31,11 @@ const ContextProvider = ({ children }: { children: React.ReactNode; }) => {
   const dashboardRef = React.useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
+    if (getLocalStorageItem("Token")) {
+      setLoged(true);
+    }
+    if(loged === false) return;
     const getUser = async () => {
-      if (!getLocalStorageItem("Token")) {
-        router.push("/login");
-        return;
-      }
       try
       {
         const resp = await axiosInstance.get(`http://${process.env.NEXT_PUBLIC_APP_URL}:3000/api/user/userinfo`);
@@ -160,7 +161,7 @@ const ContextProvider = ({ children }: { children: React.ReactNode; }) => {
         const getFriends = async () => {
             try{
                 const res = await axiosInstance.get(`http://${process.env.NEXT_PUBLIC_APP_URL}:3000/api/friendship/show`);
-                console.log("myFrinds : ", res.data);
+                // console.log("myFrinds : ", res.data);
                 setMyFriends(res.data);
             }
             catch(err){
@@ -187,26 +188,26 @@ const ContextProvider = ({ children }: { children: React.ReactNode; }) => {
 
 		}
 	}, [user]);
-	useEffect(() => {
-	  if (!notifSocket) return;
-		notifSocket.on('notification', (payload:any) => {
-			setMyNotif((prev:any) => [...prev, payload]);
-			setTimeout(() => {
-			setMyNotif([]);
-			}
-			, 100);
-		})
-		notifSocket.on('redirect', (payload:any) => {
-			router.push(`${payload.link}`);
-		})
-		return () => {
-			setMyNotif([]);
-			notifSocket.off('notification');
-      notifSocket.off('redirect');
-      notifSocket?.disconnect();
-		}
-	}
-	, [notifSocket]);
+	// useEffect(() => {
+	//   if (!notifSocket) return;
+	// 	notifSocket.on('notification', (payload:any) => {
+	// 		setMyNotif((prev:any) => [...prev, payload]);
+	// 		setTimeout(() => {
+	// 		setMyNotif([]);
+	// 		}
+	// 		, 100);
+	// 	})
+	// 	notifSocket.on('redirect', (payload:any) => {
+	// 		router.push(`${payload.link}`);
+	// 	})
+	// 	return () => {
+	// 		setMyNotif([]);
+	// 		notifSocket.off('notification');
+  //     notifSocket.off('redirect');
+  //     notifSocket?.disconnect();
+	// 	}
+	// }
+	// , [notifSocket]);
   return (
     <contextdata.Provider value={{
         socket:socket,
@@ -231,20 +232,21 @@ const ContextProvider = ({ children }: { children: React.ReactNode; }) => {
       
       }}>
         <div className='w-full h-full relative'>
+          <MyNotif/>
             {
-              <div className='w-full absolute'>
-                <Toaster position="top-right"  richColors/>
-                {myNotif.length !== 0 && myNotif.map((notif:any, index:number) => (
-                <div key={index}>
+              // <div className='w-full absolute'>
+              //   <Toaster position="top-right"  richColors/>
+              //   {myNotif.length !== 0 && myNotif.map((notif:any, index:number) => (
+              //   <div key={index}>
                   
-                  {notif.type === 'success' && toast.success(notif.message)}
-                  {notif.type === 'info' && toast.info(notif.message)}
-                  {notif.type === 'error' && toast.error(notif.message)}
-                  {notif.type === 'warning' && toast.warning(notif.message)}
-                </div>
-                ))
-                }
-              </div>
+              //     {notif.type === 'success' && toast.success(notif.message)}
+              //     {notif.type === 'info' && toast.info(notif.message)}
+              //     {notif.type === 'error' && toast.error(notif.message)}
+              //     {notif.type === 'warning' && toast.warning(notif.message)}
+              //   </div>
+              //   ))
+              //   }
+              // </div>
             }
           {children}
         </div>
