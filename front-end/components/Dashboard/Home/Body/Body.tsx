@@ -128,59 +128,6 @@ export default function Body({ leaderRef, handelShaw }: Props) {
                             <p className="text-[#02539D] text-[14px] font-[700]">FRIENDS</p>
                         </div>
                     </div>
-                        {/* <Swiper
-                            spaceBetween={0}
-                            slidesPerView={2}
-                            breakpoints={{
-                                0: {
-                                    slidesPerView: 1,
-                                },
-                                768: {
-                                    slidesPerView: 2,
-                                },
-                                1100: {
-                                    slidesPerView: 3,
-                                },
-                                1350: {
-                                    slidesPerView: 4,
-                                },
-                            }}
-                            className="w-full h-full cursor-grab !pl-[30px] !pt-[34px]"
-                            > */}
-                                {/* {profiles?.map((profile:any) => {
-                                        if(profile?.userId !== user?.id){
-                                            return (
-                                            <SwiperSlide>
-                                            <Friend cover={profile?.cover} avatar={profile?.avatar} name={`${profile?.firstName} ${profile?.lastName}`} username={profile?.username} online={profile?.status} userId={profile?.userId} key={profile?.userId}  />
-                                            </SwiperSlide>)
-                                        }
-                                })} */}
-                                {/* {Friends?.map((friend:any) => {
-                                        return (
-                                        <SwiperSlide>
-                                        <Friend cover={friend?.cover} avatar={friend?.avatar} name={`${friend?.firstName} ${friend?.lastName}`} username={friend?.username} online={friend?.status} userId={friend?.userId} key={friend?.userId}  />
-                                        </SwiperSlide>)
-                                })}  */}
-                                {/* {
-                                  Friends && Friends.length > 0 ? (
-                                    Friends.map((friend: any) => (
-                                      <SwiperSlide>
-                                        <Friend
-                                          cover={friend?.cover}
-                                          avatar={friend?.avatar}
-                                          name={`${friend?.firstName} ${friend?.lastName}`}
-                                          username={friend?.username}
-                                          online={friend?.status}
-                                          userId={friend?.userId}
-                                          key={friend?.userId}
-                                        />
-                                      </SwiperSlide>
-                                    ))
-                                  ) : (
-                                    <p>No friends found.</p>
-                                  )
-                                }
-                        </Swiper> */}
                     {
                         Friends && Friends.length > 0 ? (
                             <Swiper
@@ -220,7 +167,7 @@ export default function Body({ leaderRef, handelShaw }: Props) {
                             <div className='w-full  h-full flex  justify-center'>
                             <div className=" w-[300px]  ">
                                 <Lottie animationData={animationData2}/>
-                             </div>
+                            </div>
                             </div>
                         )
                     }
@@ -229,7 +176,6 @@ export default function Body({ leaderRef, handelShaw }: Props) {
                 <div className='header__left flex flex-col gap-[52px]
             lg:max-2xl:gap-[50px] lg:max-2xl:justify-start lg:max-2xl:items-start  min-w-[371px] w-full 3xl:w-fit max-w-[1224px]
             '>
-                {/* <RightSide> */}
                 <div className="leaderboard w-full 3xl:w-[371px] h-[396px] bg-white z-20">
 
                     <div className=" flex  items-center justify-between pt-[35px] px-[30px]">
@@ -239,9 +185,6 @@ export default function Body({ leaderRef, handelShaw }: Props) {
                             </svg> 
                             <p className="text-[14px] font-[700] text-[#02539D]">LEADERBOARD</p>
                         </span>
-                        {/* <button className=" border-none outline-none text-[#00539D] font-[Poppins] text-[10px] font-[300]"
-                        onClick={() => handelShaw(leaderRef)}
-                        >See All</button> */}
                     </div>
                     <div className="flex justify-center items-end gap-[2px]  h-[calc(100%-56px)] overflow-hidden">
                         <div className="flex flex-col items-center justify-center gap-[10px]">
@@ -295,9 +238,7 @@ export default function Body({ leaderRef, handelShaw }: Props) {
                           
                     </div>
                 </div>
-                {/* </RightSide> */}
                 <RightSide>
-                {/* <div className=" min-w-[371px] h-[390px] bg-white rounded-[42px] overflow-hidden"> */}
                 <div className=" flex  items-center justify-between pt-[35px] px-[30px] bf">
                         <span className="flex items-center gap-[10px] pb-[10px] w-full">
                             <svg width="19" height="14" viewBox="0 0 19 14" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -327,7 +268,6 @@ export default function Body({ leaderRef, handelShaw }: Props) {
                                         </div>
                                     )
                                 }
-                                                    
                     </div>
                 </RightSide>
             </div>

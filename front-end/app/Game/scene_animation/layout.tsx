@@ -7,7 +7,7 @@ import ExitGame from "@/components/Dashboard/Game/Exit_game/exit_game";
 
 
 export const metadata = {
-  title: "Inbox",
+  title: "Animation",
   description: "ft_transcendence",
 };
 

@@ -4,7 +4,8 @@ import { useContext, useEffect, useState } from 'react';
 import axiosInstance from "@/utils/axiosInstance";
 import { contextdata } from '@/app/contextApi';
 import FriendCard from "./Friend_Card";
-
+import Lottie from "lottie-react"
+import animationData2 from   "../../../../public/ghost2.json"
 
 
 const FriendSearch = ({setShow}: any) => {
@@ -42,9 +43,19 @@ const FriendSearch = ({setShow}: any) => {
           </p>
         </div>
         <div className="pt-[20px] w-10/12 flex flex-col gap-[20px] overflow-y-scroll scrollbar-hide">
-          {Friends.map((friend: any) => (
-              <FriendCard id={friend?.userId} avatar={friend?.avatar} name={`${friend?.firstName} ${friend?.lastName}`} online={friend?.status} level={friend?.level}/>
-          ))}
+        {
+            Friends && Friends.length > 0 ? (
+                Friends.map((friend: any) => (
+                    <FriendCard id={friend?.userId} avatar={friend?.avatar} name={`${friend?.firstName} ${friend?.lastName}`} online={friend?.status} level={friend?.level}/>
+                ))
+            ) : (
+                <div className='w-full h-full flex justify-center'>
+                    <div className="w-[300px]">
+                        <Lottie animationData={animationData2}/>
+                    </div>
+                </div>
+            )
+        }
         </div>
       </div>
     </div>
