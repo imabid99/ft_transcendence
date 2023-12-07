@@ -31,7 +31,7 @@ const Game = () => {
 		
 	return (
 		<div className="w-full h-full flex justify-center items-center">
-			<div className="absolute top-0 left-0 z-20 hidden lsm:max-sm:block cursor-pointer" onClick={() => {
+			<div className="absolute top-10 left-10 z-20 hidden lsm:max-sm:block cursor-pointer" onClick={() => {
 				setMediaDashbord(true)
 				dashboardRef.current?.classList.add("!left-0")
 			}}>
