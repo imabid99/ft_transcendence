@@ -133,7 +133,6 @@ export class GameGateway implements OnGatewayConnection, OnGatewayDisconnect {
   }
   }
 
-  
 
   @SubscribeMessage("paddle-pos")
   async handlePaddlePos(
@@ -149,11 +148,58 @@ export class GameGateway implements OnGatewayConnection, OnGatewayDisconnect {
   @SubscribeMessage("ball-serve")
   async handleBallServe(
     client: Socket,
-    payload: { isServing: boolean; isServingmobile: boolean; direction: number }
+    payload: { hasServed: boolean }
   ) {
     const match = await this.gameService.getMatch(client.id);
     if (match) {
+      await this.gameService.updateServingPlayer(match.id, client.id);
       client.broadcast.to(match.id).emit("ball-serve", payload);
+    }
+  }
+
+  @SubscribeMessage("ball-position")
+  async handleBallPosition(
+    client: Socket,
+    payload: { x: number, y: number, z: number }
+  ) {
+    try {
+      const token = client.handshake.headers.authorization?.split(" ")[1];
+      if (token) {
+        const decoded: any = jwt_decode(token);
+        if (!decoded || !decoded.userId || !decoded.username) {
+          throw new Error('Invalid token');
+        }
+        const match = await this.gameService.getMatch(client.id);
+        if (match && match.servingplayer === client.id) {
+          client.broadcast.to(match.id).emit('ball-position', payload);
+        }
+      }
+    } catch (e) {
+      console.log("error at invite ", e);
+    }
+  }
+
+  @SubscribeMessage("current-score")
+  async handleplayerscore(
+    client: Socket,
+    payload: { score: number }
+  ) {
+    try {
+      const token = client.handshake.headers.authorization?.split(" ")[1];
+      if (token) {
+        const decoded: any = jwt_decode(token);
+        if (!decoded || !decoded.userId || !decoded.username) {
+          throw new Error('Invalid token');
+        }
+        const match = await this.gameService.getMatch(client.id);
+        console.log("match serving player ", match.servingplayer);
+        if (match && match.servingplayer === client.id) {
+          console.log("match at score ", payload.score);
+          client.broadcast.to(match.id).emit('current-score', payload);
+        }
+      }
+    } catch (e) {
+      console.log("error at invite ", e);
     }
   }
 

@@ -31,6 +31,7 @@ import {
 import { checkLoged, getLocalStorageItem } from "@/utils/localStorage";
 import { useRouter } from "next/navigation";
 import LoadingRandom from "@/components/Dashboard/Game/Random_Loading/loading";
+import { set } from "react-hook-form";
 
 
 const Random = () => {
@@ -227,9 +228,9 @@ const Random = () => {
       const updatePosition = () => {
         if (ref.current) {
           if (isMovingLeft || touchleft) {
-            targetPosX = Math.max(targetPosX - 0.6, -5);
+            targetPosX = Math.max(targetPosX - 0.4, -5);
           } else if (isMovingRight || touchright) {
-            targetPosX = Math.min(targetPosX + 0.6, 5);
+            targetPosX = Math.min(targetPosX + 0.4, 5);
           }
           const smoothingFactor = 0.4;
           paddleposX = paddleposX + (targetPosX - paddleposX) * smoothingFactor;
@@ -239,9 +240,9 @@ const Random = () => {
             z: -9,
             playerId: user?.profile.userId,
           });
-          setTimeout(() => {
+          // setTimeout(() => {
             api.position.set(paddleposX, 0.5, 9);
-          }, 5);
+          // }, 5);
         }
         animationFrameId = requestAnimationFrame(updatePosition);
       };
@@ -387,49 +388,36 @@ const Random = () => {
       const ServeDown = (event: KeyboardEvent) => {
         if (event.code === "Space") {
           isServing = true;
-          socket.emit("ball-serve", {
-            isServing: true,
-            isServingmobile: false,
-            direction: -1,
-          });
         }
       };
 
       const ServeUp = (event: KeyboardEvent) => {
         if (event.code === "Space") {
           isServing = false;
-          socket.emit("ball-serve", {
-            isServing: false,
-            isServingmobile: false,
-            direction: 1,
-          });
         }
       };
 
       const handleTouchStart = (event: TouchEvent) => {
         isServingmobile = true;
-        socket.emit("ball-serve", {
-          isServing: false,
-          isServingmobile: true,
-          direction: -1,
-        });
       };
 
       const handleTouchEnd = (event: TouchEvent) => {
         isServingmobile = false;
-        socket.emit("ball-serve", {
-          isServing: false,
-          isServingmobile: false,
-          direction: 1,
-        });
       };
 
       const subpos = () => {
         api.position.subscribe((v) => {
-          return (position.current = new THREE.Vector3(v[0], v[1], v[2]));
+          position.current = new THREE.Vector3(v[0], v[1], v[2]);
+          socket.emit("ball-position", { x: -v[0], y: v[1], z: -v[2] });
+          return (position.current);
         });
       };
       subpos();
+      
+      socket.on("ball-position", (data: any) => {
+        console.log("here");
+        api.position.set(data.x, data.y, data.z);
+      });
 
       const subspeed = () => {
         api.velocity.subscribe((v) => {
@@ -444,15 +432,26 @@ const Random = () => {
       window.addEventListener("touchend", handleTouchEnd);
 
       const serveball = () => {
-        // const value = Math.random() < 0.5 ? -10 : 10;
         const value = -5;
+        
+        socket.on("ball-serve", (data: any) => {
+          hasServed = data.hasServed;
+        });
+        
         if ((isServing || isServingmobile) && !hasServed) {
+          console.log("serving", hasServed);
           api.applyImpulse([value * direction, 0, -10 * direction], [0, 0, 0]);
+          socket.emit("ball-serve", {
+            hasServed: true,
+          });
           hasServed = true;
         }
         if (position.current.z < -10 || position.current.z > 10) {
           api.position.set(0, 0.35, 0);
           api.velocity.set(0, 0, 0);
+          socket.emit("ball-serve", {
+            hasServed: false,
+          });
           hasServed = false;
         }
         if (speed.current.x < -10)
@@ -468,18 +467,14 @@ const Random = () => {
       };
       requestAnimationFrame(serveball);
 
-      socket.on("ball-serve", (data: any) => {
-        isServing = data.isServing;
-        isServingmobile = data.isServingmobile;
-        direction = data.direction;
-      });
+
 
       return () => {
         window.removeEventListener("keydown", ServeDown);
         window.removeEventListener("keyup", ServeUp);
         window.removeEventListener("touchstart", handleTouchStart);
         window.removeEventListener("touchend", handleTouchEnd);
-        // socket.off('ballPosition');
+        socket.off('ball-position');
         socket.off("ball-serve");
       };
     }, []);
@@ -548,11 +543,17 @@ const Random = () => {
         if (currentZ > 10 && lastPositionZ <= 10) {
           setP1Count((prevCount) => prevCount + 1);
           position.current.z = 0;
+          // socket.emit("current-score", { score: p1_count});
         }
         if (currentZ < -10 && lastPositionZ >= -10) {
           setP2Count((prevCount) => prevCount + 1);
           position.current.z = 0;
         }
+
+        // socket.on("current-score", (data: any) => {
+        //   console.log("hahahahahahahahahahah");
+        //   setP1Count(data.score);
+        // }, []);
 
         lastPositionZ = currentZ;
     
@@ -571,11 +572,9 @@ const Random = () => {
    
 
     useEffect(() => {
-      // TODO CHANGE THE SCORE TO 5
       if (!user) return;
       if (p1_count === 5 || p2_count === 5) {
         if (p2_count === 5) {
-          // console.log(user?.profile.userId, p1_count, p2_count);
           const payload = {
             winner: user?.profile.userId,
             winnerscore: p2_count,

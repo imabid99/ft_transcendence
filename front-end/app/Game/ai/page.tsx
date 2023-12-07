@@ -159,9 +159,9 @@ const PlayWithAI = () => {
       const updatePosition = () => {
         if (ref.current) {
           if (isMovingLeft || touchleft) {
-            targetPosX = Math.max(targetPosX - 0.6, -5);
+            targetPosX = Math.max(targetPosX - 0.4, -5);
           } else if (isMovingRight || touchright) {
-            targetPosX = Math.min(targetPosX + 0.6, 5);
+            targetPosX = Math.min(targetPosX + 0.4, 5);
           }
           const smoothingFactor = 0.4;
           paddleposX = paddleposX + (targetPosX - paddleposX) * smoothingFactor;
