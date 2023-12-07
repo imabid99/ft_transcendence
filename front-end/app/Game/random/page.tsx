@@ -228,9 +228,9 @@ const Random = () => {
       const updatePosition = () => {
         if (ref.current) {
           if (isMovingLeft || touchleft) {
-            targetPosX = Math.max(targetPosX - 0.6, -5);
+            targetPosX = Math.max(targetPosX - 0.4, -5);
           } else if (isMovingRight || touchright) {
-            targetPosX = Math.min(targetPosX + 0.6, 5);
+            targetPosX = Math.min(targetPosX + 0.4, 5);
           }
           const smoothingFactor = 0.4;
           paddleposX = paddleposX + (targetPosX - paddleposX) * smoothingFactor;
@@ -388,37 +388,21 @@ const Random = () => {
       const ServeDown = (event: KeyboardEvent) => {
         if (event.code === "Space") {
           isServing = true;
-          socket.emit("ball-serve", {
-            hasServed: true,
-            isServing: true,
-          });
         }
       };
 
       const ServeUp = (event: KeyboardEvent) => {
         if (event.code === "Space") {
           isServing = false;
-          socket.emit("ball-serve", {
-            hasServed: true,
-            isServing: false,
-          });
         }
       };
 
       const handleTouchStart = (event: TouchEvent) => {
         isServingmobile = true;
-        socket.emit("ball-serve", {
-          hasServed: true,
-          isServingmobile: true,
-        });
       };
 
       const handleTouchEnd = (event: TouchEvent) => {
         isServingmobile = false;
-        socket.emit("ball-serve", {
-          hasServed: true,
-          isServingmobile: false,
-        });
       };
 
       const subpos = () => {
@@ -448,17 +432,26 @@ const Random = () => {
       window.addEventListener("touchend", handleTouchEnd);
 
       const serveball = () => {
-        // const value = Math.random() < 0.5 ? -10 : 10;
         const value = -5;
         
-
+        socket.on("ball-serve", (data: any) => {
+          hasServed = data.hasServed;
+        });
+        
         if ((isServing || isServingmobile) && !hasServed) {
+          console.log("serving", hasServed);
           api.applyImpulse([value * direction, 0, -10 * direction], [0, 0, 0]);
+          socket.emit("ball-serve", {
+            hasServed: true,
+          });
           hasServed = true;
         }
         if (position.current.z < -10 || position.current.z > 10) {
           api.position.set(0, 0.35, 0);
           api.velocity.set(0, 0, 0);
+          socket.emit("ball-serve", {
+            hasServed: false,
+          });
           hasServed = false;
         }
         if (speed.current.x < -10)
@@ -474,9 +467,6 @@ const Random = () => {
       };
       requestAnimationFrame(serveball);
 
-      socket.on("ball-serve", (data: any) => {
-        hasServed = data.hasServed;
-      });
 
 
       return () => {
@@ -485,7 +475,7 @@ const Random = () => {
         window.removeEventListener("touchstart", handleTouchStart);
         window.removeEventListener("touchend", handleTouchEnd);
         socket.off('ball-position');
-        // socket.off("ball-serve");
+        socket.off("ball-serve");
       };
     }, []);
 
@@ -553,17 +543,17 @@ const Random = () => {
         if (currentZ > 10 && lastPositionZ <= 10) {
           setP1Count((prevCount) => prevCount + 1);
           position.current.z = 0;
-          socket.emit("current-score", { score: p1_count});
+          // socket.emit("current-score", { score: p1_count});
         }
         if (currentZ < -10 && lastPositionZ >= -10) {
           setP2Count((prevCount) => prevCount + 1);
           position.current.z = 0;
         }
 
-        socket.on("current-score", (data: any) => {
-          console.log("hahahahahahahahahahah");
-          setP1Count(data.score);
-        }, []);
+        // socket.on("current-score", (data: any) => {
+        //   console.log("hahahahahahahahahahah");
+        //   setP1Count(data.score);
+        // }, []);
 
         lastPositionZ = currentZ;
     
@@ -582,11 +572,9 @@ const Random = () => {
    
 
     useEffect(() => {
-      // TODO CHANGE THE SCORE TO 5
       if (!user) return;
       if (p1_count === 5 || p2_count === 5) {
         if (p2_count === 5) {
-          // console.log(user?.profile.userId, p1_count, p2_count);
           const payload = {
             winner: user?.profile.userId,
             winnerscore: p2_count,

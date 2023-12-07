@@ -203,9 +203,9 @@ const InviteAFriend = () => {
 		  const updatePosition = () => {
 			if (ref.current) {
 				if (isMovingLeft || touchleft) {
-					targetPosX = Math.max(targetPosX - 0.6, -5);
+					targetPosX = Math.max(targetPosX - 0.4, -5);
 					} else if (isMovingRight || touchright) {
-						targetPosX = Math.min(targetPosX + 0.6, 5);
+						targetPosX = Math.min(targetPosX + 0.4, 5);
 					}
 					const smoothingFactor = 0.4;
 					paddleposX = paddleposX + (targetPosX - paddleposX) * smoothingFactor;
@@ -220,8 +220,8 @@ const InviteAFriend = () => {
 		  return () => {
 			window.removeEventListener("keydown", handleKeyDown);
 			window.removeEventListener("keyup", handleKeyUp);
-      window.removeEventListener('touchstart', handleTouchStart);
-      window.removeEventListener('touchend', handleTouchEnd);
+			window.removeEventListener('touchstart', handleTouchStart);
+			window.removeEventListener('touchend', handleTouchEnd);
 			socket.off('paddle-pos');
 			if (animationFrameId !== null) {
 				cancelAnimationFrame(animationFrameId);
@@ -313,118 +313,125 @@ const InviteAFriend = () => {
 
 	function GameBall(props: any) {
 		let direction = 1;
-
-		  const [ref, api] = useSphere(
-      () => ({
-        mass: 1,
-        material: { restitution: 1.06, friction: 0 },
-        args: [0.32, 42, 16],
-        position: [0, 0.35, 0],
-        ...props,
-      }),
-      useRef<THREE.Mesh>(null)
-    );
-
-    const speed = useRef(new THREE.Vector3(0, 0, 0));
-
-		useEffect(() => {
-			let isServing = false;
-      let isServingmobile = false;
-
-			const ServeDown = (event: KeyboardEvent) => {
-				if (event.code === 'Space') {
-					isServing = true;
-					socket.emit('ball-serve', {isServing: true, isServingmobile:false, direction: -1})
-				}
-			};
-
-			const ServeUp = (event: KeyboardEvent) => {
-				if (event.code === 'Space') {
-					isServing = false;
-					socket.emit('ball-serve', {isServing: false, isServingmobile:false, direction: 1})
-				}
-			};
-
-      const handleTouchStart = (event: TouchEvent) => {
-        isServingmobile = true;
-        socket.emit('ball-serve', {isServing: false, isServingmobile:true, direction: -1})
-      };
-  
-      const handleTouchEnd = (event: TouchEvent) => {
-        isServingmobile = false;
-        socket.emit('ball-serve', {isServing: false, isServingmobile:false, direction: 1})
-      };
-
-      const subpos = () => {
-        api.position.subscribe((v) => {
-          return (position.current = new THREE.Vector3(v[0], v[1], v[2]));
-        });
-      };
-      subpos();
-
-      const subspeed = () => {
-        api.velocity.subscribe((v) => {
-          return (speed.current = new THREE.Vector3(v[0], v[1], v[2]));
-        });
-      };
-      subspeed();
-
-			window.addEventListener('keydown', ServeDown);
-			window.addEventListener('keyup', ServeUp);
-      window.addEventListener("touchstart", handleTouchStart);
-      window.addEventListener("touchend", handleTouchEnd);
-
-			const serveball = () => {
-				// const value = Math.random() < 0.5 ? -10 : 10;
-				const value = -5;
-				if((isServing || isServingmobile) && !hasServed)
-				{
-					api.applyImpulse([value * direction, 0, -10 * direction], [0, 0, 0]);
-					hasServed = true;
-				}
-				if(position.current.z < -10 || position.current.z > 10)
-				{
-					api.position.set(0, 0.35, 0);
-					api.velocity.set(0, 0, 0);
-					hasServed = false;
-				}
-        if (speed.current.x < -10)
-          api.velocity.set(-10, speed.current.y, speed.current.z);
-        if (speed.current.x > 10)
-          api.velocity.set(10, speed.current.y, speed.current.z);
-        if (speed.current.z > 25)
-          api.velocity.set(speed.current.x, speed.current.y, 24);
-        if (speed.current.z < -25)
-          api.velocity.set(speed.current.x, speed.current.y, -24);
-
-				requestAnimationFrame(serveball);
-			};
-			requestAnimationFrame(serveball);
-
-			socket.on('ball-serve', (data: any) => {
-				isServing = data.isServing;
-				isServingmobile = data.isServingmobile;
-				direction = data.direction;
-			});
-
-			return () => {
-				window.removeEventListener('keydown', ServeDown);
-				window.removeEventListener('keyup', ServeUp);
-        window.removeEventListener("touchstart", handleTouchStart);
-        window.removeEventListener("touchend", handleTouchEnd);
-				// socket.off('ballPosition');
-				socket.off('ball-serve');
-			};
-
-			}, []);
-
-		return (
-			<mesh position={[0, 0.35, 0]} ref={ref} castShadow receiveShadow>
-				<sphereGeometry args={[0.35, 42, 16]}/>
-				<meshStandardMaterial color={"white"}/>
-			</mesh>
+	
+		const [ref, api] = useSphere(
+		  () => ({
+			mass: 1,
+			material: { restitution: 1.06, friction: 0 },
+			args: [0.32, 42, 16],
+			position: [0, 0.35, 0],
+			...props,
+		  }),
+		  useRef<THREE.Mesh>(null)
 		);
-	}
+	
+		const speed = useRef(new THREE.Vector3(0, 0, 0));
+	
+		useEffect(() => {
+		  let isServing = false;
+		  let isServingmobile = false;
+	
+		  const ServeDown = (event: KeyboardEvent) => {
+			if (event.code === "Space") {
+			  isServing = true;
+			}
+		  };
+	
+		  const ServeUp = (event: KeyboardEvent) => {
+			if (event.code === "Space") {
+			  isServing = false;
+			}
+		  };
+	
+		  const handleTouchStart = (event: TouchEvent) => {
+			isServingmobile = true;
+		  };
+	
+		  const handleTouchEnd = (event: TouchEvent) => {
+			isServingmobile = false;
+		  };
+	
+		  const subpos = () => {
+			api.position.subscribe((v) => {
+			  position.current = new THREE.Vector3(v[0], v[1], v[2]);
+			  socket.emit("ball-position", { x: -v[0], y: v[1], z: -v[2] });
+			  return (position.current);
+			});
+		  };
+		  subpos();
+		  
+		  socket.on("ball-position", (data: any) => {
+			console.log("here");
+			api.position.set(data.x, data.y, data.z);
+		  });
+	
+		  const subspeed = () => {
+			api.velocity.subscribe((v) => {
+			  return (speed.current = new THREE.Vector3(v[0], v[1], v[2]));
+			});
+		  };
+		  subspeed();
+	
+		  window.addEventListener("keydown", ServeDown);
+		  window.addEventListener("keyup", ServeUp);
+		  window.addEventListener("touchstart", handleTouchStart);
+		  window.addEventListener("touchend", handleTouchEnd);
+	
+		  const serveball = () => {
+			const value = -5;
+			
+			socket.on("ball-serve", (data: any) => {
+			  hasServed = data.hasServed;
+			});
+			
+			if ((isServing || isServingmobile) && !hasServed) {
+			  console.log("serving", hasServed);
+			  api.applyImpulse([value * direction, 0, -10 * direction], [0, 0, 0]);
+			  socket.emit("ball-serve", {
+				hasServed: true,
+			  });
+			  hasServed = true;
+			}
+			if (position.current.z < -10 || position.current.z > 10) {
+			  api.position.set(0, 0.35, 0);
+			  api.velocity.set(0, 0, 0);
+			  socket.emit("ball-serve", {
+				hasServed: false,
+			  });
+			  hasServed = false;
+			}
+			if (speed.current.x < -10)
+			  api.velocity.set(-10, speed.current.y, speed.current.z);
+			if (speed.current.x > 10)
+			  api.velocity.set(10, speed.current.y, speed.current.z);
+			if (speed.current.z > 25)
+			  api.velocity.set(speed.current.x, speed.current.y, 24);
+			if (speed.current.z < -25)
+			  api.velocity.set(speed.current.x, speed.current.y, -24);
+	
+			requestAnimationFrame(serveball);
+		  };
+		  requestAnimationFrame(serveball);
+	
+	
+	
+		  return () => {
+			window.removeEventListener("keydown", ServeDown);
+			window.removeEventListener("keyup", ServeUp);
+			window.removeEventListener("touchstart", handleTouchStart);
+			window.removeEventListener("touchend", handleTouchEnd);
+			socket.off('ball-position');
+			socket.off("ball-serve");
+		  };
+		}, []);
+	
+		return (
+		  <mesh position={[0, 0.35, 0]} ref={ref} castShadow receiveShadow>
+			<sphereGeometry args={[0.35, 42, 16]} />
+			<meshStandardMaterial color={"white"} />
+		  </mesh>
+		);
+	  }
 
 	function SideRock1(props: any) {
 
