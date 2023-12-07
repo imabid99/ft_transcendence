@@ -23,7 +23,7 @@ export class NotificationService {
       });
       return notifications;
     } catch (error) {
-      return error;
+      console.log(error);
     }
   }
 }

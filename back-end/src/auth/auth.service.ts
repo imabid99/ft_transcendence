@@ -27,7 +27,7 @@ export class AuthService {
   constructor(
     private prisma: PrismaService,
     private userService: UserService,
-    private notificationGateway : NotificationGateway,
+    private notificationGateway: NotificationGateway,
   ) { }
 
   async login(userData: UserDataLogin): Promise<any> {
@@ -54,14 +54,14 @@ export class AuthService {
       }
     } catch (error) {
       console.log(error.message);
-      return {message : error.message};
+      return { message: error.message };
     }
   }
 
   async addUser(userData: UserData, file: any) {
     try {
       console.log(userData);
-      let av : string = "uploads/default/nouser.avif";
+      let av: string = "uploads/default/nouser.avif";
       if (file && file.path) {
         av = file.path;
         console.log("avatar", av);
@@ -97,8 +97,8 @@ export class AuthService {
               email: userData.email,
               username: userData.username,
               avatar: av,
-              achievements : {
-                create : {
+              achievements: {
+                create: {
                 }
               }
             },
@@ -107,14 +107,14 @@ export class AuthService {
       });
     } catch (error) {
       console.log(error);
-      return error;
+      console.log(error);
     }
   }
   generateQR(data: string): Buffer {
     return QRCode.toBuffer(data);
   }
 
-  generate2FASecret(username : string): string {
+  generate2FASecret(username: string): string {
     const secret = speakeasy.generateSecret({
       length: 20,
       name: `The kingdom of Pong : ${username}`,
@@ -137,7 +137,7 @@ export class AuthService {
       });
       return this.generateQR(url);
     } catch (error) {
-      return error;
+      console.log(error);
     }
   }
 
@@ -148,7 +148,7 @@ export class AuthService {
           id,
         },
       });
-      
+
       const verified = speakeasy.totp.verify({
         secret: user.twoFASecret,
         encoding: "base32",
@@ -161,7 +161,7 @@ export class AuthService {
         this.notificationGateway.apiError(id, "Code is not valid");
       return verified;
     } catch (error) {
-      return error;
+      console.log(error);
     }
   }
 
@@ -178,10 +178,10 @@ export class AuthService {
         });
         this.notificationGateway.apiSuccess(id, "2FA enabled");
         return true;
-      }else
+      } else
         return false;
     } catch (error) {
-      return error;
+      console.log(error);
     }
   }
   async disable2FA(id: string, token: string): Promise<any> {
@@ -201,49 +201,49 @@ export class AuthService {
         return false;
       }
     } catch (error) {
-      return error;
+      console.log(error);
     }
   }
 
-  async validateOauthUser(user: any, file : any): Promise<any> {
+  async validateOauthUser(user: any, file: any): Promise<any> {
     try {
-      let av : string = user.avatar;
+      let av: string = user.avatar;
       if (file && file.path) {
         av = file.path;
         console.log("avatar", av);
       }
-        const usr = await this.prisma.user.create({
-          data: {
-            username: user.username,
-            email: user.email,
-            oauthid: user.oauthid,
-            twoFASecret: await this.generate2FASecret(user.username),
-            password: uuidv4(),
-            profile: {
-              create: {
-                firstName: user.firstName,
-                lastName: user.lastName,
-                email: user.email,
-                username: user.username,
-                avatar: av,
-                achievements : {
-                  create : {
-                  }
+      const usr = await this.prisma.user.create({
+        data: {
+          username: user.username,
+          email: user.email,
+          oauthid: user.oauthid,
+          twoFASecret: await this.generate2FASecret(user.username),
+          password: uuidv4(),
+          profile: {
+            create: {
+              firstName: user.firstName,
+              lastName: user.lastName,
+              email: user.email,
+              username: user.username,
+              avatar: av,
+              achievements: {
+                create: {
                 }
-              },
+              }
             },
           },
-        });
+        },
+      });
       this.deleteTempUser(user.oauthid);
-      return {token : this.userService.generateToken(usr.id, usr.username, usr.email)};
+      return { token: this.userService.generateToken(usr.id, usr.username, usr.email) };
     } catch (error) {
-      console.log("val oauth",error);
+      console.log("val oauth", error);
       throw error;
     }
   }
 
   async createTempUser(data: any): Promise<string> {
-    const { oauthid ,email, firstName, lastName, username , avatar } = data;  
+    const { oauthid, email, firstName, lastName, username, avatar } = data;
     try {
       const exist = await this.prisma.tempUser.findUnique({ where: { email } });
       if (exist) {
@@ -262,7 +262,7 @@ export class AuthService {
       });
       return tempUser.id;
     } catch (error) {
-      return error;
+      console.log(error);
     }
   }
 
@@ -275,7 +275,7 @@ export class AuthService {
       });
       return tempUser;
     } catch (error) {
-      return error;
+      console.log(error);
     }
   }
 
@@ -287,34 +287,33 @@ export class AuthService {
         },
       });
     } catch (error) {
-      return error;
+      console.log(error);
     }
   }
 
-  async getUserByOauthId(id : string) : Promise<User>
-  {
+  async getUserByOauthId(id: string): Promise<User> {
     try {
 
       const user = await this.prisma.user.findUnique({
         where: {
-          oauthid : id,
+          oauthid: id,
         },
       });
       return user;
     } catch (error) {
-      return error;
+      console.log(error);
     }
   }
-  
-  async logicAuth(usr :  any): Promise<any> {
+
+  async logicAuth(usr: any): Promise<any> {
     try {
       const user = await this.getUserByOauthId(usr.oauthid);
       if (user)
-        return {type : "login" , token : await this.userService.generateToken(user.id, user.username, user.email)};
+        return { type: "login", token: await this.userService.generateToken(user.id, user.username, user.email) };
       else
-        return {type : "signup" , token : await this.createTempUser(usr)}
+        return { type: "signup", token: await this.createTempUser(usr) }
     } catch (error) {
-      return error;
+      console.log(error);
     }
   }
 

@@ -25,7 +25,8 @@ export class uploadController {
     @Req() req,
     @UploadedFile() file: Express.Multer.File
   ): Promise<void> {
-    console.log(file.path);
+    if (!file)
+      return;
     return this.uploadService.uploadAvatar(file.path, req.user.id);
   }
   @Get("avatar")
@@ -40,7 +41,8 @@ export class uploadController {
     @Req() req,
     @UploadedFile() file: Express.Multer.File
   ): Promise<void> {
-    console.log(file.path);
+    if (!file)
+      return;
     return this.uploadService.uploadCover(file.path, req.user.id);
   }
   @Get("cover")
@@ -57,6 +59,8 @@ export class uploadController {
     @UploadedFile() file: Express.Multer.File,
     @Param() params: any
   ): Promise<void> {
+    if (!file)
+      return;
     return this.uploadService.uploadChannelAvatar(file.path, params.id);
   }
 

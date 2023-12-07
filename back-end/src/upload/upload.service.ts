@@ -4,7 +4,7 @@ import { NotificationGateway } from 'src/notification/gateway/notification.gatew
 
 @Injectable()
 export class UploadService {
-  constructor(private prisma: PrismaService , private notificationGateway : NotificationGateway) { }
+  constructor(private prisma: PrismaService, private notificationGateway: NotificationGateway) { }
 
   async uploadAvatar(path: string, userId: string): Promise<any> {
     try {
@@ -27,7 +27,7 @@ export class UploadService {
       });
       this.notificationGateway.updated(userId);
     } catch (error) {
-      return error;
+      console.log(error);
     }
   }
 
@@ -39,7 +39,7 @@ export class UploadService {
         },
       });
     } catch (error) {
-      return error;
+      console.log(error);
     }
   }
   async uploadCover(path: string, userId: string): Promise<any> {
@@ -54,7 +54,7 @@ export class UploadService {
       });
       this.notificationGateway.updated(userId);
     } catch (error) {
-      return error;
+      console.log(error);
     }
   }
   async getCover(userId: string): Promise<any> {
@@ -66,7 +66,7 @@ export class UploadService {
       });
       return profile.cover;
     } catch (error) {
-      return error;
+      console.log(error);
     }
   }
   async uploadChannelAvatar(path: string, channelId: string): Promise<any> {
@@ -88,7 +88,7 @@ export class UploadService {
         },
       });
     } catch (error) {
-      return error;
+      console.log(error);
     }
   }
   async deleteAvatar(userId: string): Promise<any> {
@@ -113,7 +113,7 @@ export class UploadService {
       });
       this.notificationGateway.updated(userId);
     } catch (error) {
-      return error;
+      console.log(error);
     }
   }
 }
