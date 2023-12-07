@@ -52,9 +52,9 @@ export class authController {
   @UseGuards(AuthGuard("42"))
   Callback42(@Req() req, @Res() res) {
     if (req.user.type === "login")
-      res.redirect("http://localhost:1337/login/validate/?token=" + req.user.token);
+      res.redirect(`${process.env.Front_URL}/login/validate/?token=` + req.user.token);
     else
-      res.redirect("http://localhost:1337/signup/validate/?token=" + req.user.token);
+      res.redirect(`${process.env.Front_URL}/signup/validate/?token=` + req.user.token);
   }
 
   @Get("oauth2/tempUser/:id")
@@ -65,7 +65,6 @@ export class authController {
   @Post("oauth2/createUser")
   @UseInterceptors(FileInterceptor("file", { storage: customStorage }))
   async userCreate(@Req() req,@UploadedFile() file: Express.Multer.File,): Promise<any> {
-    // console.log(req.body);
     return await this.authService.validateOauthUser(req.body,file);
   }
 
@@ -80,9 +79,9 @@ export class authController {
   @UseGuards(AuthGuard("google"))
   CallbackGoogle(@Req() req,@Res() res) {
     if (req.user.type === "login")
-      res.redirect("http://localhost:1337/login/validate/?token=" + req.user.token);
+      res.redirect(`${process.env.Front_URL}/login/validate/?token=` + req.user.token);
     else
-      res.redirect("http://localhost:1337/signup/validate/?token=" + req.user.token);
+      res.redirect(`${process.env.Front_URL}/signup/validate/?token=` + req.user.token);
   }
 
   @Get("2fa_qr")
