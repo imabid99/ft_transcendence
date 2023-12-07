@@ -13,7 +13,7 @@ import { NotificationGateway } from "src/notification/gateway/notification.gatew
 
 @Injectable()
 export class UserService {
-  constructor(private prisma: PrismaService, private notificationGateway : NotificationGateway) { }
+  constructor(private prisma: PrismaService, private notificationGateway: NotificationGateway) { }
 
   checkMute(
     arg0: number,
@@ -32,8 +32,8 @@ export class UserService {
   async getProfiles() {
     const profiles = await this.prisma.profile.findMany({
       where: {
-        user : {
-          deleted : false
+        user: {
+          deleted: false
         }
       },
       include: { achievements: true },
@@ -185,7 +185,7 @@ export class UserService {
       return;
     } catch (error) {
       console.log(error);
-      // return error;
+      // console.log(error);
     }
   }
 
@@ -237,7 +237,7 @@ export class UserService {
       }
       return false;
     } catch (error) {
-      return error;
+      console.log(error);
     }
   }
 
@@ -251,7 +251,7 @@ export class UserService {
       }
       return false;
     } catch (error) {
-      return error;
+      console.log(error);
     }
   }
 
@@ -266,7 +266,7 @@ export class UserService {
       }
       return false;
     } catch (error) {
-      return error;
+      console.log(error);
     }
   }
 
@@ -296,11 +296,11 @@ export class UserService {
       this.notificationGateway.updated(userid);
       return;
     } catch (error) {
-      return error;
+      console.log(error);
     }
   }
 
-  async changeData(id: string,data: any): Promise<any> {
+  async changeData(id: string, data: any): Promise<any> {
     const { email, firstName, lastName } = data;
     if (!email || !firstName || !lastName) {
       this.notificationGateway.apiError(id, "Invalid input");
@@ -324,7 +324,7 @@ export class UserService {
       this.notificationGateway.updated(id);
       return "changed";
     } catch (error) {
-      return error;
+      console.log(error);
     }
   }
 }

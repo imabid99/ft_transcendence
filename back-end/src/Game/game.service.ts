@@ -20,7 +20,7 @@ export class GameService {
             return match.id;
         } catch (error) {
             console.log("This is The ERROR  ", error);
-            return error;
+            console.log(error);
         }
     }
 
@@ -37,7 +37,7 @@ export class GameService {
             })
             return match;
         } catch (error) {
-            return error;
+            console.log(error);
         }
     }
 
@@ -54,7 +54,7 @@ export class GameService {
             })
             return match;
         } catch (error) {
-            return error;
+            console.log(error);
         }
     }
 
@@ -67,7 +67,7 @@ export class GameService {
             })
             return match;
         } catch (error) {
-            return error;
+            console.log(error);
         }
     }
 
@@ -81,7 +81,7 @@ export class GameService {
             });
         } catch (error) {
             console.log("This is the ERROR  in updateServingPlayer ", error);
-            return error;
+            console.log(error);
         }
     }
 
@@ -120,7 +120,7 @@ export class GameService {
                 ach7: achievements.ach7,
             },
         });
-        
+
         let count = 0;
         if (achievements.ach1) count++;
         if (achievements.ach2) count++;
@@ -136,7 +136,7 @@ export class GameService {
                 achcount: count,
             },
         });
-        
+
         return updated;
     }
 
@@ -172,10 +172,10 @@ export class GameService {
             }
             winnerProfile.percentage = (winnerProfile.xp / winnerProfile.nextLevelXp) * 100;
             winnerProfile.points += 50;
-            
-            
-            
-            
+
+
+
+
             const updatedwinner = await this.prisma.profile.update({
                 where: { userId: winnerId },
                 data: {
@@ -206,23 +206,23 @@ export class GameService {
                     randommatchcount: MatchType === "RANDOM" ? { increment: 1 } : { increment: 0 },
                 },
             });
-            
-            this.notificationGateway.apiInfo(winnerId,"You won the match")
-            this.notificationGateway.apiInfo(loserId,"You lost the match")
+
+            this.notificationGateway.apiInfo(winnerId, "You won the match")
+            this.notificationGateway.apiInfo(loserId, "You lost the match")
 
             let updated_winner = await this.checkAchievements(updatedwinner);
-            if(updated_winner.achcount > winnerProfile.achcount){
-                this.notificationGateway.apiInfo(winnerId,"You got a new achievement")
+            if (updated_winner.achcount > winnerProfile.achcount) {
+                this.notificationGateway.apiInfo(winnerId, "You got a new achievement")
             }
 
             let updated_loser = await this.checkAchievements(updatedloser);
-            if(updated_loser.achcount > loserProfile.achcount){
-                this.notificationGateway.apiInfo(loserId,"You got a new achievement")
+            if (updated_loser.achcount > loserProfile.achcount) {
+                this.notificationGateway.apiInfo(loserId, "You got a new achievement")
             }
 
         } catch (error) {
             console.log("This is the ERROR  in submitScore ", error);
-            return error;
+            console.log(error);
         }
     }
 
@@ -256,7 +256,7 @@ export class GameService {
                     },
                 });
             }
-            const notification = await this.prisma.notification.create({
+            await this.prisma.notification.create({
                 data: {
                     userId: OpponentId,
                     type: "Match_Invitation",
@@ -269,7 +269,7 @@ export class GameService {
             this.notificationGateway.inviteMatch(senderId, OpponentId);
         } catch (error) {
             console.log("This is the ERROR  in makeRequest ", error);
-            // return error;
+            // console.log(error);
         }
     }
 
@@ -286,13 +286,13 @@ export class GameService {
             });
         } catch (error) {
             console.log("This is the ERROR  in updateMatch ", error);
-            return error;
+            console.log(error);
         }
     }
 
-    async setOpponentSocket(matchId : string , opponentSocket: string): Promise<void> {
+    async setOpponentSocket(matchId: string, opponentSocket: string): Promise<void> {
         try {
-            const update =await this.prisma.match.update({
+            const update = await this.prisma.match.update({
                 where: {
                     id: matchId,
                 },
@@ -302,7 +302,7 @@ export class GameService {
             });
         } catch (error) {
             console.log("error at set op so", error)
-            return error;
+            console.log(error);
         }
     }
 
@@ -318,17 +318,16 @@ export class GameService {
             });
         } catch (error) {
             console.log("error at set cr so", error)
-            return error;
+            console.log(error);
         }
     }
 
     async acceptRequest(senderId: string, receiverId: string, notId: string): Promise<void> {
         try {
-            const notification = await this.prisma.notification.findUnique({ where: { id : notId,},});
+            const notification = await this.prisma.notification.findUnique({ where: { id: notId, }, });
             if (notification && notification.createdAt < new Date(Date.now() - 30000)) {
                 this.notificationGateway.apiError(receiverId, "This request is no longer valid");
                 this.notificationGateway.sendRefresh();
-                throw new BadRequestException("This request is no longer valid");
             }
             else {
                 const matchId = await this.createMatch(senderId, receiverId, MatchType.FRIEND);
@@ -340,17 +339,16 @@ export class GameService {
                 },
             });
         } catch (error) {
-            return error;
+            console.log(error);
         }
     }
 
     async refuseRequest(senderId: string, receiverId: string, notId: string): Promise<void> {
         try {
-            const notification = await this.prisma.notification.findUnique({ where: { id : notId,},});
+            const notification = await this.prisma.notification.findUnique({ where: { id: notId, }, });
 
             if (notification && notification.createdAt < new Date(Date.now() - 30000)) {
                 this.notificationGateway.apiError(receiverId, "This request is no longer valid");
-                throw new BadRequestException("This request is no longer valid");
             }
             else {
                 this.notificationGateway.refuseMatchRequest(senderId, receiverId);
@@ -361,7 +359,7 @@ export class GameService {
                 },
             });
         } catch (error) {
-            return error;
+            console.log(error);
         }
     }
 
@@ -387,26 +385,37 @@ export class GameService {
                         { creatorId: userId },
                         { opponentId: userId },
                     ],
+                    creatorScore: { not: null },
+                    opponentScore: { not: null },
                 },
                 orderBy: { createdAt: 'desc' },
                 include: {
-                    creator: { select: { profile: {
+                    creator: {
                         select: {
-                            firstName: true,
-                            lastName: true,
-                            avatar: true,
+                            profile: {
+                                select: {
+                                    firstName: true,
+                                    lastName: true,
+                                    avatar: true,
+                                }
+                            }
                         }
-                    }} }, opponent: { select: { profile: {
+                    }, opponent: {
                         select: {
-                            firstName: true,
-                            lastName: true,
-                            avatar: true,
+                            profile: {
+                                select: {
+                                    firstName: true,
+                                    lastName: true,
+                                    avatar: true,
+                                }
+                            }
                         }
-                    } } } }
+                    }
+                }
             });
             return matchHistory;
         } catch (error) {
-            return error;
+            console.log(error);
         }
     }
 
@@ -414,22 +423,15 @@ export class GameService {
         try {
             const leaderboard = await this.prisma.profile.findMany({
                 where: {
-                    user : {
-                        deleted : false,
+                    user: {
+                        deleted: false,
                     }
                 },
                 orderBy: { points: 'desc' },
-                // select: {
-                //     userId: true,
-                //     firstName: true,
-                //     lastName: true,
-                //     avatar: true,
-                //     points: true,
-                // },
             });
-            return {first : leaderboard[0] , second : leaderboard[1] , third : leaderboard[2]};
+            return { first: leaderboard[0], second: leaderboard[1], third: leaderboard[2] };
         } catch (error) {
-            return error;
+            console.log(error);
         }
     }
 
@@ -443,25 +445,25 @@ export class GameService {
             });
             this.notificationGateway.sendRefresh();
         } catch (error) {
-            // return error;
+            // console.log(error);
         }
     }
     async setOnline(userId: string): Promise<void> {
         try {
-            const user = await this.prisma.profile.findUnique({ where: { userId} });
+            const user = await this.prisma.profile.findUnique({ where: { userId } });
             if (user.status === "offline") {
                 return;
             }
             await this.prisma.profile.update({
-                where: { userId: userId},
+                where: { userId: userId },
                 data: {
                     status: "online",
                 },
             });
             this.notificationGateway.sendRefresh();
-        } catch (error) { 
+        } catch (error) {
             console.log("setOnline error", error);
-            // return error;
+            // console.log(error);
         }
     }
 }
