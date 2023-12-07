@@ -83,7 +83,7 @@ export default function Body({ leaderRef, handelShaw }: Props) {
             // console.log(error)
         }
     }, [profiles])
-    // console.log("this is the hahahahahahahah ",matchHistoryy)
+    console.log("this is the hahahahahahahah ",matchHistoryy)
     const firstavatar = `http://${process.env.NEXT_PUBLIC_APP_URL}:3000/${leaderboard?.first?.avatar}`;
     const secondavatar = `http://${process.env.NEXT_PUBLIC_APP_URL}:3000/${leaderboard?.second?.avatar}`;
     const thirdavatar = `http://${process.env.NEXT_PUBLIC_APP_URL}:3000/${leaderboard?.third?.avatar}`;
@@ -253,10 +253,10 @@ export default function Body({ leaderRef, handelShaw }: Props) {
                                         matchHistoryy.map((match: any) => (
                                         <MatchHistory
                                             winnerAvatar={match?.creator?.profile?.avatar}
-                                            winnerName={`${match?.creator?.profile?.firstName} ${match?.creator?.profile?.lastName}`}
+                                            winnerName={`${match?.creator?.profile?.username}`}
                                             winnerScore={match?.creatorScore}
                                             loserAvatar={match?.opponent?.profile?.avatar}
-                                            loserName={`${match?.opponent?.profile?.firstName} ${match?.opponent?.profile?.lastName}`}
+                                            loserName={`${match?.opponent?.profile?.username}`}
                                             loserScore={match?.opponentScore}
                                         />
                                         ))

@@ -35,8 +35,8 @@ const FriendSearch = ({setShow}: any) => {
       <>
 
   <div className="w-full h-full backdrop-blur-[20px] backSh flex gap-[30px] flex-col items-center justify-center">
-    <div className="flex flex-col gap-[16px] w-10/12 ">
-      <div className="w-full h-[491px] rounded-[34px] backdrop-blur-[20px] inpShad flex items-center flex-col  ">
+    <div className="flex flex-col gap-[16px] w-7/12 ">
+      <div className="w-full h-[600px] rounded-[34px] backdrop-blur-[20px] inpShad flex items-center flex-col  ">
         <div className=" pt-[20px] w-10/12">
           <p className="text-[#fff] text-[20px] font-[400] font-['Fredoka']">
             Friends
