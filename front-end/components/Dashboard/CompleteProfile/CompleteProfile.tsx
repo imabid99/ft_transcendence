@@ -84,7 +84,7 @@ export default function CompleteProfile({info, setInfo}:any) {
         return;
       }
     }
-    const onError = (errors:any) => console.log(errors);
+    const onError = (errors:any) => {};
     const registerOptions = {
       firstName: { required: "First name is required",
       maxLength: {

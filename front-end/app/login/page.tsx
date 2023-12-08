@@ -78,7 +78,7 @@ export default function Home() {
     }
     getUser();
   }, [jwtToken]);
-  const onError = (errors:any) => console.log(errors);
+  const onError = (errors:any) => {};
 
   return (
     
