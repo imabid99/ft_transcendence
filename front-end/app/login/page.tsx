@@ -34,7 +34,7 @@ export default function Home() {
   const form = useForm<FormValues>({mode: 'all'});
   const {register, handleSubmit, formState } = form;
   const {errors, isDirty} = formState;
-  const [jwtToken, setJwtToken] = useState<string>("");
+  const [jwtToken, setJwtToken] = useState<string| null>("");
   const onSubmit = async (data: FormValues) => {
     try {
       const response = await axios.post(`http://${process.env.NEXT_PUBLIC_APP_URL}:3000/api/auth/login`, {
@@ -46,7 +46,9 @@ export default function Home() {
         if (response?.data?.message) {
           toast.error(response.data.message);
         }
-      setJwtToken(response.data);
+        if (response?.data?.token.length > 0) {
+          setJwtToken(response.data.token);
+        }
       } catch (e:any) 
       {
         return;

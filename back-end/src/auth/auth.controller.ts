@@ -29,8 +29,9 @@ export class authController {
   ) {}
 
   @Post("login")
-  signin(@Body() userData: UserDataLogin) : Promise<any> {
-    return this.authService.login(userData);
+  signin(@Body() loginData) : Promise<any> {
+    // loginData: UserDataLogin
+    return this.authService.login(loginData);
   }
 
   @Post("signup")

@@ -111,6 +111,21 @@ export class NotificationGateway implements OnGatewayConnection, OnGatewayDiscon
     }
   }
 
+  sendNotification_v3(id: string, data: any) {
+    try {
+      this.socketMap.get(id).forEach(socket => {
+        socket.emit('notification', {
+          type: data.type,
+          message: data.message,
+        });
+        setTimeout(() => {
+          socket.emit("reload");
+        } , 500);
+      });
+    } catch (error) {
+    }
+  }
+
   sendRefresh() {
     setTimeout(() => {
       this.socketMap.forEach((sockets) => {
@@ -150,15 +165,15 @@ export class NotificationGateway implements OnGatewayConnection, OnGatewayDiscon
   }
 
   apiError(userId : string , message : string) {
-    this.sendNotification(userId, {type : "error", message});
+    this.sendNotification_v3(userId, {type : "error", message});
   }
 
   apiInfo(userId : string , message : string) {
-    this.sendNotification(userId, {type : "info", message});
+    this.sendNotification_v3(userId, {type : "info", message});
   }
 
   apiSuccess(userId : string , message : string) {
-    this.sendNotification(userId, {type : "success", message});
+    this.sendNotification_v3(userId, {type : "success", message});
   }
   updated(userId : string) {
     this.sendNotification_refresh(userId, {type : "success", message : "Updated successfully"});

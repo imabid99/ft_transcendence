@@ -45,32 +45,24 @@ export default function Page() {
                 if (isloading) {
                     return <Loading />;
                 }
-                console.log("Imad abid", myProfile);
-    async function handleFileInputChange(e: any, type: 'avatar' | 'cover') {
-        const file = e.target.files?.[0];
-        if (!file) {
-            return;
-        }
-        const formData = new FormData();
-        formData.append('file', file);
-        const maxFileSize = 1024 * 1024 * 5;
-        const uploadEndpoint = type === 'avatar'
-        ? `http://${process.env.NEXT_PUBLIC_APP_URL}:3000/api/upload/avatar`
-        : `http://${process.env.NEXT_PUBLIC_APP_URL}:3000/api/upload/cover`;
-
-            try{
-                const re = await axiosInstance.post(uploadEndpoint, formData);
-                socket.emit('refresh', { userId: user.id });
+        async function handleFileInputChange(e: any, type: 'avatar' | 'cover') {
+            const file = e.target.files?.[0];
+            if (!file) {
+                return;
             }
-            catch(err){}
+            const formData = new FormData();
+            formData.append('file', file);
+            const maxFileSize = 1024 * 1024 * 5;
+            const uploadEndpoint = type === 'avatar'
+            ? `http://${process.env.NEXT_PUBLIC_APP_URL}:3000/api/upload/avatar`
+            : `http://${process.env.NEXT_PUBLIC_APP_URL}:3000/api/upload/cover`;
+        
+                try{
+                    const re = await axiosInstance.post(uploadEndpoint, formData);
+                    socket.emit('refresh', { userId: user.id });
+                }
+                catch(err){}
     }
-    console.log("heereee \n");
-
-    // if(profiles.length === 0) {
-    //     return null
-    // }
-    // const avatarUrl = `http://${process.env.NEXT_PUBLIC_APP_URL}:3000/${myProfile?.avatar}`;
-    // const coverUrl = `http://${process.env.NEXT_PUBLIC_APP_URL}:3000/${myProfile?.cover}`;
     return (
         <div className='flex items-center  flex-col  gap-[80px] 3xl:gap-0 w-[100%] justify-start  3xl:px-[30px]  '>
         <Header/>
