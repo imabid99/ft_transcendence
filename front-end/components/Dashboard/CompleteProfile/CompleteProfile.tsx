@@ -20,7 +20,6 @@ import { setLocalStorageItem } from '@/utils/localStorage';
 
 
 export default function CompleteProfile({info, setInfo}:any) {
-  console.log("this is info ---------> : ", info);
   const {setLoged}:any = useContext(contextdata);
 
   const [avatarUrl, setAvatarUrl] = useState(`http://${process.env.NEXT_PUBLIC_APP_URL}:3000/${info?.avatar}`);
@@ -45,14 +44,11 @@ export default function CompleteProfile({info, setInfo}:any) {
         email: info.email,
       }
     });
-    // console.log("this is form", myProfile?.firstName);
     const {register, handleSubmit, formState } = form;
     const {errors, isDirty} = formState;
     const onSubmit = async (data: FormValues) => {
       for (let pair of user_data.entries()) {
-        console.log(pair[0]+ ', '+ pair[1]); 
       }
-      console.log("this is user_data ahahah : ", avatar);
       try {
         
             if(info.type === "Oauth")
@@ -65,7 +61,6 @@ export default function CompleteProfile({info, setInfo}:any) {
               formData.append('email', data.email);
               formData.append('oauthid', info.oauthid);
               formData.append('avatar', info.avatar);
-              console.log("this is info in oauth: ", info);
               const response = await axios.post(`http://${process.env.NEXT_PUBLIC_APP_URL}:3000/api/auth/oauth2/createUser`,formData);
               if (response.status !== 200)
                 setLocalStorageItem("Token", response.data.token);
@@ -80,18 +75,16 @@ export default function CompleteProfile({info, setInfo}:any) {
               formData.append('username', data.userName);
               formData.append('email', data.email);
               formData.append('password', info.password);
-              console.log("this is formData : ", formData);
               const response = await axios.post(`http://${process.env.NEXT_PUBLIC_APP_URL}:3000/api/auth/signup`,formData);
               if (response.status !== 200) 
                 router.push('/login');
             }
       } catch (e:any) 
       {
-        console.log("Error : ", e.response.data);
         return;
       }
     }
-    const onError = (errors:any) => console.log(errors);
+    const onError = (errors:any) => {};
     const registerOptions = {
       firstName: { required: "First name is required",
       maxLength: {
@@ -149,47 +142,17 @@ export default function CompleteProfile({info, setInfo}:any) {
       }
     },
     };
-  //   function handleFileInputChange(e: any) {
-  //     const file = e.target.files?.[0];
-  //     if (!file) {
-  //         return;
-  //     }
-  //     const formData = new FormData();
-  //     formData.append('file', file);
-  //     const maxFileSize = 1024 * 1024 * 5;
-  //     const uploadEndpoint =  `http://${process.env.NEXT_PUBLIC_APP_URL}:3000/api/upload/avatar`;
-  //     axiosInstance
-  //         .post(uploadEndpoint, formData)
-  //         .then((res) => {
-  //         socket.emit('refresh', { userId: user.id });
-  //     })
-  //     .catch((err) => {
-  //         console.log(err);
-  //     });
-  // }
-  
-  // console.log("this is my profile : ", myProfile);
   const handleUploadImage = (e: any) => {
     const file = e.target.files?.[0];
     const maxFileSize = 1024 * 1024 * 5;
-    console.log("this is file : ", file);
-    // formData.append('file', file);
-    
     if (!file) return;
     if (file?.size > maxFileSize) {
       alert("File is too large. Please upload a file smaller than 5 MB.");
       return;
     }
-    // user_data.delete('file');
-    // user_data.append('file', file);
-    // setUserData(formData);
-    console.log("------> file : ", file);
     setUserData(file);
-    console.log("------> setUserData : ", avatar);
-
     setAvatarUrl(URL.createObjectURL(file));
 }
-  // const avatarUrl = `http://${process.env.NEXT_PUBLIC_APP_URL}:3000/${info?.avatar}`;
 
     return (
         

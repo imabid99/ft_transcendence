@@ -69,7 +69,6 @@ export default function Page() {
             }
             setIsBlocked(true);
           } catch (err) {
-            console.log(err);
           }
         }, 500);
       }
@@ -92,7 +91,6 @@ export default function Page() {
         setReceiver(res.data);
       } catch (err) {
         setIsUser(false);
-        console.log(err);
       }
     }
     getReceiver();
@@ -112,7 +110,6 @@ export default function Page() {
         })
         setMessages(onlyMyMessages);
       } catch (err) {
-        console.log(err);
       }
     }
     async function fetchIsBlocked() {
@@ -131,7 +128,6 @@ export default function Page() {
         }
         setIsBlocked(true);
       } catch (err) {
-        console.log(err);
       }
     }
     fetchIsBlocked();
@@ -201,7 +197,6 @@ export default function Page() {
       router.push('/Chat');
     }
     catch(err:any){
-      console.log(err.message);
     }
   }
 
@@ -211,17 +206,14 @@ export default function Page() {
       setIsIblocked(false);
     }
     catch(err:any){
-      console.log(err.message);
     }
   }
   
   const handleInvite = async () => {
     try{
       const res = await axiosInstance.post(`http://${process.env.NEXT_PUBLIC_APP_URL}:3000/api/game/request/${receiver?.userId}`);
-      console.log(res.data);
     }
     catch(err){
-      console.log(err);
     }
   }
   messages?.sort((a, b) => {

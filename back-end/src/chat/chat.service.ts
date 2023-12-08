@@ -51,7 +51,6 @@ export class ChatService {
         }
         const membersProfile = await this.getMembersProfile(channel.Members);
         const myBlocked = await this.friendshipService.getBlocked(myId);
-        console.log("myBlocked", myBlocked);
         channel.Messages = channel.Messages.filter((message) => {
           if (myBlocked.includes(message.fromName)) {
             return false;
@@ -59,7 +58,6 @@ export class ChatService {
           return true;
         }
         );
-        console.log("channel.Messages", channel.Messages);
         return {channel, membersProfile};
     }
     async getMembersProfile(members: any): Promise<any> {

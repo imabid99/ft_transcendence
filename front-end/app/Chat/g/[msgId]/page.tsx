@@ -45,9 +45,7 @@ export default function Page() {
       try {
         const res = await axiosInstance.get(`http://${process.env.NEXT_PUBLIC_APP_URL}:3000/api/friendship/blocked`);
         setMyBlockList(res.data);
-        console.log("myBlockList : ", res.data);
       } catch (err) {
-        console.log(err);
       }
     }
     getBlockList();
@@ -65,7 +63,6 @@ export default function Page() {
         setMember(true);
       } catch (err) {
         setMember(false);
-        console.log(err);
       }
     }
     getgroup();
@@ -101,7 +98,6 @@ export default function Page() {
           setMember(true);
         } catch (err) {
           setMember(false);
-          console.log(err);
         }
       }
       getgroup();
@@ -163,19 +159,6 @@ export default function Page() {
   messages?.sort((a, b) => {
     return new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime()
   })
-  /*
-    filter messages from blocked users
-  */
-
-    // messages?.filter((message:Message) => {
-    //   if (myBlockList?.includes(message.fromName)) {
-    //     console.log("message from blocked user");
-    //     return false;
-    //   }
-    //   return true;
-    // }
-    // )
-
 
   return (
       <div className='message w-[calc(100%-450px)] min-h-full flex flex-col min-w-[490px] lg:max-xl:w-[calc(100%-350px)] lsm:max-lg:min-w-full '>

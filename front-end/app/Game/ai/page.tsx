@@ -512,11 +512,6 @@ const PlayWithAI = () => {
   };
 
 
-  if(!shosenMap)
-  {
-    console.log("Loading");
-  }
-
   return (
     <div className="w-full h-full relative">
 

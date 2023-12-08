@@ -4,6 +4,8 @@ export class UserDataLogin {
     @IsEmail()
     @IsNotEmpty()
     email: string;
+
+    @IsString()
     @IsNotEmpty()
     password: string;
   }

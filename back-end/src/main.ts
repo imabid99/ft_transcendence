@@ -4,6 +4,7 @@ import { PrismaService } from "./prisma/prisma.service";
 import * as cors from 'cors';
 import * as express from 'express';
 import { join } from 'path';
+import { ValidationPipe } from "@nestjs/common";
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
@@ -13,6 +14,7 @@ async function bootstrap() {
   }));
   app.use('/uploads', express.static(join(__dirname, '..', 'uploads')));
   app.setGlobalPrefix("api");
+  app.useGlobalPipes(new ValidationPipe());
   const prismaService = app.get(PrismaService);
   await prismaService.enableShutdownHooks(app);
   await app.listen(3000);

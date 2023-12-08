@@ -20,7 +20,6 @@ function Guard ({ children }: { children: React.ReactNode; }) {
     if (isloading) {
         return <Loading />;
     }
-    console.log("Guard");
     return (
         <>
             {children}

@@ -17,7 +17,6 @@ export default function validateForm() {
   const searchParams = useSearchParams()
   const token = searchParams.get('token')
   const router = useRouter();
-  console.log("this is token : ", token);
     useEffect(() => {
         if (!token) {
             return;
@@ -25,7 +24,6 @@ export default function validateForm() {
         const fetchMyProfile = async () => {
             try {
             const response = await axios.get(`http://${process.env.NEXT_PUBLIC_APP_URL}:3000/api/auth/oauth2/tempUser/${token}`);
-            console.log("this is response : ", response.data);
             setInfo({
                 firstName: response.data.firstName,
                 lastName: response.data.lastName,
@@ -38,7 +36,6 @@ export default function validateForm() {
             });
             setIsLoading(false);
             } catch (e: any) {
-            console.log("Error : ", e);
             return;
             }
         };

@@ -40,23 +40,17 @@ export default function Page() {
       };
     }, [notifSocket]);
     useEffect(() => {
-      // if(!profiles) return;
-      // setProfile(myProfile);
-      // console.log("Acheraf  is", profiles);
+
       setLoading(false);
       setAchievements(myProfile?.achievements);
     }, [profiles]);
-
-    // console.log("Acheraf  is-------------->>>>>>>", myProfile);
 
     const sendRequest = async () => {
       try {
         const res = await axiosInstance.post(
           `http://${process.env.NEXT_PUBLIC_APP_URL}:3000/api/friendship/request/${UserId}`
         );
-        // console.log("res is", res);
       } catch (err) {
-        // console.log(err);
       }
     };
     const blockUser = async () => {
@@ -65,7 +59,6 @@ export default function Page() {
           `http://${process.env.NEXT_PUBLIC_APP_URL}:3000/api/friendship/block/${UserId}`
         );
       } catch (err) {
-        // console.log(err);
       }
     };
     const unblockUser = async () => {
@@ -73,9 +66,7 @@ export default function Page() {
         const res = await axiosInstance.patch(
           `http://${process.env.NEXT_PUBLIC_APP_URL}:3000/api/friendship/unblock/${UserId}`
         );
-        console.log("res is hhhhhh blockuser", res);
       } catch (err) {
-        // console.log(err);
       }
     };
     const isBlockedUser = async () => {
@@ -85,7 +76,6 @@ export default function Page() {
         );
         setIsBlocked(res.data);
       } catch (err) {
-        // console.log(err);
       }
     };
 
@@ -94,11 +84,9 @@ export default function Page() {
         const res = await axiosInstance.get(
           `http://${process.env.NEXT_PUBLIC_APP_URL}:3000/api/friendship/amIBlocked/${UserId}`
         );
-        // console.log("res isfri", res);
-          // console.log("res is", res);
+
           setAmIBlocked(res.data);
       } catch (err) {
-        // console.log(err);
       }
     };
 
@@ -107,18 +95,14 @@ export default function Page() {
         const res = await axiosInstance.get(
           `http://${process.env.NEXT_PUBLIC_APP_URL}:3000/api/friendship/show/${UserId}`
         );
-        // console.log("res isfri", res);
         if (res.data) {
-          // console.log("res is", res);
           setIsFriend(true);
         }
       } catch (err) {
-        // console.log(err);
       }
     };
 
     useEffect(() => {
-      console.log("Achraf  is-------------->>>>>>>", isBlocked);
       isBlockedUser();
       checkFriendship();
       amIBlocked();
@@ -130,14 +114,11 @@ export default function Page() {
     if (loading) {
       return <Loading />;
     }
-        // console.log("Achivement hahahahaha : ", profile?.achievements);
 
     const avatarUrl = `http://${process.env.NEXT_PUBLIC_APP_URL}:3000/${myProfile?.avatar}`;
     const coverUrl = `http://${process.env.NEXT_PUBLIC_APP_URL}:3000/${myProfile?.cover}`;
     return (
       <div className="flex items-center  flex-col  gap-[80px] 3xl:gap-0 w-[100%] justify-start  3xl:px-[30px]  ">
-        {/* <div className='bg-black px-[60px] '>
-        </div> */}
         <Header />
         <div className="flex items-center flex-col 3xl:flex-row gap-[40px] w-[100%] 3xl:justify-center h-full z-[10]">
           <div className=" flex max-w-[922px] w-11/12 xl:h-[823px] rounded-[42px] sh-d bg-white">
@@ -478,7 +459,7 @@ export default function Page() {
                 <div className="flex ">
                   <img src="/group.svg" alt="" />
                   <span className="pl-[10px] text-[#064A85] text-[15px] sm:text-[20px] font-[400]">
-                    Achievements - <span>0</span> / 7
+                    Achievements - <span>{myProfile?.achcount}</span> / 7
                   </span>
                 </div>
               </div>

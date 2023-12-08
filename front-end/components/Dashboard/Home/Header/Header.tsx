@@ -62,7 +62,6 @@ export default function Header({show, modalRef,handelShaw,notifRef,notifIconRef}
 	const handleSearch = (e: any) => {
         setCloseSearch(false)
         setShowBody(true)
-        console.log("hereee : ", users)
 		const value = e.target.value;
 		const result = profiles.filter((profile: any) => {
 			if (profile.userId === user.id) return false;

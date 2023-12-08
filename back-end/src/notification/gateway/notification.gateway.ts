@@ -65,7 +65,6 @@ export class NotificationGateway implements OnGatewayConnection, OnGatewayDiscon
         socket.emit("reload");
       });
     } catch (error) {
-      // console.log("error is ", error);
     }
   }
 
@@ -80,7 +79,6 @@ export class NotificationGateway implements OnGatewayConnection, OnGatewayDiscon
       socket.emit("redirect", { link : data.link });
     });
   } catch (error) {
-    // console.log("error is ", error);
   }
   }
   
@@ -94,13 +92,11 @@ export class NotificationGateway implements OnGatewayConnection, OnGatewayDiscon
         });
       });
     } catch (error) {
-      // console.log("error is ", error);
     }
   }
 
   sendNotification_v2(id: string, data: any) {
     try {
-
       this.socketMap.get(id).forEach(socket => {
         socket.emit('notification', {
           type: data.type,
@@ -112,7 +108,21 @@ export class NotificationGateway implements OnGatewayConnection, OnGatewayDiscon
         } , 500);
       });
     } catch (error) {
-      // console.log("error is ", error);
+    }
+  }
+
+  sendNotification_v3(id: string, data: any) {
+    try {
+      this.socketMap.get(id).forEach(socket => {
+        socket.emit('notification', {
+          type: data.type,
+          message: data.message,
+        });
+        setTimeout(() => {
+          socket.emit("reload");
+        } , 500);
+      });
+    } catch (error) {
     }
   }
 
@@ -155,15 +165,15 @@ export class NotificationGateway implements OnGatewayConnection, OnGatewayDiscon
   }
 
   apiError(userId : string , message : string) {
-    this.sendNotification(userId, {type : "error", message});
+    this.sendNotification_v3(userId, {type : "error", message});
   }
 
   apiInfo(userId : string , message : string) {
-    this.sendNotification(userId, {type : "info", message});
+    this.sendNotification_v3(userId, {type : "info", message});
   }
 
   apiSuccess(userId : string , message : string) {
-    this.sendNotification(userId, {type : "success", message});
+    this.sendNotification_v3(userId, {type : "success", message});
   }
   updated(userId : string) {
     this.sendNotification_refresh(userId, {type : "success", message : "Updated successfully"});

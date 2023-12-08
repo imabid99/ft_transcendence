@@ -60,7 +60,7 @@ export default function Home() {
         });
   }
 
-  const onError = (errors: any) => console.log(errors);
+  const onError = (errors:any) => {};
   const registerOptions = {
     firstName: {
       required: "First name is required",
@@ -144,7 +144,7 @@ export default function Home() {
           <div className="w-[100%] flex flex-col items-center justify-center xl:w-[30%] py-[50px]">
             <div className="flex flex-col pt-[20px] gap-[16px] sm:flex-row w-full items-center justify-center">
               <button           onClick={() => {
-            router.push('http://localhost:3000/api/auth/oauth2/google');
+            router.push(`http://${process.env.NEXT_PUBLIC_APP_URL}:3000/api/auth/oauth2/google`);
           }}
           className="flex justify-evenly items-center w-[170px] h-[52px] border-[0.1px] rounded-[11px] border-white cursor-pointer hover:bg-white hover:bg-opacity-10">
                 <img
@@ -157,7 +157,7 @@ export default function Home() {
                 </p>
               </button>
               <button           onClick={() => {
-            router.push('http://localhost:3000/api/auth/oauth2/42');
+            router.push(`http://${process.env.NEXT_PUBLIC_APP_URL}:3000/api/auth/oauth2/42`);
           }} 
           className="flex justify-evenly items-center w-[170px] h-[52px] border-[0.1px] rounded-[11px] border-white cursor-pointer hover:bg-white hover:bg-opacity-10">
                 <img

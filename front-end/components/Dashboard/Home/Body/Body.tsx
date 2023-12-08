@@ -29,18 +29,15 @@ export default function Body({ leaderRef, handelShaw }: Props) {
             const getFriends = async () => {
                 try{
                     const res = await axiosInstance.get(`http://${process.env.NEXT_PUBLIC_APP_URL}:3000/api/friendship/show`);
-                    // console.log(res.data);
                     setFriends(res.data);
                 }
                 catch(err){
-                    // console.log(err);
                 }
             }
             getFriends();
         }
         catch(error)
         {
-            // console.log(error)
         }
     }, [profiles])
 
@@ -49,18 +46,15 @@ export default function Body({ leaderRef, handelShaw }: Props) {
             const getMatchHistorty = async () => {
                 try{
                     const res = await axiosInstance.get(`http://${process.env.NEXT_PUBLIC_APP_URL}:3000/api/game/match/history`);
-                    console.log("this is match history",res.data[0].creator.profile.avatar);
                     setmatchHistoryy(res.data);
                 }
                 catch(err){
-                    // console.log(err);
                 }
             }
             getMatchHistorty();
         }
         catch(error)
         {
-            // console.log(error)
         }
     }, [profiles])
 
@@ -69,21 +63,17 @@ export default function Body({ leaderRef, handelShaw }: Props) {
             const getLeaderBoard = async () => {
                 try{
                     const res = await axiosInstance.get(`http://${process.env.NEXT_PUBLIC_APP_URL}:3000/api/game/leaderboard`);
-                    // console.log("this is the leaderboard",res.data);
                     setleaderBoard(res.data);
                 }
                 catch(err){
-                    // console.log(err);
                 }
             }
             getLeaderBoard();
         }
         catch(error)
         {
-            // console.log(error)
         }
     }, [profiles])
-    console.log("this is the hahahahahahahah ",matchHistoryy)
     const firstavatar = `http://${process.env.NEXT_PUBLIC_APP_URL}:3000/${leaderboard?.first?.avatar}`;
     const secondavatar = `http://${process.env.NEXT_PUBLIC_APP_URL}:3000/${leaderboard?.second?.avatar}`;
     const thirdavatar = `http://${process.env.NEXT_PUBLIC_APP_URL}:3000/${leaderboard?.third?.avatar}`;
@@ -150,7 +140,7 @@ export default function Body({ leaderRef, handelShaw }: Props) {
                                 className="w-full h-full cursor-grab !pl-[30px] !pt-[34px]"
                             >
                                 {Friends.map((friend: any) => (
-                                <SwiperSlide>
+                                <SwiperSlide key={friend?.userId}>
                                     <Friend
                                     cover={friend?.cover}
                                     avatar={friend?.avatar}
@@ -258,6 +248,7 @@ export default function Body({ leaderRef, handelShaw }: Props) {
                                             loserAvatar={match?.opponent?.profile?.avatar}
                                             loserName={`${match?.opponent?.profile?.username}`}
                                             loserScore={match?.opponentScore}
+                                            key={match?.id}
                                         />
                                         ))
                                     ) : (

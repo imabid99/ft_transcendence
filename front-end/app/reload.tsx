@@ -60,7 +60,6 @@ export default function Reload({children,}: {children: React.ReactNode}) {
 				}
 				catch (error)
 				{
-					console.log("get : profiles ", error);
 					return;
 				}
 				}
@@ -81,7 +80,6 @@ export default function Reload({children,}: {children: React.ReactNode}) {
 			}
 			catch (error)
 			{
-			console.log("get : messages ", error);
 			return;
 			}
 		}
@@ -96,7 +94,6 @@ export default function Reload({children,}: {children: React.ReactNode}) {
 			}
 			catch (error)
 			{
-			  console.log("error : getChannels ", error);
 			  return;
 			}
 		  }    async function getChannels() {
@@ -110,7 +107,6 @@ export default function Reload({children,}: {children: React.ReactNode}) {
 			}
 			catch (error)
 			{
-			  console.log("error : profiles ", error);
 			  return;
 			}
 		  }
@@ -122,14 +118,12 @@ export default function Reload({children,}: {children: React.ReactNode}) {
 					  setMyFriends(res.data);
 				  }
 				  catch(err){
-					  console.log(err);
 				  }
 			  }
 			  getFriends();
 		  }
 		  catch(error)
 		  {
-			  console.log(error)
 		  }
 
 		  }

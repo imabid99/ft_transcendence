@@ -61,7 +61,6 @@ export default function GroupInfo({setShowBody,setGroupUsers,groupUsers}:GroupIn
                         setShowAnimationLoading(false)
                         setAvatar(null);
                         router.push(`/Chat`);
-                        console.log("avatar ==null update-groupAvatar : ", avatar);
                     }
                     else{
                         const res = await axiosInstance.post(`http://${process.env.NEXT_PUBLIC_APP_URL}:3000/api/upload/channelAvatar/${data.groupId}`,avatar)
@@ -73,7 +72,6 @@ export default function GroupInfo({setShowBody,setGroupUsers,groupUsers}:GroupIn
                     }
                 }
                 catch(err){
-                    console.log("update-groupAvatar : ",err);
                 }
             })
 

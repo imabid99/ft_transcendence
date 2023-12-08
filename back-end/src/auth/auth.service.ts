@@ -19,6 +19,8 @@ import axios from 'axios';
 import { writeFile } from 'fs';
 import { promisify } from 'util';
 import * as mime from 'mime-types';
+import { IsEmail, IsNotEmpty, validate } from 'class-validator';
+
 
 const writeFileAsync = promisify(writeFile);
 
@@ -30,22 +32,34 @@ export class AuthService {
     private notificationGateway: NotificationGateway,
   ) { }
 
-  async login(userData: UserDataLogin): Promise<any> {
+  async login(userData: any): Promise<any> {
     try {
+      userData = Object.assign(new UserDataLogin(), userData);
+      const errors = await validate(userData);
+      if (errors.length > 0) {
+        const firstError = errors[0];
+        const errorMessage = firstError.constraints ? Object.values(firstError.constraints)[0] : 'Validation error';
+        throw new BadRequestException({ message: errorMessage });
+      }
+
       let user: any;
       if (userData.email) {
         user = await this.prisma.user.findUnique({
           where: { email: userData.email },
         });
       }
+      else {
+        throw new BadRequestException("Email is required");
+      }
       if (user) {
+        if (!userData.password)
+          throw new BadRequestException("Password is required");
         const valid = await bcrypt.compare(userData.password, user.password);
         if (valid)
-          return this.userService.generateToken(
+          return {token : this.userService.generateToken(
             user.id,
             user.username,
-            user.email
-          );
+            user.email )};
         else {
           throw new UnauthorizedException("Invalid password");
         }
@@ -53,18 +67,15 @@ export class AuthService {
         throw new NotFoundException("Email not found");
       }
     } catch (error) {
-      console.log(error.message);
       return { message: error.message };
     }
   }
 
   async addUser(userData: UserData, file: any) {
     try {
-      console.log(userData);
       let av: string = "uploads/default/nouser.avif";
       if (file && file.path) {
         av = file.path;
-        console.log("avatar", av);
       }
       let exist = await this.prisma.user.findUnique({
         where: {
@@ -106,7 +117,6 @@ export class AuthService {
         },
       });
     } catch (error) {
-      console.log(error);
       console.log(error);
     }
   }
@@ -210,7 +220,6 @@ export class AuthService {
       let av: string = user.avatar;
       if (file && file.path) {
         av = file.path;
-        console.log("avatar", av);
       }
       const usr = await this.prisma.user.create({
         data: {
@@ -237,7 +246,6 @@ export class AuthService {
       this.deleteTempUser(user.oauthid);
       return { token: this.userService.generateToken(usr.id, usr.username, usr.email) };
     } catch (error) {
-      console.log("val oauth", error);
       throw error;
     }
   }
@@ -323,10 +331,8 @@ export class AuthService {
         responseType: 'arraybuffer',
       });
 
-      // Determine the file extension
       let extension = mime.extension(response.headers['content-type']) || '';
       if (!extension) {
-        // Fallback: Extract extension from URL if possible
         const match = url.match(/\.(jpeg|jpg|gif|png|svg)$/);
         extension = match ? match[0] : '';
       }

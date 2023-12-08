@@ -61,7 +61,6 @@ export default function Page() {
       return;
     }
     if(!user) return;
-    console.log("user : ", user?.twoFAActive);
     setTwofactoryIsEnable(!user?.twoFAActive);
     setIsLoading(false);
   }, [user]);
@@ -81,7 +80,6 @@ export default function Page() {
       const objectURL = URL.createObjectURL(blob);
       setQrCodeSrc(objectURL);
     } catch (e: any) {
-      console.log("Error : ", e.response?.data || e.message);
       return;
     }
   };
@@ -104,11 +102,9 @@ export default function Page() {
         formData
       )
       .then((res) => {
-        console.log(res);
         socket.emit("refresh", { userId: user.id });
       })
       .catch((err) => {
-        console.log(err);
       });
   }
   const avatarUrl = `http://${process.env.NEXT_PUBLIC_APP_URL}:3000/${myProfile?.avatar}`;
@@ -120,7 +116,6 @@ export default function Page() {
       )
       .then((res) => {})
       .catch((err) => {
-        console.log(err);
       });
   }
 
@@ -135,13 +130,11 @@ export default function Page() {
       socket?.disconnect();
       router.push("/login");
     } catch (e: any) {
-      console.log("Error : ", e.response?.data || e.message);
       return;
     }
   };
 
   const onSubmit = async (data: FormValues) => {
-    console.log(data);
     try {
       const response = await axiosInstance.patch(
         `http://${process.env.NEXT_PUBLIC_APP_URL}:3000/api/user/change-data`,
@@ -151,16 +144,13 @@ export default function Page() {
           lastName: data.lastName,
         }
       );
-      console.log(response);
     } catch (e: any) {
-      console.log("Error : ", e.response.data);
       return;
     }
   };
-  const onError = (errors: any) => console.log(errors);
+  const onError = (errors:any) => {};
 
   const onSubmit1 = async (data: FormValues) => {
-    console.log(data);
     try {
       const response = await axiosInstance.patch(
         `http://${process.env.NEXT_PUBLIC_APP_URL}:3000/api/user/change-password`,
@@ -169,9 +159,7 @@ export default function Page() {
           newPassword: data.newpassword,
         }
       );
-      console.log(response);
     } catch (e: any) {
-      console.log("Error : ", e.response.data);
       return;
     }
   };
@@ -245,14 +233,12 @@ export default function Page() {
         message: "Password must have at least 8 characters",
       },
       validate: async (value: string) => {
-        console.log("oldpassword", value);
         const response = await axiosInstance.post(
           `http://${process.env.NEXT_PUBLIC_APP_URL}:3000/api/user/check-password`,
           {
             password: value,
           }
         );
-        console.log(response);
         if (response.data !== true) return "old password incorrect";
       },
     },
@@ -277,14 +263,12 @@ export default function Page() {
         message: "must have at least 8 characters",
       },
       validate: async (value: string) => {
-        console.log("oldpassword", value);
         const response = await axiosInstance.patch(
           `http://${process.env.NEXT_PUBLIC_APP_URL}:3000/api/auth/2fa_enable`,
           {
             twofactory: value,
           }
         );
-        console.log(response);
         if (response.data !== true) return "two factory incorrect";
       },
     },
@@ -299,12 +283,10 @@ export default function Page() {
           twofactory: twofactoryInput,
         }
       );
-      console.log("handleEnableTwoFactory : ", response.data);
       if (response.data === true) {
         setTwofactoryIsEnable(false);
       }
     } catch (e: any) {
-      console.log("Error : ", e.response.data);
       return;
     }
   };
@@ -321,7 +303,6 @@ export default function Page() {
         setTwofactoryIsEnable(true);
       }
     } catch (e: any) {
-      console.log("Error : ", e.response.data);
       return;
     }
   };

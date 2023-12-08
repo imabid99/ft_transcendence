@@ -45,39 +45,7 @@ const PlayWithAI = () => {
       setShosenMap(getLocalStorageItem("Maps"));
   }, []);
   const router = useRouter();
-  // const Controls = {
-  //   left: "left",
-  //   right: "right",
-  // };
 
-  // const map = useMemo(
-  //   () => [
-  //     { name: Controls.left, keys: ["ArrowLeft"], player: "player1" },
-  //     { name: Controls.right, keys: ["ArrowRight"], playerd: "player1" },
-  //     { name: Controls.left, keys: ["ArrowLeft"], player: "player2" },
-  //     { name: Controls.right, keys: ["ArrowRight"], player: "player2" },
-  //   ],
-  //   []
-  // );
-
-  // const router = useRouter();
-  // const [searchParams, { selectedMap }] = useSearchParams();
-  // const [searchParams] = useSearchParams();
-  // const params = new URLSearchParams(searchParams);
-  // const selectedMap = params.get('selectedMap');
-
-
-  // console.log("this is map lololololo", selectedMap);
-  // GUI CONTROLS
-  // 	const controls = useControls({});
-  //   const { sunPosition } = useControls("sky", {
-  // 	sunPosition: [-0.07, -0.03, -0.75],
-  //   });
-  // const { planecolor } = useControls("color", { planecolor: "#51b151" });
-  // const { floorcolor } = useControls("color", { floorcolor: "#1572ff" });
-  // const { paddlecolor } = useControls("color", { paddlecolor: "#abebff" });
-  // const { fogcolor } = useControls("color", { fogcolor: "#382f21" });
-  // const { fogfar } = useControls("color", { fogfar: 180 });
 
   function Plane(props: any) {
     const [ref, api] = usePlane(
@@ -104,11 +72,7 @@ const PlayWithAI = () => {
     );
   }
 
-  // const [MobileLeft, setMobileLeft] = useState(false);
-  // const [MobileRight, setMobileRight] = useState(false);
-
   function Player1Paddle(props: any) {
-    // console.log("P1START");
     const [ref, api] = useBox(
       () => ({
         mass: 0,
@@ -240,7 +204,6 @@ const PlayWithAI = () => {
   }
 
   function Player2Paddle(props: any) {
-    // console.log("P2START");
     const [ref, api] = useBox(
       () => ({
         mass: 0,
@@ -409,9 +372,7 @@ const PlayWithAI = () => {
       window.addEventListener("keyup", ServeUp);
       window.addEventListener("touchstart", handleTouchStart);
       window.addEventListener("touchend", handleTouchEnd);
-      // let khrjat = false;
       const serveball = () => {
-        // const value = Math.random() < 0.5 ? -10 : 10;
         const value = -5;
         if ((isServing || isServingmobile) && !hasServed) {
           api.applyImpulse([value * direction, 0, -10 * direction], [0, 0, 0]);
@@ -421,7 +382,6 @@ const PlayWithAI = () => {
           api.position.set(0, 0.35, 0);
           api.velocity.set(0, 0, 0);
           hasServed = false;
-          // khrjat = true;
         }
         if (speed.current.x < -10)
           api.velocity.set(-10, speed.current.y, speed.current.z);
@@ -431,8 +391,7 @@ const PlayWithAI = () => {
           api.velocity.set(speed.current.x, speed.current.y, 24);
         if (speed.current.z < -25)
           api.velocity.set(speed.current.x, speed.current.y, -24);
-        // if (!khrjat)
-        // 	console.log(speed.current);
+
         requestAnimationFrame(serveball);
       };
       requestAnimationFrame(serveball);
@@ -442,7 +401,6 @@ const PlayWithAI = () => {
         window.removeEventListener("keyup", ServeUp);
         window.removeEventListener("touchstart", handleTouchStart);
         window.removeEventListener("touchend", handleTouchEnd);
-        // socket.off('ballPosition');
       };
     }, []);
 
@@ -528,12 +486,6 @@ const PlayWithAI = () => {
 
     useEffect(() => {
       if (p1_count === 7 || p2_count === 7) {
-        // else
-        // {
-        //   console.log("Opponent Wins!", p1_count, p2_count);
-        //   const payload = {winner: "Opponent", winnerscore: p1_count, loserscore: p2_count};
-        //   socket.emit('player-wins', payload)
-        // }
         setP1Count(0);
         setP2Count(0);
       }
@@ -648,11 +600,6 @@ const PlayWithAI = () => {
       </>
     )
   };
-
-  if(!shosenMap)
-  {
-    console.log("Loading");
-  }
 
   return (
     <div className="w-full h-full relative">

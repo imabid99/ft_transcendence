@@ -10,7 +10,6 @@ export class FriendshipService {
 
   async makeRequest(senderId: string, receiverId: string): Promise<any> {
     try {
-      console.log("request is ", senderId, receiverId);
       if (senderId === receiverId) {
         throw new BadRequestException("You can't send a friend request to yourself");
       }
@@ -56,8 +55,7 @@ export class FriendshipService {
       this.notificationGateway.friendRequest(senderId, receiverId);
       return ;
     } catch (error) {
-      //  console.log("error is ", error);
-      //  return  error;
+
     }
   }
 
@@ -99,8 +97,6 @@ export class FriendshipService {
       await this.prisma.notification.delete({where: { id: notid },});
       this.notificationGateway.acceptFriendRequest(senderId, receiverId);
     } catch (error) {
-        console.log("error is at accept req", error);
-        // return  error;
     }
   }
 
@@ -133,7 +129,6 @@ export class FriendshipService {
           id: friendship.id,
         }
       });
-      console.log("notid is ", notid);
       await this.prisma.notification.delete({
         where: {
           id: notid,
@@ -226,7 +221,6 @@ export class FriendshipService {
     friends = friends.filter((friend, index, self) =>
       index === self.findIndex((t) => (t.userId === friend.userId)));
     const allUsersnames = friends.map(friend => friend.username);
-    console.log("allUsersnames is ", allUsersnames);
     return allUsersnames;
   }
 
@@ -301,7 +295,6 @@ export class FriendshipService {
         this.notificationGateway.apiError(blockerId, "You have no relationship with this user");
         throw new BadRequestException("You have no relationship with this user");
       }
-      console.log("existingRelationship is ", existingRelationship);
       if (existingRelationship.status !== FriendshipStatus.BLOCKED) {
         this.notificationGateway.apiError(blockerId, "this user is not even blocked");
         throw new BadRequestException("this user is not even blocked");
@@ -354,7 +347,6 @@ export class FriendshipService {
         else
           return false;
       } catch (error) {
-          console.log(error.message);
       }
     }
 }
