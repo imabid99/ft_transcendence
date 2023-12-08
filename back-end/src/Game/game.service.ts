@@ -367,6 +367,7 @@ export class GameService {
                                 select: {
                                     firstName: true,
                                     lastName: true,
+                                    username: true,
                                     avatar: true,
                                 }
                             }
@@ -377,6 +378,7 @@ export class GameService {
                                 select: {
                                     firstName: true,
                                     lastName: true,
+                                    username: true,
                                     avatar: true,
                                 }
                             }

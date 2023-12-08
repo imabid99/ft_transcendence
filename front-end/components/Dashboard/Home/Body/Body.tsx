@@ -140,7 +140,7 @@ export default function Body({ leaderRef, handelShaw }: Props) {
                                 className="w-full h-full cursor-grab !pl-[30px] !pt-[34px]"
                             >
                                 {Friends.map((friend: any) => (
-                                <SwiperSlide>
+                                <SwiperSlide key={friend?.userId}>
                                     <Friend
                                     cover={friend?.cover}
                                     avatar={friend?.avatar}
@@ -248,6 +248,7 @@ export default function Body({ leaderRef, handelShaw }: Props) {
                                             loserAvatar={match?.opponent?.profile?.avatar}
                                             loserName={`${match?.opponent?.profile?.username}`}
                                             loserScore={match?.opponentScore}
+                                            key={match?.id}
                                         />
                                         ))
                                     ) : (

@@ -17,32 +17,35 @@ export default function Page() {
     const name = `${myProfile?.firstName} ${myProfile?.lastName}`;
     const router = useRouter();
     const [isloading, setIsLoading] = useState(true);
-    const [achievements, setAchievements] = useState<any>(null);
 
-    useEffect(() => {
-        setAchievements(achievements);
-        }
-        , [profiles])
-    const getNotificatons = async () => {
-        try{
-            const res = await axiosInstance.get(`http://${process.env.NEXT_PUBLIC_APP_URL}:3000/api/notification/all`);
-        }
-        catch(err){
-        }
-    }
-    getNotificatons();
-    useEffect(() => {
-        const token = checkLoged();
-        if (!token) {
-            router.push("/login");
-            return;
-        }
-        setIsLoading(false);
-    }, []);
-    
-    if (isloading) {
-        return <Loading />;
-    }
+    // useEffect(() => {
+    //     setAchievements(achievements);
+    //     }
+    //     , [profiles])
+    // const getNotificatons = async () => {
+        //     try{
+            //         const res = await axiosInstance.get(`http://${process.env.NEXT_PUBLIC_APP_URL}:3000/api/notification/all`);
+            //     }
+            //     catch(err){
+                //     }
+                // }
+                useEffect(() => {
+                    if(!myProfile) {
+                        return;
+                    }
+                    const token = checkLoged();
+                    if (!token) {
+                        router.push("/login");
+                        return;
+                    }
+                    setIsLoading(false);
+                    // getNotificatons();
+                }, [profiles]);
+                
+                if (isloading) {
+                    return <Loading />;
+                }
+                console.log("Imad abid", myProfile);
     async function handleFileInputChange(e: any, type: 'avatar' | 'cover') {
         const file = e.target.files?.[0];
         if (!file) {
@@ -61,6 +64,7 @@ export default function Page() {
             }
             catch(err){}
     }
+    console.log("heereee \n");
 
     // if(profiles.length === 0) {
     //     return null

@@ -17,9 +17,8 @@ const Rules = ({setShow}:props) => {
             </div>
             <div className="text-center flex gap-[30px] flex-col max-w-[1500px] z-50 px-[40px]">
                 <p className="text-[#003A6B] lg:text-[30px] font-[500] font-['Fredoka'] text-[16px] "><span className="text-white lg:text-[30px] font-[500] text-[16px]">Your Objective:</span> Be the first to achieve <span className="text-white lg:text-[30px] font-[500] text-[16px]">5 Pts</span> !</p>
-                <p className="text-[#003A6B] lg:text-[30px] font-[500] font-['Fredoka'] text-[16px] "><span className="text-white lg:text-[30px] font-[500] text-[16px]">Basic Controls:</span> Navigate your paddle using the up and down arrow keys, and serve the ball with the space button.</p>
-                <p className="text-[#003A6B] lg:text-[30px] font-[500] font-['Fredoka'] text-[16px] "><span className="text-white lg:text-[30px] font-[500] text-[16px]">Paddle Control:</span> Navigate your paddle with finesse using the left and right arrow keys.</p>
-                <p className="text-[#003A6B] lg:text-[30px] font-[500] font-['Fredoka'] text-[16px] "><span className="text-white lg:text-[30px] font-[500] text-[16px]">Mobile Mastery:</span> On mobile devices, tap the left side of the screen to gracefully glide your paddle to the left, or tap the right side elegantly steer it to the right, simply tap the screen to serve the ball.</p>
+                <p className="text-[#003A6B] lg:text-[30px] font-[500] font-['Fredoka'] text-[16px] "><span className="text-white lg:text-[30px] font-[500] text-[16px]">Basic Controls:</span> Navigate your paddle using the left and right arrow keys, and serve the ball with the space button.</p>
+                <p className="text-[#003A6B] lg:text-[30px] font-[500] font-['Fredoka'] text-[16px] "><span className="text-white lg:text-[30px] font-[500] text-[16px]">Mobile Controls:</span> On mobile devices, tap the left or the right side of the screen to move the paddle, and simply tap the screen to serve the ball.</p>
             </div>
             <div className="w-full  flex justify-center gap-[10px] pb-[40px] flex-col items-center md:flex-row">
 
