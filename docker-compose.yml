@@ -35,7 +35,6 @@ services:
     networks:
       - my-network
     depends_on: 
-      - prisma-migrate
       - db
 
   prisma-migrate:

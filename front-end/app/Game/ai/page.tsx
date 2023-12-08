@@ -468,11 +468,11 @@ const PlayWithAI = () => {
 
     useEffect(() => {
       <Toaster position="top-right"  richColors/>
-      if (p1_count === 7 || p2_count === 7) {
+      if (p1_count === 5 || p2_count === 5) {
 
-        if(p2_count === 7)
+        if(p2_count === 5)
           toast.info("You Win!");
-        else if(p1_count === 7)
+        else if(p1_count === 5)
           toast.info("You Lose!");
 
         router.push("/Game");
