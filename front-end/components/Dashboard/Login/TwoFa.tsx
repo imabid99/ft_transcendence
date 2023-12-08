@@ -82,12 +82,12 @@ export default function TwoFa({ jwtToken }: any) {
         </div>
         <div className="xl:block hidden relative">
             <img
-            src="Frame 101-PhotoRoom.png"
+            src="/Frame 101-PhotoRoom.png"
             alt=""
             className=" relative mt-[-112px] ml-[60px]"
             />
             <img
-            src="heroball.png"
+            src="/heroball.png"
             alt=""
             className="mt-[-200px] ml-[60px]  top-[440px] left-[45px] animateball absolute"
             />
