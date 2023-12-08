@@ -182,6 +182,25 @@ export class UserService {
           },
         },
       });
+      const freinships = await this.prisma.Friendship.findMany({
+        where: {
+          OR: [
+            {
+              senderId: id,
+            },
+            {
+              receiverId: id,
+            },
+          ],
+        },
+      });
+      for (const friendship of freinships) {
+        await this.prisma.Friendship.delete({
+          where: {
+            id: friendship.id,
+          },
+        });
+      } 
       return;
     } catch (error) {
       console.log(error);

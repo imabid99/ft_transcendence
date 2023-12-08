@@ -9,10 +9,11 @@ services:
       - 5432:5432
     networks:
       - my-network
+
   frontend:
     image: node:16
     working_dir: /app
-    command: bash -c "npm install && npm run build && npm run start -- -p 1337"
+    command: bash -c "npm install && npm run build && npm run start -- --port 1337"
     volumes:
       - ./front-end:/app
     ports:
@@ -25,7 +26,7 @@ services:
   backend:
     image: node:16
     working_dir: /app
-    command: bash -c "npm install && npm run build && npx prisma migrate dev --name update && npm run start:dev"
+    command: bash -c "npm install && npm run build && npm run start"
     volumes:
       - ./back-end:/app
     ports:
@@ -34,6 +35,20 @@ services:
     networks:
       - my-network
     depends_on: 
+      - prisma-migrate
+      - db
+
+  prisma-migrate:
+    image: node:16
+    working_dir: /app
+    command: bash -c "npx prisma migrate deploy"
+    volumes:
+      - ./back-end:/app
+    env_file:
+      - back-end/.env
+    networks:
+      - my-network
+    depends_on:
       - db
 
 networks:

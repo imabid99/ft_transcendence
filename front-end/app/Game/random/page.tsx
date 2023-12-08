@@ -494,33 +494,67 @@ const Random = () => {
     );
   }
 
-  const Scoreboard = () => {
+  const Parentscoreboard = () => {
     const [p1_count, setP1Count] = useState<number>(0);
     const [p2_count, setP2Count] = useState<number>(0);
 
+
+    useEffect(() => {
+          if (!user) return;
+          if (p1_count === 5 || p2_count === 5) {
+            if (p2_count === 5) {
+              const payload = {
+                winner: user?.profile.userId,
+                winnerscore: p2_count,
+                loserscore: p1_count,
+              };
+              socket.emit("player-wins", payload);
+            }
+    
+            setP1Count(0);
+            setP2Count(0);
+          }
+        }, [p1_count, p2_count, user]);
+    
+        useEffect(() => {
+          socket.on("player-wins", (data: any) => {
+            router.push('/Game');
+          });
+    }, []);
+  
+    return (
+      <>
+        <Scoreboard1 p1_count={p1_count} setP1Count={setP1Count} p2_count={p2_count} />
+        <Scoreboard2 p2_count={p2_count} setP2Count={setP2Count} p1_count={p1_count} />
+      </>
+    );
+  };
+  
+  const Scoreboard2 = ({ p2_count, setP2Count, p1_count }: any) => {
+  
     useEffect(() => {
       let animationFrameId: number | null = null;
       let lastPositionZ = 0;
-    
+  
       const goalCheck = () => {
         const currentZ = position.current.z;
-    
-        if (currentZ > 10 && lastPositionZ <= 10) {
-          setP1Count((prevCount) => prevCount + 1);
-          position.current.z = 0;
-        }
+  
         if (currentZ < -10 && lastPositionZ >= -10) {
-          setP2Count((prevCount) => prevCount + 1);
+          setP2Count((prevCount: number) => {
+            const newCount = prevCount + 1;
+            socket.emit("current-score", { score: newCount });
+            return newCount;
+          });
           position.current.z = 0;
         }
-
+        
         lastPositionZ = currentZ;
-    
+  
         animationFrameId = requestAnimationFrame(goalCheck);
       };
-    
+  
       animationFrameId = requestAnimationFrame(goalCheck);
-    
+  
       return () => {
         if (animationFrameId !== null) {
           cancelAnimationFrame(animationFrameId);
@@ -528,73 +562,44 @@ const Random = () => {
       };
     }, []);
 
-   
-
-    useEffect(() => {
-      if (!user) return;
-      if (p1_count === 5 || p2_count === 5) {
-        if (p2_count === 5) {
-          const payload = {
-            winner: user?.profile.userId,
-            winnerscore: p2_count,
-            loserscore: p1_count,
-          };
-          socket.emit("player-wins", payload);
-        }
-
-        setP1Count(0);
-        setP2Count(0);
-      }
-    }, [p1_count, p2_count, user]);
-
-    useEffect(() => {
-      socket.on("player-wins", (data: any) => {
-        router.push('/Game');
-      });
-    }, []);
-
     return (
-      <>
-        <group>
-          <Text
-            receiveShadow
-            color="White"
-            anchorX="center"
-            anchorY="middle"
-            position={[-3.3, 0.05, -4.8]}
-            scale={[6, 6, 6]}
-            rotation={[Math.PI / 2, Math.PI, Math.PI]}
+        <Text
+          receiveShadow
+          color="White"
+          anchorX="center"
+          anchorY="middle"
+          position={[3.4, 0.05, 5.5]}
+          scale={[6, 6, 6]}
+          rotation={[Math.PI / 2, Math.PI, Math.PI]}
           >
-            {p1_count}
-          </Text>
-          <Text
-            receiveShadow
-            color="White"
-            anchorX="center"
-            anchorY="middle"
-            position={[3.4, 0.05, 5.5]}
-            scale={[6, 6, 6]}
-            rotation={[Math.PI / 2, Math.PI, Math.PI]}
-          >
-            {p2_count}
-          </Text>
-        </group>
-      </>
+          {p2_count}
+        </Text>
     );
   };
   
+  const Scoreboard1 = ({ p1_count, setP1Count, p2_count }: any) => {
+  
+    useEffect(() => {
+        socket.on("current-score", (data: any) => {
+          setP1Count(data.score);
+        });
+    }, []);
+  
+    return (
+      <Text
+      receiveShadow
+      color="White"
+      anchorX="center"
+      anchorY="middle"
+      position={[-3.3, 0.05, -4.8]}
+      scale={[6, 6, 6]}
+      rotation={[Math.PI / 2, Math.PI, Math.PI]}
+      >
+        {p1_count}
+      </Text>
+    );
+  };
 
-  // const [currentMap, setCurrentMap] = useState('Desert');
-
-  // const switchMap = () => {
-  //   if (currentMap === 'Desert') {
-  // 	setCurrentMap('Forest');
-  //   } else if (currentMap === 'Forest') {
-  // 	setCurrentMap('Snow');
-  //   } else {
-  // 	setCurrentMap('Desert');
-  //   }
-  // };
   if(isLoading || !shosenMap)
   {
     return <LoadingRandom/>
@@ -683,7 +688,8 @@ const Random = () => {
           shosenMap === 'snow' ? <Snow /> :
           <Forest />
       }
-      <Scoreboard />
+      <Parentscoreboard />
+      {/* <Scoreboard2 /> */}
 
         <Sky sunPosition={[-0.07, -0.03, -0.75]} />
         <OrbitControls

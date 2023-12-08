@@ -358,6 +358,12 @@ export class GameService {
                     ],
                     creatorScore: { not: null },
                     opponentScore: { not: null },
+                    creator : {
+                            deleted : false,
+                    },
+                    opponent : {
+                            deleted : false,
+                    }
                 },
                 orderBy: { createdAt: 'desc' },
                 include: {

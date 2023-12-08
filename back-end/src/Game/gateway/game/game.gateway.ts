@@ -186,7 +186,7 @@ export class GameGateway implements OnGatewayConnection, OnGatewayDisconnect {
           throw new Error('Invalid token');
         }
         const match = await this.gameService.getMatch(client.id);
-        if (match && match.servingplayer === client.id) {
+        if (match) {
           client.broadcast.to(match.id).emit('current-score', payload);
         }
       }
