@@ -41,7 +41,7 @@ const Game = () => {
             </div>
 			<div className="absolute top-0 left-0 w-full h-full  overflow-hidden">
 				<video
-						src="/Europa Official Game Reveal Trailer.mp4"
+						src="/vw8xu5_1.mp4"
 						autoPlay={true}
 						muted={true}
 						loop={true}  

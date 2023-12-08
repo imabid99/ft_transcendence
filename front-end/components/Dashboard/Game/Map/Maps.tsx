@@ -45,7 +45,7 @@ const Maps = ({setShow, onMapChange}:props) => {
             <div className="flex gap-[20px] flex-col lg:flex-row items-center">
                 <div className={`w-[290px] lg:w-[372px] h-[150px] lg:h-[201px] rounded-[14px] aiSh relative overflow-hidden cursor-pointer ${selected === 'forest' ? 'border-4 border-white backdrop-blur-[20px] bg-black' : ''}`}     onClick={() => {
         handleClick('forest');
-        setVideoSource('pexels-mathias-de-rivo-13680000 (720p).mp4');
+        setVideoSource('forest_-_18534 (1080p).mp4');
     }}>
                 <img
                     src="forest7.jpeg"
