@@ -19,7 +19,6 @@ const Friend = ({ cover, avatar, name, username, online,userId }:props) => {
             const res = await axiosInstance.post(`http://${process.env.NEXT_PUBLIC_APP_URL}:3000/api/game/request/${userId}`);
         }
         catch(err){
-            console.log(err);
         }
     }
     return (

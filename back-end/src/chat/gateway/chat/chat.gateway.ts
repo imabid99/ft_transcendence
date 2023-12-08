@@ -275,14 +275,12 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
           Members: true,
         },
       });
-      // console.log("channel : ", this.getSocketsByUserName(user.username).join(channel.id));
       channel.Members.map((member) => {
         const sockets = this.getSocketsByUserName(member.username);
         sockets.map((socket) => {
           socket.join(channel.id);
         });
       })
-      console.log("channel : ", newChannel);
       newChannel && payload.newAvatar && this.server.to(decoded.username).emit("update-groupAvatar", {groupId: channel.id});
       this.server.to(user.username).emit("errorNotif", {message: `group created`, type: true});
       this.server.emit("refresh");

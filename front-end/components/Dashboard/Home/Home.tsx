@@ -38,18 +38,15 @@ export default function Home() {
             const getNotificatons = async () => {
                 try{
                     const res = await axiosInstance.get(`http://${process.env.NEXT_PUBLIC_APP_URL}:3000/api/notification/all`);
-                    // console.log(res.data);
                     setAllNotifications(res.data);
                 }
                 catch(err){
-                    // console.log(err);
                 }
             }
             getNotificatons();
         }
         catch(error)
         {
-            // console.log(error)
         }
     }
     ,[reload])
@@ -86,7 +83,6 @@ export default function Home() {
             setShow(true)
         }
     }
-    // console.log(allNotifications);
     return (
         <div className="flex flex-col px-[10px] sm:px-[62px] py-[60px] w-full bg-[#FAFDFF]  h-[100vh] overflow-y-scroll overflow-x-hidden gap-[52px] relative no-scrollbar ">
             {!show && <div className='w-full h-full fixed top-0 left-0 z-[51]' onClick={() => handelClose(HeadermodalRef)}></div>}
@@ -115,23 +111,6 @@ export default function Home() {
                     </span>
                 </div>
                 <div className=" flex flex-col gap-[16px] overflow-y-scroll scrollbar-hide max-h-[calc(100%-100px)]">
-                {/* <FriendNotifications name="Saad Gmira" avatar="jlemdrayaf.png"/>
-                    <FriendNotifications name="Saad Gmira" avatar="jlemdrayaf.png"/>
-                    <FriendNotifications name="Saad Gmira" avatar="jlemdrayaf.png"/>
-                    <AchievementsNotifications name="Saad Gmira" avatar="jlemdrayaf.png"/>
-                    <AchievementsNotifications name="Saad Gmira" avatar="jlemdrayaf.png"/>
-                    <AchievementsNotifications name="Saad Gmira" avatar="jlemdrayaf.png"/>
-                    <AchievementsNotifications name="Saad Gmira" avatar="jlemdrayaf.png"/>
-                    <AchievementsNotifications name="Saad Gmira" avatar="jlemdrayaf.png"/>
-                    <AchievementsNotifications name="Saad Gmira" avatar="jlemdrayaf.png"/>
-                    <AchievementsNotifications name="Saad Gmira" avatar="jlemdrayaf.png"/>
-                    <AchievementsNotifications name="Saad Gmira" avatar="jlemdrayaf.png"/>
-                    <AchievementsNotifications name="Saad Gmira" avatar="jlemdrayaf.png"/>
-                    <AchievementsNotifications name="Saad Gmira" avatar="jlemdrayaf.png"/>
-                    <AchievementsNotifications name="Saad Gmira" avatar="jlemdrayaf.png"/>
-                    <AchievementsNotifications name="Saad Gmira" avatar="jlemdrayaf.png"/>
-                    <AchievementsNotifications name="Saad Gmira" avatar="jlemdrayaf.png"/> */}
-                    
                     {allNotifications.map((notif: any, index: number) => {
                         if(notif.type === "FRIEND_REQUEST")
                         {
@@ -142,12 +121,6 @@ export default function Home() {
                             return <GameNotifications name={notif.actionUserName} avatar={notif.actionUserAvatar} userId={notif.actionUserId} notId={notif.id} key={notif.id}/>
                         }
                     })}
-                    {/* {Friends.map((friend: any, index: number) => {
-                        if(friend.status === "pending")
-                        {
-                            return <FriendNotifications name={friend.name} avatar={friend.avatar} userId={friend.id} notId={friend.notId} key={friend.id}/>
-                        }
-                    } */}
                 </div>
             </RightModal>
         </div>

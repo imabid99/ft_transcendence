@@ -13,7 +13,6 @@ export default function validateForm() {
   const token = searchParams.get('token')
   const router = useRouter();
   const {setLoged}:any = useContext(contextdata);
-  console.log("this is token : ", token);
     useEffect(() => {
         if (!token) {
             return;

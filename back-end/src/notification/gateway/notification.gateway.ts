@@ -65,7 +65,6 @@ export class NotificationGateway implements OnGatewayConnection, OnGatewayDiscon
         socket.emit("reload");
       });
     } catch (error) {
-      // console.log("error is ", error);
     }
   }
 
@@ -80,7 +79,6 @@ export class NotificationGateway implements OnGatewayConnection, OnGatewayDiscon
       socket.emit("redirect", { link : data.link });
     });
   } catch (error) {
-    // console.log("error is ", error);
   }
   }
   
@@ -94,13 +92,11 @@ export class NotificationGateway implements OnGatewayConnection, OnGatewayDiscon
         });
       });
     } catch (error) {
-      // console.log("error is ", error);
     }
   }
 
   sendNotification_v2(id: string, data: any) {
     try {
-
       this.socketMap.get(id).forEach(socket => {
         socket.emit('notification', {
           type: data.type,
@@ -112,7 +108,6 @@ export class NotificationGateway implements OnGatewayConnection, OnGatewayDiscon
         } , 500);
       });
     } catch (error) {
-      // console.log("error is ", error);
     }
   }
 

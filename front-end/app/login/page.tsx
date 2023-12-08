@@ -36,7 +36,6 @@ export default function Home() {
   const {errors, isDirty} = formState;
   const [jwtToken, setJwtToken] = useState<string>("");
   const onSubmit = async (data: FormValues) => {
-    console.log(data);
     try {
       const response = await axios.post(`http://${process.env.NEXT_PUBLIC_APP_URL}:3000/api/auth/login`, {
         email: data.email,
@@ -44,15 +43,12 @@ export default function Home() {
       });
       <Toaster position="top-right" richColors />
 
-        // toast.error(response?.data?.message);
         if (response?.data?.message) {
           toast.error(response.data.message);
         }
-      console.log("hello world : ", response.data.message);
       setJwtToken(response.data);
       } catch (e:any) 
       {
-        console.log("Login : ", e.response.data);
         return;
       }
   }
@@ -61,7 +57,6 @@ export default function Home() {
       return;
     }
     const getUser = async () => {
-      console.log("jwtToken : ", jwtToken);
       try
       {
         const resp = await axios.get(`http://${process.env.NEXT_PUBLIC_APP_URL}:3000/api/user/userinfo`,{headers: {Authorization: `Bearer ${jwtToken}`}});
@@ -76,7 +71,6 @@ export default function Home() {
       }
       catch (error)
       {
-        console.log("getUser : ",error);
         removeLocalStorageItem("Token");
         router.push("/login");
         return;
@@ -85,71 +79,7 @@ export default function Home() {
     getUser();
   }, [jwtToken]);
   const onError = (errors:any) => console.log(errors);
-  // const registerOptions = {
-  //   firstName: { required: "First name is required",
-  //   maxLength: {
-  //     value: 20,
-  //     message: "should not exceed 20 characters",
-  //   },
-  //   pattern: {
-  //     value: /^[a-zA-Z\u00C0-\u017F]+(?:\s[a-zA-Z\u00C0-\u017F]+)*$/,
-  //     message: 'Please enter valid name',
-  //   },
-  //   minLength: {
-  //     value: 2,
-  //     message: "at least 3 characters",
-  //   },
-  //  },
-  //   lastName: { required: "Last name is required",
-  //   maxLength: {
-  //     value: 20,
-  //     message: "should not exceed 20 characters",
-  //   },
-  //   minLength: {
-  //     value: 2,
-  //     message: "at least 3 characters",
-  //   },
-  //  },
-  //   userName: { required: "Name is required",
-  //   usernameAvailable: async (value:string) => {
-  //     console.log("usernameAvailable", value);
-  //     const response = await axios.post(`http://${process.env.NEXT_PUBLIC_APP_URL}:3000/api/auth/usernameAvailable`, {
-  //       username: value,
-  //     });
-  //     if (response.status !== 200) 
-  //       return "Username already exists";
-  //   }
-  //   },
-  //   email: { required: "Email is required",
-  //   pattern: {
-  //     value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
-  //     message: "invalid email address"
-  //   },
-  //   emailAvailable: async (value:string) => {
-  //     console.log("emailAvailable", value);
-  //     const response = await axios.post(`http://${process.env.NEXT_PUBLIC_APP_URL}:3000/api/auth/emailAvailable`, {
-  //       email: value,
-  //     });
-  //     if (response.status !== 200) 
-  //       return "Email already exists";
-  //   },
-  // },
-  //   password: {
-  //     required: "Password is required",
-  //     minLength: {
-  //       value: 8,
-  //       message: "Password must have at least 8 characters"
-  //     },
-  //     validate: (value:string) => {
-  //       return (
-  //         [/[a-z]/, /[A-Z]/, /[0-9]/, /[^a-zA-Z0-9]/].every((pattern) =>
-  //           pattern.test(value)
-  //         ) || "must include lower, upper, number, and special chars"
-  //       );
-  //     },
 
-  //   }
-  // };
   return (
     
     <>
@@ -166,7 +96,7 @@ export default function Home() {
         <div className="flex flex-col pt-[20px] gap-[16px] sm:flex-row w-full items-center justify-center">
           <button className="flex justify-evenly items-center w-[170px] h-[52px] border-[0.1px] rounded-[11px] border-white cursor-pointer hover:bg-white hover:bg-opacity-10"
           onClick={() => {
-            router.push('http://localhost:3000/api/auth/oauth2/google');
+            router.push(`http://${process.env.NEXT_PUBLIC_APP_URL}:3000/api/auth/oauth2/google`);
           }}>
             <img src="goog.svg" alt="" className="w-[20.153px] h-[20.56px]" />
             <p className="text-white text-[10px] font-[400] cursor-pointer">
@@ -175,9 +105,8 @@ export default function Home() {
           </button>
           <button className="flex justify-evenly items-center w-[170px] h-[52px] border-[0.1px] rounded-[11px] border-white cursor-pointer hover:bg-white hover:bg-opacity-10"
           onClick={() => {
-            // setLogInAnimation(true);
-            // signIn('42');
-              router.push('http://localhost:3000/api/auth/oauth2/42');
+
+              router.push(`http://${process.env.NEXT_PUBLIC_APP_URL}:3000/api/auth/oauth2/42`);
           }
           }
           >

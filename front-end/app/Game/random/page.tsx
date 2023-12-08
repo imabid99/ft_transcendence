@@ -27,7 +27,6 @@ import {
   useSphere,
   Debug,
 } from "@react-three/cannon";
-// import Loading from "@/app/loading";
 import { checkLoged, getLocalStorageItem } from "@/utils/localStorage";
 import { useRouter } from "next/navigation";
 import LoadingRandom from "@/components/Dashboard/Game/Random_Loading/loading";
@@ -35,7 +34,6 @@ import { set } from "react-hook-form";
 
 
 const Random = () => {
- console.log("Random");
 	const [socket, setSocket] = useState<any>(null);
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const router = useRouter();
@@ -76,9 +74,7 @@ const Random = () => {
   
 	useEffect(() => {
 	  if (!socket) return;
-	  // socket.on("connect", () => {console.log(name + " is Connected to server");});
     socket.on('match started', (data: any) => {
-      console.log('Match started:', data);
       setIsLoading(false);
     });
   
@@ -101,18 +97,6 @@ const Random = () => {
 		});
 	}, [socket]);
 
-
-
-  // GUI CONTROLS
-  // 	const controls = useControls({});
-  //   const { sunPosition } = useControls("sky", {
-  // 	sunPosition: [-0.07, -0.03, -0.75],
-  //   });
-  // const { planecolor } = useControls("color", { planecolor: "#51b151" });
-  // const { floorcolor } = useControls("color", { floorcolor: "#1572ff" });
-  // const { paddlecolor } = useControls("color", { paddlecolor: "#abebff" });
-  // const { fogcolor } = useControls("color", { fogcolor: "#382f21" });
-  // const { fogfar } = useControls("color", { fogfar: 180 });
 
   function Plane(props: any) {
     const [ref, api] = usePlane(
@@ -140,7 +124,6 @@ const Random = () => {
   }
 
   function Player1Paddle(props: any) {
-    // console.log("P1START");
     const [ref, api] = useBox(
       () => ({
         mass: 0,
@@ -277,7 +260,6 @@ const Random = () => {
   }
 
   function Player2Paddle(props: any) {
-    // console.log("P2START");
     const [ref, api] = useBox(
       () => ({
         mass: 0,
@@ -315,22 +297,7 @@ const Random = () => {
       window.addEventListener("keydown", handleKeyDown);
       window.addEventListener("keyup", handleKeyUp);
 
-      // const updatePosition = () => {
-      // 	// if (ref.current) {
-      // 	// 	// if (isMovingLeft) {
-      // 	// 	// 	targetPosX = Math.max(targetPosX - 0.5, -5);
-      // 	// 	// 	} else if (isMovingRight) {
-      // 	// 	// 		targetPosX = Math.min(targetPosX + 0.5, 5);
-      // 	// 	// 	}
-      // 	// 	// 	const smoothingFactor = 0.5;
-      // 	// 	// 	paddleposX = paddleposX + (targetPosX - paddleposX) * smoothingFactor;
-      // 	// 	// 	// api.position.set(paddleposX, 0.5, -9);
-      // 	// 	}
 
-      // 	requestAnimationFrame(updatePosition);
-      // };
-
-      // requestAnimationFrame(updatePosition);
       socket.on("paddle-pos", (data: any) => {
         if (data.playerId === user?.profile.userId) return;
         api.position.set(data.x, data.y, data.z);
@@ -415,7 +382,6 @@ const Random = () => {
       subpos();
       
       socket.on("ball-position", (data: any) => {
-        console.log("here");
         api.position.set(data.x, data.y, data.z);
       });
 
@@ -439,7 +405,6 @@ const Random = () => {
         });
         
         if ((isServing || isServingmobile) && !hasServed) {
-          console.log("serving", hasServed);
           api.applyImpulse([value * direction, 0, -10 * direction], [0, 0, 0]);
           socket.emit("ball-serve", {
             hasServed: true,
@@ -543,17 +508,11 @@ const Random = () => {
         if (currentZ > 10 && lastPositionZ <= 10) {
           setP1Count((prevCount) => prevCount + 1);
           position.current.z = 0;
-          // socket.emit("current-score", { score: p1_count});
         }
         if (currentZ < -10 && lastPositionZ >= -10) {
           setP2Count((prevCount) => prevCount + 1);
           position.current.z = 0;
         }
-
-        // socket.on("current-score", (data: any) => {
-        //   console.log("hahahahahahahahahahah");
-        //   setP1Count(data.score);
-        // }, []);
 
         lastPositionZ = currentZ;
     
@@ -638,7 +597,6 @@ const Random = () => {
   // };
   if(isLoading || !shosenMap)
   {
-    console.log("Loading");
     return <LoadingRandom/>
   }
 

@@ -18,8 +18,6 @@ export default function Page() {
     const router = useRouter();
     const [isloading, setIsLoading] = useState(true);
     const [achievements, setAchievements] = useState<any>(null);
-    console.log("achievements : ", myProfile?.achievements);
-    // const achievements = myProfile?.achievements;
 
     useEffect(() => {
         setAchievements(achievements);
@@ -28,10 +26,8 @@ export default function Page() {
     const getNotificatons = async () => {
         try{
             const res = await axiosInstance.get(`http://${process.env.NEXT_PUBLIC_APP_URL}:3000/api/notification/all`);
-            console.log(res.data);
         }
         catch(err){
-            console.log(err);
         }
     }
     getNotificatons();
@@ -47,7 +43,7 @@ export default function Page() {
     if (isloading) {
         return <Loading />;
     }
-    function handleFileInputChange(e: any, type: 'avatar' | 'cover') {
+    async function handleFileInputChange(e: any, type: 'avatar' | 'cover') {
         const file = e.target.files?.[0];
         if (!file) {
             return;
@@ -58,20 +54,19 @@ export default function Page() {
         const uploadEndpoint = type === 'avatar'
         ? `http://${process.env.NEXT_PUBLIC_APP_URL}:3000/api/upload/avatar`
         : `http://${process.env.NEXT_PUBLIC_APP_URL}:3000/api/upload/cover`;
-        axiosInstance
-        .post(uploadEndpoint, formData)
-        .then((res) => {
-            socket.emit('refresh', { userId: user.id });
-        })
-        .catch((err) => {
-            console.log(err);
-        });
+
+            try{
+                const re = await axiosInstance.post(uploadEndpoint, formData);
+                socket.emit('refresh', { userId: user.id });
+            }
+            catch(err){}
     }
-    // console.log("achievements imad : ", achievements);
-    // console.log("myProfile : ", myProfile);
-    
-    const avatarUrl = `http://${process.env.NEXT_PUBLIC_APP_URL}:3000/${myProfile?.avatar}`;
-    const coverUrl = `http://${process.env.NEXT_PUBLIC_APP_URL}:3000/${myProfile?.cover}`;
+
+    // if(profiles.length === 0) {
+    //     return null
+    // }
+    // const avatarUrl = `http://${process.env.NEXT_PUBLIC_APP_URL}:3000/${myProfile?.avatar}`;
+    // const coverUrl = `http://${process.env.NEXT_PUBLIC_APP_URL}:3000/${myProfile?.cover}`;
     return (
         <div className='flex items-center  flex-col  gap-[80px] 3xl:gap-0 w-[100%] justify-start  3xl:px-[30px]  '>
         <Header/>
@@ -81,7 +76,7 @@ export default function Page() {
                 <div className="relative w-12/12 h-[185px] rounded-[25px] overflow-hidden">
                         <picture>
                         <img
-                            src={coverUrl}
+                            src={`http://${process.env.NEXT_PUBLIC_APP_URL}:3000/${myProfile?.cover}`}
                             alt=""
                             className="object-cover object-top w-full h-full"
                         />
@@ -106,7 +101,7 @@ export default function Page() {
                         <picture>
                         <img
                         className="rounded-full w-full h-full object-cover"
-                        src={avatarUrl}
+                        src={`http://${process.env.NEXT_PUBLIC_APP_URL}:3000/${myProfile?.avatar}`}
                         alt=""
                         />
                         </picture>
@@ -293,24 +288,11 @@ export default function Page() {
                 <div className="flex ">
                     <img src="group.svg" alt="" />
                     <span className="pl-[10px] text-[#064A85] text-[15px] sm:text-[20px] font-[400]">
-                    Achievements - <span>0</span> / 7
+                    Achievements - <span>{myProfile?.achcount}</span> / 7
                     </span>
                 </div>
                 </div>
                 <div className="flex items-center flex-col w-12/12 gap-[30px] lg:gap-0 pb-[30px]">
-                {/* {loading && <Loading />} */}
-                
-                
-                
-                {/* {images.map((imageRow, rowIndex) => (
-                    <div key={rowIndex} className="flex items-center justify-center gap-[30px] flex-col sm:flex-row">
-                        {imageRow.map((img, imgIndex) => (
-                            <div key={imgIndex} className="transform hover:scale-110 transition-transform duration-300 relative">
-                                <Image src={acharr[imgIndex] ? img.unlocked : img.locked}  alt={img.alt} className={img.className} width={197} height={220} loading="lazy"/>
-                            </div>
-                        ))}
-                    </div>
-                ))} */}
 
                 <div className="flex items-center  flex-col w-12/12 gap-[30px] lg:gap-0 pb-[30px]">
                         <div className="flex items-center justify-center  gap-[30px] flex-col sm:flex-row">

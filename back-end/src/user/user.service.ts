@@ -185,7 +185,6 @@ export class UserService {
       return;
     } catch (error) {
       console.log(error);
-      // console.log(error);
     }
   }
 
@@ -193,37 +192,44 @@ export class UserService {
     id: string,
     userId: string
   ): Promise<{ iBlocked: boolean; heBlocked: boolean }> {
-    const blocked = await this.prisma.BlockList.findMany({
-      where: {
-        userId: id,
-        blockedId: userId,
-      },
-    });
-    const blocked2 = await this.prisma.BlockList.findMany({
-      where: {
-        userId: userId,
-        blockedId: id,
-      },
-    });
-    if (blocked.length > 0) {
-      return { iBlocked: true, heBlocked: false };
-    } else if (blocked2.length > 0) {
-      return { iBlocked: false, heBlocked: true };
-    }
-    return { iBlocked: false, heBlocked: false };
+    try {
+
+      const blocked = await this.prisma.BlockList.findMany({
+        where: {
+          userId: id,
+          blockedId: userId,
+        },
+      });
+      const blocked2 = await this.prisma.BlockList.findMany({
+        where: {
+          userId: userId,
+          blockedId: id,
+        },
+      });
+      if (blocked.length > 0) {
+        return { iBlocked: true, heBlocked: false };
+      } else if (blocked2.length > 0) {
+        return { iBlocked: false, heBlocked: true };
+      }
+      return { iBlocked: false, heBlocked: false };
+    } catch (error) {}
   }
 
   async getUserInfo(id: string): Promise<any> {
-    const user = await this.prisma.user.findUnique({
-      where: {
-        id,
-      },
-      include: {
-        profile: true,
-      },
-    });
-    delete user.password;
-    return user;
+    try {
+
+      const user = await this.prisma.user.findUnique({
+        where: {
+          id,
+        },
+        include: {
+          profile: true,
+        },
+      });
+      delete user.password;
+      return user;
+    } catch (error) {
+    }
   }
 
 
@@ -237,7 +243,6 @@ export class UserService {
       }
       return false;
     } catch (error) {
-      console.log(error);
     }
   }
 
@@ -251,7 +256,6 @@ export class UserService {
       }
       return false;
     } catch (error) {
-      console.log(error);
     }
   }
 
@@ -266,7 +270,6 @@ export class UserService {
       }
       return false;
     } catch (error) {
-      console.log(error);
     }
   }
 
@@ -296,7 +299,6 @@ export class UserService {
       this.notificationGateway.updated(userid);
       return;
     } catch (error) {
-      console.log(error);
     }
   }
 
@@ -324,7 +326,6 @@ export class UserService {
       this.notificationGateway.updated(id);
       return "changed";
     } catch (error) {
-      console.log(error);
     }
   }
 }

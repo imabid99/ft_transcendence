@@ -11,7 +11,6 @@ import axios from "axios";
 import { contextdata } from "@/app/contextApi";
 
 export default function TwoFa({ jwtToken }: any) {
-  // console.log("this is message", messa
   const [twofactoryInput, setTwofactoryInput] = useState<string>("");
   const router = useRouter();
   const { loged, setLoged }: any = useContext(contextdata);
@@ -30,14 +29,12 @@ export default function TwoFa({ jwtToken }: any) {
         }
       );
 
-      console.log("resp", resp);
       if (resp.data === true) {
         setLoged(!loged);
         setLocalStorageItem("Token", jwtToken);
         router.push("/");
       }
     } catch (error) {
-      console.log("error", error);
     }
   };
   return (

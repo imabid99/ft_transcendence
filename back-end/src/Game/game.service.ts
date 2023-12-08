@@ -19,8 +19,6 @@ export class GameService {
             });
             return match.id;
         } catch (error) {
-            console.log("This is The ERROR  ", error);
-            console.log(error);
         }
     }
 
@@ -37,7 +35,6 @@ export class GameService {
             })
             return match;
         } catch (error) {
-            console.log(error);
         }
     }
 
@@ -54,7 +51,6 @@ export class GameService {
             })
             return match;
         } catch (error) {
-            console.log(error);
         }
     }
 
@@ -67,7 +63,6 @@ export class GameService {
             })
             return match;
         } catch (error) {
-            console.log(error);
         }
     }
 
@@ -80,18 +75,9 @@ export class GameService {
                 },
             });
         } catch (error) {
-            console.log("This is the ERROR  in updateServingPlayer ", error);
-            console.log(error);
+
         }
     }
-
-    // expectedScore(rating1: number, rating2: number): number {
-    //     return 1 / (1 + Math.pow(10, (rating2 - rating1) / 400));
-    // }
-
-    // updateRating(rating: number, expected: number, actual: number, k: number = 32): number {
-    //     return rating + k * (actual - expected);
-    // }
 
     async checkAchievements(profile: any) {
         const achievements = await this.prisma.achievement.findUnique({
@@ -164,7 +150,6 @@ export class GameService {
             const loserProfile = await this.prisma.profile.findUnique({ where: { userId: loserId } });
 
             winnerProfile.xp += 100;
-            // winnerProfile.nextLevelXp = winnerProfile.level === 0 ? 500 : (winnerProfile.level + 1) * 1000;
             winnerProfile.nextLevelXp = winnerProfile.level === 0 ? 500 : 500 + winnerProfile.level * 1000;
             if (winnerProfile.xp >= winnerProfile.nextLevelXp) {
                 winnerProfile.level += 1;
@@ -221,8 +206,6 @@ export class GameService {
             }
 
         } catch (error) {
-            console.log("This is the ERROR  in submitScore ", error);
-            console.log(error);
         }
     }
 
@@ -268,8 +251,6 @@ export class GameService {
             });
             this.notificationGateway.inviteMatch(senderId, OpponentId);
         } catch (error) {
-            console.log("This is the ERROR  in makeRequest ", error);
-            // console.log(error);
         }
     }
 
@@ -285,8 +266,6 @@ export class GameService {
                 },
             });
         } catch (error) {
-            console.log("This is the ERROR  in updateMatch ", error);
-            console.log(error);
         }
     }
 
@@ -301,8 +280,6 @@ export class GameService {
                 },
             });
         } catch (error) {
-            console.log("error at set op so", error)
-            console.log(error);
         }
     }
 
@@ -317,8 +294,6 @@ export class GameService {
                 },
             });
         } catch (error) {
-            console.log("error at set cr so", error)
-            console.log(error);
         }
     }
 
@@ -339,7 +314,6 @@ export class GameService {
                 },
             });
         } catch (error) {
-            console.log(error);
         }
     }
 
@@ -359,7 +333,6 @@ export class GameService {
                 },
             });
         } catch (error) {
-            console.log(error);
         }
     }
 
@@ -371,8 +344,6 @@ export class GameService {
                 },
             });
         } catch (error) {
-            console.log("Error deleting match:", error);
-            throw error;
         }
     }
 
@@ -415,7 +386,6 @@ export class GameService {
             });
             return matchHistory;
         } catch (error) {
-            console.log(error);
         }
     }
 
@@ -431,7 +401,6 @@ export class GameService {
             });
             return { first: leaderboard[0], second: leaderboard[1], third: leaderboard[2] };
         } catch (error) {
-            console.log(error);
         }
     }
 
@@ -445,7 +414,6 @@ export class GameService {
             });
             this.notificationGateway.sendRefresh();
         } catch (error) {
-            // console.log(error);
         }
     }
     async setOnline(userId: string): Promise<void> {
@@ -462,8 +430,7 @@ export class GameService {
             });
             this.notificationGateway.sendRefresh();
         } catch (error) {
-            console.log("setOnline error", error);
-            // console.log(error);
+
         }
     }
 }

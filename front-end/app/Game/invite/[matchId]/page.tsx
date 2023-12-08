@@ -25,32 +25,18 @@ import { checkLoged, getLocalStorageItem } from "@/utils/localStorage";
 import { useRouter } from "next/navigation";
 import Loading from "@/app/loading";
 
-// map = snow, desert, forest; mode = friend, bot, random
 
 const InviteAFriend = () => {
 
-	console.log("InviteAFriend");
 	const currentRoute = typeof window !== 'undefined' ? window.location.pathname : '';
 	const matchId = currentRoute.substring(13);
-	console.log(matchId);
 	
 	const [socket, setSocket] = useState<any>(null);
 	const { user }: any = useContext(contextdata);
-	// const [isLoading, setIsLoading] = useState<boolean>(true);
 	const router = useRouter();
 
 	const [shosenMap, setShosenMap] = useState<string | null>(null);
 
-	/// SOCKET MANAGER
-	// useEffect(() => {
-	// 	const token = checkLoged();
-	// 	if (!token) {
-	// 	router.push("/login");
-	// 	return;
-	// 	}
-	// 	if(!user) return;
-	// 	setIsLoading(false);
-	// }, [user]);
 
 	useEffect(() => {
 		const headers = {
@@ -78,7 +64,6 @@ const InviteAFriend = () => {
   
 	useEffect(() => {
 	  if (!socket) return;
-	  // socket.on("connect", () => {console.log(name + " is Connected to server");});
   
 	  return () => {
 		socket.off("connect");
@@ -98,19 +83,6 @@ const InviteAFriend = () => {
 		});
 	}, [socket]);
 
-
-
-
-	// GUI CONTROLS
-// 	const controls = useControls({});
-//   const { sunPosition } = useControls("sky", {
-// 	sunPosition: [-0.07, -0.03, -0.75],
-//   });
-	// const { planecolor } = useControls("color", { planecolor: "#51b151" });
-	// const { floorcolor } = useControls("color", { floorcolor: "#1572ff" });
-	// const { paddlecolor } = useControls("color", { paddlecolor: "#abebff" });
-	// const { fogcolor } = useControls("color", { fogcolor: "#382f21" });
-	// const { fogfar } = useControls("color", { fogfar: 180 });
 
 	function Plane(props: any) {
 		const [ref, api] = usePlane(() => ({type: "Static", material: { friction: 0 }, args: [20, 20],  rotation: [-Math.PI / 2, 0, 0],...props}), useRef<THREE.Mesh>(null))
@@ -247,7 +219,6 @@ const InviteAFriend = () => {
 	  }
 
 	function Player2Paddle(props: any) {
-		// console.log("P2START");
 		const [ref, api] = useBox(() => ({ mass: 0, type: "Static",material: { restitution: 1.06, friction: 0 }, args: [3, 1, 0.3], position: [0, 0.5, -9], ...props }), useRef<THREE.Mesh>(null))
 
 		useEffect(() => {
@@ -361,7 +332,6 @@ const InviteAFriend = () => {
 		  subpos();
 		  
 		  socket.on("ball-position", (data: any) => {
-			console.log("here");
 			api.position.set(data.x, data.y, data.z);
 		  });
 	
@@ -385,7 +355,6 @@ const InviteAFriend = () => {
 			});
 			
 			if ((isServing || isServingmobile) && !hasServed) {
-			  console.log("serving", hasServed);
 			  api.applyImpulse([value * direction, 0, -10 * direction], [0, 0, 0]);
 			  socket.emit("ball-serve", {
 				hasServed: true,
@@ -502,11 +471,9 @@ const InviteAFriend = () => {
 	   
 	
 		useEffect(() => {
-		  // TODO CHANGE THE SCORE TO 5
 		  if (!user) return;
 		  if (p1_count === 5 || p2_count === 5) {
 			if (p2_count === 5) {
-			  // console.log(user?.profile.userId, p1_count, p2_count);
 			  const payload = {
 				winner: user?.profile.userId,
 				winnerscore: p2_count,

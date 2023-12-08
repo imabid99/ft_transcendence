@@ -73,7 +73,6 @@ export class GameGateway implements OnGatewayConnection, OnGatewayDisconnect {
           this.socketMap.get(user.userId).push(client);
         }
         const matchtype_ = client.handshake.auth.matchType;
-        // console.log("HEYHEYHEY", client);
         if(matchtype_ === 'Random')
         {
           this.randomMatchmaking(client);
@@ -84,7 +83,6 @@ export class GameGateway implements OnGatewayConnection, OnGatewayDisconnect {
         }
       }
     } catch (e) {
-      console.log("error at con ", e);
     }
   }
 
@@ -116,9 +114,6 @@ export class GameGateway implements OnGatewayConnection, OnGatewayDisconnect {
           await this.gameService.updateMatch(matchId, creator.client.id, opponent.client.id);
           creator.client.join(matchId);
           opponent.client.join(matchId);
-          console.log(
-            `Match started between ${creator.client.id} and ${opponent.client.id}, in match ${matchId}`
-          );
           this.server.to(matchId).emit('match started', { matchId, creator: creator.userId, opponent: opponent.userId });
         } else {
           this.waitingPlayers.unshift(opponent);
@@ -175,7 +170,6 @@ export class GameGateway implements OnGatewayConnection, OnGatewayDisconnect {
         }
       }
     } catch (e) {
-      console.log("error at invite ", e);
     }
   }
 
@@ -192,14 +186,11 @@ export class GameGateway implements OnGatewayConnection, OnGatewayDisconnect {
           throw new Error('Invalid token');
         }
         const match = await this.gameService.getMatch(client.id);
-        console.log("match serving player ", match.servingplayer);
         if (match && match.servingplayer === client.id) {
-          console.log("match at score ", payload.score);
           client.broadcast.to(match.id).emit('current-score', payload);
         }
       }
     } catch (e) {
-      console.log("error at invite ", e);
     }
   }
 
@@ -238,7 +229,7 @@ export class GameGateway implements OnGatewayConnection, OnGatewayDisconnect {
             socket.leave(match.id);
           });
         }
-        } catch (e){ console.log("error at player-wins", e)}
+        } catch (e){}
     }
 
   //INVITE GAME
@@ -266,7 +257,6 @@ async match_invite(client: Socket) : Promise<void>  {
       }
     }
   } catch (e) {
-    console.log("error at invite ", e);
   }
 } 
 
@@ -274,8 +264,6 @@ async match_invite(client: Socket) : Promise<void>  {
     try {
       const token = client.handshake.headers.authorization?.split(" ")[1];
       const match = await this.gameService.getMatch(client.id);
-      console.log("match at disconnect ", match);
-      // console.log("the player has disconnected", client.id);
       if(token)
       {
         const user: any = jwt_decode(token);
@@ -300,7 +288,6 @@ async match_invite(client: Socket) : Promise<void>  {
         }
       }
       } catch (e) {
-        console.log("Error at descon", e);
       }
   }
 }

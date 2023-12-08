@@ -53,18 +53,15 @@ export class AuthService {
         throw new NotFoundException("Email not found");
       }
     } catch (error) {
-      console.log(error.message);
       return { message: error.message };
     }
   }
 
   async addUser(userData: UserData, file: any) {
     try {
-      console.log(userData);
       let av: string = "uploads/default/nouser.avif";
       if (file && file.path) {
         av = file.path;
-        console.log("avatar", av);
       }
       let exist = await this.prisma.user.findUnique({
         where: {
@@ -106,7 +103,6 @@ export class AuthService {
         },
       });
     } catch (error) {
-      console.log(error);
       console.log(error);
     }
   }
@@ -210,7 +206,6 @@ export class AuthService {
       let av: string = user.avatar;
       if (file && file.path) {
         av = file.path;
-        console.log("avatar", av);
       }
       const usr = await this.prisma.user.create({
         data: {
@@ -237,7 +232,6 @@ export class AuthService {
       this.deleteTempUser(user.oauthid);
       return { token: this.userService.generateToken(usr.id, usr.username, usr.email) };
     } catch (error) {
-      console.log("val oauth", error);
       throw error;
     }
   }

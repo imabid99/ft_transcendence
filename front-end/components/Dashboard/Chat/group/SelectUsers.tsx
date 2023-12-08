@@ -21,7 +21,6 @@ export default function SelectUsers({user,setGroupUsers,groupUsers}: SelectUsers
     const [isActivated, setIsActivated] = useState<Boolean>(false);
     const handleClick = (e:any) =>
     {
-        console.log(groupUsers);
         if(!isActivated)
         {
             checkRef.current?.classList?.add('bg-[#d9d9d9a1]');
@@ -35,10 +34,8 @@ export default function SelectUsers({user,setGroupUsers,groupUsers}: SelectUsers
             checkRef.current?.classList?.remove('bg-[#d9d9d9a1]');
             setGroupUsers(groupUsers.filter((id:any) => id !== user.userId));
         }
-        console.log(groupUsers);
         setIsActivated(!isActivated);
     }
-    console.log(groupUsers);
     return (
         <>
         <label ref={

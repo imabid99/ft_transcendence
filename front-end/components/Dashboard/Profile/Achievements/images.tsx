@@ -20,36 +20,12 @@ const images = [
       { unlocked: '/ach5.svg', locked: '/ach5Lock.svg', alt: 'Ach5', className: 'pb-[30px] block lg:hidden'},
   ],
 ];
-// type ImageType = {
-//   src: string;
-//   alt: string;
-//   className?: string;
-// };
-
-// type ImageComponentProps = {
-//   images: ImageType[][];
-// };
-// images.forEach(row => {
-//   row.forEach(image => {
-//       console.log(image.locked);
-//   });
-// });
 
 function ImageComponent({achievements} : any) {
   const [loading, setLoading] = useState(true);
   const [showImages, setShowImages] = useState(false);
-  console.log("this is achiasdfkljasdf alsdfj :",achievements);
-  // const handleImageLoad = () => {
-  //   setLoading(false);
-  // };
-  // const timer = setTimeout(() => {
-  //   setShowImages(true);
-  // }, 2000);
-
-  // clearTimeout(timer);
   return (
     <div className="flex items-center flex-col w-12/12 gap-[30px] lg:gap-0 pb-[30px]">
-      {/* {loading && <Loading />} */}
       {images.map((imageRow, rowIndex) => (
         <div key={rowIndex} className="flex items-center justify-center gap-[30px] flex-col sm:flex-row">
           {imageRow.map((img, imgIndex) => (

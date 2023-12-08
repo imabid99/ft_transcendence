@@ -10,28 +10,21 @@ type props  = {
 }
 
 export default function FriendNotifications({name, avatar, userId, notId}: props) {
-    console.log("this is name", notId);
     async function AcceptFriend(){
         try{
             const res = await axiosInstance.patch(`http://${process.env.NEXT_PUBLIC_APP_URL}:3000/api/friendship/accept/${userId}` ,  {notId: notId});
-            console.log(res);
         }
         catch(err){
-            console.log(err);
         }
     }
     async function RefuseFriend(){
         try{
             const res = await axiosInstance.patch(`http://${process.env.NEXT_PUBLIC_APP_URL}:3000/api/friendship/refuse/${userId}` ,  {notId: notId});
-            console.log(res);
         }
         catch(err){
-            console.log(err);
         }
     }
     const avatarUrl = `http://${process.env.NEXT_PUBLIC_APP_URL}:3000/${avatar}`;
-    console.log(avatarUrl);
-    console.log("this is avatar", avatar);
     return (
         <div className="flex justify-center">
         <div className="w-11/12 ">
